@@ -12,7 +12,6 @@ This repository is a collection of technical notes. Contributions should optimiz
 
 There is no build step or runtime for this repo.
 
-- Preview Markdown in your editor, or serve locally: `python -m http.server` (open `http://localhost:8000/`).
 - Quick sanity checks: `rg "TODO|FIXME" .` and `wc -w *.md` to keep notes focused.
 
 ## Coding Style & Naming Conventions
