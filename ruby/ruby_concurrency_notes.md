@@ -485,20 +485,68 @@ Ractor.make_shareable(obj)    # попытка сделать объект share
 
 Это похоже на перенос идеи Rust в runtime: в Rust типы `Send/Sync` решают «можно ли делить/передавать между потоками» на этапе компиляции; в Ruby это решается проверками и протоколом передачи.
 
+##### 3.3.1 Классы: shareable объект ≠ свободный shared state
+
+`Class` и `Module` объекты всегда считаются shareable, поэтому *определения классов/модулей общие для всех ractors*: если `C` определён как константа, не-main ractors могут обращаться к `C` и вызывать его методы.
+
+Но класс — это объект, у которого есть «глобальное» состояние, и Ractor вводит на него отдельные ограничения:
+
+- **Class variables (`@@cv`) доступны только в main ractor.** Попытка прочитать/изменить `@@cv` в non-main ractor приводит к `Ractor::IsolationError`.
+- **Class instance variables (`@iv` на уровне класса) в non-main ractor:**
+  - чтение разрешено только если значение shareable;
+  - запись запрещена даже для shareable значений.
+- **Константы должны ссылаться на shareable объекты**, иначе non-main ractors не смогут их читать.
+
+Минимальный пример (Ruby 3.0+: в Ruby 4.0 есть `value`, в Ruby 3.0–3.4 — `take`):
+
+```ruby
+class C
+  @@cv = 1
+  @iv = 1
+  GOOD = "good".freeze
+  BAD  = "bad".dup
+end
+
+r = Ractor.new do
+  class C
+    begin
+      p @iv
+      p GOOD
+      p @@cv
+    rescue => e
+      p [e.class, e.message]
+    end
+
+    begin
+      @iv = 42
+    rescue => e
+      p [e.class, e.message]
+    end
+
+    begin
+      p BAD
+    rescue => e
+      p [e.class, e.message]
+    end
+  end
+
+  :done
+end
+
+if r.respond_to?(:value) # Ruby 4.0+
+  r.value
+else
+  r.take                 # Ruby 3.0-3.4: возврат из ractor читается через `take`
+end
+```
+
 #### 3.4 Сообщения: default port и `Ractor::Port`
 
-> **Примечание о версиях Ruby:** до Ruby 4.0 у ractors были два API обмена сообщениями: `Ractor#send`/`Ractor.receive` и `Ractor.yield`/`Ractor#take`. В Ruby 4.0 (релиз 25 декабря 2025) `Ractor.yield`/`Ractor#take` удалены, а вместо них добавлены `Ractor::Port` и `Ractor#default_port`.
+> **Примечание о версиях Ruby:** в Ruby 3.0–3.4 у ractors были два канала: входящий (`Ractor#send`/`Ractor.receive`) и исходящий (`Ractor.yield`/`Ractor#take`). В Ruby 4.0 `Ractor.yield`/`Ractor#take` удалены, вместо них добавлены `Ractor::Port`, `Ractor#default_port`, `Ractor#join` и `Ractor#value`.
 
-У ractors есть два связанных, но разных механизма приёма сообщений.
+У ractor есть **mailbox** (очередь входящих сообщений). В Ruby 4.0 mailbox представлен объектом `Ractor::Port` и доступен как `r.default_port`. В Ruby 3.0–3.4 этот объектный API отсутствует, но `r.send` и `Ractor.receive` работают по той же идее: `send` кладёт сообщение в mailbox получателя, `receive` читает из mailbox текущего ractor.
 
-**Default port** (порт по умолчанию, `Ractor#default_port`) есть у каждого ractor. Он используется «обычными» API:
-
-- `r.send(obj)` отправляет `obj` в default port ractor `r`;
-- `Ractor.receive` читает сообщение из default port *текущего* ractor (`Ractor.current`).
-
-Это самый прямой аналог mailbox в акторной модели: каждый актор сам читает из своего почтового ящика.
-
-**`Ractor::Port`** — это отдельный объект-очередь, который создаётся вызовом `Ractor::Port.new` и **принадлежит ractor'у-создателю**.
+**`Ractor::Port`** (Ruby 4.0+) — отдельный объект-очередь, который создаётся вызовом `Ractor::Port.new` и **принадлежит ractor'у-создателю**.
 
 Ключевое правило владения:
 
@@ -520,36 +568,61 @@ Ractor.make_shareable(obj)    # попытка сделать объект share
 - если `main` должен получать от `worker`, то `main` создаёт `reply_port`, передаёт его `worker`, и `worker` делает `reply_port.send(...)`;
 - если `worker` должен получать от `main` *через port*, то `worker` должен создать свой входящий port, передать его `main`, и `main` будет в него `send`.
 
-При этом для многих сценариев ports вообще не нужны: можно общаться через default ports, если у сторон есть ссылки друг на друга.
+При этом для многих сценариев ports вообще не нужны: можно общаться через mailbox'ы ractor-ов (`send/receive`), если у сторон есть ссылки друг на друга.
 
-Пример «main → worker → main» через default ports (mailboxes):
+Пример «main → worker → main» через mailbox'ы (`send/receive`):
 
 ```ruby
 main = Ractor.current
 
 worker = Ractor.new(main) do |main|
-  req = Ractor.receive        # читаем из default port worker
-  main.send([:ok, req])       # пишем в default port main
+  req = Ractor.receive        # читаем из mailbox worker
+  main.send([:ok, req])       # пишем в mailbox main
+  :done
 end
 
 worker.send("ping")
-p Ractor.receive              # читаем из default port main
-worker.join
+p Ractor.receive              # читаем из mailbox main
+
+if worker.respond_to?(:value) # Ruby 4.0+
+  worker.value
+else
+  worker.take                 # Ruby 3.0-3.4
+end
 ```
 
-Пример «много воркеров → один consumer» через `Ractor::Port`:
+Пример «много воркеров → один consumer» (`Ractor::Port` в Ruby 4.0+, иначе mailbox main):
 
 ```ruby
-results = Ractor::Port.new    # owner: main
+results = Ractor.const_defined?(:Port) ? Ractor::Port.new : nil # owner: main (Ruby 4.0+)
+main = Ractor.current
 
 workers = 4.times.map do |i|
-  Ractor.new(results, i) do |results, i|
-    results << [:done, i, Process.pid]
+  if results
+    Ractor.new(results, i) do |results, i|
+      results << [:done, i, Process.pid]
+      :done
+    end
+  else
+    Ractor.new(main, i) do |main, i|
+      main.send([:done, i, Process.pid])
+      :done
+    end
   end
 end
 
-4.times { p results.receive } # читать может только main
-workers.each(&:join)
+4.times do
+  msg = results ? results.receive : Ractor.receive
+  p msg
+end
+
+workers.each do |w|
+  if w.respond_to?(:value) # Ruby 4.0+
+    w.value
+  else
+    w.take                 # Ruby 3.0-3.4
+  end
+end
 ```
 
 #### 3.6 Общение между двумя non-main ractors без участия main «в доставке»
@@ -966,11 +1039,7 @@ array.size
 
 В многопоточном коде важно не только «кто первый записал», но и «когда другой поток это увидит». CPU‑кеши и переупорядочивание инструкций могут дать ситуацию: один поток уже записал "готово", другой увидел флаг, но не увидел данные.
 
-Под "volatile" в контексте многопоточности обычно понимают *семантику видимости и порядка* (а не атомарность):
-
-- чтение volatile запрещает «уносить чтения раньше» этой точки (acquire)
-- запись volatile запрещает «уносить записи позже» этой точки (release)
-- volatile помогает корректно публиковать данные между потоками (happens-before), но **не делает** `x += 1` атомарным
+- **Volatile** — это про *видимость и порядок*, а не про атомарность: запись volatile работает как “release” (всё, что записано «до», станет видимым другим потокам), а чтение volatile — как “acquire” (после чтения видны записи, сделанные «до» соответствующего release). Это помогает корректно публиковать данные (happens-before), но **не делает** `x += 1` атомарным.
 
 Ruby как язык не задаёт "volatile" семантики для instance variables, поэтому pattern "data + ready flag" без синхронизации не должен использоваться. В MRI GVL сериализует выполнение Ruby‑кода, и на практике многие visibility‑проблемы маскируются, но логические гонки остаются. В JRuby/TruffleRuby Ruby‑код выполняется параллельно, поэтому visibility становится реальной проблемой.
 
@@ -1402,21 +1471,24 @@ Process, Ractor, Thread, Fiber — каждый инструмент имеет 
 ## Sources
 
 - Ruby 4.0.0 release announcement (2025-12-25): https://www.ruby-lang.org/en/news/2025/12/25/ruby-4-0-0-released/
-- Ruby 4.0.0 NEWS (Ractor changes): https://docs.ruby-lang.org/en/master/NEWS/NEWS-4_0_0_md.html
-- Ruby 3.3.0 NEWS (M:N thread scheduler, `RUBY_MN_THREADS`, `RUBY_MAX_CPU`): https://docs.ruby-lang.org/en/master/NEWS/NEWS-3_3_0_md.html
+- Ruby 4.0.0 NEWS (Ractor changes): https://docs.ruby-lang.org/en/4.0/NEWS/NEWS-4_0_0_md.html
+- Ruby 3.3.0 NEWS (M:N thread scheduler, `RUBY_MN_THREADS`, `RUBY_MAX_CPU`): https://docs.ruby-lang.org/en/3.3/NEWS/NEWS-3_3_0_md.html
 - Ruby feature #20861 (`RUBY_THREAD_TIMESLICE`, default quantum 100ms): https://bugs.ruby-lang.org/issues/20861
-- Ruby env vars: `RUBY_THREAD_TIMESLICE`: https://docs.ruby-lang.org/en/master/ruby_md.html
+- Ruby manpage env vars (`RUBY_THREAD_TIMESLICE`, `RUBY_MN_THREADS`, `RUBY_MAX_CPU`): https://github.com/ruby/ruby/blob/master/man/ruby.1
 - Ruby internal concurrency (timer thread, interrupts): https://docs.ruby-lang.org/en/master/contributing/concurrency_guide_md.html
 - Ruby docs: `Thread#native_thread_id`: https://docs.ruby-lang.org/en/4.0/Thread.html#method-i-native_thread_id
 - Ruby docs: `Thread#status`: https://docs.ruby-lang.org/en/4.0/Thread.html#method-i-status
 - Ruby docs: `Fiber` / `Fiber.schedule` / `Fiber::Scheduler`: https://docs.ruby-lang.org/en/master/Fiber.html, https://docs.ruby-lang.org/en/master/Fiber/Scheduler.html
+- Ruby docs (Ruby 3.3): Ractor (legacy `yield`/`take`): https://docs.ruby-lang.org/en/3.3/ractor_md.html
 - Ruby docs: `Ractor::Port`: https://docs.ruby-lang.org/en/4.0/Ractor/Port.html
+- Ruby docs: Ractor (shareable objects, globals, class vars, constants): https://docs.ruby-lang.org/en/4.0/Ractor.html
+- Ruby language: Ractor semantics (class vars, constants, class ivars): https://docs.ruby-lang.org/en/4.0/language/ractor_md.html
 - CRuby source: `thread.c` (quantum, `RUBY_THREAD_TIMESLICE`, timer interrupts): https://github.com/ruby/ruby/blob/master/thread.c
 - CRuby source: `thread_pthread_mn.c` / `thread_pthread.c` (timer thread polling, waking, `RUBY_VM_SET_TIMER_INTERRUPT`): https://github.com/ruby/ruby/blob/master/thread_pthread_mn.c, https://github.com/ruby/ruby/blob/master/thread_pthread.c
 - concurrent-ruby (README, `concurrent-ruby-ext`): https://github.com/ruby-concurrency/concurrent-ruby
-- TruffleRuby additions (`full_memory_barrier`, atomics): https://www.graalvm.org/jdk21/reference-manual/ruby/TruffleRubyAdditions/
-- TruffleRuby runtime configurations (`--native`/`--jvm`): https://www.graalvm.org/latest/reference-manual/ruby/TruffleRubyRuntimeConfigurations/
-- TruffleRuby: thread-safe `Hash` (TruffleRuby 33): https://www.graalvm.org/jdk21/reference-manual/ruby/TruffleRubyThreadSafeHash/
+- TruffleRuby additions (`full_memory_barrier`, atomics): https://www.graalvm.org/22.0/reference-manual/ruby/TruffleRubyAdditions/index.html
+- TruffleRuby runtime configurations (`--native`/`--jvm`): https://www.graalvm.org/22.0/reference-manual/ruby/
+- TruffleRuby 33 release (thread-safe `Hash`, `ConcurrentMap`): https://www.graalvm.org/2026/01/13/truffleruby-33-released/
 - io-event selectors (epoll/kqueue/select): https://github.com/socketry/io-event/blob/main/lib/io/event/selector/epoll.rb, https://github.com/socketry/io-event/blob/main/lib/io/event/selector/kqueue.rb, https://github.com/socketry/io-event/blob/main/lib/io/event/selector/select.rb
 - Puma documentation: https://puma.io/
 - Falcon documentation: https://socketry.github.io/falcon/
