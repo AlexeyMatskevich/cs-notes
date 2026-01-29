@@ -97,6 +97,58 @@ end
 
 Обе операции O(1). "Мёртвая зона" становится свободным местом для новых элементов. При переполнении буфер растёт по тому же принципу, что и динамический массив: выделяется новый буфер большего размера, элементы копируются — отсюда амортизированный O(1).
 
+Как отличить пустой буфер от полного? В обоих случаях `head == tail`. Классическое решение — хранить отдельный счётчик `size` или всегда оставлять одну ячейку пустой (capacity на 1 больше, чем максимум элементов).
+
+### Реализация очереди на ring buffer (Ruby)
+
+```ruby
+class Queue
+  def initialize(initial_capacity = 8)
+    @buffer = Array.new(initial_capacity)
+    @head = 0
+    @tail = 0
+    @size = 0
+  end
+
+  def enqueue(value)
+    resize if @size == @buffer.length
+    @buffer[@tail] = value
+    @tail = (@tail + 1) % @buffer.length
+    @size += 1
+  end
+
+  def dequeue
+    return nil if @size == 0
+    value = @buffer[@head]
+    @buffer[@head] = nil
+    @head = (@head + 1) % @buffer.length
+    @size -= 1
+    value
+  end
+
+  def front
+    return nil if @size == 0
+    @buffer[@head]
+  end
+
+  def empty?
+    @size == 0
+  end
+
+  private
+
+  def resize
+    new_buffer = Array.new(@buffer.length * 2)
+    @size.times { |i| new_buffer[i] = @buffer[(@head + i) % @buffer.length] }
+    @buffer = new_buffer
+    @head = 0
+    @tail = @size
+  end
+end
+```
+
+При `resize` элементы копируются в начало нового буфера, сбрасывая `head` в 0 — как при росте динамического массива.
+
 ## ADT: Deque (Дек)
 
 Стек работает с одного конца, очередь — с двух, но роли фиксированы: один для добавления, другой для удаления. Иногда нужны оба конца для обеих операций.

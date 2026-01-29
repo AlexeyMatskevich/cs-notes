@@ -141,6 +141,77 @@ load_factor = n / capacity
 
 Стоит O(n), но происходит редко → амортизированно O(1) на операцию.
 
+### Реализация хеш-таблицы с chaining (Ruby)
+
+```ruby
+class HashTable
+  LOAD_FACTOR_THRESHOLD = 0.75
+
+  def initialize(capacity = 8)
+    @buckets = Array.new(capacity)
+    @size = 0
+  end
+
+  def put(key, value)
+    resize if (@size + 1).to_f / @buckets.length > LOAD_FACTOR_THRESHOLD
+
+    index = bucket_index(key)
+    entry = find_entry(index, key)
+
+    if entry
+      entry[1] = value
+    else
+      @buckets[index] ||= []
+      @buckets[index] << [key, value]
+      @size += 1
+    end
+  end
+
+  def get(key)
+    entry = find_entry(bucket_index(key), key)
+    entry&.[](1)
+  end
+
+  def delete(key)
+    index = bucket_index(key)
+    chain = @buckets[index]
+    return nil unless chain
+
+    i = chain.index { |k, _| k == key }
+    return nil unless i
+
+    @size -= 1
+    chain.delete_at(i)[1]
+  end
+
+  private
+
+  def bucket_index(key)
+    key.hash % @buckets.length
+  end
+
+  def find_entry(index, key)
+    chain = @buckets[index]
+    return nil unless chain
+
+    chain.find { |k, _| k == key }
+  end
+
+  def resize
+    old_buckets = @buckets
+    @buckets = Array.new(old_buckets.length * 2)
+    @size = 0
+
+    old_buckets.each do |chain|
+      next unless chain
+      chain.each { |key, value| put(key, value) }
+    end
+  end
+end
+```
+
+Каждая ячейка (`bucket`) — массив пар `[key, value]`. При `resize` все элементы перехешируются: `hash % новый_capacity` даёт другие индексы, поэтому цепочки перераспределяются.
+
 ### Сложность операций
 
 | Операция | В среднем | В худшем |

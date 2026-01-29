@@ -55,7 +55,7 @@ Doubly Linked List: head (свежий) ⇄ ... ⇄ tail (старый)
 
 **Почему ключ в узле?** При вытеснении берём tail — самый старый элемент. Чтобы удалить его из хеш-таблицы, нужен ключ. Если ключ не хранится в узле, придётся искать его перебором всей хеш-таблицы — O(n) вместо O(1).
 
-### Класс узла для LRU
+### Реализация (Ruby)
 
 ```ruby
 class Node
@@ -68,73 +68,76 @@ class Node
     @next = nil
   end
 end
-```
 
-### Вспомогательные методы
-
-```ruby
-# Отцепить узел из текущего места
-def remove_node(node)
-  if node.prev
-    node.prev.next = node.next
-  else
-    @head = node.next
+class LRUCache
+  def initialize(capacity)
+    @capacity = capacity
+    @hash = {}
+    @head = nil  # свежий конец
+    @tail = nil  # старый конец
   end
 
-  if node.next
-    node.next.prev = node.prev
-  else
-    @tail = node.prev
-  end
-end
-
-# Вставить в начало (сделать свежим)
-def add_to_head(node)
-  node.prev = nil
-  node.next = @head
-
-  if @head
-    @head.prev = node
-  else
-    @tail = node
-  end
-
-  @head = node
-end
-```
-
-### Операции
-
-```ruby
-def get(key)
-  node = @hash[key]
-  return nil unless node
-  return node.value if node == @head  # уже свежий
-
-  remove_node(node)
-  add_to_head(node)
-  node.value
-end
-
-def put(key, value)
-  if @hash.key?(key)
+  def get(key)
     node = @hash[key]
-    node.value = value
+    return nil unless node
+    return node.value if node == @head
+
     remove_node(node)
     add_to_head(node)
-  else
-    node = Node.new(key, value)
-    @hash[key] = node
-    add_to_head(node)
+    node.value
+  end
 
-    if @hash.size > @capacity
-      # Важен порядок! Сначала удаляем из хеша, потом из списка
-      @hash.delete(@tail.key)
-      remove_node(@tail)
+  def put(key, value)
+    if @hash.key?(key)
+      node = @hash[key]
+      node.value = value
+      remove_node(node)
+      add_to_head(node)
+    else
+      node = Node.new(key, value)
+      @hash[key] = node
+      add_to_head(node)
+
+      if @hash.size > @capacity
+        # Важен порядок! Сначала удаляем из хеша, потом из списка
+        @hash.delete(@tail.key)
+        remove_node(@tail)
+      end
     end
+  end
+
+  private
+
+  def remove_node(node)
+    if node.prev
+      node.prev.next = node.next
+    else
+      @head = node.next
+    end
+
+    if node.next
+      node.next.prev = node.prev
+    else
+      @tail = node.prev
+    end
+  end
+
+  def add_to_head(node)
+    node.prev = nil
+    node.next = @head
+
+    if @head
+      @head.prev = node
+    else
+      @tail = node
+    end
+
+    @head = node
   end
 end
 ```
+
+`remove_node` отцепляет узел из текущего места в списке, обновляя указатели соседей. `add_to_head` вставляет узел в начало, делая его "свежим".
 
 ### Критичный баг с порядком операций
 
