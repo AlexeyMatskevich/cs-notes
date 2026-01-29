@@ -19,6 +19,24 @@
 6. [LRU-кэш](linear/06-lru-cache.md)
 7. [Clock-Sweep](linear/07-clock-sweep.md)
 
+## Нелинейные структуры
+
+Все линейные структуры хранят элементы в последовательности — по позиции или по ключу. Но когда в данных есть иерархии, сети или маршруты, нужны связи "многие ко многим" или "один ко многим". Граф — обобщение, дерево и куча — его частные случаи с более сильными гарантиями.
+
+0. [Граф](non-linear/00-graph.md)
+1. [Дерево](non-linear/01-tree.md)
+2. [Бинарное дерево](non-linear/02-binary-tree.md)
+3. [Двоичное дерево поиска (BST)](non-linear/03-binary-search-tree.md)
+4. [Куча (Heap)](non-linear/04-heap.md)
+
+## Выбор структуры
+
+- Нужно часто проверять "есть ли ребро между i и j" → матрица смежности.
+- Граф разреженный и важны обходы соседей → списки смежности.
+- Нужна иерархия без циклов → дерево.
+- Нужны быстрые `search/insert/delete` по упорядоченному ключу → BST (если важны гарантии, лучше самобалансирующееся).
+- Нужна приоритетная очередь (добавить элемент и извлечь min/max) → куча.
+
 ## Сводные таблицы
 
 ### Массив vs Связный список
@@ -88,3 +106,5 @@
 - CPython (например, Python 3.12): over-allocation списка. <https://github.com/python/cpython/blob/v3.12.0/Objects/listobject.c>
 - Go (например, Go 1.22): рост `slice`. <https://github.com/golang/go/blob/go1.22.0/src/runtime/slice.go>
 - PostgreSQL (например, 16): clock-sweep / `BM_MAX_USAGE_COUNT`. <https://github.com/postgres/postgres/blob/REL_16_0/src/include/storage/buf_internals.h> и <https://github.com/postgres/postgres/blob/REL_16_0/src/backend/storage/buffer/freelist.c>
+- Cormen, Leiserson, Rivest, Stein. *Introduction to Algorithms* (CLRS), 4th ed.
+- Wikipedia: [Graph (discrete mathematics)](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)), [Tree (graph theory)](https://en.wikipedia.org/wiki/Tree_(graph_theory)), [Binary heap](https://en.wikipedia.org/wiki/Binary_heap)
