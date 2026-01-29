@@ -28,6 +28,10 @@
 2. [Бинарное дерево](non-linear/02-binary-tree.md)
 3. [Двоичное дерево поиска (BST)](non-linear/03-binary-search-tree.md)
 4. [Куча (Heap)](non-linear/04-heap.md)
+5. [B-дерево (B-tree)](non-linear/05-b-tree.md)
+6. [B+ дерево (B+ tree)](non-linear/06-b-plus-tree.md)
+7. [B* дерево (B* tree)](non-linear/07-b-star-tree.md)
+8. [Инвертированный индекс (Inverted Index)](non-linear/08-inverted-index.md)
 
 ## Выбор структуры
 
@@ -36,6 +40,8 @@
 - Нужна иерархия без циклов → дерево.
 - Нужны быстрые `search/insert/delete` по упорядоченному ключу → BST (если важны гарантии, лучше самобалансирующееся).
 - Нужна приоритетная очередь (добавить элемент и извлечь min/max) → куча.
+- Поиск по ключу на диске → B-дерево / B+ дерево.
+- Поиск внутри составных значений (массивы, тексты) → инвертированный индекс.
 
 ## Сводные таблицы
 
@@ -102,6 +108,8 @@
 
 ## Sources
 
+- Bayer, R., McCreight, E. *Organization and Maintenance of Large Ordered Indices*, 1972.
+- Knuth, D. *The Art of Computer Programming*, Vol. 3: Sorting and Searching.
 - OpenJDK (например, JDK 21): `java.util.ArrayList` (`grow`). <https://github.com/openjdk/jdk/blob/jdk21u/src/java.base/share/classes/java/util/ArrayList.java>
 - CPython (например, Python 3.12): over-allocation списка. <https://github.com/python/cpython/blob/v3.12.0/Objects/listobject.c>
 - Go (например, Go 1.22): рост `slice`. <https://github.com/golang/go/blob/go1.22.0/src/runtime/slice.go>

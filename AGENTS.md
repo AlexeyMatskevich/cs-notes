@@ -4,7 +4,7 @@ This repository is a collection of technical notes. Contributions should optimiz
 
 ## Project Structure & Module Organization
 
-- Top-level `*.md` files are standalone notes (e.g. `postgresql.md`, `redis_notes.md`, `b-tree.md`).
+- Top-level `*.md` files are standalone notes (e.g. `postgresql.md`, `redis_notes.md`). Large topics are organized into directories (e.g. `postgresql/indexes.md`).
 - Large reference files (PDFs, images) should go in `assets/` (create if needed) and be linked from notes.
 - Prefer one topic per file; cross-link related notes using relative links.
 

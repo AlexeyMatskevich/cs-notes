@@ -2,7 +2,7 @@
 
 ## Предпосылки
 
-Читатель знаком с устройством хранения PostgreSQL: heap-таблицы, страницы по 8 KB, различие sequential и random I/O, shared_buffers и OS page cache, visibility map (подробнее — в [postgresql.md](postgresql.md)). Также предполагается понимание типов индексного сканирования — Index Scan, Bitmap Index Scan, Index Only Scan — и понятие корреляции физического порядка данных с логическим (подробнее — в [b-tree.md](../b-tree.md)). На уровне SQL — таблицы, строки, индексы, JOIN.
+Читатель знаком с устройством хранения PostgreSQL: heap-таблицы, страницы по 8 KB, различие sequential и random I/O, shared_buffers и OS page cache, visibility map (подробнее — в [postgresql.md](postgresql.md)). Также предполагается понимание типов индексного сканирования — Index Scan, Bitmap Index Scan, Index Only Scan — и понятие корреляции физического порядка данных с логическим (подробнее — в [indexes.md](indexes.md)). На уровне SQL — таблицы, строки, индексы, JOIN.
 
 ---
 

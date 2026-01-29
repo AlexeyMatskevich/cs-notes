@@ -34,7 +34,7 @@ No build step or runtime. Quick checks:
 
 ## File Organization
 
-- One topic per file, kebab-case naming (`postgresql.md`, `b-tree.md`)
+- One topic per file, kebab-case naming (`postgresql.md`, `indexes.md`)
 - Cross-link related notes with relative links
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections
