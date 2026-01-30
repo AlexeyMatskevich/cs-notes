@@ -49,7 +49,9 @@
 
 ### Планировщик запросов
 
-- [Планировщик запросов](query-processing/00-planner.md) — как PostgreSQL выбирает план выполнения
+- [Планировщик запросов](query-processing/00-planner.md) — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
+- [Порядок соединения](query-processing/01-join-order.md) — dynamic programming, interesting orders, GEQO
+- [Подзапросы и CTE](query-processing/02-subqueries-and-cte.md) — flattening, semi-join, материализация CTE
 
 ## Выбор индекса
 
