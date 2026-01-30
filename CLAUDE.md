@@ -18,9 +18,9 @@ No build step or runtime. Quick checks:
 
 1. **Narrative pattern:** goal → problem → solution → result. Each concept answers a question raised by the previous one.
 
-2. **No meta-language in final text:** Never use terms like "мостик", "нить повествования", "граф зависимостей", "конечный эффект" (as methodology terms), "атомарное понятие". Technical terms like "массив", "B-tree", "транзакция" are fine.
+2. **No styleguide vocabulary in final text:** The styleguide uses its own methodology terms internally ("мостик", "нить повествования", "граф зависимостей", "конечный эффект" as a methodology concept, "атомарное понятие", "уровень 0/1/2/3"). These terms must never leak into the notes. Technical terms ("массив", "B-tree", "транзакция") are fine. Normal Russian transitional phrases ("сначала разберём", "перейдём к", "выше мы говорили", "позже увидим") are also fine — they are natural language, not meta-language.
 
-3. **No meta-commentary:** Avoid "сначала разберём", "это важно потому что", "перейдём к следующему". Text should read naturally as if no styleguide exists.
+3. **No self-referential commentary about the document structure:** Avoid sentences that describe what the document/section is doing instead of explaining the subject matter (e.g. "В этой части мы прошли по цепочке компромиссов", "Следующий кусок пазла"). The text should talk about the topic, not about itself. This does NOT mean removing ordinary transitions — phrases like "сначала разберём X, потом перейдём к Y" are normal and improve readability.
 
 4. **Dependency order:** Never use a term before defining it. Before writing a section, list its dependencies and ensure each is either already explained, in prerequisites, or explained right now.
 
