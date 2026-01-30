@@ -117,6 +117,7 @@ WHERE relname = 'users';
 
 - [WAL](../durability/00-wal.md) — что такое `pg_wal/` и зачем нужен `pd_lsn`
 - [VACUUM](../maintenance/00-vacuum.md) — зачем нужны FSM/VM форки и что означает all-visible
+- [MVCC](../concurrency/00-mvcc.md) — зачем нужен CLOG (`pg_xact/`) и как работает проверка видимости
 
 ## Sources
 

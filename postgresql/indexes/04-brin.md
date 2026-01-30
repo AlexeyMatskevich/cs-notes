@@ -177,7 +177,7 @@ PostgreSQL хранит статистику корреляции:
     CREATE INDEX idx_created_brin ON logs USING brin(created_at)
     WITH (pages_per_range = 32, autosummarize = on);
 
-BRIN завершает набор типов индексов PostgreSQL. Выбор индекса под конкретную задачу и понимание того, как планировщик использует индексы — в [index.md](../index.md).
+BRIN завершает набор типов индексов PostgreSQL. Выбор индекса под конкретную задачу и понимание того, как планировщик использует индексы — в [планировщике запросов](../query-processing/00-planner.md).
 
 ## Sources
 
