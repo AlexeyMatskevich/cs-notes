@@ -4,12 +4,10 @@
 
 PostgreSQL называет свой индекс "B-tree", но технически это **B+tree с модификациями**, основанный на статье **Lehman & Yao (1981)** — "Efficient Locking for Concurrent Operations on B-Trees".
 
-## История и версии
+## Версии (выборочно)
 
 | Версия PostgreSQL | Изменения в B-tree |
 |-------------------|-------------------|
-| 7.0 (2000) | Базовая реализация B-tree |
-| 10 (2017) | Улучшения производительности |
 | 11 (2018) | Covering indexes (INCLUDE) |
 | 12 (2019) | REINDEX CONCURRENTLY |
 | 13 (2020) | Дедупликация записей, индексы со смешанным порядком |
@@ -32,7 +30,7 @@ PostgreSQL хранит всё в **страницах по 8 КБ** (по ум�
 
     ┌────────────────────────────────────────────────────────────────┐
     │  Page Header (24 байта)                                        │
-    │  ├── pd_lsn: LSN последнего изменения (для WAL)               │
+    │  ├── pd_lsn: LSN последнего изменения (см. [WAL](../durability/00-wal.md)) │
     │  ├── pd_flags: флаги страницы                                  │
     │  ├── pd_lower: указатель на конец массива item pointers        │
     │  ├── pd_upper: указатель на начало свободного места            │
@@ -53,29 +51,21 @@ PostgreSQL хранит всё в **страницах по 8 КБ** (по ум�
     │  └── btpo_flags: leaf? root? deleted?                          │
     └────────────────────────────────────────────────────────────────┘
 
-## Tuple и TID
+## Термины: heap tuple, index tuple, TID/ctid
 
-### Tuple (кортеж)
+В PostgreSQL слово *tuple* встречается в двух разных смыслах:
 
-**Tuple** — термин из реляционной алгебры и теории множеств.
+- **Heap tuple** — физическая версия строки в таблице (с заголовком `xmin/xmax/ctid/...`; см. [страницы и кортежи](../storage/01-pages-and-tuples.md) и [MVCC](../concurrency/00-mvcc.md)).
+- **Index tuple** — запись внутри индекса (ключ + указатель).
 
-**Буквальный смысл:** упорядоченный набор значений фиксированной длины.
+Дальше в этой заметке:
+- “строка” — логическая строка таблицы (row в SQL),
+- “heap tuple” — физическая версия строки,
+- “index tuple” — запись индекса.
 
-В математике: `(a, b, c)` — это 3-tuple (тройка).
+### TID (ctid) — адрес heap tuple
 
-**В контексте БД:** tuple = одна строка таблицы = набор значений по всем колонкам.
-
-    Таблица employees:
-    ┌────┬─────────┬────────┐
-    │ id │  name   │ salary │
-    ├────┼─────────┼────────┤
-    │ 1  │ 'Alice' │ 50000  │  ← это один tuple: (1, 'Alice', 50000)
-    │ 2  │ 'Bob'   │ 60000  │  ← это другой tuple: (2, 'Bob', 60000)
-    └────┴─────────┴────────┘
-
-### TID — Tuple Identifier
-
-**TID** — физический адрес tuple в heap.
+**TID (Tuple Identifier)** — физический адрес heap tuple в heap (таблице).
 
 **Структура:** `(block_number, offset_within_block)`
 
@@ -84,6 +74,8 @@ PostgreSQL хранит всё в **страницах по 8 КБ** (по ум�
             │    └── третий tuple на этой странице (нумерация с 1)
             │
             └── страница номер 847 в файле heap
+
+В SQL тот же указатель виден как системная колонка `ctid`.
 
 ## Index Tuple — что хранится в узле
 
@@ -213,7 +205,7 @@ PostgreSQL использует **двусвязный список** (btpo_prev
     -- А этот — нет (name не в индексе):
     SELECT name, salary FROM employees WHERE salary > 50000;
 
-**Ограничение:** работает только если страница heap помечена как "all-visible" в Visibility Map (связано с MVCC).
+**Ограничение:** работает только если страница heap помечена как "all-visible" в Visibility Map (см. [VACUUM](../maintenance/00-vacuum.md); связано с [MVCC](../concurrency/00-mvcc.md)).
 
 ### Covering Index (INCLUDE) — PostgreSQL 11+
 
@@ -366,7 +358,7 @@ PostgreSQL использует split по Lehman & Yao:
 
 ### VACUUM
 
-**VACUUM** — фоновый процесс, чистящий dead tuples.
+**[VACUUM](../maintenance/00-vacuum.md)** — фоновый процесс, чистящий dead tuples.
 
     До VACUUM:
     Лист: [10, 20, DEAD, DEAD, 50, DEAD, 70]
@@ -585,3 +577,9 @@ B-tree требует **пять операторов сравнения**:
 | Collation | Правила сортировки строк |
 
 B-tree покрывает точные совпадения, диапазоны и сортировку. Когда нужно заглянуть внутрь составных значений — массивов, JSONB, полнотекстовых векторов — работает [GIN](01-gin.md).
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Indexes, B-tree, Index-Only Scans, operator classes, collations. <https://www.postgresql.org/docs/16/indexes.html>, <https://www.postgresql.org/docs/16/indexes-types.html>, <https://www.postgresql.org/docs/16/indexes-index-only-scans.html>, <https://www.postgresql.org/docs/16/indexes-opclass.html>, <https://www.postgresql.org/docs/16/collation.html>
+- Lehman, P., Yao, S. *Efficient Locking for Concurrent Operations on B-Trees* (1981). <https://doi.org/10.1145/319566.319567>
+- PostgreSQL Release Notes: v11/v12/v13 (INCLUDE, REINDEX CONCURRENTLY, deduplication, mixed-order indexes). <https://www.postgresql.org/docs/11/release-11.html>, <https://www.postgresql.org/docs/12/release-12.html>, <https://www.postgresql.org/docs/13/release-13.html>

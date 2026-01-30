@@ -1,6 +1,6 @@
 # Куча (Heap)
 
-**Предпосылки:** [бинарное дерево](02-binary-tree.md) (left/right, полнота), [массив](../linear/01-array.md) (индексация, формула адреса).
+**Предпосылки:** оценка сложности в O(…), [бинарное дерево](02-binary-tree.md) (left/right, полнота), [массив](../linear/01-array.md) (индексация, формула адреса).
 
 Для задачи "добавить элемент и извлечь максимальный (или минимальный)" BST избыточен — он поддерживает полный порядок, а нужен только экстремум. **Куча** решает именно эту задачу, с гарантированным O(log n) и без риска вырождения.
 
@@ -117,11 +117,15 @@ class Heap
   end
 
   def extract_max
-    maximum = peek
+    return nil if @values.empty?
+
+    maximum = @values[0]
     last = @values.pop
 
-    @values[0] = last unless maximum == last
-    sift_down
+    unless @values.empty?
+      @values[0] = last
+      sift_down
+    end
 
     maximum
   end
@@ -199,3 +203,7 @@ end
 ## Дубликаты
 
 В отличие от BST (где правило для равных значений выбирается отдельно), куча допускает дубликаты естественно. Инвариант "родитель ≥ детей" выполняется при равенстве (50 ≥ 50). При извлечении обе копии выйдут по очереди.
+
+## Sources
+
+- Cormen, Leiserson, Rivest, Stein. *Introduction to Algorithms* (CLRS), 4th ed. (binary heap, build-heap за O(n), heapsort, priority queue).

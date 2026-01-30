@@ -143,3 +143,7 @@ Line pointer занимает 4 байта и хранит: смещение tup
 При UPDATE PostgreSQL создаёт новый tuple. Старый и новый tuple — это одна логическая строка, но две физические версии.
 
 Страницы стандартизируют I/O, но не гарантируют, что COMMIT переживёт сбой. Для этого нужен журнал упреждающей записи — [WAL](../durability/00-wal.md). А когда данные не помещаются в одну страницу, PostgreSQL использует [TOAST](02-toast.md).
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Database Page Layout, Database File Layout. <https://www.postgresql.org/docs/16/storage-page-layout.html>, <https://www.postgresql.org/docs/16/storage-file-layout.html>

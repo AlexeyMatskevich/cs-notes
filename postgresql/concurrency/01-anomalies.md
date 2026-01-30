@@ -361,3 +361,8 @@ SQL-стандарт определяет четыре уровня изоляц
 **SERIALIZABLE:** Один snapshot + дополнительные проверки на опасные зависимости между транзакциями.
 
 SQL-стандарт определяет минимальные требования к уровням изоляции. PostgreSQL реализует их через MVCC-механизмы — [уровни изоляции](02-isolation-levels.md) описывают конкретную реализацию.
+
+## Sources
+
+- Berenson et al. *A Critique of ANSI SQL Isolation Levels* (1995). <https://doi.org/10.1145/223784.223785>
+- PostgreSQL Documentation (пример: v16): Transaction Isolation. <https://www.postgresql.org/docs/16/transaction-iso.html>

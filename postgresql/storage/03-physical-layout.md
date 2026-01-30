@@ -1,6 +1,6 @@
 # Физическая структура хранения — справочник
 
-**Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md), [WAL](../durability/00-wal.md), [VACUUM](../maintenance/00-vacuum.md).
+**Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md).
 
 Это справочный раздел. Здесь собрана информация о файловой организации PostgreSQL — полезно для диагностики и понимания, где физически находятся данные.
 
@@ -33,7 +33,9 @@ PostgreSQL Cluster (data directory, например /var/lib/postgresql/data)
 └── postgresql.conf, pg_hba.conf   ← конфигурация
 ```
 
-**OID (Object Identifier)** — уникальный числовой идентификатор объекта. Имена файлов в base/ — это OID объектов.
+**OID (Object Identifier)** — уникальный числовой идентификатор объекта в системных каталогах.
+
+**relfilenode** — идентификатор физического файла (main fork) для таблицы/индекса. В `base/<db_oid>/` имена файлов соответствуют `relfilenode` (а не обязательно `pg_class.oid`). `relfilenode` может измениться после операций, которые переписывают объект (например, `VACUUM FULL`, `CLUSTER`, `REINDEX`, `TRUNCATE`).
 
 ### Форки (forks) — файлы одного объекта
 
@@ -77,7 +79,7 @@ WHERE relname = 'users';
  16385 | users   | 16385
 ```
 
-`relfilenode` — имя файла. Обычно совпадает с OID, но может измениться после VACUUM FULL, TRUNCATE, или REINDEX.
+`relfilenode` — имя файла. Обычно совпадает с OID, но это не гарантия.
 
 ### Связь компонентов — диаграмма
 
@@ -110,3 +112,12 @@ WHERE relname = 'users';
 ```
 
 **Важно:** Индексы — отдельные файлы со своими страницами и своей FSM. Не внутри файла таблицы.
+
+## См. также
+
+- [WAL](../durability/00-wal.md) — что такое `pg_wal/` и зачем нужен `pd_lsn`
+- [VACUUM](../maintenance/00-vacuum.md) — зачем нужны FSM/VM форки и что означает all-visible
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Database File Layout, System Catalogs (`pg_class`), `pg_relation_filepath`. <https://www.postgresql.org/docs/16/storage-file-layout.html>

@@ -76,3 +76,7 @@ WAL растёт бесконечно. После checkpoint'а старые WAL
 Это работает, потому что WAL-записи **идемпотентны**: применить запись дважды безопасно. «Установить значение X в позиции Y» — можно выполнять сколько угодно раз, результат один.
 
 WAL гарантирует, что COMMIT переживёт сбой. Но данные при этом остаются в памяти как dirty pages — [буферный кеш](01-buffer-cache.md) управляет этой памятью и координирует запись на диск.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Write-Ahead Logging (WAL) и Checkpoints. <https://www.postgresql.org/docs/16/wal.html>, <https://www.postgresql.org/docs/16/runtime-config-wal.html>

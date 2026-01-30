@@ -42,7 +42,7 @@ B-tree, где ключи — это **отдельные элементы** (н
      Posting      Posting       Posting
       List         List          List
 
-**Почему B-tree для ключей, а не хеш-таблица?** B-tree сохраняет порядок ключей. Это критично для диапазонных запросов по элементам (если ключи — числа) и prefix-поиска (для tsvector можно искать лексемы, начинающиеся с "prog").
+**Почему B-tree для ключей, а не [хеш-таблица](../../algorithms-and-data-structures/linear/05-hash-table.md)?** B-tree сохраняет порядок ключей. Это критично для диапазонных запросов по элементам (если ключи — числа) и prefix-поиска (для tsvector можно искать лексемы, начинающиеся с "prog").
 
 ### 2. Posting List (список вхождений)
 
@@ -155,7 +155,7 @@ PostgreSQL использует **varbyte encoding** — кодирование 
         Дельта +1026 кодируется 2 байтами
         Итого: ~10-15 байт вместо 30
 
-Сжатие эффективнее, когда TID'ы идут последовательно (таблица не фрагментирована). После VACUUM FULL или CLUSTER сжатие лучше.
+Сжатие эффективнее, когда TID'ы идут последовательно (таблица не фрагментирована). После [VACUUM FULL](../maintenance/00-vacuum.md) или CLUSTER сжатие лучше.
 
 ## Операторы для GIN
 
@@ -316,7 +316,7 @@ INSERT одной строки с массивом из 200 элементов �
 ### Когда pending list сливается
 
 1. При переполнении: `gin_pending_list_limit` (по умолчанию 4MB). Та транзакция, которой "не повезло", платит за всех.
-2. При `VACUUM` таблицы
+2. При `VACUUM` таблицы (см. [VACUUM](../maintenance/00-vacuum.md))
 3. Вручную: `SELECT gin_clean_pending_list('idx_name')`
 
 ### Отключение Fast Update
@@ -400,3 +400,8 @@ GIN требует от типа данных определить нескол�
 | jsonb_path_ops | Operator class для JSONB, только @>, компактнее |
 
 GIN работает с дискретными элементами внутри составных значений. Данные без линейного порядка — геометрия, диапазоны, IP-сети — индексирует [GiST](02-gist.md).
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): GIN. <https://www.postgresql.org/docs/16/gin.html>
+- PostgreSQL Documentation (пример: v16): Full Text Search, JSON types и JSONB operators. <https://www.postgresql.org/docs/16/textsearch.html>, <https://www.postgresql.org/docs/16/datatype-json.html>

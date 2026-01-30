@@ -101,7 +101,7 @@ PostgreSQL использует **linear hashing** для расширения: 
 
 ## История и надёжность
 
-**До PostgreSQL 10:** Hash index не писался в WAL. При crash — индекс повреждён, нужен REINDEX. Непригоден для production.
+**До PostgreSQL 10:** Hash index не писался в [WAL](../durability/00-wal.md). При crash — индекс повреждён, нужен REINDEX. Непригоден для production.
 
 **PostgreSQL 10+:** Hash полностью поддерживает WAL. Можно использовать на production.
 
@@ -135,3 +135,8 @@ PostgreSQL использует **linear hashing** для расширения: 
 По умолчанию (без USING) PostgreSQL создаёт B-tree.
 
 Hash — нишевый инструмент для точечных запросов. Для огромных append-only таблиц с естественной корреляцией данных существует самый компактный тип индекса — [BRIN](04-brin.md).
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Hash Indexes. <https://www.postgresql.org/docs/16/indexes-types.html>
+- PostgreSQL Release Notes: v10 (WAL для hash indexes). <https://www.postgresql.org/docs/10/release-10.html>

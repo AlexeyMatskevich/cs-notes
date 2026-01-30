@@ -27,3 +27,7 @@ PostgreSQL начинается с контракта: какие гаранти
 Каждая буква — это боль, которую СУБД берёт на себя. Но за каждую гарантию приходится платить. Вся архитектура PostgreSQL — это история компромиссов: как дать максимум гарантий за минимальную цену.
 
 Цена гарантий начинается с физического хранения — [страницы и кортежи](01-pages-and-tuples.md) решают проблему управляемого обновления данных на диске.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Transactions и Transaction Isolation. <https://www.postgresql.org/docs/16/tutorial-transactions.html>, <https://www.postgresql.org/docs/16/transaction-iso.html>

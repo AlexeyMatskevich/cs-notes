@@ -24,6 +24,8 @@
 | Динамический массив | O(1)* | O(1) | Лучшая локальность |
 | Односвязный список | O(1) | O(1) | Нет resize |
 
+`*` — амортизированно из-за resize динамического массива
+
 На практике почти всегда массив.
 
 **Call stack** работает по LIFO: последняя вызванная функция завершается первой.
@@ -31,6 +33,15 @@
 ### Реализация стека на односвязном списке (Ruby)
 
 ```ruby
+class Node
+  attr_accessor :value, :next
+
+  def initialize(value, next_node = nil)
+    @value = value
+    @next = next_node
+  end
+end
+
 class Stack
   def initialize
     @head = nil
@@ -48,7 +59,7 @@ class Stack
   end
 
   def peek
-    @head&.value  # safe navigation: nil если пусто
+    @head ? @head.value : nil
   end
 
   def empty?
@@ -101,8 +112,10 @@ end
 
 ### Реализация очереди на ring buffer (Ruby)
 
+В Ruby в stdlib уже есть `Queue`. Здесь `RingQueue` — учебная реализация для понимания механики ring buffer.
+
 ```ruby
-class Queue
+class RingQueue
   def initialize(initial_capacity = 8)
     @buffer = Array.new(initial_capacity)
     @head = 0

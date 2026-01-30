@@ -178,3 +178,7 @@ end
 **Почему FOR UPDATE в "хорошем" примере?** Без него каждый `find` + `update` — отдельная блокировка. С FOR UPDATE мы явно берём все нужные блокировки сразу, в правильном порядке, до начала изменений.
 
 Блокировки дают механизм координации. Выбор между блокировками и уровнями изоляции зависит от конкретного сценария — [практические паттерны](04-patterns.md) помогают сделать этот выбор.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Explicit Locking, `pg_locks`, advisory locks. <https://www.postgresql.org/docs/16/explicit-locking.html>, <https://www.postgresql.org/docs/16/view-pg-locks.html>, <https://www.postgresql.org/docs/16/functions-admin.html>

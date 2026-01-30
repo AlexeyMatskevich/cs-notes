@@ -464,3 +464,8 @@ SIREAD lock на каждую строку требует памяти. Если
 4. Чем выше уровень — тем больше откатов, тем важнее retry-логика в приложении
 
 Уровни изоляции контролируют видимость данных через snapshot. Но параллельная запись требует координации — [блокировки](03-locks.md) решают эту задачу.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Transaction Isolation (включая SERIALIZABLE/SSI). <https://www.postgresql.org/docs/16/transaction-iso.html>
+- Cahill et al. *Serializable Isolation for Snapshot Databases* (SIGMOD 2008). <https://doi.org/10.1145/1376616.1376690>

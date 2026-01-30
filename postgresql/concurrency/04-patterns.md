@@ -337,7 +337,7 @@ end
 
 **Почему long-running транзакции мешают VACUUM:**
 
-VACUUM удаляет dead tuples — старые версии строк. Но он не может удалить версию, если хоть одна транзакция ещё может её видеть через snapshot.
+[VACUUM](../maintenance/00-vacuum.md) удаляет dead tuples — старые версии строк. Но он не может удалить версию, если хоть одна транзакция ещё может её видеть через snapshot.
 
 Транзакция на REPEATABLE READ/SERIALIZABLE держит snapshot на всё время работы. Пока она активна — все версии строк, существовавшие на момент старта, должны оставаться. VACUUM видит: «есть активный snapshot» — и не трогает старые версии.
 
@@ -370,3 +370,7 @@ VACUUM удаляет dead tuples — старые версии строк. Но
 **FOR UPDATE защищает от write skew, только если заблокировать все связанные строки.
 
 Паттерны описывают правильные подходы. [Распространённые ошибки](05-common-mistakes.md) показывают, что бывает, когда эти подходы игнорируются.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Transaction Isolation и Explicit Locking (`SELECT ... FOR UPDATE`). <https://www.postgresql.org/docs/16/transaction-iso.html>, <https://www.postgresql.org/docs/16/explicit-locking.html>

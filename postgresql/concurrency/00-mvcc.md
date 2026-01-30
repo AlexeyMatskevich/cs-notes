@@ -76,7 +76,7 @@ UPDATE users SET name = 'Bob' WHERE id = 1;
 
 DELETE работает так же: ставит xmax, не создавая новую версию.
 
-**Проблема 32-битного счётчика:** 2³² ≈ 4 миллиарда транзакций. При высокой нагрузке это конечное число. Когда счётчик переполняется — **transaction ID wraparound**. PostgreSQL использует «заморозку» старых транзакций (freezing). Это одна из причин, почему VACUUM критически важен.
+**Проблема 32-битного счётчика:** 2³² ≈ 4 миллиарда транзакций. При высокой нагрузке это конечное число. Когда счётчик переполняется — **transaction ID wraparound**. PostgreSQL использует «заморозку» старых транзакций (freezing). Это одна из причин, почему [VACUUM](../maintenance/00-vacuum.md) критически важен.
 
 ## Компонент 2: CLOG — ЗАВЕРШИЛАСЬ ли транзакция
 
@@ -186,6 +186,11 @@ MVCC дал нам «читатели не блокируют писателей
 - Sequential scan читает больше страниц
 - Индексы указывают на мёртвые версии
 
-**VACUUM** — процесс очистки. Он освобождает место, занятое dead tuples. Это обязательная часть эксплуатации PostgreSQL — цена за MVCC.
+**[VACUUM](../maintenance/00-vacuum.md)** — процесс очистки. Он освобождает место, занятое dead tuples, и продвигает `relfrozenxid` (защита от wraparound). Это обязательная часть эксплуатации PostgreSQL — цена за MVCC.
 
 Snapshot определяет, что видно транзакции, но не определяет, какие аномалии допустимы. [Аномалии транзакций](01-anomalies.md) описывают конкретные проблемы, которые могут возникнуть при недостаточной изоляции.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): MVCC и Transaction Isolation. <https://www.postgresql.org/docs/16/mvcc.html>, <https://www.postgresql.org/docs/16/transaction-iso.html>
+- PostgreSQL Documentation (пример: v16): VACUUM и wraparound. <https://www.postgresql.org/docs/16/routine-vacuuming.html>

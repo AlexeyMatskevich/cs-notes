@@ -1,8 +1,10 @@
 # Буферный кеш
 
-**Предпосылки:** [WAL](00-wal.md), [MVCC](../concurrency/00-mvcc.md).
+**Предпосылки:** [WAL](00-wal.md).
 
-MVCC решает проблему изоляции, но создаёт dead tuples. И чтение данных, и уборка этого мусора упираются в одно узкое место: дисковый I/O. Буферный кеш снижает цену I/O, удерживая горячие страницы в памяти.
+Диск медленный, а PostgreSQL читает и пишет **страницы** (обычно по 8 KB). Если каждый запрос будет заново читать страницы с диска, latency становится непредсказуемой. Буферный кеш снижает цену I/O, удерживая горячие страницы в памяти и сглаживая запись.
+
+Отдельно буферный кеш важен из-за [MVCC](../concurrency/00-mvcc.md): UPDATE/DELETE создают версии строк, появляются dead tuples, и [VACUUM](../maintenance/00-vacuum.md) вынужден регулярно читать страницы и поддерживать таблицы в рабочем состоянии.
 
 ### Проблема: повторное чтение с диска
 
@@ -131,7 +133,7 @@ SELECT * FROM pg_stat_bgwriter;
 
 ### Алгоритм вытеснения
 
-Когда нужен свободный буфер, PostgreSQL выбирает жертву для вытеснения. Используется **clock-sweep** — вариант LRU с минимальными блокировками.
+Когда нужен свободный буфер, PostgreSQL выбирает жертву для вытеснения. Используется **[clock-sweep](../../algorithms-and-data-structures/linear/07-clock-sweep.md)** — вариант LRU с минимальными блокировками.
 
 Суть: каждый буфер имеет `usage_count` (0-5). При обращении к странице — инкремент. При поиске жертвы — декремент. Страница с `usage_count = 0` — кандидат на вытеснение. «Горячие» страницы постоянно получают инкременты и не вытесняются. «Холодные» постепенно теряют счётчик и освобождаются.
 
@@ -175,7 +177,7 @@ WAL обычно хранит дельты изменений (~100 байт н�
 
 **Почему PostgreSQL не полагается только на OS page cache:**
 
-1. **Координация между backend'ами.** Shared buffers — общая память. Backend 1 меняет страницу, backend 2 сразу видит изменение. OS page cache не даёт такой гарантии — каждый процесс может работать со своей копией.
+1. **Единая “истина” для буферов.** OS page cache общий для системы, но он кеширует *файлы* и живёт по правилам ОС. PostgreSQL же держит страницы в `shared_buffers` вместе с метаданными (pin/dirty/usage_count/LSN) и блокировками, чтобы backend'ы согласованно работали с одной и той же страницей и не создавали лишних конфликтов и I/O. Изменения, сделанные одним backend'ом в `shared_buffers`, не обязаны немедленно появиться в page cache — они становятся “файловыми” только после записи на диск.
 
 2. **WAL before data.** PostgreSQL знает про связь страниц и WAL, проверяет LSN. ОС не знает — может записать страницу в любой момент.
 
@@ -186,3 +188,8 @@ WAL обычно хранит дельты изменений (~100 байт н�
 Остальная память достаётся OS page cache. Он работает как «второй эшелон»: если страницы нет в shared buffers, но она есть в OS cache — физического I/O не будет.
 
 Буферный кеш оптимизирует доступ к страницам, но на этих страницах накапливается мусор от MVCC. [VACUUM](../maintenance/00-vacuum.md) решает проблему dead tuples и защищает от wraparound.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Resource Consumption (`shared_buffers`), WAL Configuration (`full_page_writes`), `pg_stat_bgwriter`. <https://www.postgresql.org/docs/16/runtime-config-resource.html>, <https://www.postgresql.org/docs/16/runtime-config-wal.html>, <https://www.postgresql.org/docs/16/monitoring-stats.html>
+- PostgreSQL source (пример: REL_16_0): clock-sweep / `BM_MAX_USAGE_COUNT`. <https://github.com/postgres/postgres/blob/REL_16_0/src/backend/storage/buffer/freelist.c>, <https://github.com/postgres/postgres/blob/REL_16_0/src/include/storage/buf_internals.h>

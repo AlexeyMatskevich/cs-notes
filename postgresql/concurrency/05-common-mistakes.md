@@ -75,7 +75,7 @@ transaction(isolation: :repeatable_read) do
 end
 ```
 
-**Почему опасно:** Вспомним как работает MVCC. VACUUM удаляет dead tuples — старые версии строк. Но он не может удалить версию, если хоть одна транзакция ещё может её видеть через свой snapshot.
+**Почему опасно:** Вспомним как работает [MVCC](00-mvcc.md). [VACUUM](../maintenance/00-vacuum.md) удаляет dead tuples — старые версии строк. Но он не может удалить версию, если хоть одна транзакция ещё может её видеть через свой snapshot.
 
 Транзакция на REPEATABLE READ держит snapshot 30 минут. Все версии строк, существовавшие на момент старта, должны оставаться — вдруг транзакция их прочитает. VACUUM видит: «есть активный snapshot от 30 минут назад» — и не трогает старые версии.
 
@@ -98,4 +98,8 @@ ALTER TABLE huge_table ...;  -- ждёт ACCESS EXCLUSIVE
 
 **Решения:** `lock_timeout` на DDL, `CREATE INDEX CONCURRENTLY`, вынос аналитики на реплику, `idle_in_transaction_session_timeout`.
 
-Ошибки параллельного доступа проявляются в рантайме. Но есть и более фундаментальная проблема: каждый UPDATE создаёт dead tuples, и без регулярной очистки таблица разбухает. [Буферный кеш](../durability/01-buffer-cache.md) определяет, как PostgreSQL работает с памятью и диском.
+Ошибки параллельного доступа проявляются в рантайме. Но есть и более фундаментальная проблема: каждый UPDATE создаёт dead tuples, и без регулярного [VACUUM](../maintenance/00-vacuum.md) таблица разбухает.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Transaction Isolation, Explicit Locking, Routine Vacuuming. <https://www.postgresql.org/docs/16/transaction-iso.html>, <https://www.postgresql.org/docs/16/explicit-locking.html>, <https://www.postgresql.org/docs/16/routine-vacuuming.html>

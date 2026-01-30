@@ -236,7 +236,7 @@ Tuple с xmin = 100,000,000
 100,000,000 > 50,000,000 → заморозить
 ```
 
-**Почему не замораживать сразу?** Freezing требует записи на страницу (меняем флаг в tuple header). Это делает страницу dirty, генерирует WAL. Если замораживать слишком агрессивно — лишний I/O.
+**Почему не замораживать сразу?** Freezing требует записи на страницу (меняем флаг в tuple header). Это делает страницу dirty и генерирует записи в [WAL](../durability/00-wal.md). Если замораживать слишком агрессивно — лишний I/O.
 
 ## Aggressive VACUUM — принудительная заморозка
 
@@ -333,3 +333,9 @@ SET idle_in_transaction_session_timeout = '5min';
 ```
 
 VACUUM поддерживает таблицы в рабочем состоянии. Но страничная организация создаёт ещё одно ограничение: один tuple должен поместиться в страницу. Как PostgreSQL хранит значения на мегабайты — описано в [TOAST](../storage/02-toast.md).
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): Routine Vacuuming, Autovacuum, wraparound. <https://www.postgresql.org/docs/16/routine-vacuuming.html>
+- PostgreSQL Documentation (пример: v16): `pgstattuple`. <https://www.postgresql.org/docs/16/pgstattuple.html>
+- `pg_repack` (online table reorganization). <https://github.com/reorg/pg_repack>
