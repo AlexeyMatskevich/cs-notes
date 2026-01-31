@@ -60,7 +60,7 @@ Redis дополнительно оптимизирует представлен
 
 ## См. также
 
-- [Практика в Ruby/Rails: STRING](../../../rails/redis/02-data-structures-in-practice.md#string) — SET/GET, TTL, INCR из Rails-приложения
+- [Практика в Ruby/Rails: STRING](../../../rails/redis/02-data-structures-in-practice.md) — SET/GET, TTL, INCR из Rails-приложения
 
 ## Sources
 

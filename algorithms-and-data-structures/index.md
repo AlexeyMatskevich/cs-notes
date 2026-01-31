@@ -36,6 +36,7 @@
 6. [B+ дерево (B+ tree)](non-linear/06-b-plus-tree.md)
 7. [B* дерево (B* tree)](non-linear/07-b-star-tree.md)
 8. [Инвертированный индекс (Inverted Index)](non-linear/08-inverted-index.md)
+9. [Skip List](non-linear/09-skip-list.md)
 
 ## Выбор структуры
 
@@ -46,6 +47,7 @@
 - Нужна приоритетная очередь (добавить элемент и извлечь min/max) → куча.
 - Поиск по ключу на диске → B-дерево / B+ дерево.
 - Поиск внутри составных значений (массивы, тексты) → инвертированный индекс.
+- Упорядоченное множество с O(log n) без балансировки → skip list.
 
 ## Сводные таблицы
 
@@ -119,4 +121,5 @@
 - Go (например, Go 1.22): рост `slice`. <https://github.com/golang/go/blob/go1.22.0/src/runtime/slice.go>
 - PostgreSQL (например, 16): clock-sweep / `BM_MAX_USAGE_COUNT`. <https://github.com/postgres/postgres/blob/REL_16_0/src/include/storage/buf_internals.h> и <https://github.com/postgres/postgres/blob/REL_16_0/src/backend/storage/buffer/freelist.c>
 - Cormen, Leiserson, Rivest, Stein. *Introduction to Algorithms* (CLRS), 4th ed.
+- Pugh, W. *Skip Lists: A Probabilistic Alternative to Balanced Trees*, 1990.
 - Wikipedia: [Graph (discrete mathematics)](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)), [Tree (graph theory)](https://en.wikipedia.org/wiki/Tree_(graph_theory)), [Binary heap](https://en.wikipedia.org/wiki/Binary_heap)

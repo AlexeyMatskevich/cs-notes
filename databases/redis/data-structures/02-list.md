@@ -57,7 +57,7 @@ Quicklist также поддерживает сжатие внутренних 
 
 ## См. также
 
-- [Практика в Ruby/Rails: LIST](../../../rails/redis/02-data-structures-in-practice.md#list) — LPUSH/BRPOP/LTRIM, очереди и capped lists из Rails-приложения
+- [Практика в Ruby/Rails: LIST](../../../rails/redis/02-data-structures-in-practice.md) — LPUSH/BRPOP/LTRIM, очереди и capped lists из Rails-приложения
 
 ## Sources
 

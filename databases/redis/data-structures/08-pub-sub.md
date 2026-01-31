@@ -51,8 +51,8 @@ Pub/Sub подходит для real-time уведомлений, где пот�
 
 ## См. также
 
-- [Практика в Ruby/Rails: Pub/Sub](../../../rails/redis/02-data-structures-in-practice.md#pubsub) — PUBLISH/SUBSCRIBE/PSUBSCRIBE из Ruby
-- [ActionCable через Pub/Sub](../../../rails/redis/01-patterns.md#actioncable-координация-websocketов-между-процессами) — координация WebSocket'ов в Rails
+- [Практика в Ruby/Rails: Pub/Sub](../../../rails/redis/02-data-structures-in-practice.md) — PUBLISH/SUBSCRIBE/PSUBSCRIBE из Ruby
+- [ActionCable через Pub/Sub](../../../rails/redis/01-patterns.md) — координация WebSocket'ов в Rails
 
 ## Sources
 

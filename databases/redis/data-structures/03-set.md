@@ -52,7 +52,7 @@ SET подходит, когда нужна уникальность элеме�
 
 ## См. также
 
-- [Практика в Ruby/Rails: SET](../../../rails/redis/02-data-structures-in-practice.md#set) — SADD/SISMEMBER/SINTER из Rails-приложения
+- [Практика в Ruby/Rails: SET](../../../rails/redis/02-data-structures-in-practice.md) — SADD/SISMEMBER/SINTER из Rails-приложения
 
 ## Sources
 

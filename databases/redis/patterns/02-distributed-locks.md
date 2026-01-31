@@ -64,7 +64,7 @@ Martin Kleppmann в статье «How to do distributed locking» (2016) кри
 
 ## См. также
 
-- [Распределённые блокировки в Rails](../../../rails/redis/01-patterns.md#распределённые-блокировки) — SET NX EX + Lua-скрипт, гем redlock
+- [Распределённые блокировки в Rails](../../../rails/redis/01-patterns.md) — SET NX EX + Lua-скрипт, гем redlock
 
 ## Sources
 

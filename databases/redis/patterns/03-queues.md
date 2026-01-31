@@ -102,7 +102,7 @@ LIST и ZSET требуют ручной реализации подтвержд
 
 ## См. также
 
-- [Практика в Ruby/Rails: LIST](../../../rails/redis/02-data-structures-in-practice.md#list) — LPUSH/BRPOP, очереди и capped lists
+- [Практика в Ruby/Rails: LIST](../../../rails/redis/02-data-structures-in-practice.md) — LPUSH/BRPOP, очереди и capped lists
 - [Sidekiq](../../../rails/sidekiq.md) — фоновые задачи через Redis LIST + BRPOP
 
 ## Sources

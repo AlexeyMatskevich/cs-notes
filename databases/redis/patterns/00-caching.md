@@ -61,7 +61,7 @@ Cache-aside обновляет кеш при чтении. Альтернати�
 
 ## См. также
 
-- [Защита от cache stampede в Rails](../../../rails/redis/01-patterns.md#защита-от-cache-stampede) — блокировка на перестроение и early expiration
+- [Защита от cache stampede в Rails](../../../rails/redis/01-patterns.md) — блокировка на перестроение и early expiration
 
 ## Sources
 
