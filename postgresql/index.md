@@ -34,6 +34,7 @@
 - [Блокировки](concurrency/03-locks.md) — координация записи, table-level и row-level locks
 - [Практические паттерны](concurrency/04-patterns.md) — выбор между оптимистичным и пессимистичным подходом
 - [Распространённые ошибки](concurrency/05-common-mistakes.md) — типичные заблуждения о транзакциях и блокировках
+- [Очереди задач](concurrency/06-queues-and-skip-locked.md) — `FOR UPDATE SKIP LOCKED`, индекс под очередь, идемпотентность
 
 ### Обслуживание
 
@@ -46,12 +47,24 @@
 - [GiST](indexes/02-gist.md) — дерево для геометрии, диапазонов, пространственных запросов
 - [Hash](indexes/03-hash.md) — хеш-индекс для точечных запросов по равенству
 - [BRIN](indexes/04-brin.md) — компактный индекс для огромных таблиц с корреляцией
+- [SP-GiST](indexes/05-spgist.md) — space-partitioned индекс (trie/quad-tree) для некоторых типов и запросов
+
+### Проектирование схемы
+
+- [Ограничения (constraints)](schema-design/00-constraints.md) — PK/UNIQUE/FK/CHECK/EXCLUDE, влияние на корректность и скорость
+- [Sequence и авто-id](schema-design/01-sequences-and-identity.md) — SERIAL/IDENTITY, «дырки» в id и порядок событий
+- [Партиционирование](schema-design/02-partitioning.md) — pruning, индексы на партициях, типовые ошибки запросов
 
 ### Планировщик запросов
 
 - [Планировщик запросов](query-processing/00-planner.md) — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
 - [Порядок соединения](query-processing/01-join-order.md) — [динамическое программирование](../algorithms-and-data-structures/techniques/00-dynamic-programming.md), interesting orders, GEQO
 - [Подзапросы и CTE](query-processing/02-subqueries-and-cte.md) — flattening, semi-join, материализация CTE
+- [EXPLAIN](query-processing/03-explain.md) — как читать план: оценки vs факты, BUFFERS, где «болит» запрос
+- [Память и spill](query-processing/04-memory-and-spill.md) — `work_mem`, сортировки и хеши, temp I/O
+- [Prepared statements](query-processing/05-prepared-statements.md) — generic plan vs custom plan, parameter sensitivity
+- [Диагностика медленных запросов](query-processing/06-diagnosing-slow-queries.md) — как быстро локализовать причину: оценки, I/O, spill, параметры
+- [Пагинация](query-processing/07-pagination.md) — `LIMIT/OFFSET` vs keyset, стабильный порядок и стоимость “дальних” страниц
 
 ## Выбор индекса
 

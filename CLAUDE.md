@@ -32,6 +32,8 @@ No build step or runtime. Quick checks:
 
 8. **Prose over lists:** Bullet points break narrative flow. Use prose when possible.
 
+9. **No prompt/session leakage in notes:** The final text must not contain wording or structure that exists only because of the current conversation/prompt (even if the chat is not mentioned directly). Avoid “author intent” framing like “Чтобы почувствовать…”, “Дадим ментальную модель…”, “по просьбе…”. Headings should describe *what* is being explained, not *why the author decided to include it*. Causal “чтобы” is fine when it describes the system itself (e.g., “Чтобы обеспечить durability, PostgreSQL пишет WAL”).
+
 ## File Organization
 
 - One topic per file, kebab-case naming (`postgresql.md`, `indexes.md`)

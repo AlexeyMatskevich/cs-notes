@@ -17,6 +17,7 @@ There is no build step or runtime for this repo.
 ## Coding Style & Naming Conventions
 
 - Follow `styleguide.md` for the writing “story” pattern (goal → problem → solution → result) and terminology rules.
+- Notes must not “leak” the prompt/session: the final text should read as standalone subject matter, without “author intent” phrasing that exists only because of the current chat (e.g., headings like “Чтобы почувствовать…” or “по просьбе…”).
 - Use a single `#` title per note; use `##` for major sections; keep headings descriptive.
 - Use fenced code blocks with language tags (e.g. ```sql, ```rust) and keep examples minimal but runnable.
 - File names: prefer `kebab-case.md` for new notes (existing `_` names are fine).
