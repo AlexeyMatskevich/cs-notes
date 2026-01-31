@@ -246,19 +246,89 @@ end
 
 ## MULTI/EXEC
 
-`MULTI/EXEC` выполняет несколько команд атомарно. Между `MULTI` и `EXEC` команды буферизуются и выполняются единым блоком — никакая команда от другого клиента не вклинится.
+### Гонка без транзакции
+
+`INCR` атомарен сам по себе, но если логика требует прочитать значение, принять решение и записать результат — между чтением и записью может вклиниться другой процесс. Типичный пример — перевод средств:
 
 ```ruby
 REDIS.with do |r|
-  r.multi do |transaction|
-    transaction.incr("counter:a")
-    transaction.incr("counter:b")
-    transaction.set("status", "done")
-  end
-  # Все три команды выполнятся атомарно
+  balance = r.get("balance:user:42").to_i  # → 100
+  # ... в этот момент другой Puma-воркер тоже читает 100
+  r.set("balance:user:42", balance - 20)   # → 80
+  # другой воркер пишет 100 - 30 = 70
+  # Итог: 70 вместо 50. Списание 20 потеряно.
 end
 ```
 
-Ограничение `MULTI/EXEC`: нельзя использовать результат одной команды в другой внутри транзакции и нет условной логики (if/else). Для таких случаев — [Lua-скрипты](../../databases/redis/atomicity/02-lua-scripting.md).
+Проблема — в разрыве между `GET` и `SET`. Одна атомарная команда (`DECRBY`) здесь не спасёт: перевод требует проверить баланс отправителя и изменить два ключа.
+
+### Атомарный пакет
+
+`r.multi` открывает транзакцию. Все команды внутри блока буферизуются и выполняются единым пакетом — ни одна команда от другого клиента не вклинится между ними:
+
+```ruby
+REDIS.with do |r|
+  results = r.multi do |tx|
+    tx.incr("counter:a")
+    tx.incr("counter:b")
+    tx.set("status", "done")
+  end
+  # results → [1, 1, "OK"] — массив ответов в порядке команд
+end
+```
+
+`r.multi` возвращает массив результатов всех команд. Это полезно, когда нужно узнать новые значения счётчиков после инкремента.
+
+Однако MULTI/EXEC не решает проблему перевода выше: команды в очереди не имеют доступа к результатам друг друга. Нельзя написать «если баланс >= суммы, то списать» — для условной логики нужен [Lua-скрипт](../../databases/redis/atomicity/02-lua-scripting.md).
+
+### WATCH: оптимистичная блокировка
+
+`WATCH` позволяет выполнить паттерн «прочитать — решить — записать» безопасно. Клиент наблюдает за ключами; если между `WATCH` и `EXEC` кто-то изменил наблюдаемый ключ, `r.multi` возвращает `nil` — транзакция отменена, можно повторить:
+
+```ruby
+def transfer(from_id, to_id, amount)
+  key_from = "balance:user:#{from_id}"
+  key_to   = "balance:user:#{to_id}"
+
+  REDIS.with do |r|
+    r.watch(key_from, key_to) do |conn|
+      balance = conn.get(key_from).to_i
+
+      if balance < amount
+        conn.unwatch  # снять наблюдение, транзакция не нужна
+        return :insufficient_funds
+      end
+
+      result = conn.multi do |tx|
+        tx.decrby(key_from, amount)
+        tx.incrby(key_to, amount)
+      end
+
+      # result == nil → другой клиент изменил один из ключей
+      result ? :ok : :conflict
+    end
+  end
+end
+```
+
+При конфликте `result` будет `nil`. В продакшен-коде вокруг вызова оборачивают retry-цикл:
+
+```ruby
+MAX_RETRIES = 5
+
+MAX_RETRIES.times do
+  case transfer(42, 99, 20)
+  when :ok                 then break
+  when :conflict           then next            # повторить
+  when :insufficient_funds then raise "Not enough funds"
+  end
+end
+```
+
+При низкой конкуренции конфликты редки и `WATCH` работает быстро. При высокой конкуренции за одни и те же ключи количество retry растёт — в таком случае [Lua-скрипт](../../databases/redis/atomicity/02-lua-scripting.md) выполняет всё атомарно за один вызов без повторов.
+
+### Pipelining внутри MULTI
+
+В теории MULTI, каждая команда и EXEC — это отдельные сообщения, и каждое требует round-trip по сети. Библиотека `redis-rb` при использовании блочной формы `r.multi { |tx| ... }` автоматически буферизует все команды и отправляет MULTI + команды + EXEC одним пакетом. Поэтому транзакция из N команд обходится в один round-trip, а не в N+2 — [pipelining](../../databases/redis/architecture/02-pipelining.md) получается бесплатно.
 
 Подробнее: [MULTI/EXEC](../../databases/redis/atomicity/01-multi-exec.md).

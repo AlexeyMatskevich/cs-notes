@@ -14,6 +14,8 @@ Rails-приложение на Puma — это несколько процес�
 
 [Структуры данных на практике](02-data-structures-in-practice.md) — Ruby-примеры для STRING, HASH, LIST, SET, ZSET, Pub/Sub, MULTI/EXEC.
 
+[Команды, блокирующие Redis](03-blocking-pitfalls.md) — какие команды блокируют event loop и как этого избежать в Rails-коде.
+
 ## Связанные заметки
 
 - [Sidekiq](../sidekiq.md) — фоновые задачи через Redis LIST + BRPOP

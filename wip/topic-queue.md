@@ -10,3 +10,10 @@
 
 - [ ] Failover в реальных системах: как выбирают лидера, что такое fencing, как избегают split brain (общие принципы и типовые механики).
 - [ ] Как шардируют в реальных продуктах: практики и компромиссы (например, Notion и другие компании) — ближе к system design.
+
+## Computer Systems / OS
+
+- [ ] Файловые дескрипторы (file descriptors): что это, зачем нужны, как ОС через них абстрагирует файлы/сокеты/пайпы.
+- [ ] Мультиплексирование ввода-вывода (I/O multiplexing): epoll, kqueue, select — как ОС позволяет одному потоку следить за тысячами сокетов. Связь с event loop Redis (`src/ae.c`).
+- [ ] `write()` vs `fsync()`/`fdatasync()`: page cache, flush, durability, почему latency `fsync` задаёт верхнюю границу throughput для “одна транзакция = один fsync” (на примерах WAL/AOF).
+- [ ] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё.
