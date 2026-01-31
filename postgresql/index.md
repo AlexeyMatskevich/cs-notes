@@ -66,6 +66,11 @@
 - [Диагностика медленных запросов](query-processing/06-diagnosing-slow-queries.md) — как быстро локализовать причину: оценки, I/O, spill, параметры
 - [Пагинация](query-processing/07-pagination.md) — `LIMIT/OFFSET` vs keyset, стабильный порядок и стоимость “дальних” страниц
 
+### Распределение и масштабирование
+
+- [Репликация](distribution/00-replication.md) — physical vs logical, lag, failover
+- [Шардирование](distribution/01-sharding.md) — отличие от партиционирования, shard key, цена распределения
+
 ## Выбор индекса
 
 | Задача | Индекс |

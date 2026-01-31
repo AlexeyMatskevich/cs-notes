@@ -5,3 +5,8 @@
 ## Rails + PostgreSQL
 
 - [ ] Prepared statements в Rails (ActiveRecord): где и как используются, как связаны с пулом соединений, как влияют на планирование (generic/custom plan) и что меняют/не меняют в защите от SQL injection.
+
+## System Design / Distributed Systems
+
+- [ ] Failover в реальных системах: как выбирают лидера, что такое fencing, как избегают split brain (общие принципы и типовые механики).
+- [ ] Как шардируют в реальных продуктах: практики и компромиссы (например, Notion и другие компании) — ближе к system design.
