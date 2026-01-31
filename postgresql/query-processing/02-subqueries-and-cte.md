@@ -227,3 +227,9 @@ SELECT * FROM subordinates;
 ```
 
 Рекурсивный CTE всегда материализуется — inline невозможен, потому что тело ссылается на себя. Попытка развернуть привела бы к бесконечной подстановке. PostgreSQL выполняет рекурсивный CTE итеративно: начальный запрос (anchor) вычисляется один раз, затем рекурсивная часть повторяется, пока не вернёт пустой результат. На каждой итерации рекурсивная часть видит только строки, добавленные на предыдущей итерации.
+
+## Sources
+
+- PostgreSQL Documentation (пример: v16): `WITH` / Common Table Expressions (включая `MATERIALIZED`). <https://www.postgresql.org/docs/16/queries-with.html>
+- PostgreSQL Documentation (пример: v16): `SELECT`, подзапросы, `EXISTS`/`IN`. <https://www.postgresql.org/docs/16/sql-select.html>
+- PostgreSQL Release Notes: v12 (изменение поведения CTE: возможное inlining). <https://www.postgresql.org/docs/12/release-12.html>

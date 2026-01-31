@@ -22,7 +22,7 @@
 Как PostgreSQL переживает сбои и почему дисковый I/O не убивает latency.
 
 - [WAL](durability/00-wal.md) — журнал предзаписи для восстановления после сбоя
-- [Буферный кеш](durability/01-buffer-cache.md) — shared buffers, dirty pages, [clock-sweep](../algorithms-and-data-structures/linear/07-clock-sweep.md), WAL before data
+- [Буферный кеш](durability/01-buffer-cache.md) — shared buffers, dirty pages, [LRU](../algorithms-and-data-structures/linear/06-lru-cache.md) vs [clock-sweep](../algorithms-and-data-structures/linear/07-clock-sweep.md), WAL before data
 
 ### Параллельный доступ
 
@@ -50,7 +50,7 @@
 ### Планировщик запросов
 
 - [Планировщик запросов](query-processing/00-planner.md) — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
-- [Порядок соединения](query-processing/01-join-order.md) — dynamic programming, interesting orders, GEQO
+- [Порядок соединения](query-processing/01-join-order.md) — [динамическое программирование](../algorithms-and-data-structures/techniques/00-dynamic-programming.md), interesting orders, GEQO
 - [Подзапросы и CTE](query-processing/02-subqueries-and-cte.md) — flattening, semi-join, материализация CTE
 
 ## Выбор индекса

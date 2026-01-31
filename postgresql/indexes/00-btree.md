@@ -4,6 +4,24 @@
 
 PostgreSQL называет свой индекс "B-tree", но технически это **B+tree с модификациями**, основанный на статье **Lehman & Yao (1981)** — "Efficient Locking for Concurrent Operations on B-Trees".
 
+## Зачем нужен B-tree
+
+B-tree — индекс «по умолчанию» в PostgreSQL: он ускоряет точные совпадения и диапазоны, а ещё часто позволяет обойтись без отдельной сортировки.
+
+```sql
+-- точечный поиск
+SELECT * FROM users WHERE email = 'alice@example.com';
+
+-- диапазон
+SELECT * FROM events
+WHERE created_at >= '2026-01-01' AND created_at < '2026-02-01';
+
+-- порядок (может быть Index Scan Backward/Forward без Sort)
+SELECT * FROM events ORDER BY created_at DESC LIMIT 100;
+```
+
+Цена у индекса тоже прямая: это отдельный файл, который нужно поддерживать. INSERT/DELETE/UPDATE добавляют работу по модификации страниц индекса и порождают дополнительный I/O (в том числе запись в [WAL](../durability/00-wal.md)). А так как PostgreSQL обновляет строки через версии ([MVCC](../concurrency/00-mvcc.md)), индексы на активно изменяемых таблицах неизбежно накапливают «мусор» и зависят от регулярного [VACUUM](../maintenance/00-vacuum.md).
+
 ## Версии (выборочно)
 
 | Версия PostgreSQL | Изменения в B-tree |
@@ -118,7 +136,7 @@ PostgreSQL хранит всё в **страницах по 8 КБ** (по ум�
 
 ## Зачем двусвязный список листьев
 
-PostgreSQL использует **двусвязный список** (btpo_prev + btpo_next), а не односвязный.
+PostgreSQL использует [двусвязный список](../../algorithms-and-data-structures/linear/03-linked-list.md) (btpo_prev + btpo_next), а не односвязный.
 
 **Причина: ORDER BY ... DESC**
 
