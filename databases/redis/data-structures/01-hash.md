@@ -46,7 +46,7 @@ Redis автоматически переключает кодировку с li
 
 ## См. также
 
-- [Практика в Ruby/Rails: HASH](../../../rails/redis/02-data-structures-in-practice.md) — HSET/HGET/HGETALL/HINCRBY из Rails-приложения
+- [Корзина checkout на HASH в Rails](../../../rails/redis/practice/hash-checkout-cart.md) — HSET/HGETALL, обновление полей без гонки
 
 ## Sources
 

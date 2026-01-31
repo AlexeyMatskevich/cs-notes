@@ -72,6 +72,10 @@ PFCOUNT visitors:total                        -- уникальные за об�
 
 HyperLogLog не подходит, если нужен ответ на вопрос «был ли конкретный элемент» — для этого есть [Bitmap](07-bitmap-and-bitfield.md) или [SET](03-set.md). Если кардинальность невелика (до нескольких тысяч) и важен точный результат, SET проще и даёт точный ответ при сопоставимом расходе памяти.
 
+## См. также
+
+- [Уникальные посетители на HyperLogLog в Rails](../../../rails/redis/practice/hyperloglog-unique-visitors.md) — PFADD, PFMERGE, дневные и недельные агрегаты
+
 ## Sources
 
 - Redis Documentation: HyperLogLog. <https://redis.io/docs/data-types/hyperloglogs/>

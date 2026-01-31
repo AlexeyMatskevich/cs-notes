@@ -56,7 +56,7 @@ ZPOPMIN queue 1
 
 ## См. также
 
-- [Практика в Ruby/Rails: ZSET](../../../rails/redis/02-data-structures-in-practice.md) — ZADD/ZRANGE/ZINCRBY, leaderboard и очереди из Rails-приложения
+- [Очередь звонков на ZSET в Rails](../../../rails/redis/practice/sorted-set-call-queue.md) — приоритеты, ZPOPMAX, ZREVRANK
 
 ## Sources
 

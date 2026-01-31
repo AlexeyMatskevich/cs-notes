@@ -60,7 +60,7 @@ Redis дополнительно оптимизирует представлен
 
 ## См. также
 
-- [Практика в Ruby/Rails: STRING](../../../rails/redis/02-data-structures-in-practice.md) — SET/GET, TTL, INCR из Rails-приложения
+- [Rate limiter на STRING в Rails](../../../rails/redis/practice/string-rate-limiter.md) — атомарный счётчик с TTL
 
 ## Sources
 

@@ -14,7 +14,9 @@ SETBIT daily:2025-01-15 5678 1      -- пользователь 5678 был ак
 GETBIT daily:2025-01-15 1234        -- → 1
 GETBIT daily:2025-01-15 9999        -- → 0 (не был)
 
-BITCOUNT daily:2025-01-15           -- количество установленных бит (DAU)
+BITCOUNT daily:2025-01-15           -- количество установленных бит
+                                    -- = DAU (daily active users) за этот день
+                                    -- аналогично WAU (weekly) и MAU (monthly)
 ```
 
 ## Экономия памяти
@@ -62,9 +64,9 @@ BITFIELD player:123 OVERFLOW SAT INCRBY u8 0 300
 -- FAIL = отклонить операцию при переполнении
 ```
 
-## Типичные применения
+## См. также
 
-Трекинг DAU/WAU/MAU: один bitmap на день, user_id как offset, `BITCOUNT` для подсчёта, `BITOP AND/OR` для пересечений и объединений. Feature flags: один бит на пользователя, мгновенная проверка через `GETBIT`. Bloom filter: несколько бит на элемент (Redis Bloom module реализует это, но базовый bitmap позволяет построить простой фильтр вручную).
+- [DAU и retention на Bitmap в Rails](../../../rails/redis/practice/bitmap-dau-retention.md) — SETBIT/GETBIT, BITOP AND/OR, BITFIELD
 
 ## Sources
 

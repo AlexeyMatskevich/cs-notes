@@ -63,9 +63,9 @@ EXEC
 
 `UNWATCH` снимает наблюдение за всеми ключами без выполнения транзакции. После `EXEC` или `DISCARD` наблюдение снимается автоматически — явный `UNWATCH` не нужен.
 
-## Практика в Rails
+## См. также
 
-- [MULTI/EXEC в Ruby/Rails](../../../rails/redis/02-data-structures-in-practice.md) — `r.multi`, `r.watch`, оптимистичная блокировка из Rails-приложения
+- [Атомарный перевод через MULTI/EXEC в Rails](../../../rails/redis/practice/multi-exec-atomic-transfer.md) — WATCH, оптимистичная блокировка, retry
 
 ## Sources
 

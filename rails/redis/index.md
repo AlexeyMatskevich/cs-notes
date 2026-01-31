@@ -12,7 +12,7 @@ Rails-приложение на Puma — это несколько процес�
 
 [Паттерны использования](01-patterns.md) — ActionCable через Pub/Sub, rate limiting, распределённые блокировки, защита от cache stampede, ограниченные списки.
 
-[Структуры данных на практике](02-data-structures-in-practice.md) — Ruby-примеры для STRING, HASH, LIST, SET, ZSET, Pub/Sub, MULTI/EXEC.
+[Структуры данных на практике](02-data-structures-in-practice.md) — rate limiter, корзина checkout, очереди, права доступа, аудит-лог, DAU/retention и другие сценарии в `practice/`.
 
 [Команды, блокирующие Redis](03-blocking-pitfalls.md) — какие команды блокируют event loop и как этого избежать в Rails-коде.
 

@@ -81,6 +81,10 @@ XAUTOCLAIM mystream processors worker-2 60000 0
 
 Внутри Redis поток хранится как radix tree (`src/rax.c`) — дерево, в котором узлы хранят общие префиксы ключей. Ключи в дереве — ID сообщений. Radix tree компактен для ключей с общими префиксами, а ID потока всегда имеют общий префикс миллисекунд. Значения в узлах — listpack'и, содержащие поля сообщений.
 
+## См. также
+
+- [Аудит-лог платежей на Stream в Rails](../../../rails/redis/practice/stream-payment-audit.md) — XADD, XREADGROUP, XACK, consumer groups
+
 ## Sources
 
 - Redis Documentation: Streams. <https://redis.io/docs/data-types/streams/>
