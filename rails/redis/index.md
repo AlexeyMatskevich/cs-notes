@@ -10,11 +10,9 @@ Rails-приложение на Puma — это несколько процес�
 
 [Клиенты и соединения](00-clients-and-connections.md) — redis-rb, hiredis-client, connection_pool, конфигурация нескольких инстансов Redis под разные задачи.
 
-[Паттерны использования](01-patterns.md) — ActionCable через Pub/Sub, rate limiting, распределённые блокировки, защита от cache stampede, ограниченные списки.
+[Структуры данных на практике](01-data-structures-in-practice.md) — rate limiter, корзина checkout, очереди, права доступа, аудит-лог, DAU/retention, ActionCable, блокировки, cache stampede, capped lists и другие сценарии в `practice/`.
 
-[Структуры данных на практике](02-data-structures-in-practice.md) — rate limiter, корзина checkout, очереди, права доступа, аудит-лог, DAU/retention и другие сценарии в `practice/`.
-
-[Команды, блокирующие Redis](03-blocking-pitfalls.md) — какие команды блокируют event loop и как этого избежать в Rails-коде.
+[Команды, блокирующие Redis](02-blocking-pitfalls.md) — какие команды блокируют event loop и как этого избежать в Rails-коде.
 
 ## Связанные заметки
 

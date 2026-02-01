@@ -116,7 +116,7 @@ Token bucket допускает короткие всплески (если на
 
 ## См. также
 
-- [Rate limiting в Rails](../../../rails/redis/01-patterns.md) — INCR + TTL из Puma-процессов
+- [Rate limiter на STRING в Rails](../../../rails/redis/practice/string-rate-limiter.md) — INCR + TTL из Puma-процессов
 
 ## Sources
 

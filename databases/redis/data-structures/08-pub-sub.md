@@ -52,7 +52,7 @@ Pub/Sub подходит для real-time уведомлений, где пот�
 ## См. также
 
 - [Инвалидация кеша через Pub/Sub в Rails](../../../rails/redis/practice/pub-sub-cache-invalidation.md) — PUBLISH/SUBSCRIBE, fire-and-forget
-- [ActionCable через Pub/Sub](../../../rails/redis/01-patterns.md) — координация WebSocket'ов в Rails
+- [ActionCable через Pub/Sub](../../../rails/redis/practice/pub-sub-actioncable.md) — координация WebSocket'ов в Rails
 
 ## Sources
 

@@ -1,6 +1,6 @@
 # Команды, блокирующие Redis
 
-**Предпосылки:** [Event loop](../../databases/redis/architecture/01-event-loop.md), [Клиенты и соединения](00-clients-and-connections.md), [Структуры данных на практике](02-data-structures-in-practice.md).
+**Предпосылки:** [Event loop](../../databases/redis/architecture/01-event-loop.md), [Клиенты и соединения](00-clients-and-connections.md), [Структуры данных на практике](01-data-structures-in-practice.md).
 
 Redis обрабатывает все команды в одном потоке. Пока одна команда выполняется, остальные клиенты ждут. Для типичных команд (`GET`, `SET`, `INCR`) это незаметно — они занимают микросекунды. Проблемы начинаются, когда команда за один вызов обходит большой объём данных: все Puma-процессы, Sidekiq-воркеры и другие клиенты Redis встают в очередь.
 
