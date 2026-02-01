@@ -68,6 +68,7 @@
 
 ### Распределение и масштабирование
 
+- [Распределение данных](../distribution.md) — репликация, failover, шардинг (общие понятия)
 - [Репликация](distribution/00-replication.md) — physical vs logical, lag, failover
 - [Шардирование](distribution/01-sharding.md) — отличие от партиционирования, shard key, цена распределения
 
