@@ -44,6 +44,12 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   ├── 00–02             # clients/connections, data structures in practice, blocking pitfalls (3)
 │   │   └── practice/          # 14 case studies (bitmap-dau, hash-cart, HLL-visitors, etc.)
 │   └── sidekiq.md             # Sidekiq deep dive
+├── system-design/
+│   ├── index.md               # system design: architecture, scalability, trade-offs
+│   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition
+│   ├── 01-consistency-models.md   # spectrum from eventual to linearizability
+│   ├── 02-conflict-resolution.md  # LWW, vector clocks, CRDTs
+│   └── 03-consensus.md           # Raft: leader election, log replication, safety (4 files)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
@@ -64,23 +70,25 @@ No build step or runtime. Quick checks:
 
 **Read `styleguide.md` before writing or editing notes.** Key rules:
 
-1. **Narrative pattern:** goal → problem → solution → result. Each concept answers a question raised by the previous one.
+1. **Narrative principle:** every document is a connected story, not a reference. Choose a narrative thread (axis) for the document — goal→problem→solution→result, chain of trade-offs, entity lifecycle, request/data path, or system layers. All threads are equal; pick the one that fits the topic best. Each concept should follow from the previous one through causal links.
 
-2. **No styleguide vocabulary in final text:** The styleguide uses its own methodology terms internally ("мостик", "нить повествования", "граф зависимостей", "конечный эффект" as a methodology concept, "атомарное понятие", "уровень 0/1/2/3"). These terms must never leak into the notes. Technical terms ("массив", "B-tree", "транзакция") are fine. Normal Russian transitional phrases ("сначала разберём", "перейдём к", "выше мы говорили", "позже увидим") are also fine — they are natural language, not meta-language.
+2. **No styleguide vocabulary in final text:** The styleguide uses its own methodology terms internally ("нарратив", "мостик", "нить повествования", "граф зависимостей", "конечный эффект" as a methodology concept, "атомарное понятие", "уровень 0/1/2/3"). These terms must never leak into the notes. Technical terms ("массив", "B-tree", "транзакция") are fine. Normal Russian transitional phrases ("сначала разберём", "перейдём к", "выше мы говорили", "позже увидим") are also fine — they are natural language, not meta-language.
 
 3. **No self-referential commentary about the document structure:** Avoid sentences that describe what the document/section is doing instead of explaining the subject matter (e.g. "В этой части мы прошли по цепочке компромиссов", "Следующий кусок пазла"). The text should talk about the topic, not about itself. This does NOT mean removing ordinary transitions — phrases like "сначала разберём X, потом перейдём к Y" are normal and improve readability.
 
-4. **Dependency order:** Never use a term before defining it. Before writing a section, list its dependencies and ensure each is either already explained, in prerequisites, or explained right now.
+4. **Layered disclosure for complex topics:** When a topic has 3+ interdependent components (e.g., MVCC = xmin/xmax + CLOG + Snapshot), start with an abstract layer — a compact mental model of the whole mechanism before diving into each component. Layer 0 = what it does and how parts connect; Layer 1 = each component in detail; Layer 2 = edge cases and optimizations.
 
-5. **Prerequisites section:** Start documents/parts with explicit "Предпосылки" stating what reader should already know.
+5. **Dependency order:** Never use a term before defining it. Before writing a section, list its dependencies and ensure each is either already explained, in prerequisites, or explained right now.
 
-6. **Concrete effects:** Trace every mechanism to observable outcomes (latency, memory, OOM, CPU), not abstract statements.
+6. **Prerequisites section:** Start documents/parts with explicit "Предпосылки" stating what reader should already know.
 
-7. **Code anchors:** When introducing implementation names (`heap_page`, `rb_heap_t`), bind them to human concepts: "страница кучи (`struct heap_page`)". Include what it is, where it lives, and why it matters now.
+7. **Concrete effects:** Trace every mechanism to observable outcomes (latency, memory, OOM, CPU), not abstract statements.
 
-8. **Prose over lists:** Bullet points break narrative flow. Use prose when possible.
+8. **Code anchors:** When introducing implementation names (`heap_page`, `rb_heap_t`), bind them to human concepts: "страница кучи (`struct heap_page`)". Include what it is, where it lives, and why it matters now.
 
-9. **No prompt/session leakage in notes:** The final text must not contain wording or structure that exists only because of the current conversation/prompt (even if the chat is not mentioned directly). Avoid “author intent” framing like “Чтобы почувствовать…”, “Дадим ментальную модель…”, “по просьбе…”. Headings should describe *what* is being explained, not *why the author decided to include it*. Causal “чтобы” is fine when it describes the system itself (e.g., “Чтобы обеспечить durability, PostgreSQL пишет WAL”).
+9. **Prose over lists:** Bullet points break narrative flow. Use prose when possible.
+
+10. **No prompt/session leakage in notes:** The final text must not contain wording or structure that exists only because of the current conversation/prompt (even if the chat is not mentioned directly). Avoid “author intent” framing like “Чтобы почувствовать…”, “Дадим ментальную модель…”, “по просьбе…”. Headings should describe *what* is being explained, not *why the author decided to include it*. Causal “чтобы” is fine when it describes the system itself (e.g., “Чтобы обеспечить durability, PostgreSQL пишет WAL”).
 
 ## File Organization
 
