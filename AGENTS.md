@@ -8,11 +8,53 @@ This repository is a collection of technical notes. Contributions should optimiz
   - `mcp__serena__activate_project(project="technical")` (or pass the repo path)
   - If onboarding is needed: `mcp__serena__onboarding()`
 
-## Project Structure & Module Organization
+## File Map
 
-- Top-level `*.md` files are standalone notes (e.g. `postgresql.md`, `redis_notes.md`). Large topics are organized into directories (e.g. `postgresql/indexes.md`).
-- Large reference files (PDFs, images) should go in `assets/` (create if needed) and be linked from notes.
-- Prefer one topic per file; cross-link related notes using relative links.
+```
+.
+├── styleguide.md              # writing methodology for all notes
+├── network.md                 # networking: from bits to HTTP
+├── algorithms-and-data-structures/
+│   ├── index.md
+│   ├── linear/                # ADT, array, dynamic array, linked list, stack/queue/deque, hash table, LRU, clock-sweep (8 files)
+│   ├── non-linear/            # graph, tree, binary tree, BST, heap, B-tree, B+tree, B*tree, inverted index, skip list (10 files)
+│   └── techniques/            # dynamic programming (1 file)
+├── databases/
+│   ├── distribution.md        # shared theory: replication, failover, sharding
+│   ├── postgresql/
+│   │   ├── index.md
+│   │   ├── storage/           # ACID, pages & tuples, TOAST, physical layout (4)
+│   │   ├── durability/        # WAL, buffer cache (2)
+│   │   ├── concurrency/       # MVCC, anomalies, isolation levels, locks, patterns, mistakes, queues (7)
+│   │   ├── maintenance/       # VACUUM (1)
+│   │   ├── distribution/      # replication, sharding (2)
+│   │   ├── query-processing/  # planner, join order, subqueries/CTE, EXPLAIN, memory/spill, prepared stmts, slow queries, pagination (8)
+│   │   ├── indexes/           # B-tree, GIN, GiST, Hash, BRIN, SP-GiST (6)
+│   │   └── schema-design/     # constraints, sequences/identity, partitioning (3)
+│   └── redis/
+│       ├── index.md
+│       ├── architecture/      # what is Redis, event loop, pipelining, logical databases (4)
+│       ├── atomicity/         # single command, MULTI/EXEC, Lua scripting (3)
+│       ├── data-structures/   # string, hash, list, set, sorted set, stream, HyperLogLog, bitmap/bitfield, pub/sub (9)
+│       ├── distribution/      # overview, replication, Sentinel, Cluster (4)
+│       ├── memory/            # encodings, eviction, key design (3)
+│       ├── patterns/          # caching, rate limiting, distributed locks, queues (4)
+│       └── persistence/       # RDB, AOF (2)
+├── rails/
+│   ├── redis/
+│   │   ├── index.md           # Redis in Rails apps
+│   │   ├── 00–02             # clients/connections, data structures in practice, blocking pitfalls (3)
+│   │   └── practice/          # 14 case studies (bitmap-dau, hash-cart, HLL-visitors, etc.)
+│   └── sidekiq.md             # Sidekiq deep dive
+├── ruby/
+│   ├── ruby_collections_notes.md   # Array, Hash, Set internals
+│   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
+│   ├── ruby_gc_notes.md            # GC algorithms
+│   └── ruby_jit_notes.md           # YJIT / ZJIT
+└── wip/                        # unfinished drafts
+    ├── rust-async-multithreading.md
+    └── topic-queue.md
+```
 
 ## Build, Test, and Development Commands
 
