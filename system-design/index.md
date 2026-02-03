@@ -21,6 +21,10 @@
 - [Load Balancing](05-load-balancing.md) — распределение запросов между серверами: health checks, алгоритмы выбора, L4 vs L7, высокая доступность
 - [Паттерны надёжности](06-reliability-patterns.md) — timeout, retry with backoff, circuit breaker, rate limiting, bulkhead, idempotency
 
+### Case Studies
+
+- [Система бронирования отелей](cases/hotel-booking.md) — async-обработка, state machine заказа, refund flow, типичные ошибки с транзакциями
+
 ## Как всё связано
 
 **Consistency vs Availability:** сетевое разделение неизбежно; жёсткая консистентность блокирует записи при partition, eventual consistency сохраняет доступность ценой временных расхождений данных. Выбор зависит от цены ошибки в конкретной операции.
