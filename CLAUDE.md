@@ -51,7 +51,8 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 02-conflict-resolution.md  # LWW, vector clocks, CRDTs
 │   ├── 03-consensus.md           # Raft: leader election, log replication, safety
 │   ├── 04-read-write-profiles.md # read-heavy vs write-heavy: architecture implications
-│   └── 05-load-balancing.md      # health checks, algorithms, L4/L7, HA (6 files)
+│   ├── 05-load-balancing.md      # health checks, algorithms, L4/L7, HA
+│   └── 06-reliability-patterns.md # timeout, retry, circuit breaker, bulkhead, idempotency (7 files)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
