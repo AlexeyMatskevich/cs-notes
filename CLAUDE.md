@@ -53,8 +53,9 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 04-read-write-profiles.md # read-heavy vs write-heavy: architecture implications
 │   ├── 05-load-balancing.md      # health checks, algorithms, L4/L7, HA
 │   ├── 06-reliability-patterns.md # timeout, retry, circuit breaker, bulkhead, idempotency
+│   ├── 07-caching.md             # cache levels, coherence, invalidation, cache-aside, stampede
 │   └── cases/
-│       └── hotel-booking.md      # case study: async booking, state machine, refund flow (8 files)
+│       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers

@@ -20,6 +20,7 @@
 - [Профили нагрузки](04-read-write-profiles.md) — read-heavy vs write-heavy: как соотношение чтений и записей определяет выбор storage engine, стратегии масштабирования и кэширования
 - [Load Balancing](05-load-balancing.md) — распределение запросов между серверами: health checks, алгоритмы выбора, L4 vs L7, высокая доступность
 - [Паттерны надёжности](06-reliability-patterns.md) — timeout, retry with backoff, circuit breaker, rate limiting, bulkhead, idempotency
+- [Кэширование](07-caching.md) — уровни кэша (local, external, CDN), когерентность, инвалидация (TTL vs event-based), cache-aside, stampede
 
 ### Case Studies
 
@@ -36,6 +37,8 @@
 **Read throughput vs Write throughput:** индексы и кэш ускоряют чтение, но замедляют запись. Read replicas масштабируют чтение, sharding — запись. B-tree оптимизирован для чтения, LSM-tree — для записи. Профиль нагрузки определяет, какой набор компромиссов выбрать.
 
 **Stateless vs Stateful серверы:** load balancer свободно распределяет запросы, если серверы не хранят состояние. Состояние в памяти сервера (сессии, кэш) привязывает клиента к конкретному серверу и ломает масштабирование. Вынос состояния во внешнее хранилище (Redis, БД) возвращает свободу.
+
+**Latency vs Consistency в кэше:** локальный in-process кэш даёт минимальную latency (нет сетевого RTT), но создаёт проблему когерентности — N копий данных в N процессах рассинхронизируются. Внешний кэш (Redis) решает когерентность ценой RTT на каждый запрос.
 
 **Retry vs перегрузка:** retry с backoff помогает при transient failures, но при permanent failure каждый клиент делает N запросов вместо одного — нагрузка на сломанный сервис растёт в N раз. Circuit breaker разрывает этот цикл: после N ошибок — прекратить попытки, дать сервису восстановиться.
 
