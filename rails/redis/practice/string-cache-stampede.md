@@ -1,6 +1,6 @@
 # Защита от cache stampede
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [STRING](../../../databases/redis/data-structures/00-string.md), [Lua-скрипты](../../../databases/redis/atomicity/02-lua-scripting.md).
+**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [STRING](../../../databases/redis/data-structures/00-string.md), [Lua-скрипты](../../../databases/redis/atomicity/02-lua-scripting.md), [теория cache stampede](../../../system-design/07-caching.md#cache-stampede).
 
 Популярный кеш с TTL 5 минут хранит результат тяжёлого SQL-запроса. В момент, когда TTL истекает, 1000 параллельных запросов обнаруживают пустой кеш и одновременно отправляют один и тот же запрос в PostgreSQL. База получает лавину одинаковых тяжёлых запросов и деградирует — p99 latency подскакивает, вплоть до таймаутов у пользователей.
 

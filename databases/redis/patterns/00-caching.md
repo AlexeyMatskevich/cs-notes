@@ -1,6 +1,6 @@
 # Кеширование
 
-**Предпосылки:** [String](../data-structures/00-string.md), [Hash](../data-structures/01-hash.md), [eviction](../memory/01-eviction.md).
+**Предпосылки:** [String](../data-structures/00-string.md), [Hash](../data-structures/01-hash.md), [eviction](../memory/01-eviction.md), [архитектура кэширования](../../../system-design/07-caching.md) (уровни кэша, когерентность, инвалидация).
 
 ## Cache-aside (lazy loading)
 

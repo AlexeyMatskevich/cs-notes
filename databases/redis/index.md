@@ -60,7 +60,7 @@ Redis — это сервер структур данных в оператив�
 
 ### Практические паттерны
 
-- [Кеширование](patterns/00-caching.md) — cache-aside, stampede, early expiration
+- [Кеширование](patterns/00-caching.md) — cache-aside, stampede, early expiration (см. также [архитектура кэширования](../../system-design/07-caching.md))
 - [Rate limiting](patterns/01-rate-limiting.md) — fixed window, sliding window, token bucket
 - [Распределённые блокировки](patterns/02-distributed-locks.md) — SET NX EX, Lua unlock, Redlock, fencing tokens
 - [Очереди](patterns/03-queues.md) — LIST-очередь, reliable queue, delayed queue (ZSET), Streams
