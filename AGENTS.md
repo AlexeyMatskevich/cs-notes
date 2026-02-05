@@ -13,6 +13,7 @@ This repository is a collection of technical notes. Contributions should optimiz
 ```
 .
 ├── styleguide.md              # writing methodology for all notes
+├── structure-guide.md         # structural patterns for notes
 ├── network.md                 # networking: from bits to HTTP
 ├── algorithms-and-data-structures/
 │   ├── index.md
@@ -46,6 +47,18 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   ├── 00–02             # clients/connections, data structures in practice, blocking pitfalls (3)
 │   │   └── practice/          # 14 case studies (bitmap-dau, hash-cart, HLL-visitors, etc.)
 │   └── sidekiq.md             # Sidekiq deep dive
+├── system-design/
+│   ├── index.md               # system design: architecture, scalability, trade-offs
+│   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition
+│   ├── 01-consistency-models.md   # spectrum from eventual to linearizability
+│   ├── 02-conflict-resolution.md  # LWW, vector clocks, CRDTs
+│   ├── 03-consensus.md           # Raft: leader election, log replication, safety
+│   ├── 04-read-write-profiles.md # read-heavy vs write-heavy: architecture implications
+│   ├── 05-load-balancing.md      # health checks, algorithms, L4/L7, HA
+│   ├── 06-reliability-patterns.md # timeout, retry, circuit breaker, bulkhead, idempotency
+│   ├── 07-caching.md             # cache levels, coherence, invalidation, cache-aside, stampede
+│   └── cases/
+│       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers

@@ -11,6 +11,7 @@ This is a personal technical knowledge repository containing deep technical note
 ```
 .
 ├── styleguide.md              # writing methodology for all notes
+├── structure-guide.md         # structural patterns for notes
 ├── network.md                 # networking: from bits to HTTP
 ├── algorithms-and-data-structures/
 │   ├── index.md
