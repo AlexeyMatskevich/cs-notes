@@ -22,6 +22,7 @@
 - [Паттерны надёжности](06-reliability-patterns.md) — timeout, retry with backoff, circuit breaker, rate limiting, bulkhead, idempotency
 - [Кэширование](07-caching.md) — уровни кэша (local, external, CDN), когерентность, инвалидация, паттерны записи (cache-aside, write-through, write-behind), eviction (LRU/LFU), stampede, распределённый кэш (consistent hashing)
 - [Message Queues](08-message-queues.md) — асинхронная коммуникация: broker, ACK, at-least-once/exactly-once, point-to-point vs pub/sub, традиционная очередь vs лог, partitions, backpressure, DLQ
+- [Выбор хранилища](09-storage-selection.md) — паттерн доступа как критерий: row vs column storage, OLTP vs OLAP, key-value, search engine, document/graph/time-series, ACID vs BASE, schema-on-write vs schema-on-read
 
 ### Case Studies
 
@@ -49,8 +50,11 @@
 
 **Традиционная очередь vs лог:** очередь удаляет сообщение после подтверждения — подходит для задач, которые нужно выполнить и забыть. Лог хранит сообщения и позволяет replay — подходит для событий, которые могут понадобиться новым consumers или для аудита. Выбор определяется тем, нужна ли история.
 
+**Универсальность хранилища vs эффективность под паттерн:** PostgreSQL справляется с большинством задач, но физическая организация данных, оптимальная для одного паттерна доступа (OLTP — построчная), неизбежно субоптимальна для другого (OLAP — поколоночная, поиск — инвертированный индекс). Специализированное хранилище даёт порядки по производительности, но каждое — это деплой, мониторинг, экспертиза и data pipeline.
+
 ## Sources
 
 - Kleppmann, 2017, *Designing Data-Intensive Applications* — главный источник по распределённым системам
 - Brewer, 2012, *CAP Twelve Years Later* — уточнение CAP от автора теоремы
 - Ongaro, Ousterhout, 2014, *In Search of an Understandable Consensus Algorithm* — Raft
+- Stonebraker, Çetintemel, 2005, *"One Size Fits All": An Idea Whose Time Has Come and Gone* — аргумент за специализированные хранилища

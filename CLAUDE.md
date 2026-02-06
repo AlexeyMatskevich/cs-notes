@@ -56,6 +56,7 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 06-reliability-patterns.md # timeout, retry, circuit breaker, bulkhead, idempotency
 │   ├── 07-caching.md             # cache levels, coherence, invalidation, cache-aside, stampede
 │   ├── 08-message-queues.md      # async communication: broker, ACK, partitions, backpressure, DLQ
+│   ├── 09-storage-selection.md   # choosing storage: access patterns, OLTP/OLAP, NoSQL categories, ACID/BASE
 │   └── cases/
 │       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── ruby/
