@@ -1,19 +1,33 @@
-# Project overview: `technical`
+# Project Overview
 
 ## Purpose
-Personal technical knowledge repository (Markdown notes), primarily in Russian. Notes optimize for clarity, correctness, and long-term recall.
+Personal technical knowledge repository containing deep technical notes **in Russian**. Notes follow a narrative "story" pattern designed for understanding and retention, not reference lookup.
 
-## Tech stack / tooling
-- Content: `*.md` notes (UTF-8)
-- No build step / runtime
-- Optional dev environment via Devbox: `python312` and `uv` (see `devbox.json`)
+## Tech Stack
+- Pure Markdown files, no build step or runtime
+- Devbox for development environment (`devbox.json` present)
+- Git for version control
 
-## Repo structure (high level)
-- Top-level `*.md` files are standalone notes
-- Larger topics live in directories (examples in this repo: `algorithms-and-data-structures/`, `databases/`, `rails/`, `ruby/`, `wip/`)
-- Large reference files (PDFs/images) should go in `assets/` and be linked from notes
+## Structure
+```
+styleguide.md              # writing methodology (MUST READ before writing)
+structure-guide.md         # file/folder structural patterns
+network.md                 # networking notes
+algorithms-and-data-structures/  # ADT, linear/non-linear structures, techniques
+databases/
+  distribution.md          # shared theory (replication, failover, sharding)
+  postgresql/              # storage, durability, concurrency, maintenance, distribution, query-processing, indexes, schema-design
+  redis/                   # architecture, atomicity, data-structures, distribution, memory, patterns, persistence
+rails/
+  redis/                   # Redis in Rails apps + 14 practice case studies
+  sidekiq.md
+system-design/             # CAP, consistency, consensus, load balancing, reliability, caching, queues, storage selection, cases
+ruby/                      # collections, concurrency, GC, JIT internals
+wip/                       # unfinished drafts
+```
 
-## Key guidance docs
-- `styleguide.md`: writing methodology + terminology rules (must not leak into notes)
-- `AGENTS.md`: repo-specific guidelines
-- `CLAUDE.md`: additional writing requirements (aligns with `styleguide.md`)
+## Abstraction Layers (top to bottom)
+1. **Architectural** (system-design/) — technology-agnostic patterns
+2. **Shared domain theory** (databases/distribution.md) — concepts common to multiple technologies
+3. **Technology-specific** (databases/postgresql/, databases/redis/) — implementation details
+4. **Applied** (rails/redis/) — using technology in a concrete stack

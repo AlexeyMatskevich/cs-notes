@@ -99,12 +99,28 @@ No build step or runtime. Quick checks:
 
 10. **No prompt/session leakage in notes:** The final text must not contain wording or structure that exists only because of the current conversation/prompt (even if the chat is not mentioned directly). Avoid “author intent” framing like “Чтобы почувствовать…”, “Дадим ментальную модель…”, “по просьбе…”. Headings should describe *what* is being explained, not *why the author decided to include it*. Causal “чтобы” is fine when it describes the system itself (e.g., “Чтобы обеспечить durability, PostgreSQL пишет WAL”).
 
+11. **Scenario-driven:** each note is built around a realistic scenario that threads through the document. Every technical detail (command, structure, parameter) is introduced at the moment the scenario creates a need for it — not in documentation order. Test: remove all technical details; the scenario alone should read as a coherent story of problems and solutions.
+
+12. **Cross-layer linking, not duplication:** concepts belong to the abstraction layer where they're defined (system-design → technology-specific → applied). Lower-level notes reference the upper level instead of re-explaining. If a statement is true for any message broker (not just Redis Stream), it belongs in `system-design/`, not in `redis/`.
+
 ## File Organization
 
+**Read `structure-guide.md` for full structural patterns.** Key rules:
+
 - One topic per file, kebab-case naming (`postgresql.md`, `indexes.md`)
-- Cross-link related notes with relative links
+- Files with numeric prefix (`00-acid.md`, `01-pages-and-tuples.md`): prefix = dependency order. File `02` may reference `00` and `01`, not the other way around.
+- 3+ files on one theme → extract into a subdirectory
+- Each themed directory has an `index.md` (study order, cross-links, "Как всё связано" trade-offs section)
+- Shared theory used by multiple technologies → extract to parent level (e.g. `databases/distribution.md`)
+- Cross-link related notes with relative links at the point of first mention
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections
+- When adding a new note, check for cascading changes: update `index.md`, cross-references in neighboring files, and the file map above
+
+## Content Rules
+
+- **No interview/preparation framing:** notes are technical material, never "interview prep". Words like "собеседование", "интервью", "подготовка к интервью" must not appear.
+- **Classical CS examples only:** cities → San Francisco, New York, London, Tokyo. Companies → Amazon, Netflix, Twitter/X, Google. People → Alice, Bob, Charlie. No references to the author or their location.
 
 ## Commits
 
