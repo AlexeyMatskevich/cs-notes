@@ -23,6 +23,7 @@
 - [Кэширование](07-caching.md) — уровни кэша (local, external, CDN), когерентность, инвалидация, паттерны записи (cache-aside, write-through, write-behind), eviction (LRU/LFU), stampede, распределённый кэш (consistent hashing)
 - [Message Queues](08-message-queues.md) — асинхронная коммуникация: broker, ACK, at-least-once/exactly-once, point-to-point vs pub/sub, традиционная очередь vs лог, partitions, backpressure, DLQ
 - [Выбор хранилища](09-storage-selection.md) — паттерн доступа как критерий: row vs column storage, OLTP vs OLAP, key-value, search engine, document/graph/time-series, ACID vs BASE, schema-on-write vs schema-on-read
+- [API Design](10-api-design.md) — REST, GraphQL, gRPC: проектирование границы между системами, свойства HTTP-методов, пагинация, версионирование, выбор протокола по типу клиента
 
 ### Case Studies
 
@@ -52,9 +53,12 @@
 
 **Универсальность хранилища vs эффективность под паттерн:** PostgreSQL справляется с большинством задач, но физическая организация данных, оптимальная для одного паттерна доступа (OLTP — построчная), неизбежно субоптимальна для другого (OLAP — поколоночная, поиск — инвертированный индекс). Специализированное хранилище даёт порядки по производительности, но каждое — это деплой, мониторинг, экспертиза и data pipeline.
 
+**Читаемость vs эффективность API:** REST с JSON читаем (curl, браузер, логи), но текстовая сериализация и HTTP/1.1 overhead стоят дорого при тысячах вызовов в секунду. gRPC с Protobuf на порядок эффективнее, но бинарный формат непрозрачен для отладки. Выбор определяется тем, кто клиент: человек с curl или сервис в том же датацентре.
+
 ## Sources
 
 - Kleppmann, 2017, *Designing Data-Intensive Applications* — главный источник по распределённым системам
 - Brewer, 2012, *CAP Twelve Years Later* — уточнение CAP от автора теоремы
 - Ongaro, Ousterhout, 2014, *In Search of an Understandable Consensus Algorithm* — Raft
+- Fielding, 2000, *Architectural Styles and the Design of Network-Based Software Architectures* — оригинальная диссертация REST
 - Stonebraker, Çetintemel, 2005, *"One Size Fits All": An Idea Whose Time Has Come and Gone* — аргумент за специализированные хранилища
