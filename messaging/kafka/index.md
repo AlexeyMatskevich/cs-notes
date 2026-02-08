@@ -1,0 +1,29 @@
+# Apache Kafka
+
+**Предпосылки:** [Message Queues](../../system-design/08-message-queues.md) (log-based брокер, партиции, consumer groups, гарантии доставки), [Event-driven Architecture](../../system-design/12-event-driven-architecture.md) (CQRS, проекции, event sourcing), [Redis Stream](../../databases/redis/data-structures/05-stream.md) (append-only лог, consumer groups, PEL).
+
+Kafka — распределённая платформа потоковой обработки событий. В основе — append-only лог на диске, разбитый на партиции и распределённый по кластеру broker'ов. Партиции обеспечивают горизонтальное масштабирование записи и чтения, репликация — durability и availability. Consumer groups с независимыми offset'ами позволяют нескольким подсистемам читать один поток событий параллельно, каждая в своём темпе.
+
+## Порядок изучения
+
+Заметки выстроены по зависимостям: сначала фундаментальная модель данных (broker, topic, partition, offset), затем механизмы надёжности (репликация), потом producer и consumer как клиенты этой модели, и наконец — внутреннее устройство хранения.
+
+### Архитектура
+
+Как устроен кластер Kafka: из каких сущностей состоит, как данные распределяются и реплицируются.
+
+- [Broker, topic, partition, offset](architecture/00-what-is-kafka.md) — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, consumer groups с независимыми offset'ами
+
+## Как всё связано
+
+**Throughput vs Latency:** Kafka оптимизирован под throughput — батчинг записей, sequential I/O, zero-copy. Цена — latency отдельного сообщения выше, чем у in-memory брокера (Redis Streams: микросекунды, Kafka: единицы миллисекунд). Для event pipeline и CQRS-проекций это допустимо; для real-time чата — нет.
+
+**Durability vs Performance:** синхронная репликация (`acks=all`) гарантирует, что сообщение записано на несколько broker'ов до подтверждения producer'у. Цена — дополнительная латентность на каждую запись. `acks=1` (только leader) быстрее, но при смерти leader'а до репликации — потеря данных.
+
+**Ordering vs Parallelism:** порядок гарантирован только внутри одной партиции. Больше партиций = больше параллелизма (больше consumer'ов в группе), но корреляция между событиями из разных партиций теряется. Partition key определяет, какие события обязаны идти в одну партицию для сохранения порядка.
+
+## Sources
+
+- Narkhede, Shapira, Palino, 2017, *Kafka: The Definitive Guide*. O'Reilly
+- Apache Kafka Documentation. <https://kafka.apache.org/documentation/>
+- Kreps, 2013, *The Log: What every software engineer should know about real-time data's unifying abstraction*. <https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying>

@@ -62,6 +62,11 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 12-event-driven-architecture.md  # CQRS, event sourcing: read/write separation, projections, event store
 │   └── cases/
 │       └── hotel-booking.md      # case study: async booking, state machine, refund flow
+├── messaging/
+│   ├── index.md               # messaging technologies: Kafka, Pulsar
+│   └── kafka/
+│       ├── index.md
+│       └── architecture/      # broker, topic, partition, offset (1 file)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
