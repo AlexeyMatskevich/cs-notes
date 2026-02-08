@@ -59,6 +59,7 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 09-storage-selection.md   # choosing storage: access patterns, OLTP/OLAP, NoSQL categories, ACID/BASE
 │   ├── 10-api-design.md          # REST, GraphQL, gRPC: HTTP methods, pagination, versioning, protocol choice
 │   ├── 11-microservices.md       # monolith → modular monolith → microservices, saga, decomposition criteria
+│   ├── 12-event-driven-architecture.md  # CQRS, event sourcing: read/write separation, projections, event store
 │   └── cases/
 │       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── ruby/
