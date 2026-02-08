@@ -21,7 +21,7 @@
 - [Load Balancing](05-load-balancing.md) — распределение запросов между серверами: health checks, алгоритмы выбора, L4 vs L7, высокая доступность
 - [Паттерны надёжности](06-reliability-patterns.md) — timeout, retry with backoff, circuit breaker, rate limiting, bulkhead, idempotency
 - [Кэширование](07-caching.md) — уровни кэша (local, external, CDN), когерентность, инвалидация, паттерны записи (cache-aside, write-through, write-behind), eviction (LRU/LFU), stampede, распределённый кэш (consistent hashing)
-- [Message Queues](08-message-queues.md) — temporal decoupling, broker, ACK, at-least-once/exactly-once, point-to-point vs pub/sub, традиционная очередь vs лог, partitions, backpressure, DLQ
+- [Message Queues](08-message-queues.md) — temporal decoupling, broker, ACK, at-least-once/exactly-once, point-to-point vs pub/sub, очередь сообщений vs лог, partitions, backpressure, DLQ
 - [Выбор хранилища](09-storage-selection.md) — паттерн доступа как критерий: row vs column storage, OLTP vs OLAP, key-value, search engine, document/graph/time-series, ACID vs BASE, schema-on-write vs schema-on-read
 - [API Design](10-api-design.md) — REST, GraphQL, gRPC: проектирование границы между системами, свойства HTTP-методов, пагинация, версионирование, выбор протокола по типу клиента
 
@@ -54,7 +54,7 @@
 
 **Синхронный вызов vs очередь:** синхронный HTTP-вызов прост в реализации и даёт немедленный результат, но создаёт coupling по доступности — если зависимость недоступна, вызывающий блокируется. Очередь развязывает сервисы по времени, но добавляет сложность (брокер, idempotency, мониторинг) и убирает немедленный ответ. Начинай синхронно, переходи к очереди когда появляется конкретная проблема.
 
-**Традиционная очередь vs лог:** очередь удаляет сообщение после подтверждения — подходит для задач, которые нужно выполнить и забыть. Лог хранит сообщения и позволяет replay — подходит для событий, которые могут понадобиться новым consumers или для аудита. Выбор определяется тем, нужна ли история.
+**Очередь сообщений vs лог:** очередь удаляет сообщение после подтверждения — подходит для задач, которые нужно выполнить и забыть. Лог хранит сообщения и позволяет replay — подходит для событий, которые могут понадобиться новым consumers или для аудита. Выбор определяется тем, нужна ли история.
 
 **Универсальность хранилища vs эффективность под паттерн:** PostgreSQL справляется с большинством задач, но физическая организация данных, оптимальная для одного паттерна доступа (OLTP — построчная), неизбежно субоптимальна для другого (OLAP — поколоночная, поиск — инвертированный индекс). Специализированное хранилище даёт порядки по производительности, но каждое — это деплой, мониторинг, экспертиза и data pipeline.
 

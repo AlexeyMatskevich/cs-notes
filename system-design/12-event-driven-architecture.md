@@ -1,6 +1,6 @@
 # Event-driven Architecture
 
-**Предпосылки:** [Профили нагрузки](04-read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](01-consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](06-reliability-patterns.md) (idempotency), [Message Queues](08-message-queues.md) (temporal decoupling, pub/sub, distributed log vs традиционная очередь), [Микросервисы](11-microservices.md) (текущая архитектура магазина: Orders, события, подписчики).
+**Предпосылки:** [Профили нагрузки](04-read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](01-consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](06-reliability-patterns.md) (idempotency), [Message Queues](08-message-queues.md) (temporal decoupling, pub/sub, log-based vs queue-based брокер), [Микросервисы](11-microservices.md) (текущая архитектура магазина: Orders, события, подписчики).
 
 Архитектура из предыдущей заметки работает: Orders пишет в PostgreSQL, checkout координируется через saga, событие `order.completed` уходит в очередь, Notification, Loyalty и Analytics подписываются самостоятельно. Но Orders-сервис обслуживает не только checkout. Бизнес хочет панель продавца: список заказов с фильтрацией по статусу, дате, городу, полнотекстовый поиск по товарам, выручка за период, топ продаж. Все эти данные лежат в той же PostgreSQL, куда пишутся заказы. Одна модель данных — два конфликтующих паттерна доступа.
 
