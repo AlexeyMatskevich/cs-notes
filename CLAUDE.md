@@ -66,7 +66,7 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── index.md               # messaging technologies: Kafka, Pulsar
 │   └── kafka/
 │       ├── index.md
-│       └── architecture/      # broker, topic, partition, offset (1 file)
+│       └── architecture/      # broker, topic, partition, offset, replication (2 files)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers

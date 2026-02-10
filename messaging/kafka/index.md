@@ -13,6 +13,7 @@ Kafka — распределённая платформа потоковой о�
 Как устроен кластер Kafka: из каких сущностей состоит, как данные распределяются и реплицируются.
 
 - [Broker, topic, partition, offset](architecture/00-what-is-kafka.md) — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, consumer groups с независимыми offset'ами
+- [Репликация](architecture/01-replication.md) — per-partition leader/follower, ISR, high watermark, acks, min.insync.replicas, controller и partition leader election, KRaft
 
 ## Как всё связано
 
