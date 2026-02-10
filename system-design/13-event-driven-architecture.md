@@ -1,6 +1,6 @@
 # Event-driven Architecture
 
-**Предпосылки:** [Профили нагрузки](04-read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](01-consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](06-reliability-patterns.md) (idempotency), [Message Queues](08-message-queues.md) (temporal decoupling, pub/sub, log-based vs queue-based брокер), [Микросервисы](11-microservices.md) (текущая архитектура магазина: Orders, события, подписчики).
+**Предпосылки:** [Профили нагрузки](04-read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](01-consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](06-reliability-patterns.md) (idempotency), [Message Queues](09-message-queues.md) (temporal decoupling, pub/sub, log-based vs queue-based брокер), [Микросервисы](12-microservices.md) (текущая архитектура магазина: Orders, события, подписчики).
 
 Архитектура из предыдущей заметки работает: Orders пишет в PostgreSQL, checkout координируется через saga, событие `order.completed` уходит в очередь, Notification, Loyalty и Analytics подписываются самостоятельно. Но Orders-сервис обслуживает не только checkout. Бизнес хочет панель продавца: список заказов с фильтрацией по статусу, дате, городу, полнотекстовый поиск по товарам, выручка за период, топ продаж. Все эти данные лежат в той же PostgreSQL, куда пишутся заказы. Одна модель данных — два конфликтующих паттерна доступа.
 
@@ -61,7 +61,7 @@ COMMIT
 
 Триггер живёт внутри PostgreSQL-транзакции. Он не может надёжно записать в Elasticsearch или ClickHouse — это внешние системы, транзакция PostgreSQL их не покрывает. Если Elasticsearch недоступен в момент триггера — транзакция checkout откатывается. Покупатель не может оплатить заказ из-за того, что поисковый индекс для продавца лежит.
 
-Нужно [temporal decoupling](08-message-queues.md) — развязка записи заказа и обновления read-моделей по времени. Запись фиксирует факт и завершается; read-модели обновляются позже, асинхронно.
+Нужно [temporal decoupling](09-message-queues.md) — развязка записи заказа и обновления read-моделей по времени. Запись фиксирует факт и завершается; read-модели обновляются позже, асинхронно.
 
 Background job через Sidekiq — первый вариант. `after_commit` callback в Rails ставит задачу: `SyncOrderToElasticsearchJob.perform_async(order_id)`. Retry с backoff из коробки, обновление per-event (секунды, не минуты). Работает для трёх потребителей — три джоба на каждый заказ:
 
@@ -77,7 +77,7 @@ end
 
 Проблема — coupling. Orders знает обо всех потребителях. Появился четвёртый consumer (рекомендательная система) — ещё один джоб. Пятый (fraud detection) — ещё один. Каждый новый потребитель данных требует изменения кода Orders-сервиса: добавить callback, добавить джоб. Orders отправляет команды («синхронизируй в Elasticsearch»), а не факты. Это зависимость от внешних модулей (efferent coupling).
 
-Решение — [pub/sub](08-message-queues.md). Orders публикует событие — факт о том, что произошло — в message queue: `order.completed`, `order.shipped`, `order.cancelled`. Потребители подписываются сами. Добавление нового consumer — ноль изменений в коде Orders.
+Решение — [pub/sub](09-message-queues.md). Orders публикует событие — факт о том, что произошло — в message queue: `order.completed`, `order.shipped`, `order.cancelled`. Потребители подписываются сами. Добавление нового consumer — ноль изменений в коде Orders.
 
 ```
 БЫЛО (Sidekiq, Orders знает всех):
@@ -327,7 +327,7 @@ EventStoreDB (open source) — база, спроектированная тол
 
 ### Idempotency проекций
 
-Проекция читает событие из очереди и обновляет read-модель. Очередь доставила событие дважды — стандартное поведение при [at-least-once delivery](08-message-queues.md). Для `UPDATE status = 'shipped'` повторное применение безвредно — идемпотентная операция. Но если проекция считает агрегат:
+Проекция читает событие из очереди и обновляет read-модель. Очередь доставила событие дважды — стандартное поведение при [at-least-once delivery](08-delivery-guarantees.md). Для `UPDATE status = 'shipped'` повторное применение безвредно — идемпотентная операция. Но если проекция считает агрегат:
 
 ```ruby
 # Событие: OrderCompleted {seller_id: 7, total: 8500}

@@ -1,8 +1,8 @@
 # Broker, topic, partition, offset
 
-**Предпосылки:** [Message Queues](../../../system-design/08-message-queues.md) (log-based брокер, партиции, consumer groups), [Event-driven Architecture](../../../system-design/12-event-driven-architecture.md) (CQRS, проекции), [Redis Stream](../../../databases/redis/data-structures/05-stream.md) (append-only лог, consumer groups, PEL).
+**Предпосылки:** [Message Queues](../../../system-design/09-message-queues.md) (log-based брокер, партиции, consumer groups), [Event-driven Architecture](../../../system-design/13-event-driven-architecture.md) (CQRS, проекции), [Redis Stream](../../../databases/redis/data-structures/05-stream.md) (append-only лог, consumer groups, PEL).
 
-CQRS-архитектура из [event-driven architecture](../../../system-design/12-event-driven-architecture.md): Orders-сервис пишет заказы в PostgreSQL, после commit публикует событие в поток, пять независимых consumer groups обновляют свои read-модели — панель продавца, Elasticsearch (поиск), ClickHouse (аналитика), рекомендации, fraud detection. Транспорт событий — [Redis Stream](../../../databases/redis/data-structures/05-stream.md): append-only лог с consumer groups и подтверждением обработки через PEL и XACK.
+CQRS-архитектура из [event-driven architecture](../../../system-design/13-event-driven-architecture.md): Orders-сервис пишет заказы в PostgreSQL, после commit публикует событие в поток, пять независимых consumer groups обновляют свои read-модели — панель продавца, Elasticsearch (поиск), ClickHouse (аналитика), рекомендации, fraud detection. Транспорт событий — [Redis Stream](../../../databases/redis/data-structures/05-stream.md): append-only лог с consumer groups и подтверждением обработки через PEL и XACK.
 
 При 50 заказах в минуту система работает. Магазин растёт — и упирается в ограничения Redis Streams.
 
@@ -32,7 +32,7 @@ Sequential I/O быстрее на любом носителе. Kafka испол
 
 ## Broker: сервер в кластере
 
-Kafka хранит данные на обычных серверах с локальными дисками. Каждый такой сервер называется **broker** (брокер) — процесс Kafka, запущенный на машине. В [терминологии message brokers](../../../system-design/08-message-queues.md) — посредник между producer и consumer: принимает сообщения, хранит, отдаёт. Отличие от Redis — данные на диске, не в оперативной памяти.
+Kafka хранит данные на обычных серверах с локальными дисками. Каждый такой сервер называется **broker** (брокер) — процесс Kafka, запущенный на машине. В [терминологии message brokers](../../../system-design/09-message-queues.md) — посредник между producer и consumer: принимает сообщения, хранит, отдаёт. Отличие от Redis — данные на диске, не в оперативной памяти.
 
 Кластер — несколько broker'ов. Для нашего сценария — три: Broker 0, Broker 1, Broker 2, каждый на отдельном сервере с локальным диском.
 
@@ -62,7 +62,7 @@ Broker 0                 Broker 1                 Broker 2
 
 `order_events-0` ... `order_events-5` — физические директории на дисках broker'ов. 750 GB распределяются по трём серверам, по ~250 GB на каждом. Обычные диски, не терабайт RAM.
 
-Partition в Kafka играет тройную роль. Это единица **распределения** ([шардирования](../../../system-design/08-message-queues.md)): разные партиции живут на разных broker'ах, данные и нагрузка распределяются по кластеру. Это единица **порядка**: внутри одной партиции записи строго упорядочены по времени добавления. И это единица **параллелизма**: каждую партицию в consumer group читает один consumer.
+Partition в Kafka играет тройную роль. Это единица **распределения** ([шардирования](../../../system-design/09-message-queues.md)): разные партиции живут на разных broker'ах, данные и нагрузка распределяются по кластеру. Это единица **порядка**: внутри одной партиции записи строго упорядочены по времени добавления. И это единица **параллелизма**: каждую партицию в consumer group читает один consumer.
 
 ## Partition key и порядок событий
 
@@ -70,7 +70,7 @@ Partition в Kafka играет тройную роль. Это единица *
 
 Для `order_events` partition key — `order_id`. Событие для заказа #42: `hash(42) % 6 = 3` — попадает в `order_events-3` на Broker 0. Через минуту заказ #42 меняет статус — ещё одно событие с тем же `order_id`. Хеш-функция детерминирована: `hash(42) % 6` всегда даёт 3. Все события одного заказа попадают в одну партицию и хранятся в порядке записи — consumer обработает `created` до `paid`, `paid` до `shipped`.
 
-Без partition key события одного заказа могли бы разлететься по разным партициям. Между партициями порядок не гарантирован — consumer мог бы обработать `shipped` раньше `created`. Partition key — механизм, который связывает [ordering из message queues](../../../system-design/08-message-queues.md) с физическим распределением данных.
+Без partition key события одного заказа могли бы разлететься по разным партициям. Между партициями порядок не гарантирован — consumer мог бы обработать `shipped` раньше `created`. Partition key — механизм, который связывает [ordering из message queues](../../../system-design/09-message-queues.md) с физическим распределением данных.
 
 Partition key определяет и распределение нагрузки: 150 events/sec расходятся по 6 партициям — в среднем ~25 events/sec на партицию. Запись идёт параллельно на трёх broker'ах.
 

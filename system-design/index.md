@@ -21,14 +21,15 @@
 - [Load Balancing](05-load-balancing.md) — распределение запросов между серверами: health checks, алгоритмы выбора, L4 vs L7, высокая доступность
 - [Паттерны надёжности](06-reliability-patterns.md) — timeout, retry with backoff, circuit breaker, rate limiting, bulkhead, idempotency
 - [Кэширование](07-caching.md) — уровни кэша (local, external, CDN), когерентность, инвалидация, паттерны записи (cache-aside, write-through, write-behind), eviction (LRU/LFU), stampede, распределённый кэш (consistent hashing)
-- [Message Queues](08-message-queues.md) — temporal decoupling, broker, ACK, at-least-once/exactly-once, point-to-point vs pub/sub, очередь сообщений vs лог, partitions, backpressure, DLQ
-- [Выбор хранилища](09-storage-selection.md) — паттерн доступа как критерий: row vs column storage, OLTP vs OLAP, key-value, search engine, document/graph/time-series, ACID vs BASE, schema-on-write vs schema-on-read
-- [API Design](10-api-design.md) — REST, GraphQL, gRPC: проектирование границы между системами, свойства HTTP-методов, пагинация, версионирование, выбор протокола по типу клиента
+- [Гарантии доставки](08-delivery-guarantees.md) — at-most-once, at-least-once, exactly-once: сколько раз получатель обработает сообщение при сбое, невозможность exactly-once на транспортном уровне, exactly-once = at-least-once + idempotency
+- [Message Queues](09-message-queues.md) — temporal decoupling, broker, ACK, point-to-point vs pub/sub, очередь сообщений vs лог, partitions, backpressure, DLQ
+- [Выбор хранилища](10-storage-selection.md) — паттерн доступа как критерий: row vs column storage, OLTP vs OLAP, key-value, search engine, document/graph/time-series, ACID vs BASE, schema-on-write vs schema-on-read
+- [API Design](11-api-design.md) — REST, GraphQL, gRPC: проектирование границы между системами, свойства HTTP-методов, пагинация, версионирование, выбор протокола по типу клиента
 
 ### Паттерны проектирования
 
-- [Микросервисы](11-microservices.md) — монолит → модульный монолит → микросервисы: организационные и технические причины декомпозиции, saga (оркестрация и хореография), когда выносить, а когда нет
-- [Event-driven Architecture](12-event-driven-architecture.md) — CQRS и event sourcing: разделение моделей чтения и записи, проекции, event store, когда нужна история как источник истины
+- [Микросервисы](12-microservices.md) — монолит → модульный монолит → микросервисы: организационные и технические причины декомпозиции, saga (оркестрация и хореография), когда выносить, а когда нет
+- [Event-driven Architecture](13-event-driven-architecture.md) — CQRS и event sourcing: разделение моделей чтения и записи, проекции, event store, когда нужна история как источник истины
 
 ### Case Studies
 
@@ -51,6 +52,8 @@
 **Простота хеширования vs стоимость ребалансировки:** `hash % N` распределяет ключи равномерно, но при добавлении сервера ~75% ключей меняют адрес — массовый cache miss. Consistent hashing минимизирует миграцию до 1/N ключей ценой сложности реализации и необходимости virtual nodes для равномерности.
 
 **Retry vs перегрузка:** retry с backoff помогает при transient failures, но при permanent failure каждый клиент делает N запросов вместо одного — нагрузка на сломанный сервис растёт в N раз. Circuit breaker разрывает этот цикл: после N ошибок — прекратить попытки, дать сервису восстановиться.
+
+**Потеря vs дубликат:** at-most-once теряет сообщения при сбое, at-least-once гарантирует доставку ценой возможных дубликатов. Exactly-once на транспортном уровне невозможна — окно между обработкой и подтверждением неустранимо. Единственный путь — at-least-once + idempotency на стороне получателя. Цена ошибки определяет выбор: потеря аналитического события незаметна, двойное списание денег — инцидент.
 
 **Синхронный вызов vs очередь:** синхронный HTTP-вызов прост в реализации и даёт немедленный результат, но создаёт coupling по доступности — если зависимость недоступна, вызывающий блокируется. Очередь развязывает сервисы по времени, но добавляет сложность (брокер, idempotency, мониторинг) и убирает немедленный ответ. Начинай синхронно, переходи к очереди когда появляется конкретная проблема.
 

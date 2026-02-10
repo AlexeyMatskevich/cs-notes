@@ -1,6 +1,6 @@
 # Apache Kafka
 
-**Предпосылки:** [Message Queues](../../system-design/08-message-queues.md) (log-based брокер, партиции, consumer groups, гарантии доставки), [Event-driven Architecture](../../system-design/12-event-driven-architecture.md) (CQRS, проекции, event sourcing), [Redis Stream](../../databases/redis/data-structures/05-stream.md) (append-only лог, consumer groups, PEL).
+**Предпосылки:** [Гарантии доставки](../../system-design/08-delivery-guarantees.md) (at-most-once, at-least-once, exactly-once), [Message Queues](../../system-design/09-message-queues.md) (log-based брокер, партиции, consumer groups), [Event-driven Architecture](../../system-design/13-event-driven-architecture.md) (CQRS, проекции, event sourcing), [Redis Stream](../../databases/redis/data-structures/05-stream.md) (append-only лог, consumer groups, PEL).
 
 Kafka — распределённая платформа потоковой обработки событий. В основе — append-only лог на диске, разбитый на партиции и распределённый по кластеру broker'ов. Партиции обеспечивают горизонтальное масштабирование записи и чтения, репликация — durability и availability. Consumer groups с независимыми offset'ами позволяют нескольким подсистемам читать один поток событий параллельно, каждая в своём темпе.
 
@@ -14,6 +14,7 @@ Kafka — распределённая платформа потоковой о�
 
 - [Broker, topic, partition, offset](architecture/00-what-is-kafka.md) — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, consumer groups с независимыми offset'ами
 - [Репликация](architecture/01-replication.md) — per-partition leader/follower, ISR, high watermark, acks, min.insync.replicas, controller и partition leader election, KRaft
+- [Producer reliability](architecture/02-producer-reliability.md) — retries, ordering, idempotent producer: PID, sequence number, exactly-once per partition
 
 ## Как всё связано
 

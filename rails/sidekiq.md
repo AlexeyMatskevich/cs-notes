@@ -112,18 +112,7 @@ job_hash = {
 
 ## 2. Гарантии доставки и надёжность
 
-### ⚠️ КРИТИЧЕСКИ ВАЖНО: "At least once" с оговорками
-
-**Sidekiq (OSS) не гарантирует exactly-once выполнение!**
-
-```
-Sidekiq гарантирует: job будет выполнен AT LEAST ONCE
-                     (по крайней мере один раз)
-
-НО:
-- Job может быть выполнен НЕСКОЛЬКО раз (при retry)
-- Job может быть ПОТЕРЯН (в edge cases)
-```
+Sidekiq — реализация [at-least-once доставки](../system-design/08-delivery-guarantees.md) для фоновых задач в Rails. Job будет выполнен минимум один раз, но может быть выполнен повторно (при retry) или потерян (в edge cases). [Exactly-once на транспортном уровне невозможна](../system-design/08-delivery-guarantees.md#exactly-once-фундаментальное-ограничение) — критичные операции требуют [idempotency](../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) на уровне приложения.
 
 ### Когда job может быть потерян (OSS версия)
 
@@ -994,7 +983,7 @@ queue.latency  # секунды
 
 ### Q: Гарантирует ли Sidekiq exactly-once выполнение?
 
-**A:** Нет! Sidekiq гарантирует "at least once" — job выполнится минимум один раз, но может выполниться несколько раз (при retry) или потеряться (при crash). Для критичных операций нужна идемпотентность на уровне приложения.
+**A:** Нет! Sidekiq гарантирует [at-least-once](../system-design/08-delivery-guarantees.md) — job выполнится минимум один раз, но может выполниться несколько раз (при retry) или потеряться (при crash). Для критичных операций нужна [идемпотентность](../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) на уровне приложения.
 
 ### Q: Что случится, если job выполняется дольше timeout при shutdown?
 

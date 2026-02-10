@@ -55,18 +55,19 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 05-load-balancing.md      # health checks, algorithms, L4/L7, HA
 │   ├── 06-reliability-patterns.md # timeout, retry, circuit breaker, bulkhead, idempotency
 │   ├── 07-caching.md             # cache levels, coherence, invalidation, cache-aside, stampede
-│   ├── 08-message-queues.md      # async communication: broker, ACK, partitions, backpressure, DLQ
-│   ├── 09-storage-selection.md   # choosing storage: access patterns, OLTP/OLAP, NoSQL categories, ACID/BASE
-│   ├── 10-api-design.md          # REST, GraphQL, gRPC: HTTP methods, pagination, versioning, protocol choice
-│   ├── 11-microservices.md       # monolith → modular monolith → microservices, saga, decomposition criteria
-│   ├── 12-event-driven-architecture.md  # CQRS, event sourcing: read/write separation, projections, event store
+│   ├── 08-delivery-guarantees.md  # at-most-once, at-least-once, exactly-once: delivery semantics in distributed systems
+│   ├── 09-message-queues.md      # async communication: broker, ACK, partitions, backpressure, DLQ
+│   ├── 10-storage-selection.md   # choosing storage: access patterns, OLTP/OLAP, NoSQL categories, ACID/BASE
+│   ├── 11-api-design.md          # REST, GraphQL, gRPC: HTTP methods, pagination, versioning, protocol choice
+│   ├── 12-microservices.md       # monolith → modular monolith → microservices, saga, decomposition criteria
+│   ├── 13-event-driven-architecture.md  # CQRS, event sourcing: read/write separation, projections, event store
 │   └── cases/
 │       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── messaging/
 │   ├── index.md               # messaging technologies: Kafka, Pulsar
 │   └── kafka/
 │       ├── index.md
-│       └── architecture/      # broker, topic, partition, offset, replication (2 files)
+│       └── architecture/      # broker, topic, partition, offset, replication, producer reliability (3 files)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers

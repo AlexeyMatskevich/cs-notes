@@ -1,8 +1,8 @@
 # Messaging
 
-**Предпосылки:** [Message Queues](../system-design/08-message-queues.md) (temporal decoupling, broker, log vs queue, партиции, consumer groups, гарантии доставки).
+**Предпосылки:** [Гарантии доставки](../system-design/08-delivery-guarantees.md) (at-most-once, at-least-once, exactly-once), [Message Queues](../system-design/09-message-queues.md) (temporal decoupling, broker, log vs queue, партиции, consumer groups).
 
-Распределённые системы обмениваются данными не только через синхронные HTTP/gRPC-вызовы. Когда нужна развязка во времени, надёжная доставка или replay событий, появляются специализированные брокеры сообщений. Абстрактные паттерны — очередь vs лог, at-least-once доставка, партиции, backpressure — описаны в [Message Queues](../system-design/08-message-queues.md). Здесь — конкретные реализации: как каждая технология воплощает эти паттерны, какие trade-offs выбирает и чем отличается от альтернатив.
+Распределённые системы обмениваются данными не только через синхронные HTTP/gRPC-вызовы. Когда нужна развязка во времени, надёжная доставка или replay событий, появляются специализированные брокеры сообщений. Абстрактные паттерны — очередь vs лог, партиции, backpressure — описаны в [Message Queues](../system-design/09-message-queues.md), [гарантии доставки](../system-design/08-delivery-guarantees.md) — в отдельной заметке. Здесь — конкретные реализации: как каждая технология воплощает эти паттерны, какие trade-offs выбирает и чем отличается от альтернатив.
 
 ## Порядок изучения
 
