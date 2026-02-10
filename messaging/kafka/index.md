@@ -15,6 +15,7 @@ Kafka — распределённая платформа потоковой о�
 - [Broker, topic, partition, offset](architecture/00-what-is-kafka.md) — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, consumer groups с независимыми offset'ами
 - [Репликация](architecture/01-replication.md) — per-partition leader/follower, ISR, high watermark, acks, min.insync.replicas, controller и partition leader election, KRaft
 - [Producer reliability](architecture/02-producer-reliability.md) — retries, ordering, idempotent producer: PID, sequence number, exactly-once per partition
+- [Consumer internals](architecture/03-consumer-internals.md) — poll loop, offset commit, heartbeat, rebalancing: eager vs cooperative protocol, assignment strategies
 
 ## Как всё связано
 
