@@ -1,6 +1,6 @@
 # Redis Cluster: распределение ключей по узлам и автоматическое переключение мастера
 
-**Предпосылки:** [распределение данных](../../distribution.md), [репликация](00-replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md), [транзакции MULTI/EXEC](../atomicity/01-multi-exec.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [Pub/Sub](../data-structures/08-pub-sub.md).
+**Предпосылки:** [репликация](../../../system-design/replication.md), [шардинг](../../../system-design/sharding.md), [репликация Redis](00-replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md), [транзакции MULTI/EXEC](../atomicity/01-multi-exec.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [Pub/Sub](../data-structures/08-pub-sub.md).
 
 ## Зачем нужен Redis Cluster
 

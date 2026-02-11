@@ -21,7 +21,6 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   ├── non-linear/            # graph, tree, binary tree, BST, heap, B-tree, B+tree, B*tree, inverted index, skip list (10 files)
 │   └── techniques/            # dynamic programming (1 file)
 ├── databases/
-│   ├── distribution.md        # shared theory: replication, failover, sharding
 │   ├── postgresql/
 │   │   ├── index.md
 │   │   ├── storage/           # ACID, pages & tuples, TOAST, physical layout (4)

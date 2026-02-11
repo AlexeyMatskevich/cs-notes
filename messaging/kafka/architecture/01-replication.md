@@ -1,6 +1,6 @@
 # Репликация
 
-**Предпосылки:** [Broker, topic, partition, offset](00-what-is-kafka.md) (модель данных Kafka, consumer groups, partition key), [Распределение данных](../../../databases/distribution.md) (репликация, replication lag, failover), [Консенсус](../../../system-design/03-consensus.md) (Raft, leader election, term).
+**Предпосылки:** [Broker, topic, partition, offset](00-what-is-kafka.md) (модель данных Kafka, consumer groups, partition key), [Репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, кворум), [Консенсус](../../../system-design/03-consensus.md) (Raft, leader election, term).
 
 Topic `order_events` разбит на 6 партиций по 3 broker'ам, каждая партиция — единственный экземпляр на диске одного сервера. Broker 0 вышел из строя — партиции 0 и 3 пропали. Producer не может в них писать, consumer'ы не могут из них читать, а все события, которые там хранились, потеряны навсегда. Две из шести партиций — это 33% данных и 33% пропускной способности. Пять consumer groups — seller read DB, Elasticsearch, ClickHouse, рекомендации, fraud detection — недосчитаются заказов, попавших в эти партиции.
 

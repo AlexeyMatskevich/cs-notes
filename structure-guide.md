@@ -26,7 +26,6 @@
 
 ```
 databases/
-├── distribution.md              # shared: общая теория распределения
 ├── postgresql/
 │   ├── index.md
 │   ├── storage/
@@ -72,7 +71,7 @@ kebab-case: `query-processing`, `data-structures`, `schema-design`.
 | Файл | Назначение |
 |------|-----------|
 | `index.md` | Мастер-индекс тематической папки |
-| `distribution.md`, `shared-*.md` | Общая теория, используемая несколькими подпапками |
+| `shared-*.md` | Общая теория, используемая несколькими подпапками |
 
 Файлы без числового префикса — либо индексы, либо shared-концепции.
 
@@ -180,8 +179,8 @@ kebab-case: `query-processing`, `data-structures`, `schema-design`.
 <!-- между тематическими папками -->
 [LRU-кэш](../../algorithms-and-data-structures/linear/06-lru-cache.md)
 
-<!-- на shared-файл уровнем выше -->
-[Распределение данных](../distribution.md)
+<!-- на файл теории в system-design -->
+[Репликация](../../../system-design/replication.md)
 ```
 
 Ссылки ставятся в том месте текста, где концепция впервые упоминается.
@@ -190,18 +189,22 @@ kebab-case: `query-processing`, `data-structures`, `schema-design`.
 
 ## Общие теоретические файлы (shared concepts)
 
-Когда одна концепция используется несколькими технологиями — она выносится на уровень выше:
+Когда одна концепция используется несколькими технологиями — она выносится на уровень абстракции, где она определена. Теория, общая для всех баз данных и брокеров сообщений, живёт в `system-design/`:
 
 ```
+system-design/
+├── replication.md           # общая теория: sync/async, lag, failover, split brain, кворум
+├── sharding.md              # общая теория: shard key, resharding, комбинация с репликацией
+└── ...
+
 databases/
-├── distribution.md          # общая теория: репликация, failover, шардинг
 ├── postgresql/
-│   └── distribution/        # PostgreSQL-специфика ссылается на ../distribution.md
+│   └── distribution/        # PostgreSQL-специфика ссылается на system-design/replication.md
 └── redis/
-    └── distribution/        # Redis-специфика ссылается на ../distribution.md
+    └── distribution/        # Redis-специфика ссылается на system-design/replication.md
 ```
 
-Shared-файл содержит абстрактные понятия. Конкретные реализации (как PostgreSQL делает репликацию) — в файлах технологии.
+Shared-файл содержит абстрактные понятия. Конкретные реализации (как PostgreSQL делает репликацию) — в файлах технологии. Если концепция применима не только к базам данных (например, репликация используется и в Kafka, и в etcd), она принадлежит `system-design/`, а не `databases/`.
 
 ---
 

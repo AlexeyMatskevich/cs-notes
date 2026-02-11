@@ -19,7 +19,6 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── non-linear/            # graph, tree, binary tree, BST, heap, B-tree, B+tree, B*tree, inverted index, skip list (10 files)
 │   └── techniques/            # dynamic programming (1 file)
 ├── databases/
-│   ├── distribution.md        # shared theory: replication, failover, sharding
 │   ├── postgresql/
 │   │   ├── index.md
 │   │   ├── storage/           # ACID, pages & tuples, TOAST, physical layout (4)
@@ -47,6 +46,8 @@ This is a personal technical knowledge repository containing deep technical note
 │   └── sidekiq.md             # Sidekiq deep dive
 ├── system-design/
 │   ├── index.md               # system design: architecture, scalability, trade-offs
+│   ├── replication.md         # replication: sync/async, lag, failover, split brain, quorum
+│   ├── sharding.md            # horizontal partitioning: shard key, resharding, combined architecture
 │   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition
 │   ├── 01-consistency-models.md   # spectrum from eventual to linearizability
 │   ├── 02-conflict-resolution.md  # LWW, vector clocks, CRDTs
@@ -67,7 +68,7 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── index.md               # messaging technologies: Kafka, Pulsar
 │   └── kafka/
 │       ├── index.md
-│       └── architecture/      # broker, topic, partition, offset, replication, producer reliability, consumer internals (4 files)
+│       └── architecture/      # broker, topic, partition, offset, replication, producer reliability, consumer internals, transactions (5 files)
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
@@ -120,7 +121,7 @@ No build step or runtime. Quick checks:
 - Files with numeric prefix (`00-acid.md`, `01-pages-and-tuples.md`): prefix = dependency order. File `02` may reference `00` and `01`, not the other way around.
 - 3+ files on one theme → extract into a subdirectory
 - Each themed directory has an `index.md` (study order, cross-links, "Как всё связано" trade-offs section)
-- Shared theory used by multiple technologies → extract to parent level (e.g. `databases/distribution.md`)
+- Shared theory used by multiple technologies → extract to parent level (e.g. `system-design/replication.md`, `system-design/sharding.md`)
 - Cross-link related notes with relative links at the point of first mention
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections

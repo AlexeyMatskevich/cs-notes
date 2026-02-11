@@ -52,7 +52,7 @@ Redis — это сервер структур данных в оператив�
 
 ### Распределение и отказоустойчивость
 
-- [Распределение данных](../distribution.md) — репликация, failover, шардинг (общие понятия)
+- [Репликация](../../system-design/replication.md) и [шардинг](../../system-design/sharding.md) — общие понятия (failover, кворум, shard key)
 - [Распределение Redis](distribution/00-distribution.md) — что решают репликация, Sentinel и Cluster
 - [Репликация](distribution/00-replication.md) — master-replica, replication backlog, WAIT
 - [Sentinel](distribution/01-sentinel.md) — автоматический failover, кворум
