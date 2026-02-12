@@ -35,18 +35,18 @@ end
 ```
 Consumer A                              Broker 0 (leader p0, p1)
    │                                         │
-   │── poll() ─── fetch(p0, offset=15) ────► │
-   │              fetch(p1, offset=8)  ────► │
+   │── poll() ─── fetch(p0, offset=15) ────> │
+   │              fetch(p1, offset=8)  ────> │
    │                                         │  нет новых данных
    │                                         │  ждёт до 500ms...
    │                                         │  ...появились записи в p0
-   │◄──────────── p0: records 15..22 ────────│
+   │<──────────── p0: records 15..22 ────────│
    │              p1: пусто                  │
    │                                         │
    │  обрабатывает records 15..22            │
    │                                         │
-   │── poll() ─── fetch(p0, offset=23) ────► │
-   │              fetch(p1, offset=8)  ────► │
+   │── poll() ─── fetch(p0, offset=23) ────> │
+   │              fetch(p1, offset=8)  ────> │
 ```
 
 ## Offset commit
@@ -126,8 +126,8 @@ Consumer периодически отправляет **heartbeat** — кор�
 ```
 Consumer B                         Group Coordinator
    │                                       │
-   │── heartbeat (каждые 3 сек) ────────► │  "Consumer B жив"
-   │── heartbeat ────────────────────────► │
+   │── heartbeat (каждые 3 сек) ─────────> │  "Consumer B жив"
+   │── heartbeat ────────────────────────> │
    │                                       │
    │   OOM kill                            │
    │                                       │

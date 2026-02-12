@@ -10,11 +10,11 @@
 
 ```
 ┌──────────┐            ┌─────────┐
-│  Client  │───────────▶│   LB    │
+│  Client  │───────────>│   LB    │
 └──────────┘            └────┬────┘
                              │
                   ┌──────────┼──────────┐
-                  ▼          ▼          ▼
+                  v          v          v
              ┌────────┐┌────────┐┌────────┐
              │ Rails  ││ Rails  ││ Rails  │
              │ App 1  ││ App 2  ││ App 3  │  ← один и тот же код
@@ -124,7 +124,7 @@ end
 ┌──────────────────────────────┐     ┌──────────────────┐
 │       Rails Monolith         │     │ Payment Service  │
 │  ┌────────┐ ┌────────┐      │     │                  │
-│  │ Orders │ │Shipping│ ...  │────▶│  Payments API    │
+│  │ Orders │ │Shipping│ ...  │────>│  Payments API    │
 │  └────────┘ └────────┘      │gRPC │                  │
 │                              │     │  ┌────────────┐  │
 │  ┌───────────┐               │     │  │ PostgreSQL │  │
@@ -251,11 +251,11 @@ EventBus.publish("order.completed", { order_id: order.id, total: order.total })
 └──────────────────────┬──────────────────────────────┘
                        │
                        │ после confirm публикует событие
-                       ▼
+                       v
               "order.completed"
                        │
             ┌──────────┼──────────┐
-            ▼          ▼          ▼
+            v          v          v
        Notification  Loyalty   Analytics
        (подписчик)  (подписчик) (подписчик)
 ```
@@ -296,11 +296,11 @@ Chatty interface. Если два модуля связаны синхронны
                               └────┬────┘
                                    │
               ┌──────────┐    ┌────┴────┐
-              │  Client  │───▶│   LB    │
+              │  Client  │───>│   LB    │
               └──────────┘    └────┬────┘
                                    │
-                    ┌──────────────┼──────────────┐
-                    ▼              ▼               ▼
+                    ┌──────────────┼───────────────┐
+                    v              v               v
             ┌─────────────┐ ┌───────────┐  ┌─────────────┐
             │   Orders    │ │ Shipping  │  │  Monolith   │
             │  + Inventory│ │  Service  │  │  (Catalog,  │
@@ -309,28 +309,28 @@ Chatty interface. Если два модуля связаны синхронны
             └──────┬──────┘ └─────┬─────┘  └──────┬──────┘
                    │              │               │
                    │    gRPC      │               │
-                   │◄─────────────┤               │
+                   │<─────────────┤               │
                    │              │               │
-            ┌──────┴──────┐ ┌────┴─────┐  ┌──────┴──────┐
-            │ PostgreSQL  │ │PostgreSQL │  │ PostgreSQL  │
+            ┌──────┴──────┐ ┌─────┴────┐  ┌───────┴─────┐
+            │ PostgreSQL  │ │PostgreSQL│  │ PostgreSQL  │
             │ (orders +   │ │(shipping)│  │ (catalog,   │
             │  inventory) │ └──────────┘  │  etc.)      │
             └─────────────┘               └─────────────┘
                    │
               gRPC │    ┌──────────────┐
-                   ├───▶│   Payment    │
+                   ├───>│   Payment    │
                    │    │   Service    │  ← PCI DSS scope
                    │    │   own DB     │
                    │    └──────────────┘
                    │
                    │    ┌──────────────┐
-                   └───▶│  ClickHouse  │  ← аналитика
+                   └───>│  ClickHouse  │  ← аналитика
                   CDC   └──────────────┘
 
-         "order.completed" ──▶ [Message Queue]
+         "order.completed" ──> [Message Queue]
                                     │
                           ┌─────────┼─────────┐
-                          ▼         ▼         ▼
+                          v         v         v
                     Notification  Loyalty   Analytics
                     (subscriber) (subscr.) (subscr.)
 ```

@@ -13,7 +13,7 @@ Orders-сервис обработал платёж за заказ #42 и пу�
 ```
 Producer                          Leader (Broker 0)
    │                                   │
-   │── event: order_paid #42 ────────► │
+   │── event: order_paid #42 ────────> │
    │                                   │ записал в лог
    │                                   │ follower'ы скопировали
    │                                   │ готов ответить "ok"
@@ -47,9 +47,9 @@ Producer не отправляет событие и ждёт вечно. Три
 ```
 Producer                              Leader (Broker 0)
    │                                       │
-   │── request 1: order_paid #42 ────────► │
-   │── request 2: order_shipped #77 ─────► │
-   │── request 3: order_created #99 ─────► │
+   │── request 1: order_paid #42 ────────> │
+   │── request 2: order_shipped #77 ─────> │
+   │── request 3: order_created #99 ─────> │
    │                                       │
    │   (3 in-flight, ждём ответов)         │
 ```
@@ -93,9 +93,9 @@ Kafka решает обе проблемы — дубликаты и переу�
 ```
 Producer (PID=7)
    │
-   │── request: PID=7, seq=0, event: order_created #42 ──► Broker
-   │── request: PID=7, seq=1, event: order_paid #42    ──► Broker
-   │── request: PID=7, seq=2, event: order_shipped #42 ──► Broker
+   │── request: PID=7, seq=0, event: order_created #42 ──> Broker
+   │── request: PID=7, seq=1, event: order_paid #42    ──> Broker
+   │── request: PID=7, seq=2, event: order_shipped #42 ──> Broker
 ```
 
 Broker хранит для каждой комбинации (PID, partition) **последний принятый sequence number** и проверяет каждый входящий запрос:

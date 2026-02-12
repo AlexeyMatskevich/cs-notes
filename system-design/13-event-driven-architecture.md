@@ -82,15 +82,15 @@ end
 ```
 БЫЛО (Sidekiq, Orders знает всех):
 
-  Orders ──► SyncElasticsearchJob
-         ──► SyncClickHouseJob
-         ──► UpdateSellerReadJob
-         ──► каждый новый consumer = изменение Orders
+  Orders ──> SyncElasticsearchJob
+         ──> SyncClickHouseJob
+         ──> UpdateSellerReadJob
+         ──> каждый новый consumer = изменение Orders
 
 СТАЛО (pub/sub, Orders знает только событие):
 
-  Orders ──► publish("order.completed", {order_id, seller_id, total, ...})
-                         │
+  Orders ──> publish("order.completed", {order_id, seller_id, total, ...})
+                          │
                     ┌─────┼──────┬──────────┬──────────┐
                     ▼     ▼      ▼          ▼          ▼
                   ReadDB   ES   ClickH   Recommend   Fraud
@@ -117,13 +117,13 @@ Command Query Responsibility Segregation — разделение ответст
                     COMMAND SIDE                     QUERY SIDE
                 ┌─────────────────┐
                 │  Orders Service │
- CreateOrder ──►│                 │──► event: "order.completed"
- ChangeStatus─►│  Normalized DB  │         │
- CancelOrder──►│  (PostgreSQL)   │    ┌────┴──────────────────┐
+ CreateOrder ──>│                 │──> event: "order.completed"
+ ChangeStatus──>│  Normalized DB  │         │
+ CancelOrder───>│  (PostgreSQL)   │    ┌────┴──────────────────┐
                 │  3 индекса      │    │    Message Queue      │
                 └─────────────────┘    └────┬────┬────┬────────┘
                                             │    │    │
-                                            ▼    ▼    ▼
+                                            v    v    v
                                 ┌────────┐ ┌──┐ ┌───────────┐
                                 │Seller  │ │ES│ │ ClickHouse│
                                 │ReadDB  │ │  │ │           │
@@ -264,19 +264,19 @@ Events:    [1] [2] [3] ... [500] [501] [502] [503]
 ```
   WRITE SIDE                                READ SIDE
 
-  ┌──────────┐       publish       ┌──────────────────────┐
-  │ Command  │─────────────────►   │    Message Queue      │
+  ┌──────────┐       publish       ┌───────────────────────┐
+  │ Command  │─────────────────>   │    Message Queue      │
   │ Handler  │                     └────┬────┬────┬────────┘
   └────┬─────┘                          │    │    │
-       │                                ▼    ▼    ▼
-       ▼                        ┌──────┐ ┌──┐ ┌───────────┐
-  ┌──────────┐                  │Seller│ │ES│ │ ClickHouse│
-  │  Event   │                  │ReadDB│ │  │ │           │
-  │  Store   │                  └──────┘ └──┘ └───────────┘
+       │                                v    v    v
+       v                           ┌──────┐ ┌──┐ ┌───────────┐
+  ┌──────────┐                     │Seller│ │ES│ │ ClickHouse│
+  │  Event   │                     │ReadDB│ │  │ │           │
+  │  Store   │                     └──────┘ └──┘ └───────────┘
   │(append-  │
-  │  only)   │                 Проекция  Проекция  Проекция
-  └──────────┘                 списка    поиска    аналитики
-                               заказов
+  │  only)   │                    Проекция  Проекция  Проекция
+  └──────────┘                    списка    поиска    аналитики
+                                  заказов
 ```
 
 Command приходит → command handler валидирует, загружает текущее состояние (snapshot + replay), применяет бизнес-логику, записывает новое событие в event store → событие публикуется → проекции обновляют read-модели.

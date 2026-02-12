@@ -9,11 +9,11 @@
 ```
 order_events          enrichment-сервис           enriched_orders
 ───────────┐                                     ┌───────────
-  #42 paid │──► read ──► обогатить ──► write ──►│ #42 paid+seller
+  #42 paid │──> read ──> обогатить ──> write ───>│ #42 paid+seller
   #77 paid │    (consumer)             (producer)│ #77 paid+seller
 ───────────┘                                     └───────────
                                                   │       │
-                                                  ▼       ▼
+                                                  v       v
                                                billing  analytics
 ```
 
@@ -69,7 +69,7 @@ enriched_orders, partition 0:
 
 offset:  0    1    2    3    4    5        6    7
        [T1] [T1] [T1] [T1] [T1] [COMMIT] [T2] [T2]
-                                    ▲             │
+                                    ^             │
                                     │       не завершена
                                     T1 завершена
 
@@ -164,26 +164,26 @@ Coordinator не записывает COMMIT-маркеры сам — он от
 Enrichment-сервис         Tx Coordinator (Broker 1)       Partition leaders
       │                          │                              │
       │  begin_transaction       │                              │
-      │─────────────────────────►│  статус: ONGOING             │
+      │─────────────────────────>│  статус: ONGOING             │
       │                          │                              │
       │  send("enriched_orders") │                              │
-      │──────────────────────────┼─────────────────────────────►│ partition 0
+      │──────────────────────────┼─────────────────────────────>│ partition 0
       │  (coordinator узнаёт:    │                              │ partition 2
       │   T1 затрагивает p0, p2) │                              │
       │                          │                              │
       │  send_offsets_to_txn     │                              │
-      │──────────────────────────┼─────────────────────────────►│ __consumer_offsets
+      │──────────────────────────┼─────────────────────────────>│ __consumer_offsets
       │                          │                              │
       │  commit_transaction      │                              │
-      │─────────────────────────►│                              │
+      │─────────────────────────>│                              │
       │                          │  1. PREPARE_COMMIT           │
       │                          │     в __transaction_state    │
       │                          │     (acks=all, реплицировано)│
       │                          │                              │
       │                          │  2. COMMIT-маркер            │
-      │                          │─────────────────────────────►│ partition 0
-      │                          │─────────────────────────────►│ partition 2
-      │                          │─────────────────────────────►│ __consumer_offsets
+      │                          │─────────────────────────────>│ partition 0
+      │                          │─────────────────────────────>│ partition 2
+      │                          │─────────────────────────────>│ __consumer_offsets
       │                          │                              │
       │                          │  3. COMMITTED                │
       │                          │     в __transaction_state    │

@@ -142,6 +142,7 @@ No build step or runtime. Quick checks:
 
 - **No interview/preparation framing:** notes are technical material, never "interview prep". Words like "собеседование", "интервью", "подготовка к интервью" must not appear.
 - **Classical CS examples only:** cities → San Francisco, New York, London, Tokyo. Companies → Amazon, Netflix, Twitter/X, Google. People → Alice, Bob, Charlie. No references to the author or their location.
+- **ASCII diagrams — no wide Unicode arrows:** Characters `▼`, `▲`, `►`, `◄`, `▶` render wider than a standard monospace character and break diagram alignment. Use ASCII equivalents: `v`, `^`, `>`, `<`. Standard arrows `→`, `←`, `↑`, `↓` are fine in prose but avoid them inside box-drawing diagrams where alignment matters.
 
 ## Commits
 

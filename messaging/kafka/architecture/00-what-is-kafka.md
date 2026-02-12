@@ -107,11 +107,11 @@ Offset не глобален для topic'а — у каждой партици�
 ```
 partition 3:  [0] [1] [2] [3] [4]
 
-seller_read_db   ──────────────────► offset = 4
-elasticsearch    ─────────────►      offset = 3
-clickhouse       ────────►          offset = 2
-recommendations  ─────────────►      offset = 3
-fraud_detection  ──────────────────► offset = 4
+seller_read_db   ──────────────────> offset = 4
+elasticsearch    ─────────────>      offset = 3
+clickhouse       ────────>          offset = 2
+recommendations  ─────────────>      offset = 3
+fraud_detection  ──────────────────> offset = 4
 ```
 
 Принцип тот же, что в [Redis Streams consumer groups](../../../databases/redis/data-structures/05-stream.md): каждая группа видит весь поток, внутри группы сообщения распределяются между обработчиками. Разница — в Redis Streams распределение идёт на уровне отдельных сообщений (каждое следующее уходит свободному consumer'у), в Kafka — на уровне партиций.
@@ -130,7 +130,7 @@ Producer A    Producer B    Producer C
     │  partition_key = order_id
     │  hash(42) % 6 = 3
     │              │              │
-    ▼              ▼              ▼
+    v              v              v
 ┌─ Kafka Cluster ──────────────────────────────────────────────┐
 │                                                               │
 │  Broker 0              Broker 1              Broker 2         │
@@ -138,14 +138,14 @@ Producer A    Producer B    Producer C
 │  │ partition 0    │    │ partition 1    │    │ partition 2  │ │
 │  │ offsets: 0..N  │    │ offsets: 0..M  │    │ offsets: 0..K│ │
 │  │                │    │                │    │              │ │
-│  │ partition 3  ◄─┼────┼── event #42 ───┼────┼──            │ │
+│  │ partition 3  <─┼────┼── event #42 ───┼────┼──            │ │
 │  │ offsets: 0..4  │    │ partition 4    │    │ partition 5  │ │
 │  │                │    │ offsets: 0..P  │    │ offsets: 0..Q│ │
 │  └────────────────┘    └────────────────┘    └──────────────┘ │
 │       (диск)                (диск)               (диск)       │
 └───────────────────────────────────────────────────────────────┘
     │         │         │         │         │
-    ▼         ▼         ▼         ▼         ▼
+    v         v         v         v         v
  seller    elastic   click     recom     fraud
  read DB   search    house     mend.     detect.
  (offset   (offset   (offset   (offset   (offset

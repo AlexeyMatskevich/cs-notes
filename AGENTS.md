@@ -81,6 +81,7 @@ There is no build step or runtime for this repo.
 - Use a single `#` title per note; use `##` for major sections; keep headings descriptive.
 - Use fenced code blocks with language tags (e.g. ```sql, ```rust) and keep examples minimal but runnable.
 - File names: prefer `kebab-case.md` for new notes (existing `_` names are fine).
+- **ASCII diagrams — no wide Unicode arrows:** Do not use `▼`, `▲`, `►`, `◄`, `▶` — they render wider than a monospace character and break alignment. Use `v`, `^`, `>`, `<` instead.
 
 ## Testing Guidelines
 

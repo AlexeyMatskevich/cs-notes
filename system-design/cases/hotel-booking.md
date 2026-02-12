@@ -34,19 +34,19 @@ Worst case по p99: 2 + 0.5 + 3 + 0.2 + 0.1 = 5.8 секунд. Это толь
 
 ```
 ┌──────────┐     POST /bookings      ┌────────────┐
-│  Client  │ ───────────────────────►│ Controller │
+│  Client  │ ───────────────────────>│ Controller │
 └──────────┘                         └────────────┘
      │                                     │
      │                            создать Order (new)
      │                            поставить BookingJob
      │                            вернуть 202 Accepted
      │                                     │
-     │◄────────────── 202 + order_id ──────┘
+     │<────────────── 202 + order_id ──────┘
      │
      │  WebSocket / polling
-     ▼
+     v
 ┌──────────┐                         ┌────────────┐
-│  Client  │◄─────── статус ─────────│ BookingJob │
+│  Client  │<─────── статус ─────────│ BookingJob │
 └──────────┘                         └────────────┘
                                            │
                            Hotel Inventory API (lock)
@@ -54,7 +54,7 @@ Worst case по p99: 2 + 0.5 + 3 + 0.2 + 0.1 = 5.8 секунд. Это толь
                            Hotel Booking API (book)
                                            │
                                      ┌─────┴─────┐
-                                     ▼           ▼
+                                     v           v
                               EmailJob      LoyaltyJob
 ```
 
@@ -71,15 +71,15 @@ Email и Loyalty в отдельных jobs — bulkhead: сбой некрит�
 ```
      ┌─────────────────────────────────────┐
      │                                     │
-     ▼                                     │
-   [new] ──────► [progress] ──────► [completed]
+     v                                     │
+   [new] ──────> [progress] ──────> [completed]
      │                │
      │                │ (booking failed after charge)
-     │                ▼
-     └──────────► [cancelled] ◄──── [refund_pending]
+     │                v
+     └──────────> [cancelled] <──── [refund_pending]
                                           │
                                           │ (refund succeeded)
-                                          ▼
+                                          v
                                     [cancelled]
 ```
 

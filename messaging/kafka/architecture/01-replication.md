@@ -109,12 +109,12 @@ Producer не ждёт никакого подтверждения — отпр�
 Producer ждёт подтверждения от leader'а. Leader записал событие в свой локальный лог — ответил «ok». Follower'ы ещё не получили это событие.
 
 ```
-Producer ──event──► Leader (Broker 0)
+Producer ──event──> Leader (Broker 0)
                     │ записал в лог
-                    │ ◄── "ok" ──► Producer доволен
+                    │ <── "ok" ──> Producer доволен
                     │
-                    ├──fetch──► Follower (Broker 1)  ← ещё не получил
-                    └──fetch──► Follower (Broker 2)  ← ещё не получил
+                    ├──fetch──> Follower (Broker 1)  ← ещё не получил
+                    └──fetch──> Follower (Broker 2)  ← ещё не получил
 ```
 
 Leader подтвердил, через 200ms Broker 0 умирает. Follower'ы не успели скопировать последнее событие. Новый leader выбирается из follower'ов — событие потеряно. Тот же сценарий, что при [асинхронной репликации в Redis](../../../databases/redis/distribution/01-sentinel.md): master подтвердил, упал до репликации.
@@ -126,13 +126,13 @@ Leader подтвердил, через 200ms Broker 0 умирает. Follower'
 Producer ждёт, пока leader получит подтверждение от **всех реплик в ISR**. Leader записал к себе, дождался, пока follower'ы тоже записали, и только тогда ответил «ok».
 
 ```
-Producer ──event──► Leader (Broker 0)
+Producer ──event──> Leader (Broker 0)
                     │ записал в лог
-                    ├──fetch──► Follower (Broker 1) ── записал ── ok
-                    ├──fetch──► Follower (Broker 2) ── записал ── ok
+                    ├──fetch──> Follower (Broker 1) ── записал ── ok
+                    ├──fetch──> Follower (Broker 2) ── записал ── ok
                     │
                     │ все ISR-реплики подтвердили
-                    │ ◄── "ok" ──► Producer доволен
+                    │ <── "ok" ──> Producer доволен
 ```
 
 Broker 0 умирает — оба follower'а уже имеют событие. Потеря данных исключена. Аналог [синхронной репликации в PostgreSQL](../../../databases/postgresql/distribution/00-replication.md), где standby записывает в WAL до того, как primary ответит клиенту.
