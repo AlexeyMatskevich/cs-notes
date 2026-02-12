@@ -19,9 +19,10 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── non-linear/            # graph, tree, binary tree, BST, heap, B-tree, B+tree, B*tree, inverted index, skip list (10 files)
 │   └── techniques/            # dynamic programming (1 file)
 ├── databases/
+│   ├── acid.md                # ACID: transaction contract (shared by PostgreSQL, Redis refs)
 │   ├── postgresql/
 │   │   ├── index.md
-│   │   ├── storage/           # ACID, pages & tuples, TOAST, physical layout (4)
+│   │   ├── storage/           # ACID in PG (bridge), pages & tuples, TOAST, physical layout (4)
 │   │   ├── durability/        # WAL, buffer cache (2)
 │   │   ├── concurrency/       # MVCC, anomalies, isolation levels, locks, patterns, mistakes, queues (7)
 │   │   ├── maintenance/       # VACUUM (1)

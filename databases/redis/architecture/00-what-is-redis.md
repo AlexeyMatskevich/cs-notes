@@ -1,6 +1,6 @@
 # Что такое Redis
 
-**Предпосылки:** [ACID](../../postgresql/storage/00-acid.md), базовые структуры данных ([массив](../../../algorithms-and-data-structures/linear/01-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), [связный список](../../../algorithms-and-data-structures/linear/03-linked-list.md)).
+**Предпосылки:** [ACID](../../acid.md), базовые структуры данных ([массив](../../../algorithms-and-data-structures/linear/01-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), [связный список](../../../algorithms-and-data-structures/linear/03-linked-list.md)).
 
 ## Структуры данных с сетевым доступом
 

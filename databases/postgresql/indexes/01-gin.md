@@ -2,402 +2,183 @@
 
 **Предпосылки:** [инвертированный индекс](../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md).
 
-Инвертированный индекс «переворачивает» отношение между записью и её содержимым: вместо «документ → элементы» хранит «элемент → список документов». Подробнее о структуре, словаре, posting list и операциях пересечения/объединения — в [инвертированный индекс](../../algorithms-and-data-structures/non-linear/08-inverted-index.md).
+[Инвертированный индекс](../../algorithms-and-data-structures/non-linear/08-inverted-index.md) «переворачивает» отношение: вместо «документ → элементы» хранит «элемент → список документов». GIN (Generalized Inverted Index) — обобщённая реализация этой идеи в PostgreSQL: он работает не только с текстом, а с любыми типами, которые можно разбить на элементы — массивами, JSONB, полнотекстовыми векторами. «Обобщённый» означает, что GIN — фреймворк, адаптируемый под разные типы данных через operator class. Появился в PostgreSQL 8.2 (2006).
 
-GIN (Generalized Inverted Index) — обобщённый инвертированный индекс. «Обобщённый» означает, что GIN работает не только с текстом, а с любыми типами данных, которые можно разбить на элементы: массивы, JSONB, полнотекстовые векторы. GIN — фреймворк, адаптируемый под разные типы через operator class. Появился в PostgreSQL 8.2 (2006).
+## Почему B-tree не может заглянуть внутрь
 
-## Что индексирует GIN
+В интернет-магазине у каждого товара есть массив тегов. Нужно найти все товары с тегом 'ruby': `WHERE tags @> ARRAY['ruby']`. [B-tree](00-btree.md) сортирует *целые массивы* лексикографически — `{a, b}` < `{a, c}` — и может искать только точное совпадение массива или диапазон массивов. Оператор `@>` («содержит элемент») B-tree не поддерживает: элемент может быть на любой позиции, в массиве любой длины.
 
-GIN индексирует **составные значения**, разбивая их на **элементы**:
+GIN решает задачу: он разбивает каждый массив на отдельные элементы и индексирует каждый из них. Массив `{ruby, rails, api}` превращается в три записи в индексе, каждая указывает на строку-источник.
 
-| Тип данных | Составное значение | Элементы |
-|------------|-------------------|----------|
-| integer[] | {1, 2, 3} | 1, 2, 3 |
-| text[] | {ruby, rails} | ruby, rails |
-| jsonb | {"a": 1, "tags": ["x", "y"]} | a, 1, tags, x, y |
-| tsvector | 'cat' 'dog' 'fish' | cat, dog, fish |
+```sql
+CREATE TABLE posts (
+    id serial PRIMARY KEY,
+    title text,
+    tags text[]
+);
 
-## Почему B-tree не подходит
+INSERT INTO posts (title, tags) VALUES
+('Ruby Basics', ARRAY['ruby', 'tutorial']),
+('PostgreSQL GIN', ARRAY['postgresql', 'indexing', 'tutorial']),
+('Rails API', ARRAY['ruby', 'rails', 'api']);
 
-B-tree сортирует *целые массивы* как единое значение, лексикографически по элементам. Для массива `{ruby, rails, postgresql}` B-tree может эффективно искать *точное совпадение* массива или *диапазон массивов*. Но для оператора `@>` ("содержит элемент") B-tree бесполезен — элемент может быть на любой позиции, в массиве любой длины, с любыми соседними элементами. B-tree не может "заглянуть внутрь" значения.
+CREATE INDEX idx_tags ON posts USING gin(tags);
+```
 
-## Физическая структура GIN
+Три строки — шесть уникальных элементов. PostgreSQL построит индекс, в котором каждый элемент ведёт к списку строк, содержащих его.
 
-GIN состоит из двух основных частей:
+## Физическая структура: Entry Tree и Posting Lists
 
-### 1. Entry Tree (дерево ключей)
+GIN состоит из двух частей. **Entry Tree** — [B-tree](00-btree.md), где ключи — отдельные элементы (не составные значения). Почему B-tree, а не [хеш-таблица](../../algorithms-and-data-structures/linear/05-hash-table.md)? B-tree сохраняет порядок ключей, что критично для диапазонных запросов по числовым элементам и prefix-поиска по лексемам (например, все слова на «prog»).
 
-B-tree, где ключи — это **отдельные элементы** (не составные значения).
+Для каждого ключа в Entry Tree хранится **posting list** — отсортированный список TID (ctid) строк, содержащих этот элемент. Вот что GIN построит для данных выше:
 
-             ┌─────────────────┐
-             │   Entry Tree    │
-             │    (B-tree)     │
-             └────────┬────────┘
-                      │
-        ┌─────────────┼─────────────┐
-        ↓             ↓             ↓
-     [django]     [python]      [ruby]
-        │             │             │
-        ↓             ↓             ↓
-     Posting      Posting       Posting
-      List         List          List
+```
+Entry Tree (B-tree по элементам):
 
-**Почему B-tree для ключей, а не [хеш-таблица](../../algorithms-and-data-structures/linear/05-hash-table.md)?** B-tree сохраняет порядок ключей. Это критично для диапазонных запросов по элементам (если ключи — числа) и prefix-поиска (для tsvector можно искать лексемы, начинающиеся с "prog").
+    api -- indexing -- postgresql -- rails -- ruby -- tutorial
 
-### 2. Posting List (список вхождений)
+Posting Lists:
+    api        -> [TID(1,3)]
+    indexing   -> [TID(1,2)]
+    postgresql -> [TID(1,2)]
+    rails      -> [TID(1,3)]
+    ruby       -> [TID(1,1), TID(1,3)]
+    tutorial   -> [TID(1,1), TID(1,2)]
+```
 
-Для каждого ключа — отсортированный список TID (указателей на строки), где этот ключ встречается.
+Posting list отсортирован по TID, потому что основная операция — [пересечение списков](../../algorithms-and-data-structures/non-linear/08-inverted-index.md) при AND-запросах. Merge двух отсортированных списков — O(n + m) методом двух указателей, а не O(n × m). Сами ключи в posting list не дублируются — они уже есть в Entry Tree.
 
-    ruby → [TID(100,1), TID(200,3), TID(350,2)]
-             ↓            ↓            ↓
-          строка 1     строка 2     строка 3
-          в heap       в heap       в heap
+## Posting Tree: когда posting list не помещается на страницу
 
-**Почему отсортированный?** Для эффективного пересечения при AND-запросах. Merge двух отсортированных списков — O(n + m) методом двух указателей, а не O(n × m).
+Для редких ключей (например, тег 'sinatra' на трёх товарах) posting list хранится inline в листе Entry Tree. Но когда ключ встречается в тысячах строк (тег 'sale' на 100 000 товаров), список не помещается на одну страницу (~8 КБ). PostgreSQL превращает его в **Posting Tree** — отдельное B-tree по TID:
 
-**Что хранится в posting list:** только TID'ы (адреса строк в heap). Сам ключ не дублируется — он уже есть в Entry Tree.
+```
+Редкий ключ:   sinatra -> [TID1, TID2, TID3]        (inline в листе Entry Tree)
+Частый ключ:   sale    -> Posting Tree (B-tree по TID, тысячи страниц)
+```
 
-### 3. Posting Tree (для частых ключей)
+TID — пара (block_number, offset_number). Сравниваются лексикографически: сначала по block_number, при равенстве — по offset. `(100, 1) < (100, 2) < (200, 1) < (200, 5)`.
 
-Если posting list слишком длинный (ключ встречается в тысячах строк), он не помещается в одну страницу. PostgreSQL превращает его в отдельное **B-tree по TID** — Posting Tree.
+## Поиск: как GIN обслуживает @> и &&
 
-    Редкий ключ "sinatra":
-    sinatra → [TID1, TID2, TID3]  (простой список, inline в листе Entry Tree)
+Вернёмся к данным из примера. Запрос `WHERE tags @> ARRAY['ruby']` — «найти посты, содержащие 'ruby'». PostgreSQL ищет 'ruby' в Entry Tree за O(log K), где K — число уникальных элементов. Находит posting list `[TID(1,1), TID(1,3)]`. Идёт в heap за строками — результат: «Ruby Basics» и «Rails API».
 
-    Частый ключ "the":
-    the → ┌──────────────────┐
-          │   Posting Tree   │
-          │  (B-tree по TID) │
-          └──────────────────┘
-          Содержит миллионы TID
+Запрос `WHERE tags @> ARRAY['ruby', 'tutorial']` — «содержит И 'ruby', И 'tutorial'». Два поиска в Entry Tree:
 
-**Порог переключения:** определяется тем, помещается ли список на одну страницу (~8KB).
+```
+ruby     -> [TID(1,1), TID(1,3)]
+tutorial -> [TID(1,1), TID(1,2)]
+```
 
-**TID как ключ в Posting Tree:** TID — это пара (block_number, offset_number). Сравниваются лексикографически: сначала по block_number, при равенстве — по offset.
+Пересечение двумя указателями: оба списка начинаются с TID(1,1) — совпадение, добавляем в результат. Дальше TID(1,3) > TID(1,2), двигаем правый указатель. TID(1,2) пройден, правый список кончился. Результат: `[TID(1,1)]` — «Ruby Basics».
 
-    (100, 1) < (100, 2) < (200, 1) < (200, 5)
+Запрос `WHERE tags && ARRAY['ruby', 'rails']` — «содержит хотя бы один». Два поиска:
 
-## Пример: индексирование массива
+```
+ruby  -> [TID(1,1), TID(1,3)]
+rails -> [TID(1,3)]
+```
 
-    CREATE TABLE posts (
-        id serial PRIMARY KEY,
-        title text,
-        tags text[]
-    );
+Объединение: TID(1,1) меньше TID(1,3) — берём из левого. TID(1,3) совпадает — берём один раз. Результат: `[TID(1,1), TID(1,3)]` — «Ruby Basics» и «Rails API».
 
-    INSERT INTO posts (title, tags) VALUES
-    ('Ruby Basics', ARRAY['ruby', 'tutorial']),
-    ('PostgreSQL GIN', ARRAY['postgresql', 'indexing', 'tutorial']),
-    ('Rails API', ARRAY['ruby', 'rails', 'api']);
+Сложность поиска одного ключа — O(log K + P), где P — размер posting list. Для AND-запросов с m ключами: O(log K × m + merge), merge = O(P₁ + P₂ + …). Для OR — аналогично, но с объединением вместо пересечения.
 
-    CREATE INDEX idx_tags ON posts USING gin(tags);
+## Сжатие posting lists
 
-Что построит PostgreSQL:
+Каждый TID занимает 6 байт (4 байта block_number + 2 байта offset). Posting list из миллиона TID — 6 МБ. PostgreSQL использует **varbyte encoding** — кодирование дельт между соседними TID с переменной длиной байта. Поскольку TID отсортированы, дельты обычно малы:
 
-    Entry Tree (B-tree по элементам массивов):
-    ┌─────────────────────────────────────────────────┐
-    │  api → indexing → postgresql → rails → ruby → tutorial │
-    └─────────────────────────────────────────────────┘
+```
+Несжатый posting list:
+    TID(100,1), TID(100,2), TID(100,5), TID(101,1), TID(105,3)
+    6 + 6 + 6 + 6 + 6 = 30 байт
 
-    Posting Lists:
-    api        → [TID строки 3]
-    indexing   → [TID строки 2]
-    postgresql → [TID строки 2]
-    rails      → [TID строки 3]
-    ruby       → [TID строки 1, TID строки 3]
-    tutorial   → [TID строки 1, TID строки 2]
+Сжатый (дельты от базы TID(100,1)):
+    +1, +3, +252, +1026
+    1 байт + 1 байт + 2 байта + 2 байта ≈ 10 байт
+```
 
-## Поиск в GIN
+Малые дельты кодируются одним байтом вместо шести. Сжатие эффективнее на нефрагментированных таблицах (после [VACUUM FULL](../maintenance/00-vacuum.md) или CLUSTER), где TID идут последовательно и дельты минимальны.
 
-### Запрос: WHERE tags @> ARRAY['ruby']
+## Запись: pending list как компромисс
 
-"Найти посты, где tags содержит 'ruby'"
+INSERT одного товара с 200 тегами требует 200 модификаций индекса — по одной для каждого элемента. Каждая модификация — потенциальная запись страницы Entry Tree в случайное место. Это много random I/O.
 
-    1. Ищем 'ruby' в Entry Tree (B-tree поиск) — O(log K), где K = число уникальных ключей
-    2. Получаем posting list: [TID строки 1, TID строки 3]
-    3. Идём в heap за строками
+**Pending list** (список ожидания, включён по умолчанию через `fastupdate = on`) решает проблему: вместо 200 записей в разные места B-tree PostgreSQL делает один sequential append в несортированный буфер.
 
-### Запрос: WHERE tags @> ARRAY['ruby', 'tutorial']
+```
+INSERT: (postgresql, TID1) (gin, TID1) (index, TID1) ...
+                         |
+                         v
+  +----------------------------------------------+
+  | Pending List (несортированный, append-only)   |
+  | (postgresql,TID1) (gin,TID1) (index,TID1)... |
+  +----------------------------------------------+
+                         |
+                   слияние (batch)
+                         |
+                         v
+  +----------------------------------------------+
+  | Entry Tree + Posting Lists (основная часть)   |
+  +----------------------------------------------+
+```
 
-"Найти посты, где tags содержит И 'ruby', И 'tutorial'"
+Записи из pending list сливаются в основную структуру при переполнении буфера (`gin_pending_list_limit`, по умолчанию 4 МБ), при [VACUUM](../maintenance/00-vacuum.md), или вручную через `SELECT gin_clean_pending_list('idx_name')`. Та транзакция, которая переполнила буфер, платит за слияние всех накопленных записей.
 
-    1. Ищем 'ruby' в Entry Tree → [TID1, TID3]
-    2. Ищем 'tutorial' в Entry Tree → [TID1, TID2]
-    3. Пересечение (AND): [TID1, TID3] ∩ [TID1, TID2] = [TID1]
-    4. Идём в heap за строкой 1
+Цена для чтения: при поиске PostgreSQL проверяет обе структуры — основной Entry Tree и весь pending list (несортированный). Для редких ключей это ощутимо: если в pending list 100 000 записей, а по основному индексу нашли бы 5 строк, почти всё время уходит на линейное сканирование буфера, где может не быть ни одного релевантного результата. Отключение fastupdate (`WITH (fastupdate = off)`) убирает этот overhead, но каждый INSERT платит полную цену записи в B-tree. Типичный выбор: fastupdate = on при write-heavy нагрузке, off — при read-heavy с критичной предсказуемостью latency.
 
-Пересечение двух отсортированных списков — O(n + m) методом двух указателей.
+## JSONB: два operator class'а
 
-### Запрос: WHERE tags && ARRAY['ruby', 'rails']
+У товара кроме тегов есть JSONB-атрибуты: `data jsonb`. Запрос `WHERE data @> '{"color": "black"}'` — найти товары чёрного цвета. GIN индексирует JSONB через один из двух operator class'ов.
 
-"Найти посты, где tags содержит 'ruby' ИЛИ 'rails' (хотя бы один)"
+**jsonb_ops** (по умолчанию) индексирует каждый ключ и каждое значение отдельно. Поддерживает `@>` (containment), `?` (наличие ключа), `?&` (все ключи), `?|` (любой ключ). Индекс крупнее, но гибче — покрывает все типы JSONB-запросов.
 
-    1. Ищем 'ruby' в Entry Tree → [TID1, TID3]
-    2. Ищем 'rails' в Entry Tree → [TID3]
-    3. Объединение (OR): [TID1, TID3] ∪ [TID3] = [TID1, TID3]
-    4. Идём в heap за строками 1 и 3
+**jsonb_path_ops** индексирует хеши полных путей от корня до значения. Поддерживает только `@>`, `@?`, `@@` — зато индекс компактнее (~30% меньше) и containment-запросы быстрее: хеш пути исключает ложные срабатывания по совпадению ключа из другой ветки JSON. Если в документе есть `{"shipping": {"color": "red"}}` и `{"color": "black"}`, jsonb_ops найдёт оба при поиске ключа `color`, а jsonb_path_ops различит пути.
 
-## Сжатие Posting Lists
+```sql
+-- Гибкий: все операторы
+CREATE INDEX idx_data ON products USING gin(data);
 
-Каждый TID занимает 6 байт (4 байта block_number + 2 байта offset). Posting list из миллиона TID'ов — 6 МБ.
+-- Компактный: только @>
+CREATE INDEX idx_data_path ON products USING gin(data jsonb_path_ops);
+```
 
-PostgreSQL использует **varbyte encoding** — кодирование дельт между соседними TID'ами с переменной длиной байта:
+Выбор определяется типом запросов: нужен `?` (проверка наличия ключа) — jsonb_ops, только containment — jsonb_path_ops.
 
-    Несжатый posting list:
-        TID(100,1), TID(100,2), TID(100,5), TID(101,1), TID(105,3)
-        6 + 6 + 6 + 6 + 6 = 30 байт
+## Полнотекстовый поиск: от LIKE к tsvector
 
-    Сжатый (дельты):
-        База: TID(100,1)
-        Дельты: +1, +3, +252, +1026
+Магазин растёт, появляется поиск по описаниям товаров. `WHERE description LIKE '%database%'` — полный перебор таблицы (LIKE с `%` в начале не использует [B-tree](00-btree.md)), не находит «databases», «Database», не понимает словоформы: «running» и «run» — для LIKE это разные строки.
 
-        Дельта +1 кодируется 1 байтом
-        Дельта +1026 кодируется 2 байтами
-        Итого: ~10-15 байт вместо 30
+**tsvector** — представление текста как отсортированного списка лексем (нормализованных слов):
 
-Сжатие эффективнее, когда TID'ы идут последовательно (таблица не фрагментирована). После [VACUUM FULL](../maintenance/00-vacuum.md) или CLUSTER сжатие лучше.
+```sql
+SELECT to_tsvector('english', 'The quick brown foxes are running fast');
 
-## Операторы для GIN
+-- Результат:
+-- 'brown':3 'fast':7 'fox':4 'quick':2 'run':6
+```
 
-### Массивы (integer[], text[], и т.д.)
+«The», «are» удалены (стоп-слова). «foxes» → «fox», «running» → «run» (стемминг — отсечение окончаний). Числа — позиции слов в оригинале.
 
-| Оператор | Значение | Пример |
-|----------|----------|--------|
-| `@>` | Содержит все элементы | `tags @> ARRAY['ruby']` |
-| `<@` | Содержится в | `tags <@ ARRAY['ruby', 'rails', 'api']` |
-| `&&` | Пересекается (есть общие) | `tags && ARRAY['ruby', 'python']` |
-| `=` | Равны | `tags = ARRAY['ruby', 'rails']` |
+**tsquery** — запрос для поиска по tsvector: `to_tsquery('english', 'running & fox')` даёт `'run' & 'fox'`. Оператор `@@` проверяет соответствие: `tsvector @@ tsquery`.
 
-### JSONB
+GIN индексирует лексемы из tsvector так же, как элементы массива — каждая лексема становится ключом в Entry Tree, posting list указывает на строки, содержащие эту лексему. Запрос `'run' & 'fox'` — пересечение posting lists для двух ключей, та же механика AND-запроса. Рекомендуемый подход — отдельная stored generated колонка, чтобы не вычислять tsvector при каждом запросе:
 
-| Оператор | Значение | Пример |
-|----------|----------|--------|
-| `@>` | Содержит JSON | `data @> '{"type": "post"}'` |
-| `?` | Содержит ключ | `data ? 'email'` |
-| `?&` | Содержит все ключи | `data ?& array['email', 'name']` |
-| `?\|` | Содержит любой ключ | `data ?\| array['email', 'phone']` |
+```sql
+ALTER TABLE products ADD COLUMN description_tsv tsvector
+GENERATED ALWAYS AS (to_tsvector('english', description)) STORED;
 
-## JSONB: jsonb_ops vs jsonb_path_ops
+CREATE INDEX idx_description_tsv ON products USING gin(description_tsv);
 
-PostgreSQL предлагает два operator class для JSONB:
+SELECT * FROM products
+WHERE description_tsv @@ to_tsquery('english', 'lightweight & database');
+```
 
-### jsonb_ops (по умолчанию)
+## Составные GIN и operator classes
 
-    CREATE INDEX idx_data ON products USING gin(data);
-    -- эквивалентно:
-    CREATE INDEX idx_data ON products USING gin(data jsonb_ops);
+GIN поддерживает составные индексы: `CREATE INDEX ON products USING gin(tags, data)`. В отличие от B-tree, здесь нет правила левого префикса — каждая колонка индексируется независимо. Запрос по любой из колонок использует индекс. GIN хранит элементы из всех колонок в одном Entry Tree, помечая, из какой колонки каждый элемент.
 
-**Что индексирует:** каждый ключ и каждое значение отдельно.
-
-**Поддерживает:** `@>`, `?`, `?&`, `?\|`, `@?`, `@@`
-
-### jsonb_path_ops
-
-    CREATE INDEX idx_data ON products USING gin(data jsonb_path_ops);
-
-**Что индексирует:** хеши полных путей от корня до значения.
-
-**Поддерживает:** только `@>`, `@?`, `@@`
-
-### Сравнение
-
-| Аспект | jsonb_ops | jsonb_path_ops |
-|--------|-----------|----------------|
-| Размер индекса | Больше | Меньше (~30%) |
-| Оператор `?` (наличие ключа) | Да | Нет |
-| Оператор `@>` (containment) | Да | Да, быстрее |
-| Когда использовать | Нужны `?`, `?&`, `?\|` | Только `@>` запросы |
-
-## Полнотекстовый поиск: tsvector и tsquery
-
-### Проблема
-
-    SELECT * FROM articles WHERE body LIKE '%database%';
-
-Проблемы:
-- Full table scan (LIKE с `%` в начале не использует B-tree)
-- Не находит "databases", "Database", "DATABASE"
-- Не понимает словоформы: "running" vs "run"
-
-### Решение: tsvector и tsquery
-
-**tsvector (text search vector)** — представление текста в виде отсортированного списка **лексем** (нормализованных слов).
-
-**Лексема (lexeme)** — нормализованная форма слова: без окончаний, в нижнем регистре.
-
-    SELECT to_tsvector('english', 'The quick brown foxes are running fast');
-
-    -- Результат:
-    'brown':3 'fast':7 'fox':4 'quick':2 'run':6
-
-Что произошло:
-- "The", "are" — удалены (стоп-слова)
-- "foxes" → "fox" (стемминг: отсечение окончания)
-- "running" → "run" (стемминг)
-- Числа — позиции слов в оригинале
-
-**tsquery (text search query)** — запрос для поиска по tsvector.
-
-    SELECT to_tsquery('english', 'running & fox');
-
-    -- Результат:
-    'run' & 'fox'
-
-### Оператор @@
-
-    SELECT * FROM articles
-    WHERE to_tsvector('english', body) @@ to_tsquery('english', 'database');
-
-Оператор `@@` — "tsvector соответствует tsquery".
-
-### GIN индекс для полнотекстового поиска
-
-**Способ 1: индекс на выражение**
-
-    CREATE INDEX idx_body_fts ON articles
-    USING gin(to_tsvector('english', body));
-
-    -- Запрос должен точно соответствовать выражению:
-    SELECT * FROM articles
-    WHERE to_tsvector('english', body) @@ to_tsquery('english', 'database');
-
-**Способ 2: отдельная колонка tsvector (рекомендуется)**
-
-    ALTER TABLE articles ADD COLUMN body_tsv tsvector
-    GENERATED ALWAYS AS (to_tsvector('english', body)) STORED;
-
-    CREATE INDEX idx_body_tsv ON articles USING gin(body_tsv);
-
-    -- Запрос проще:
-    SELECT * FROM articles
-    WHERE body_tsv @@ to_tsquery('english', 'database');
-
-## Pending List (Fast Update)
-
-### Проблема записи в GIN
-
-INSERT одной строки с массивом из 200 элементов требует 200 модификаций индекса — по одной для каждого элемента. Каждая модификация потенциально требует записи страницы. Много random I/O.
-
-### Решение: отложенная вставка
-
-**Pending List (список ожидания)** — несортированный буфер для новых записей. Вместо дорогой операции (random I/O в множество мест B-tree) делаем дешёвую (sequential append в один список).
-
-    INSERT статьи с лексемами [postgresql, gin, index]
-
-    С pending list:
-    → Записываем пары (ключ, TID) в конец pending list
-    → Готово!
-
-    ┌─────────────────────────────────────────────────────────────┐
-    │  Pending List (несортированный, append-only)               │
-    │  ┌─────────────────────────────────────────────────────┐   │
-    │  │ (postgresql, TID1) (gin, TID1) (index, TID1) ...    │   │
-    │  │ (database, TID2) (query, TID2) ...                  │   │
-    │  └─────────────────────────────────────────────────────┘   │
-    │                                                             │
-    │  Entry Tree + Posting Lists (основная структура)           │
-    │  (обновляется позже, batch-ом)                             │
-    └─────────────────────────────────────────────────────────────┘
-
-**Важно:** ключ в pending list может повторяться. Это просто лог вставок. При слиянии записи с одинаковым ключом объединяются в один posting list.
-
-### Влияние на поиск
-
-При поиске PostgreSQL проверяет **обе структуры**:
-
-    1. Ищем в Entry Tree → получаем posting list
-    2. Сканируем весь Pending List (несортированный!)
-    3. Объединяем результаты
-
-**Проблема для редких ключей:** pending list сканируется целиком. Если в pending list 100,000 записей, а по основному индексу нашли бы 5 строк — 99.99% времени тратим на сканирование pending list, где может не быть ни одного релевантного результата.
-
-**Компромисс:** INSERT быстрее, SELECT медленнее (особенно для редких ключей).
-
-### Когда pending list сливается
-
-1. При переполнении: `gin_pending_list_limit` (по умолчанию 4MB). Та транзакция, которой "не повезло", платит за всех.
-2. При `VACUUM` таблицы (см. [VACUUM](../maintenance/00-vacuum.md))
-3. Вручную: `SELECT gin_clean_pending_list('idx_name')`
-
-### Отключение Fast Update
-
-    CREATE INDEX idx_body_tsv ON articles USING gin(body_tsv)
-    WITH (fastupdate = off);
-
-Теперь INSERT сразу модифицирует основную структуру.
-
-**Когда отключать fastupdate:**
-- Нагрузка read-heavy (много поисков, мало вставок)
-- Критична предсказуемость latency (pending list создаёт спайки при слиянии)
-
-**Когда оставлять включённым:**
-- Нагрузка write-heavy или bulk insert
-- Средняя производительность важнее worst-case latency
-
-## Составные GIN индексы
-
-GIN поддерживает составные индексы:
-
-    CREATE INDEX idx_tags_attrs ON products USING gin(tags, attributes);
-
-**Важное отличие от B-tree:** нет "leftmost prefix rule". Каждая колонка индексируется независимо.
-
-    -- Все три запроса используют idx_tags_attrs:
-    WHERE tags @> ARRAY['electronics']              -- ✓
-    WHERE attributes @> '{"color": "black"}'        -- ✓
-    WHERE tags @> ARRAY['phone'] AND attributes ? 'storage'  -- ✓
-
-GIN хранит элементы из всех колонок в одном Entry Tree, помечая, из какой колонки каждый элемент.
-
-## Operator Class для GIN
-
-GIN требует от типа данных определить несколько функций:
-
-**extractValue(datum)** — разбивает составное значение на элементы при индексации. Получает массив {10, 20, 30}, возвращает три ключа: 10, 20, 30.
-
-**extractQuery(query, strategy)** — разбивает условие запроса на искомые элементы. Получает условие "@> ARRAY[10, 30]", возвращает ключи 10 и 30, плюс информацию что нужно AND.
-
-**consistent(check[], query, strategy)** — проверяет, удовлетворяет ли набор найденных ключей условию запроса.
-
-Разные operator classes для одного типа могут индексировать его по-разному (как jsonb_ops vs jsonb_path_ops).
-
-## Сложность операций GIN
-
-| Операция | Сложность | Примечание |
-|----------|-----------|------------|
-| Поиск одного ключа | O(log K + P) | K = уникальных ключей, P = размер posting list |
-| Поиск с AND | O(log K × m + merge) | m = ключей в запросе, merge = O(P1 + P2 + ...) |
-| Поиск с OR | O(log K × m + union) | union = O(P1 + P2 + ...) |
-| INSERT (fastupdate=on) | O(1) amortized | Append в pending list |
-| INSERT (fastupdate=off) | O(e × log K) | e = элементов в значении |
-
-## Когда использовать GIN
-
-| Задача | Подходит GIN? |
-|--------|---------------|
-| Поиск по элементам массива | Да |
-| Поиск по ключам/значениям JSONB | Да |
-| Полнотекстовый поиск | Да |
-| Поиск по диапазону (>, <, BETWEEN) | Нет, используй B-tree |
-| Сортировка (ORDER BY) | Нет, используй B-tree |
-| Уникальность | Нет, используй B-tree |
-| Поиск ближайших соседей | Нет, используй GiST |
-
-## Терминология GIN
-
-| Термин | Значение |
-|--------|----------|
-| Inverted Index | Индекс "элемент → список документов" |
-| Entry Tree | B-tree по элементам (ключам) |
-| Posting List | Отсортированный список TID для одного ключа |
-| Posting Tree | B-tree по TID для частого ключа |
-| Pending List | Несортированный буфер для отложенной вставки |
-| Fast Update | Режим с pending list (по умолчанию включён) |
-| tsvector | Нормализованное представление текста для поиска |
-| tsquery | Запрос для полнотекстового поиска |
-| Лексема (lexeme) | Нормализованная форма слова |
-| jsonb_ops | Operator class для JSONB, все операторы |
-| jsonb_path_ops | Operator class для JSONB, только @>, компактнее |
+Под капотом GIN — фреймворк, адаптируемый к типам данных через **operator class**. Operator class определяет три функции: `extractValue` разбивает значение на элементы при индексации (массив `{10, 20, 30}` → три ключа), `extractQuery` разбивает условие запроса на искомые элементы (условие `@> ARRAY[10, 30]` → ключи 10 и 30 плюс информация, что нужен AND), `consistent` проверяет, удовлетворяет ли набор найденных ключей условию. Разные operator class'ы для одного типа индексируют его по-разному — jsonb_ops и jsonb_path_ops тому пример.
 
 GIN работает с дискретными элементами внутри составных значений. Данные без линейного порядка — геометрия, диапазоны, IP-сети — индексирует [GiST](02-gist.md).
 
