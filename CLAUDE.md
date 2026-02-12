@@ -93,7 +93,6 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   ├── metaprogramming.md               # eval, instance_eval, define_method, refinements
 │   │   ├── gc.md                            # GC: mark-sweep, generational, incremental, compaction
 │   │   └── jit.md                           # JIT: YJIT (BBV), ZJIT (method-based), guards, invalidation
-│   ├── ruby_collections_notes.md            # Array, Hash, String internals (old, replaced by internal/collections/)
 │   └── ruby_concurrency_notes.md            # threads, GIL, fibers
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
