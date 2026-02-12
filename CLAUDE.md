@@ -70,21 +70,26 @@ This is a personal technical knowledge repository containing deep technical note
 │       ├── index.md
 │       └── architecture/      # broker, topic, partition, offset, replication, producer reliability, consumer internals, transactions (5 files)
 ├── ruby/
-│   ├── 00-tokenization-and-parsing.md  # текст → токены → AST
-│   ├── 01-compilation.md               # AST → ISeq
-│   ├── 02-execution.md                 # фреймы, EP, VM цикл
-│   ├── 03-control-flow.md              # if/while, break/return
-│   ├── 04-objects-and-classes.md        # RObject, RClass, метакласс
-│   ├── 05-modules.md                   # include/prepend, CREF
-│   ├── 06-shapes.md                    # shape_id, ivar cache
-│   ├── 07-method-dispatch.md           # типы методов, method cache
-│   ├── 08-method-definition.md         # def → m_tbl через CREF
-│   ├── 09-blocks.md                    # замыкания, Proc, lambda
-│   ├── 10-metaprogramming.md           # eval, instance_eval, define_method, refinements
-│   ├── 11-gc.md                        # GC: mark-sweep, generational, incremental, compaction
-│   ├── ruby_collections_notes.md       # Array, Hash, Set internals
-│   ├── ruby_concurrency_notes.md       # threads, GIL, fibers
-│   └── ruby_jit_notes.md              # YJIT / ZJIT
+│   ├── internal/
+│   │   ├── index.md                         # порядок изучения, связи между группами
+│   │   ├── vm/                              # Source → Bytecode → Execution
+│   │   │   ├── 00-tokenization-and-parsing.md  # текст → токены → AST
+│   │   │   ├── 01-compilation.md               # AST → ISeq
+│   │   │   ├── 02-execution.md                 # фреймы, EP, VM цикл
+│   │   │   └── 03-control-flow.md              # if/while, break/return
+│   │   ├── object-model/                    # Objects, Classes, Modules, Shapes
+│   │   │   ├── 00-objects-and-classes.md        # RObject, RClass, метакласс
+│   │   │   ├── 01-modules.md                   # include/prepend, CREF
+│   │   │   └── 02-shapes.md                    # shape_id, ivar cache
+│   │   ├── methods/                         # Method lifecycle
+│   │   │   ├── 00-method-dispatch.md           # типы методов, method cache
+│   │   │   └── 01-method-definition.md         # def → m_tbl через CREF
+│   │   ├── blocks.md                        # замыкания, Proc, lambda
+│   │   ├── metaprogramming.md               # eval, instance_eval, define_method, refinements
+│   │   └── gc.md                            # GC: mark-sweep, generational, incremental, compaction
+│   ├── ruby_collections_notes.md            # Array, Hash, Set internals
+│   ├── ruby_concurrency_notes.md            # threads, GIL, fibers
+│   └── ruby_jit_notes.md                   # YJIT / ZJIT
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
     └── topic-queue.md

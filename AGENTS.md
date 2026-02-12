@@ -59,10 +59,17 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   └── cases/
 │       └── hotel-booking.md      # case study: async booking, state machine, refund flow
 ├── ruby/
-│   ├── ruby_collections_notes.md   # Array, Hash, Set internals
-│   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
-│   ├── 11-gc.md                    # GC: mark-sweep, generational, incremental, compaction
-│   └── ruby_jit_notes.md           # YJIT / ZJIT
+│   ├── internal/
+│   │   ├── index.md                    # порядок изучения, связи между группами
+│   │   ├── vm/                         # tokenization, compilation, execution, control flow (4)
+│   │   ├── object-model/               # objects & classes, modules, shapes (3)
+│   │   ├── methods/                    # method dispatch, method definition (2)
+│   │   ├── blocks.md                   # замыкания, Proc, lambda
+│   │   ├── metaprogramming.md          # eval, instance_eval, define_method, refinements
+│   │   └── gc.md                       # GC: mark-sweep, generational, incremental, compaction
+│   ├── ruby_collections_notes.md       # Array, Hash, Set internals
+│   ├── ruby_concurrency_notes.md       # threads, GIL, fibers
+│   └── ruby_jit_notes.md              # YJIT / ZJIT
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
     └── topic-queue.md
