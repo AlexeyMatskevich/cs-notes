@@ -86,10 +86,10 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   │   └── 01-method-definition.md         # def → m_tbl через CREF
 │   │   ├── blocks.md                        # замыкания, Proc, lambda
 │   │   ├── metaprogramming.md               # eval, instance_eval, define_method, refinements
-│   │   └── gc.md                            # GC: mark-sweep, generational, incremental, compaction
+│   │   ├── gc.md                            # GC: mark-sweep, generational, incremental, compaction
+│   │   └── jit.md                           # JIT: YJIT (BBV), ZJIT (method-based), guards, invalidation
 │   ├── ruby_collections_notes.md            # Array, Hash, Set internals
-│   ├── ruby_concurrency_notes.md            # threads, GIL, fibers
-│   └── ruby_jit_notes.md                   # YJIT / ZJIT
+│   └── ruby_concurrency_notes.md            # threads, GIL, fibers
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
     └── topic-queue.md
