@@ -202,4 +202,4 @@ YJIT использует формы ещё эффективнее: при ко�
 
 - Jemma Issroff, 2022, «Implementing Object Shapes in CRuby» — RubyKaigi talk, введение shapes в CRuby.
 - Chris Seaton, 2015, «Specialising Dynamic Techniques for Implementing the Ruby Programming Language» — PhD thesis, оригинальная идея shapes для Ruby.
-- Исходники Ruby: `shape.h` (rb_shape_t, shape_id_t, SHAPE_MAX_VARIATIONS, rb_attr_index_cache), `shape.c` (дерево переходов, вариации, performance warning), `vm_insnhelper.c` (vm_getivar — hot path, fill_ivar_cache — заполнение при промахе), `vm_core.h` (iseq_inline_iv_cache_entry), `insns.def` (getinstancevariable, setinstancevariable).
+- Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `shape.h` (rb_shape_t, shape_id_t, SHAPE_MAX_VARIATIONS, rb_attr_index_cache), `shape.c` (дерево переходов, вариации, performance warning), `vm_insnhelper.c` (vm_getivar — hot path, fill_ivar_cache — заполнение при промахе), `vm_core.h` (iseq_inline_iv_cache_entry), `insns.def` (getinstancevariable, setinstancevariable).

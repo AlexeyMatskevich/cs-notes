@@ -175,4 +175,4 @@ Mathematician.singleton_class
 ## Sources
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 5: объекты и классы.
-- Исходники Ruby: `include/ruby/internal/core/rbasic.h` (RBasic: flags, klass), `include/ruby/internal/core/robject.h` (RObject: embedded/heap storage), `internal/class.h` (RClass, rb_classext_t: m_tbl, const_tbl, super), `shape.h` (object shapes: rb_shape_t, shape_id, transitions).
+- Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `include/ruby/internal/core/rbasic.h` (RBasic: flags, klass), `include/ruby/internal/core/robject.h` (RObject: embedded/heap storage), `internal/class.h` (RClass, rb_classext_t: m_tbl, const_tbl, super), `shape.h` (object shapes: rb_shape_t, shape_id, transitions).

@@ -114,4 +114,4 @@ puts RubyVM::InstructionSequence.compile('10.times { |n| break if n == 5 }').dis
 ## Sources
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 4: управление потоком.
-- Исходники Ruby: `insns.def` (branchunless, branchif, jump, throw), `iseq.h` (catch table types).
+- Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `insns.def` (branchunless, branchif, jump, throw), `iseq.h` (catch table types).

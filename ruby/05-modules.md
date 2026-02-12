@@ -233,4 +233,4 @@ end
 ## Sources
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 6: модули, поиск методов и констант.
-- Исходники Ruby: `class.c` (rb_include_class_new — создание included class; ensure_origin — prepend и origin class; rb_include_module — пропагация к подклассам), `method.h` (rb_cref_t — лексическая область), `vm_insnhelper.c` (vm_get_ev_const — поиск константы).
+- Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `class.c` (rb_include_class_new — создание included class; ensure_origin — prepend и origin class; rb_include_module — пропагация к подклассам), `method.h` (rb_cref_t — лексическая область), `vm_insnhelper.c` (vm_get_ev_const — поиск константы).

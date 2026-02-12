@@ -164,4 +164,4 @@ Mathematician.new.greet   # NoMethodError
 ## Sources
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 9: метапрограммирование и замыкания.
-- Исходники Ruby: `method.h` (rb_cref_t — строка 44), `vm_insnhelper.c` (vm_env_cref — строка 861, vm_cref_push — строка 1035, vm_define_method — строка 6016, vm_find_or_create_class_by_id — строка 5964), `vm_method.c` (rb_method_entry_make — строка 1311, rb_add_method_iseq — строка 1599), `vm.c` (vm_cref_new0 — строка 313), `compile.c` (definemethod — строка 11365, definesmethod — строка 11381), `vm_core.h` (VM_ENV_DATA_INDEX_ME_CREF — строка 1420).
+- Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `method.h` (rb_cref_t — строка 45), `vm_insnhelper.c` (vm_env_cref — строка 863, vm_cref_push — строка 1037, vm_define_method — строка 6018, vm_find_or_create_class_by_id — строка 5966), `vm_method.c` (rb_method_entry_make — строка 1313, rb_add_method_iseq — строка 1601), `vm.c` (vm_cref_new0 — строка 315), `compile.c` (definemethod — строка 11364, definesmethod — строка 11381), `vm_core.h` (VM_ENV_DATA_INDEX_ME_CREF — строка 1420).
