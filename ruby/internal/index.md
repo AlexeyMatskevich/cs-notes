@@ -42,6 +42,14 @@ eval, instance_eval, define_method, refinements. Зависит от опред�
 
 - [Метапрограммирование](metaprogramming.md) — eval, instance_eval, define_method, refinements
 
+### Коллекции
+
+Внутреннее устройство встроенных типов Array, Hash, String. Зависит от объектной модели (VALUE, RBasic), GC (VWA, слоты, write barrier) и [структур данных](../../algorithms-and-data-structures/linear/).
+
+- [Array](collections/00-array.md) — RArray: embedded/heap-хранение, стратегия роста (×1.5), shared-массивы (CoW)
+- [Hash](collections/01-hash.md) — RHash: AR table (≤8 элементов), ST table (open addressing), переход между ними
+- [String](collections/02-string.md) — RString: embedded/heap, кодировки, CoW, frozen strings, интернирование (fstring)
+
 ### Сборка мусора
 
 Управление памятью: аллокация, mark-sweep, генерации, компактификация. Зависит от VM (VALUE, стек) и объектной модели (RBasic, flags).
@@ -61,3 +69,7 @@ eval, instance_eval, define_method, refinements. Зависит от опред�
 **Статическая структура vs Динамическое поведение:** Объектная модель (классы, модули, shapes) задаёт структуру — где лежат методы и переменные. Методы и блоки определяют поведение — как код находится и исполняется. Метапрограммирование размывает эту границу: `define_method` создаёт метод из замыкания, `instance_eval` меняет `self` и лексическую область.
 
 **Кеширование на каждом уровне:** Shapes кешируют доступ к ivar (`shape_id` → index). Method cache кеширует поиск методов (class serial → method entry). JIT-компилятор добавляет третий уровень — специализированный машинный код, который опирается на shape cache и method cache. Все три механизма оптимизируют горячий путь и инвалидируются при изменении структуры: переопределение метода сбрасывает method cache и JIT-код, изменение формы объекта сбрасывает shape cache и JIT-guard'ы.
+
+**Объектная модель vs Коллекции:** Обобщённый `RObject` хранит ivar в массиве, а klass определяет поведение. Встроенные типы (Array, Hash, String) заменяют `RObject` специализированными структурами (`RArray`, `RHash`, `RString`), оптимизированными под конкретный паттерн доступа. Все начинаются с `RBasic` — поэтому `klass`, GC-флаги и shapes работают одинаково для любого объекта.
+
+**Коллекции vs GC:** VWA из GC напрямую влияет на производительность коллекций: чем крупнее слот, тем больше данных хранится в embedded-режиме без malloc. Write barrier из generational GC срабатывает при каждой записи в массив или хеш. Compaction может переместить коллекцию в больший слот, вернув её из heap в embedded.

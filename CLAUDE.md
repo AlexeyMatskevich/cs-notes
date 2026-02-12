@@ -84,11 +84,16 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   ├── methods/                         # Method lifecycle
 │   │   │   ├── 00-method-dispatch.md           # типы методов, method cache
 │   │   │   └── 01-method-definition.md         # def → m_tbl через CREF
+│   │   ├── collections/                    # Built-in type internals
+│   │   │   ├── index.md                       # embedded/heap pattern, study order
+│   │   │   ├── 00-array.md                    # RArray: embedded/heap, growth ×1.5, shared/CoW
+│   │   │   ├── 01-hash.md                     # RHash: AR table (≤8), ST table, SipHash
+│   │   │   └── 02-string.md                   # RString: embedded/heap, encoding, fstring
 │   │   ├── blocks.md                        # замыкания, Proc, lambda
 │   │   ├── metaprogramming.md               # eval, instance_eval, define_method, refinements
 │   │   ├── gc.md                            # GC: mark-sweep, generational, incremental, compaction
 │   │   └── jit.md                           # JIT: YJIT (BBV), ZJIT (method-based), guards, invalidation
-│   ├── ruby_collections_notes.md            # Array, Hash, Set internals
+│   ├── ruby_collections_notes.md            # Array, Hash, String internals (old, replaced by internal/collections/)
 │   └── ruby_concurrency_notes.md            # threads, GIL, fibers
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
