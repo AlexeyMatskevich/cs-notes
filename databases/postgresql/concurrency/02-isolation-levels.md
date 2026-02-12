@@ -4,14 +4,6 @@
 
 SQL-стандарт определяет уровни изоляции через допускаемые аномалии, но ничего не говорит о реализации. PostgreSQL реализует их поверх MVCC, и разница между уровнями сводится к двум решениям: когда берётся snapshot и что делать при конфликте записи.
 
-| Уровень | Snapshot | При конфликте записи | Дополнительно |
-|---------|----------|---------------------|---------------|
-| READ COMMITTED | Новый на каждый оператор | Re-evaluation: перечитать, перепроверить WHERE | — |
-| REPEATABLE READ | Один на транзакцию | Ошибка: could not serialize access | — |
-| SERIALIZABLE | Один на транзакцию | Ошибка | SSI: SIREAD locks, поиск rw-циклов |
-
-READ COMMITTED пересоздаёт snapshot перед каждым оператором и адаптируется к чужим изменениям. REPEATABLE READ фиксирует snapshot один раз и при конфликте записи откатывает транзакцию с ошибкой. SERIALIZABLE добавляет к этому отслеживание зависимостей между транзакциями, чтобы ловить аномалии вроде write skew, где конфликта записи в одну строку нет.
-
 ## PostgreSQL не реализует READ UNCOMMITTED
 
 Из-за архитектуры MVCC dirty read в PostgreSQL невозможен. Незакоммиченные изменения записаны в tuple с xmin активной транзакции. По правилам видимости: если xmin указывает на незавершённую транзакцию, tuple невидим.
@@ -301,7 +293,27 @@ end
 
 ### Write skew на REPEATABLE READ: проходит
 
-Сценарий [write skew с дежурством врачей](01-anomalies.md#аномалия-5-write-skew-перекос-записи) — Alice и Bob одновременно снимаются с дежурства — проходит на REPEATABLE READ без ошибок:
+Бизнес-правило: минимум 1 врач на дежурстве. Alice и Bob оба дежурят и оба хотят уйти:
+
+```ruby
+# Начальное состояние: Alice on_call=true, Bob on_call=true
+
+# === T1 ===
+ActiveRecord::Base.transaction(isolation: :repeatable_read) do
+  if Doctor.where(on_call: true).count >= 2
+    Doctor.find_by(name: 'Alice').update!(on_call: false)
+  end
+end
+
+# === T2 (параллельно) ===
+ActiveRecord::Base.transaction(isolation: :repeatable_read) do
+  if Doctor.where(on_call: true).count >= 2
+    Doctor.find_by(name: 'Bob').update!(on_call: false)
+  end
+end
+```
+
+На уровне SQL обе транзакции проходят без ошибок:
 
 ```sql
 -- T1 (XID = 100), snapshot: xmax=102
@@ -333,7 +345,26 @@ PostgreSQL использует **SSI (Serializable Snapshot Isolation)** — а
 
 ### Write skew на SERIALIZABLE: обнаружен
 
-Тот же сценарий с дежурством, но с `ISOLATION LEVEL SERIALIZABLE`. Вторая транзакция получает ошибку (`ActiveRecord::SerializationFailure`):
+Тот же сценарий, но с `isolation: :serializable`. Вторая транзакция получает ошибку:
+
+```ruby
+# === T1 ===
+ActiveRecord::Base.transaction(isolation: :serializable) do
+  if Doctor.where(on_call: true).count >= 2
+    Doctor.find_by(name: 'Alice').update!(on_call: false)
+  end
+end
+
+# === T2 (параллельно) ===
+ActiveRecord::Base.transaction(isolation: :serializable) do
+  if Doctor.where(on_call: true).count >= 2
+    Doctor.find_by(name: 'Bob').update!(on_call: false)
+  end
+  # ActiveRecord::SerializationFailure!
+end
+```
+
+Внутри PostgreSQL:
 
 ```sql
 -- T1 (XID = 100)
@@ -413,6 +444,14 @@ SIREAD lock на каждую строку требует памяти. Если
 ```
 
 **Цена эскалации:** Ложные срабатывания. T1 читала страницу 3 (строки 1-100). T2 изменила строку 50. Lock на уровне страницы — конфликт. Но может T1 читала только строки 1-10, и реального конфликта нет. Откат, хотя он не был нужен.
+
+## Сводка: как MVCC реализует каждый уровень
+
+| Уровень | Snapshot | При конфликте записи | Дополнительно |
+|---------|----------|---------------------|---------------|
+| READ COMMITTED | Новый на каждый оператор | Re-evaluation: перечитать, перепроверить WHERE | — |
+| REPEATABLE READ | Один на транзакцию | Ошибка: could not serialize access | — |
+| SERIALIZABLE | Один на транзакцию | Ошибка | SSI: SIREAD locks, поиск rw-циклов |
 
 Три уровня образуют спектр компромиссов. READ COMMITTED адаптируется к чужим изменениям — транзакция не откатывается, но может увидеть разные данные между операторами. REPEATABLE READ гарантирует стабильную картину мира ценой возможных откатов при конфликте записи в одну строку. SERIALIZABLE ловит даже write skew — запись в разные строки — через анализ rw-зависимостей, но платит за это ложными срабатываниями при эскалации SIREAD locks. Чем выше уровень, тем больше откатов и тем важнее retry-логика в приложении.
 
