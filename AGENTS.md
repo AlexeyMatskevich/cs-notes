@@ -61,7 +61,7 @@ This repository is a collection of technical notes. Contributions should optimiz
 ├── ruby/
 │   ├── ruby_collections_notes.md   # Array, Hash, Set internals
 │   ├── ruby_concurrency_notes.md   # threads, GIL, fibers
-│   ├── ruby_gc_notes.md            # GC algorithms
+│   ├── 11-gc.md                    # GC: mark-sweep, generational, incremental, compaction
 │   └── ruby_jit_notes.md           # YJIT / ZJIT
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
