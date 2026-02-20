@@ -12,7 +12,12 @@ This is a personal technical knowledge repository containing deep technical note
 .
 ├── styleguide.md              # writing methodology for all notes
 ├── structure-guide.md         # structural patterns for notes
-├── network.md                 # networking: from bits to HTTP
+├── networking/
+│   ├── index.md               # networking: study order, how-it-all-connects, URL-to-page path
+│   ├── foundations/            # Ethernet, IP, DHCP, NAT, IPv6 (5 files)
+│   ├── transport/             # UDP, TCP, TCP tuning (3 files)
+│   ├── application/           # DNS, HTTP, TLS, HTTP evolution, WebSocket (5 files)
+│   └── infrastructure/        # OSI/TCP-IP models, routing protocols, firewalls, VPN, CDN (5 files)
 ├── algorithms-and-data-structures/
 │   ├── index.md
 │   ├── linear/                # ADT, array, dynamic array, linked list, stack/queue/deque, hash table, LRU, clock-sweep (8 files)

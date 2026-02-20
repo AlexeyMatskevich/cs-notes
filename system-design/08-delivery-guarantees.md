@@ -1,6 +1,6 @@
 # Гарантии доставки в распределённых системах
 
-**Предпосылки:** [Паттерны надёжности](06-reliability-patterns.md) (retry, idempotency).
+**Предпосылки:** [Паттерны надёжности](06-reliability-patterns.md) (retry, idempotency), [HTTP](../networking/application/01-http.md).
 
 [Retry](06-reliability-patterns.md#retry-с-backoff-повтор-с-нарастающей-задержкой) решает проблему transient failures: запрос не дошёл — отправь ещё раз. Но retry отвечает на вопрос «дойдёт ли вызов до получателя?», а не на вопрос «сколько раз получатель его обработает?». Разница критична.
 

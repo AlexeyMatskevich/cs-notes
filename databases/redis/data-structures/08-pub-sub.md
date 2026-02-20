@@ -1,6 +1,6 @@
 # Pub/Sub
 
-**Предпосылки:** [Event loop](../architecture/01-event-loop.md), [List](02-list.md) (для сравнения). Секция Sharded Pub/Sub использует понятия из [Redis Cluster](../distribution/02-cluster.md).
+**Предпосылки:** [Event loop](../architecture/01-event-loop.md), [List](02-list.md) (для сравнения), [TCP](../../../networking/transport/01-tcp.md) (соединение). Секция Sharded Pub/Sub использует понятия из [Redis Cluster](../distribution/02-cluster.md).
 
 ## Проблема broadcast'а
 

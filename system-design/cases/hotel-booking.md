@@ -1,6 +1,6 @@
 # Система бронирования отелей
 
-**Предпосылки:** HTTP, background jobs (Sidekiq), WebSocket/polling, [паттерны надёжности](../06-reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL (`FOR UPDATE`).
+**Предпосылки:** [HTTP](../../networking/application/01-http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/04-websockets.md)/polling, [паттерны надёжности](../06-reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL (`FOR UPDATE`).
 
 ## Сценарий
 

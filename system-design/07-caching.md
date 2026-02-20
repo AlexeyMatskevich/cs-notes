@@ -1,6 +1,6 @@
 # Кэширование
 
-**Предпосылки:** [модели консистентности](01-consistency-models.md) (read-your-writes), базовое понимание PostgreSQL (shared buffers, соединения), Redis (GET/SET/DEL), pub/sub для инвалидации, [сетевые концепции](../network.md#cdn) (RTT, CDN, origin/edge).
+**Предпосылки:** [модели консистентности](01-consistency-models.md) (read-your-writes), базовое понимание PostgreSQL (shared buffers, соединения), Redis (GET/SET/DEL), pub/sub для инвалидации, [CDN](../networking/infrastructure/04-cdn.md) (RTT, origin/edge).
 
 В [read-heavy системах](04-read-write-profiles.md) кэширование — основной способ масштабирования чтения.
 

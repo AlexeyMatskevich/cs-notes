@@ -1,6 +1,6 @@
 # Клиенты и соединения
 
-**Предпосылки:** [Redis: архитектура](../../databases/redis/index.md), GIL в Ruby, Puma (worker'ы + потоки).
+**Предпосылки:** [Redis: архитектура](../../databases/redis/index.md), [TCP](../../networking/transport/01-tcp.md) (соединение), GIL в Ruby, Puma (worker'ы + потоки).
 
 ## Ruby-клиенты для Redis
 

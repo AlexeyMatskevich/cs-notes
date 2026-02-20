@@ -12,7 +12,7 @@ Personal technical knowledge repository containing deep technical notes **in Rus
 ```
 styleguide.md              # writing methodology (MUST READ before writing)
 structure-guide.md         # file/folder structural patterns
-network.md                 # networking notes
+networking/                # networking: foundations, transport, application, infrastructure (18 notes + index)
 algorithms-and-data-structures/  # ADT, linear/non-linear structures, techniques
 databases/
   distribution.md          # shared theory (replication, failover, sharding)

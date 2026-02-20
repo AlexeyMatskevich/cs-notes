@@ -1,6 +1,6 @@
 # Репликация в PostgreSQL
 
-**Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [WAL](../durability/00-wal.md).
+**Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [WAL](../durability/00-wal.md), [TCP](../../../networking/transport/01-tcp.md) (RTT).
 
 Пока PostgreSQL живёт на одном сервере, он — единственная точка отказа. Сервер перезагружается, и на 30 секунд приложение не может ни читать, ни писать. Диск умирает — данные потеряны, если нет свежего бэкапа. Репликация решает обе проблемы: вторая (и третья) копия данных на другом сервере позволяет переключиться при сбое и разгрузить primary от части чтений.
 
