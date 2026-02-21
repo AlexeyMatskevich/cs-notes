@@ -53,6 +53,54 @@
       "last_modified": "2026-01-30T02:32:49Z",
       "resolved": "github:NixOS/nixpkgs/6308c3b21396534d8aaeac46179c14c439a89b8a?lastModified=1769740369&narHash=sha256-xKPyJoMoXfXpDM5DFDZDsi9PHArf2k5BJjvReYXoFpM%3D"
     },
+    "marksman@latest": {
+      "last_modified": "2026-02-10T02:06:53Z",
+      "resolved": "github:NixOS/nixpkgs/49d75834011c94a120a9cb874ac1c4d8b7bfc767#marksman",
+      "source": "devbox-search",
+      "version": "2026-02-08",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/64hwljdm0yizm0qp5467rhyckhygimcb-marksman-2026-02-08",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/64hwljdm0yizm0qp5467rhyckhygimcb-marksman-2026-02-08"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/l76asgi0m1dd2vv0p2d9cqj8ys44p06h-marksman-2026-02-08",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/l76asgi0m1dd2vv0p2d9cqj8ys44p06h-marksman-2026-02-08"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s08i37lwp6gzafk5gc23mfrv0ir00zn7-marksman-2026-02-08",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s08i37lwp6gzafk5gc23mfrv0ir00zn7-marksman-2026-02-08"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/i7zrmwva9y957xmfn5klrn3ywpls1x7m-marksman-2026-02-08",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/i7zrmwva9y957xmfn5klrn3ywpls1x7m-marksman-2026-02-08"
+        }
+      }
+    },
     "python312@latest": {
       "last_modified": "2026-01-23T17:20:52Z",
       "plugin_version": "0.0.4",
