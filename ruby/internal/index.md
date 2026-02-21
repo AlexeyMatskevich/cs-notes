@@ -47,7 +47,7 @@ eval, instance_eval, define_method, refinements. Зависит от опред�
 Внутреннее устройство встроенных типов Array, Hash, String. Зависит от объектной модели (VALUE, RBasic), GC (VWA, слоты, write barrier) и [структур данных](../../algorithms-and-data-structures/linear/).
 
 - [Array](collections/00-array.md) — RArray: embedded/heap-хранение, стратегия роста (×1.5), shared-массивы (CoW)
-- [Hash](collections/01-hash.md) — RHash: AR table (≤8 элементов), ST table (open addressing), переход между ними
+- [Hash](./collections/01-hash.md) — RHash: AR table (≤8 элементов), ST table (open addressing), переход между ними
 - [String](collections/02-string.md) — RString: embedded/heap, кодировки, CoW, frozen strings, интернирование (fstring)
 
 ### Сборка мусора

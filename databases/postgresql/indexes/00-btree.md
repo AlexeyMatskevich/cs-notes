@@ -1,6 +1,6 @@
 # B-tree
 
-**Предпосылки:** [B+ дерево](../../algorithms-and-data-structures/non-linear/06-b-plus-tree.md), [страницы и кортежи](../storage/01-pages-and-tuples.md) (ctid, структура страницы).
+**Предпосылки:** [B+ дерево](../../../algorithms-and-data-structures/non-linear/06-b-plus-tree.md), [страницы и кортежи](../storage/01-pages-and-tuples.md) (ctid, структура страницы).
 
 PostgreSQL называет свой индекс "B-tree", но технически это **B+tree с модификациями**, основанный на статье Lehman & Yao (1981) — "Efficient Locking for Concurrent Operations on B-Trees". B-tree — индекс по умолчанию: при `CREATE INDEX` без указания метода PostgreSQL создаёт именно его.
 
@@ -80,7 +80,7 @@ Index Tuple (внутренний узел):
 
 Вернёмся к магазину. `SELECT * FROM orders WHERE id = 7482013` выполняется как **Index Scan**: спуск от корня к листу, нахождение ключа, один поход в heap по ctid, возврат строки.
 
-Теперь менеджер хочет список заказов за январь: `SELECT * FROM orders WHERE created_at >= '2026-01-01' AND created_at < '2026-02-01' ORDER BY created_at`. B-tree по `created_at` спускается до листа с первым ключом >= '2026-01-01' и дальше проходит по [двусвязному списку](../../algorithms-and-data-structures/linear/03-linked-list.md) листьев (`btpo_next`) вправо, пока ключи < '2026-02-01'. Каждый найденный index tuple даёт ctid для похода в heap.
+Теперь менеджер хочет список заказов за январь: `SELECT * FROM orders WHERE created_at >= '2026-01-01' AND created_at < '2026-02-01' ORDER BY created_at`. B-tree по `created_at` спускается до листа с первым ключом >= '2026-01-01' и дальше проходит по [двусвязному списку](../../../algorithms-and-data-structures/linear/03-linked-list.md) листьев (`btpo_next`) вправо, пока ключи < '2026-02-01'. Каждый найденный index tuple даёт ctid для похода в heap.
 
 Двусвязность (наличие `btpo_prev`) нужна для обратного обхода. `SELECT * FROM orders ORDER BY created_at DESC LIMIT 100` спускается до самого правого листа и идёт влево — в плане это `Index Scan Backward`.
 
@@ -182,7 +182,7 @@ Observable cost: split порождает запись нескольких ст
 
 ### DELETE — нет merge
 
-Заказы старше трёх лет архивируются и удаляются. В [учебном B-дереве](../../algorithms-and-data-structures/non-linear/05-b-tree.md) при удалении выполняется заимствование или слияние (merge) узлов. PostgreSQL этого не делает:
+Заказы старше трёх лет архивируются и удаляются. В [учебном B-дереве](../../../algorithms-and-data-structures/non-linear/05-b-tree.md) при удалении выполняется заимствование или слияние (merge) узлов. PostgreSQL этого не делает:
 
 ```
 До DELETE:     [10, 20, 30, 40, 50]

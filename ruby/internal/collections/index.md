@@ -9,7 +9,7 @@
 ## Порядок изучения
 
 - [Array](00-array.md) — `RArray`: embedded/heap-хранение элементов, стратегия роста (×1.5), shared-массивы (Copy-on-Write)
-- [Hash](01-hash.md) — `RHash`: AR table для маленьких хешей (≤8), ST table для больших, переход между ними, сохранение порядка вставки
+- [Hash](./01-hash.md) — `RHash`: AR table для маленьких хешей (≤8), ST table для больших, переход между ними, сохранение порядка вставки
 - [String](02-string.md) — `RString`: embedded/heap для символов, кодировки, Copy-on-Write, frozen strings и интернирование (fstring)
 
 Array вводит паттерн embedded/heap, который повторяется в String. Hash демонстрирует другой подход — адаптивный выбор между двумя представлениями в зависимости от размера.

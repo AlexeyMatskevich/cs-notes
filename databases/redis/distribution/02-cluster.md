@@ -1,6 +1,6 @@
 # Redis Cluster: распределение ключей по узлам и автоматическое переключение мастера
 
-**Предпосылки:** [репликация](../../../system-design/replication.md), [шардинг](../../../system-design/sharding.md), [репликация Redis](00-replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md), [транзакции MULTI/EXEC](../atomicity/01-multi-exec.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [Pub/Sub](../data-structures/08-pub-sub.md), [TCP](../../../networking/transport/01-tcp.md) (cluster bus).
+**Предпосылки:** [репликация](../../../system-design/replication.md), [шардинг](../../../system-design/sharding.md), [репликация Redis](./00-replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md), [транзакции MULTI/EXEC](../atomicity/01-multi-exec.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [Pub/Sub](../data-structures/08-pub-sub.md), [TCP](../../../networking/transport/01-tcp.md) (cluster bus).
 
 ## Зачем нужен Redis Cluster
 
@@ -93,7 +93,7 @@ Master C (слоты 10923–16383) ← Replica C
 
 После этого одна из реплик становится новым мастером и принимает слоты упавшего узла. Реплики участвуют в голосовании, а предпочтение обычно получает та, у которой больше **replication offset** (условно: она успела применить больше команд старого мастера, значит, потеря данных меньше).
 
-Важно помнить: репликация в Redis по умолчанию асинхронная. Если мастер упал сразу после ответа клиенту, последняя команда могла не успеть попасть на реплику и после failover будет потеряна. Команда `WAIT` помогает сузить это окно — подробнее в [репликации](00-replication.md).
+Важно помнить: репликация в Redis по умолчанию асинхронная. Если мастер упал сразу после ответа клиенту, последняя команда могла не успеть попасть на реплику и после failover будет потеряна. Команда `WAIT` помогает сузить это окно — подробнее в [репликации](./00-replication.md).
 
 На время переключения клиенты могут получать ошибки на затронутые слоты (например, `CLUSTERDOWN`) и редиректы, пока обновляется карта слотов.
 

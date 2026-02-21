@@ -60,9 +60,9 @@ ZSET нужен O(log n) на операции с диапазонами и ра
 
 Каждый узел skip list хранит span — количество элементов, которые перескакивает указатель на этом уровне. Благодаря span Redis вычисляет ранг элемента за O(log n), не подсчитывая элементы. Пример: `ZRANK leaderboard "carol"` находит узел "carol" в skip list, спускаясь с верхних уровней к нижним. На каждом шаге при движении вправо Redis суммирует span пройденных указателей. К моменту, когда "carol" найдена, сумма span'ов равна её рангу.
 
-**Hashtable** (тот же `dict.c`, что в [Hash](01-hash.md) и [Set](03-set.md)) обеспечивает O(1) поиск score по элементу. Без хеш-таблицы `ZSCORE member` требовал бы O(log n) обхода skip list.
+**Hashtable** (тот же `dict.c`, что в [Hash](./01-hash.md) и [Set](03-set.md)) обеспечивает O(1) поиск score по элементу. Без хеш-таблицы `ZSCORE member` требовал бы O(log n) обхода skip list.
 
-При малом количестве элементов (до `zset-max-listpack-entries`, по умолчанию 128) и коротких значениях (до `zset-max-listpack-value`, по умолчанию 64 байта) ZSET использует listpack вместо skip list + hashtable — по тому же принципу, что и [Hash](01-hash.md).
+При малом количестве элементов (до `zset-max-listpack-entries`, по умолчанию 128) и коротких значениях (до `zset-max-listpack-value`, по умолчанию 64 байта) ZSET использует listpack вместо skip list + hashtable — по тому же принципу, что и [Hash](./01-hash.md).
 
 ## См. также
 

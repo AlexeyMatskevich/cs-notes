@@ -1,8 +1,8 @@
 # GIN — обобщённый инвертированный индекс
 
-**Предпосылки:** [инвертированный индекс](../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md).
+**Предпосылки:** [инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md).
 
-[Инвертированный индекс](../../algorithms-and-data-structures/non-linear/08-inverted-index.md) «переворачивает» отношение: вместо «документ → элементы» хранит «элемент → список документов». GIN (Generalized Inverted Index) — обобщённая реализация этой идеи в PostgreSQL: он работает не только с текстом, а с любыми типами, которые можно разбить на элементы — массивами, JSONB, полнотекстовыми векторами. «Обобщённый» означает, что GIN — фреймворк, адаптируемый под разные типы данных через operator class. Появился в PostgreSQL 8.2 (2006).
+[Инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md) «переворачивает» отношение: вместо «документ → элементы» хранит «элемент → список документов». GIN (Generalized Inverted Index) — обобщённая реализация этой идеи в PostgreSQL: он работает не только с текстом, а с любыми типами, которые можно разбить на элементы — массивами, JSONB, полнотекстовыми векторами. «Обобщённый» означает, что GIN — фреймворк, адаптируемый под разные типы данных через operator class. Появился в PostgreSQL 8.2 (2006).
 
 ## Почему B-tree не может заглянуть внутрь
 
@@ -29,7 +29,7 @@ CREATE INDEX idx_tags ON posts USING gin(tags);
 
 ## Физическая структура: Entry Tree и Posting Lists
 
-GIN состоит из двух частей. **Entry Tree** — [B-tree](00-btree.md), где ключи — отдельные элементы (не составные значения). Почему B-tree, а не [хеш-таблица](../../algorithms-and-data-structures/linear/05-hash-table.md)? B-tree сохраняет порядок ключей, что критично для диапазонных запросов по числовым элементам и prefix-поиска по лексемам (например, все слова на «prog»).
+GIN состоит из двух частей. **Entry Tree** — [B-tree](00-btree.md), где ключи — отдельные элементы (не составные значения). Почему B-tree, а не [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md)? B-tree сохраняет порядок ключей, что критично для диапазонных запросов по числовым элементам и prefix-поиска по лексемам (например, все слова на «prog»).
 
 Для каждого ключа в Entry Tree хранится **posting list** — отсортированный список TID (ctid) строк, содержащих этот элемент. Вот что GIN построит для данных выше:
 
@@ -47,7 +47,7 @@ Posting Lists:
     tutorial   -> [TID(1,1), TID(1,2)]
 ```
 
-Posting list отсортирован по TID, потому что основная операция — [пересечение списков](../../algorithms-and-data-structures/non-linear/08-inverted-index.md) при AND-запросах. Merge двух отсортированных списков — O(n + m) методом двух указателей, а не O(n × m). Сами ключи в posting list не дублируются — они уже есть в Entry Tree.
+Posting list отсортирован по TID, потому что основная операция — [пересечение списков](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md) при AND-запросах. Merge двух отсортированных списков — O(n + m) методом двух указателей, а не O(n × m). Сами ключи в posting list не дублируются — они уже есть в Entry Tree.
 
 ## Posting Tree: когда posting list не помещается на страницу
 

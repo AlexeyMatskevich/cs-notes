@@ -170,7 +170,7 @@ end
 
 ### Hash Join
 
-Построить [хеш-таблицу](../../algorithms-and-data-structures/linear/05-hash-table.md) из одной таблицы (build), пройти по второй (probe) и искать соответствия за O(1).
+Построить [хеш-таблицу](../../../algorithms-and-data-structures/linear/05-hash-table.md) из одной таблицы (build), пройти по второй (probe) и искать соответствия за O(1).
 
 Фаза Build:
 ```ruby

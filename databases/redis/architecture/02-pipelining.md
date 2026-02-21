@@ -1,6 +1,6 @@
 # Pipelining
 
-**Предпосылки:** [Event loop](01-event-loop.md), [RTT](../../networking/transport/01-tcp.md) (round-trip time — время от отправки запроса до получения ответа).
+**Предпосылки:** [Event loop](01-event-loop.md), [RTT](../../../networking/transport/01-tcp.md) (round-trip time — время от отправки запроса до получения ответа).
 
 ## Проблема: ожидание ответа на каждую команду
 

@@ -22,7 +22,7 @@
 Как PostgreSQL переживает сбои и почему дисковый I/O не убивает latency.
 
 - [WAL](durability/00-wal.md) — журнал предзаписи для восстановления после сбоя
-- [Буферный кеш](durability/01-buffer-cache.md) — shared buffers, dirty pages, [LRU](../algorithms-and-data-structures/linear/06-lru-cache.md) vs [clock-sweep](../algorithms-and-data-structures/linear/07-clock-sweep.md), WAL before data
+- [Буферный кеш](durability/01-buffer-cache.md) — shared buffers, dirty pages, [LRU](../../algorithms-and-data-structures/linear/06-lru-cache.md) vs [clock-sweep](../../algorithms-and-data-structures/linear/07-clock-sweep.md), WAL before data
 
 ### Параллельный доступ
 
@@ -56,7 +56,7 @@
 ### Планировщик запросов
 
 - [Планировщик запросов](query-processing/00-planner.md) — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
-- [Порядок соединения](query-processing/01-join-order.md) — [динамическое программирование](../algorithms-and-data-structures/techniques/00-dynamic-programming.md), interesting orders, GEQO
+- [Порядок соединения](query-processing/01-join-order.md) — [динамическое программирование](../../algorithms-and-data-structures/techniques/00-dynamic-programming.md), interesting orders, GEQO
 - [Подзапросы и CTE](query-processing/02-subqueries-and-cte.md) — flattening, semi-join, материализация CTE
 - [EXPLAIN](query-processing/03-explain.md) — как читать план: оценки vs факты, BUFFERS, где «болит» запрос
 - [Память и spill](query-processing/04-memory-and-spill.md) — `work_mem`, сортировки и хеши, temp I/O
@@ -67,7 +67,7 @@
 ### Распределение и масштабирование
 
 - [Репликация](../../system-design/replication.md) и [шардинг](../../system-design/sharding.md) — общие понятия (failover, кворум, shard key)
-- [Репликация](distribution/00-replication.md) — physical vs logical, lag, failover
+- [Репликация](./distribution/00-replication.md) — physical vs logical, lag, failover
 - [Шардирование](distribution/01-sharding.md) — отличие от партиционирования, shard key, цена распределения
 
 ## Выбор индекса
