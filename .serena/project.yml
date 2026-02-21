@@ -9,6 +9,7 @@ languages:
 - markdown
 
 # the encoding used by text files in the project
+# For a list of possible encodings, see https://docs.python.org/3.11/library/codecs.html#standard-encodings
 encoding: "utf-8"
 
 # whether to use the project's gitignore file to ignore files
@@ -19,6 +20,8 @@ ignored_paths:
 - ".claude/**"
 
 # whether the project is in read-only mode
+# If set to true, all editing tools will be disabled and attempts to use them will result in an error
+# Added on 2025-04-18
 read_only: false
 
 # list of tool names to exclude
@@ -70,7 +73,6 @@ initial_prompt: |
   - **Implementation:** editing mode
   - **Report generation:** planning + one-shot modes
   - **Interactive debugging:** interactive + editing modes
-
 # the name by which the project can be referenced within Serena
 project_name: "technical"
 
@@ -85,3 +87,7 @@ default_modes:
 
 # fixed set of tools to use as the base tool set
 fixed_tools: []
+
+# override of the corresponding setting in serena_config.yml, see the documentation there.
+# If null or missing, the value from the global config is used.
+symbol_info_budget:

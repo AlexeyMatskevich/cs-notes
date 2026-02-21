@@ -1,6 +1,6 @@
 # Пагинация: `LIMIT/OFFSET` vs keyset (seek)
 
-**Предпосылки:** [B-tree](../indexes/00-btree.md) (порядок ключей и range scan), [EXPLAIN](03-explain.md) (как читать план), базовые `SELECT/WHERE/ORDER BY`.
+**Предпосылки:** [B-tree](../indexes/00-btree.md) (порядок ключей и range scan), [EXPLAIN](03-explain.md) (как читать план), [SELECT и фильтрация](../../sql/querying/00-select-and-filtering.md), [сортировка и ограничение](../../sql/querying/01-sorting-and-limiting.md) (ORDER BY, LIMIT/OFFSET).
 
 Пагинация кажется простым UI‑требованием: «покажи ещё 50 элементов». Но на уровне базы данных это всегда вопрос о двух вещах:
 

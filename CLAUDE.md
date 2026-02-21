@@ -33,8 +33,14 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   ├── maintenance/       # VACUUM (1)
 │   │   ├── distribution/      # replication, sharding (2)
 │   │   ├── query-processing/  # planner, join order, subqueries/CTE, EXPLAIN, memory/spill, prepared stmts, slow queries, pagination (8)
-│   │   ├── indexes/           # B-tree, GIN, GiST, Hash, BRIN, SP-GiST (6)
-│   │   └── schema-design/     # constraints, sequences/identity, partitioning (3)
+│   │   └── indexes/           # B-tree, GIN, GiST, Hash, BRIN, SP-GiST (6)
+│   ├── sql/
+│   │   ├── index.md               # SQL: study order, cross-links
+│   │   ├── foundations/           # relational model, types & NULL, expressions (3)
+│   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE, set ops, windows (8)
+│   │   ├── schema/               # tables & types, constraints, partitioning, views, indexes (5)
+│   │   ├── modification/         # DML, transactions (2)
+│   │   └── postgresql/           # JSONB, arrays & ranges, FTS, functions & procedures (4)
 │   └── redis/
 │       ├── index.md
 │       ├── architecture/      # what is Redis, event loop, pipelining, logical databases (4)
