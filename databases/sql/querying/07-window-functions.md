@@ -1,14 +1,19 @@
 # Оконные функции
 
-**Предпосылки:** [агрегация](02-aggregation.md) (агрегатные функции, GROUP BY), [соединения](03-joins.md) (JOIN).
+<details>
+<summary>Предпосылки</summary>
+
+[агрегация](02-aggregation.md) (агрегатные функции, GROUP BY), [соединения](03-joins.md) (JOIN), [подзапросы и CTE](05-subqueries-and-cte.md) (коррелированные подзапросы, CTE).
+
+</details>
 
 ← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
 
-Все предыдущие инструменты либо оставляют строки как есть (SELECT, WHERE, JOIN), либо схлопывают их в группы (GROUP BY). Оконные функции решают задачу, которая раньше была невозможна: вычислить агрегат **без потери строк**.
+## Зарплата рядом со средней по отделу
 
-Задача: «для каждого сотрудника показать его зарплату и среднюю зарплату по отделу». С GROUP BY средняя вычисляется, но строки схлопываются — имена теряются. Нужен инструмент, который добавит вычисленное значение к каждой строке.
+Задача: «для каждого сотрудника показать его зарплату и среднюю зарплату по отделу». С GROUP BY средняя вычисляется, но строки схлопываются — имена теряются. Нужен инструмент, который добавит вычисленное значение к каждой строке, не уничтожая их.
 
-## OVER — оконная функция
+## OVER — вычисление без потери строк
 
 OVER (англ. «поверх, над») превращает агрегатную функцию в оконную. Функция смотрит «поверх» набора строк, не схлопывая их:
 
@@ -29,23 +34,25 @@ WHERE salary IS NOT NULL;
  Евгений  |          NULL |  55000 |   55000
 ```
 
-Пять строк на входе — пять строк на выходе. Но к каждой строке добавлен `dept_avg` — средняя по её отделу.
+Пять строк на входе — пять строк на выходе. Но к каждой добавлен `dept_avg` — средняя по её отделу. Контраст с GROUP BY наглядный:
 
-## PARTITION BY — разделение на секции
+```
+GROUP BY department_id:             OVER (PARTITION BY department_id):
 
-PARTITION BY (англ. «разделить по») делит данные на секции (как GROUP BY делит на группы), но строки внутри секции **сохраняются**:
+ dept_id |  avg                     name    | dept_id | salary | dept_avg
+---------+-------                   --------+---------+--------+---------
+       1 | 87500     строки         Анна    |       1 |  90000 |   87500
+       2 | 65000     схлопнуты      Вера    |       1 |  85000 |   87500
+    NULL | 55000                    Борис   |       2 |  60000 |   65000
+                                   Глеб    |       2 |  70000 |   65000
+  3 строки                         Евгений |    NULL |  55000 |   55000
 
-```sql
-AVG(salary) OVER (PARTITION BY department_id)
+                                   5 строк — все на месте
 ```
 
-Без PARTITION BY функция работает по **всем строкам** результата:
+PARTITION BY (англ. «разделить по») делит данные на секции (как GROUP BY делит на группы), но строки внутри секции **сохраняются**. Без PARTITION BY функция работает по **всем строкам** результата: `AVG(salary) OVER ()`.
 
-```sql
-AVG(salary) OVER ()
-```
-
-## ORDER BY в OVER — порядок внутри секции
+## Нарастающий итог — ORDER BY в OVER
 
 ORDER BY внутри OVER задаёт порядок обработки строк **внутри секции**:
 
@@ -66,19 +73,41 @@ WHERE salary IS NOT NULL;
  Анна     |  90000 |       360000
 ```
 
-`SUM(salary) OVER (ORDER BY salary)` — нарастающий итог (running total): для каждой строки суммируются все предыдущие строки по порядку salary.
+Для каждой строки суммируются все предыдущие строки по порядку salary — нарастающий итог (running total).
 
-## Функции ранжирования
+## Позиция по зарплате в отделе — ROW_NUMBER
 
-Ранжирование — присвоение номера каждой строке внутри секции. Три функции отличаются обработкой одинаковых значений (ties):
+«Кто первый по зарплате в отделе?» ROW_NUMBER() присваивает уникальный последовательный номер каждой строке внутри секции:
 
 ```sql
 SELECT name, department_id, salary,
-       ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC NULLS LAST) AS rn,
-       RANK()       OVER (PARTITION BY department_id ORDER BY salary DESC NULLS LAST) AS rnk,
-       DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC NULLS LAST) AS drnk
+       ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC NULLS LAST) AS rn
 FROM employees
 WHERE salary IS NOT NULL;
+```
+
+```
+ name     | department_id | salary | rn
+----------+---------------+--------+----
+ Анна     |             1 |  90000 |  1
+ Вера     |             1 |  85000 |  2
+ Глеб     |             2 |  70000 |  1
+ Борис    |             2 |  60000 |  2
+ Евгений  |          NULL |  55000 |  1
+```
+
+## Ничья — RANK vs DENSE_RANK
+
+Если два сотрудника получают одинаковую зарплату, ROW_NUMBER всё равно присвоит разные номера (порядок произволен). Для задач, где ничьи важны, есть RANK и DENSE_RANK:
+
+```sql
+SELECT name, department_id, salary,
+       ROW_NUMBER() OVER w AS rn,
+       RANK()       OVER w AS rnk,
+       DENSE_RANK() OVER w AS drnk
+FROM employees
+WHERE salary IS NOT NULL
+WINDOW w AS (PARTITION BY department_id ORDER BY salary DESC NULLS LAST);
 ```
 
 ```
@@ -91,13 +120,9 @@ WHERE salary IS NOT NULL;
  Евгений  |          NULL |  55000 |  1 |   1 |    1
 ```
 
-ROW_NUMBER() — уникальный последовательный номер. При ties порядок произволен.
+RANK() — ранг с пропусками: если две строки на 1-м месте, следующая получит 3. DENSE_RANK() — ранг без пропусков: если две строки на 1-м месте, следующая получит 2. Разница проявляется только при одинаковых значениях ORDER BY.
 
-RANK() — ранг с пропусками. Если две строки на 1-м месте, следующая получит 3.
-
-DENSE_RANK() — ранг без пропусков. Если две строки на 1-м месте, следующая получит 2.
-
-### NTILE — разбиение на равные группы
+## Терцили для compensation review — NTILE
 
 NTILE(n) (англ. «n-ая часть, плитка») делит строки на n примерно равных групп:
 
@@ -118,11 +143,9 @@ WHERE salary IS NOT NULL;
  Евгений  |  55000 |       3
 ```
 
-## Навигационные функции
+## Изменение зарплаты vs предыдущий найм — LAG, LEAD
 
-Доступ к значениям других строк внутри секции:
-
-**LAG/LEAD** — значение предыдущей/следующей строки:
+Доступ к значениям других строк внутри секции. LAG (англ. «отставание») — значение предыдущей строки, LEAD (англ. «опережение») — следующей:
 
 ```sql
 SELECT name, salary,
@@ -144,7 +167,9 @@ WHERE salary IS NOT NULL;
 
 LAG(salary, 2) — значение через две строки назад. LAG(salary, 1, 0) — с дефолтным значением 0 вместо NULL.
 
-**FIRST_VALUE / LAST_VALUE / NTH_VALUE** — значение первой/последней/N-й строки в фрейме:
+## Топ-зарплата отдела рядом с каждым — FIRST_VALUE
+
+FIRST_VALUE возвращает значение первой строки в фрейме:
 
 ```sql
 SELECT name, department_id, salary,
@@ -166,11 +191,45 @@ WHERE salary IS NOT NULL;
  Евгений  |          NULL |  55000 | Евгений
 ```
 
+### Ловушка LAST_VALUE
+
+Попробуем получить сотрудника с **наименьшей** зарплатой в отделе через LAST_VALUE:
+
+```sql
+SELECT name, department_id, salary,
+       LAST_VALUE(name) OVER (
+           PARTITION BY department_id ORDER BY salary DESC
+       ) AS bottom_earner
+FROM employees
+WHERE salary IS NOT NULL;
+```
+
+```
+ name  | department_id | salary | bottom_earner
+-------+---------------+--------+--------------
+ Анна  |             1 |  90000 | Анна
+ Вера  |             1 |  85000 | Вера
+ Глеб  |             2 |  70000 | Глеб
+ Борис |             2 |  60000 | Борис
+```
+
+Каждая строка показывает саму себя! Причина: фрейм по умолчанию (при наличии ORDER BY) — `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`. Фрейм расширяется по мере чтения — LAST_VALUE видит только строки от начала до текущей позиции.
+
+Для «настоящей» последней строки нужен явный фрейм на всю секцию:
+
+```sql
+LAST_VALUE(name) OVER (
+    PARTITION BY department_id
+    ORDER BY salary DESC
+    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+)
+```
+
+На практике `FIRST_VALUE` с обратной сортировкой предпочтительнее — не нужно помнить про фрейм.
+
 ## Фреймы
 
-Фрейм (frame, англ. «рамка») определяет, какие строки «видит» оконная функция. По умолчанию при наличии ORDER BY в OVER фрейм — `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` (от начала секции до текущей строки).
-
-Два типа фреймов:
+Фрейм (frame, англ. «рамка») определяет, какие строки «видит» оконная функция. Два типа:
 
 **ROWS** — физические строки. **RANGE** — логический диапазон значений. При одинаковых значениях (ties) результаты различаются.
 
@@ -220,42 +279,6 @@ WHERE salary IS NOT NULL;
 
 RANGE считает Анну и Веру «одной позицией» (одна дата) — обе видят сумму, включающую обеих (305000). ROWS считает физические строки по одной: Анна видит только свои 220000, Вера — 305000 с учётом Анны.
 
-### Ловушка LAST_VALUE
-
-Фрейм по умолчанию (при наличии ORDER BY) — `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`. Фрейм расширяется по мере чтения: для первой строки это 1–1, для второй 1–2, для третьей 1–3. Первая строка **всегда** внутри, последняя строка секции — только когда до неё дошли.
-
-FIRST_VALUE безопасен: первая строка всегда в фрейме. LAST_VALUE с дефолтным фреймом возвращает **текущую строку**, а не последнюю в секции:
-
-```sql
-SELECT name, department_id, salary,
-       LAST_VALUE(name) OVER (
-           PARTITION BY department_id ORDER BY salary DESC
-       ) AS bottom_earner
-FROM employees
-WHERE salary IS NOT NULL;
-```
-
-```
- name  | department_id | salary | bottom_earner
--------+---------------+--------+--------------
- Анна  |             1 |  90000 | Анна
- Вера  |             1 |  85000 | Вера
- Глеб  |             2 |  70000 | Глеб
- Борис |             2 |  60000 | Борис
-```
-
-Каждая строка показывает саму себя. Для «настоящей» последней строки нужен явный фрейм на всю секцию:
-
-```sql
-LAST_VALUE(name) OVER (
-    PARTITION BY department_id
-    ORDER BY salary DESC
-    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-)
-```
-
-На практике `FIRST_VALUE` с обратной сортировкой предпочтительнее — не нужно помнить про фрейм. NTH_VALUE подвержен той же ловушке, что и LAST_VALUE.
-
 ## Именованные окна
 
 Если несколько функций используют одинаковый OVER, можно вынести определение:
@@ -293,6 +316,104 @@ WHERE salary IS NOT NULL;
 
 FILTER с чисто оконными функциями (ROW_NUMBER, RANK, LAG, LEAD) **не работает** — только с агрегатными функциями в оконном режиме.
 
+## Первая строка в группе — ROW_NUMBER + CTE → DISTINCT ON
+
+Каноническая задача: «самый высокооплачиваемый в каждом отделе **с именем**». GROUP BY вычислит MAX(salary), но имя потеряется — в группе несколько имён, и PostgreSQL не знает, какое вернуть.
+
+Стандартное решение — ROW_NUMBER + CTE:
+
+```sql
+WITH ranked AS (
+    SELECT name, department_id, salary,
+           ROW_NUMBER() OVER (
+               PARTITION BY department_id
+               ORDER BY salary DESC NULLS LAST
+           ) AS rn
+    FROM employees
+    WHERE salary IS NOT NULL
+)
+SELECT name, department_id, salary
+FROM ranked
+WHERE rn = 1;
+```
+
+```
+ name     | department_id | salary
+----------+---------------+--------
+ Анна     |             1 |  90000
+ Глеб     |             2 |  70000
+ Евгений  |          NULL |  55000
+```
+
+CTE `ranked` нумерует строки внутри каждого отдела по зарплате. Внешний запрос оставляет только первые. Этот подход работает в любой СУБД, поддерживающей оконные функции.
+
+### DISTINCT ON — PostgreSQL-shortcut
+
+В PostgreSQL ту же задачу решает DISTINCT ON:
+
+```sql
+SELECT DISTINCT ON (department_id) department_id, name, salary
+FROM employees
+WHERE salary IS NOT NULL
+ORDER BY department_id, salary DESC NULLS LAST;
+```
+
+```
+ department_id | name     | salary
+---------------+----------+--------
+             1 | Анна     |  90000
+             2 | Глеб     |  70000
+          NULL | Евгений  |  55000
+```
+
+Для каждого уникального `department_id` DISTINCT ON выбирает первую строку по ORDER BY. Требование: выражение в DISTINCT ON должно быть в начале ORDER BY.
+
+Когда что:
+- **ROW_NUMBER + CTE** — стандарт SQL, гибкий: легко получить top-2 или top-N (`WHERE rn <= N`), работает в любой СУБД.
+- **DISTINCT ON** — PostgreSQL-специфика, компактнее для top-1. Для top-N не подходит.
+
+## Top-N в группе — LATERAL
+
+«Покажи топ-2 по зарплате **в каждом** отделе». DISTINCT ON не подходит — он берёт только top-1. ROW_NUMBER + CTE работает (`WHERE rn <= 2`). Но есть ещё один подход — LATERAL.
+
+LATERAL (англ. «боковой») позволяет подзапросу в FROM ссылаться на столбцы предшествующих таблиц — как вложенный цикл, где для каждой строки внешней таблицы выполняется подзапрос:
+
+```sql
+SELECT d.name AS dept, top.employee_name, top.salary
+FROM departments d
+LEFT JOIN LATERAL (
+    SELECT e.name AS employee_name, e.salary
+    FROM employees e
+    WHERE e.department_id = d.id
+    ORDER BY e.salary DESC NULLS LAST
+    LIMIT 2
+) top ON true;
+```
+
+```
+ dept        | employee_name | salary
+-------------+---------------+--------
+ engineering | Анна          |  90000
+ engineering | Вера          |  85000
+ sales       | Глеб          |  70000
+ sales       | Борис         |  60000
+ hr          | NULL          |   NULL
+```
+
+Для каждого отдела подзапрос выбирает двух лучших по зарплате. LATERAL ссылается на `d.id` из внешней таблицы — без LATERAL это было бы ошибкой. LEFT JOIN LATERAL сохраняет `hr`, у которого нет сотрудников. Это коррелированный подзапрос в FROM — по сути тот же механизм, что в [подзапросах](05-subqueries-and-cte.md), но здесь подзапрос порождает набор строк, а не одно значение.
+
+LATERAL незаменим там, где нужно **порождать строки** из значения каждой строки: развернуть массив, вызвать `generate_series`, передать параметр в табличную функцию.
+
+### Три подхода к «первая/лучшая строка в группе»
+
+| Подход | Top-1 | Top-N | Стандарт SQL | Компактность |
+|---|---|---|---|---|
+| ROW_NUMBER + CTE | да | да | да | средняя |
+| DISTINCT ON | да | нет | нет (PG) | высокая |
+| LATERAL | да | да | да* | средняя |
+
+\* LATERAL — стандарт SQL:1999, но не все СУБД его поддерживают.
+
 ## Классификация оконных функций
 
 ```
@@ -326,6 +447,31 @@ FILTER с чисто оконными функциями (ROW_NUMBER, RANK, LAG,
 - Для фильтрации по результату оконной функции — подзапрос или CTE.
 - Оконные функции видят данные **после GROUP BY**: если был GROUP BY, строки уже сгруппированы.
 
+<details>
+<summary>Задача: наименьшая зарплата отдела рядом с каждым сотрудником</summary>
+
+**Частая ошибка:**
+```sql
+SELECT name, department_id, salary,
+       LAST_VALUE(salary) OVER (
+           PARTITION BY department_id ORDER BY salary DESC
+       ) AS min_salary
+FROM employees WHERE salary IS NOT NULL;
+```
+LAST_VALUE с дефолтным фреймом возвращает текущую строку, а не последнюю в секции.
+
+**Правильный вариант:**
+```sql
+SELECT name, department_id, salary,
+       FIRST_VALUE(salary) OVER (
+           PARTITION BY department_id ORDER BY salary ASC
+       ) AS min_salary
+FROM employees WHERE salary IS NOT NULL;
+```
+FIRST_VALUE с сортировкой по возрастанию — первая строка всегда в фрейме.
+
+</details>
+
 ## NULL в оконных функциях
 
 NULL при ORDER BY внутри OVER влияет на порядок и фреймы. При RANGE NULL-значения группируются вместе (как в обычной сортировке). LAG/LEAD через NULL возвращают NULL без специальной обработки.
@@ -334,6 +480,8 @@ NULL при ORDER BY внутри OVER влияет на порядок и фр�
 
 - PostgreSQL Documentation (v16): Window Functions. <https://www.postgresql.org/docs/16/tutorial-window.html>
 - PostgreSQL Documentation (v16): Window Function Calls. <https://www.postgresql.org/docs/16/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS>
+- PostgreSQL Documentation (v16): DISTINCT ON. <https://www.postgresql.org/docs/16/sql-select.html#SQL-DISTINCT>
+- PostgreSQL Documentation (v16): LATERAL. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-LATERAL>
 
 ---
 

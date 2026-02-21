@@ -6,11 +6,24 @@
 
 Выражение в SQL — любая конструкция, которая вычисляется в значение: арифметика (`salary * 1.1`), вызов функции (`length(name)`), условная логика (`CASE WHEN ...`). Выражения можно использовать в SELECT, WHERE, ORDER BY, HAVING — везде, где ожидается значение.
 
-Три конструкции из этого файла — CASE, COALESCE и NULLIF — нужны повсюду в SQL, поэтому они вводятся здесь, до изучения запросов.
+Представим: HR-отдел готовит квартальный отчёт по сотрудникам. Каждая колонка отчёта требует вычислений — классификация, обработка пропусков, форматирование, работа с датами. Отчёт строится на знакомой таблице `employees`:
 
-## CASE — условная логика
+```
+ id | name     | department_id | salary | hire_date
+----+----------+---------------+--------+------------
+  1 | Анна     |             1 |  90000 | 2021-03-15
+  2 | Борис    |             2 |  60000 | 2020-07-01
+  3 | Вера     |             1 |  85000 | 2022-01-10
+  4 | Глеб     |             2 |  70000 | 2019-11-20
+  5 | Дина     |             1 |  NULL  | 2023-06-01
+  6 | Евгений  |          NULL |  55000 | 2024-02-01
+```
 
-CASE (англ. «случай») — аналог `if/elsif/else` внутри SQL-выражения. У конструкции две формы.
+## Классификация зарплат — CASE
+
+Первая колонка отчёта: категория зарплаты — «высокая», «средняя», «неизвестна». Нет готовой функции, которая превращает число в категорию — нужна условная логика.
+
+CASE (англ. «случай») — аналог `if/elsif/else` внутри SQL-выражения. Две формы.
 
 **Searched CASE** — произвольные условия:
 
@@ -53,33 +66,33 @@ FROM employees;
 
 Simple CASE использует `=` для сравнения, поэтому `NULL` в `department_id` не совпадёт ни с одним WHEN — сработает ELSE. Это следствие трёхзначной логики: `NULL = 1` --> NULL, не TRUE.
 
-## COALESCE — первое не-NULL значение
+## Бонус с неизвестной зарплатой — COALESCE
+
+Вторая колонка: расчётный бонус 10% от зарплаты. Для Дины `salary * 0.1` даёт NULL — бонус неизвестен. В отчёте нужно 0 вместо пустого значения.
 
 COALESCE (от лат. «срастись, слиться») принимает список аргументов и возвращает первый, который не NULL:
 
 ```sql
-SELECT name, COALESCE(salary, 0) AS effective_salary
+SELECT name, COALESCE(salary, 0) * 0.1 AS bonus
 FROM employees;
 ```
 
 ```
- name     | effective_salary
-----------+-----------------
- Анна     |           90000
- Борис    |           60000
- Вера     |           85000
- Глеб     |           70000
- Дина     |               0
- Евгений  |           55000
+ name     | bonus
+----------+-------
+ Анна     |  9000
+ Борис    |  6000
+ Вера     |  8500
+ Глеб     |  7000
+ Дина     |     0
+ Евгений  |  5500
 ```
 
-У Дины `salary` — NULL, поэтому COALESCE вернул второй аргумент — 0. У остальных `salary` не NULL, и COALESCE вернул его.
+COALESCE можно вызывать с любым количеством аргументов: `COALESCE(a, b, c, d)` вернёт первый не-NULL слева направо. Если все NULL — результат NULL. Типичное применение помимо расчётов — объединение данных из нескольких столбцов: `COALESCE(nickname, first_name, 'Anonymous')`.
 
-COALESCE можно вызывать с любым количеством аргументов: `COALESCE(a, b, c, d)` вернёт первый не-NULL слева направо. Если все NULL — результат NULL.
+## Выручка на сотрудника — NULLIF
 
-Типичные применения: замена NULL на значение по умолчанию в вычислениях, объединение данных из нескольких столбцов (`COALESCE(nickname, first_name, 'Anonymous')`).
-
-## NULLIF — превращение значения в NULL
+Третья колонка: выручка отдела / количество сотрудников. Если отдел пуст (нет сотрудников), деление на ноль вызовет ошибку.
 
 NULLIF (англ. «обнулить, если») — обратная операция к COALESCE. Принимает два аргумента: если они равны, возвращает NULL, иначе возвращает первый:
 
@@ -87,13 +100,37 @@ NULLIF (англ. «обнулить, если») — обратная опер�
 SELECT NULLIF(department_id, 0) FROM employees;
 ```
 
-Если `department_id` равен 0 — результат NULL. Иначе — значение `department_id` как есть.
+Применение для защиты от деления на ноль: `total / NULLIF(count, 0)` вернёт NULL вместо ошибки, когда `count` равен нулю.
 
-Применение: защита от деления на ноль. Выражение `total / NULLIF(count, 0)` вернёт NULL вместо ошибки, когда `count` равен нулю.
+## Метка сотрудника — конкатенация строк
 
-## CAST и приведение типов
+Четвёртая колонка: метка вида `Анна (1)`, где число — id отдела. У Евгения отдела нет — нужна обработка NULL.
 
-SQL — строго типизированный язык, но иногда нужно явно преобразовать значение из одного типа в другой. Для этого есть CAST (англ. «привести, преобразовать»):
+Оператор `||` склеивает строки:
+
+```sql
+SELECT name || ' (' || COALESCE(department_id::text, '?') || ')' AS label
+FROM employees;
+```
+
+```
+ label
+-----------------
+ Анна (1)
+ Борис (2)
+ Вера (1)
+ Глеб (2)
+ Дина (1)
+ Евгений (?)
+```
+
+Конкатенация с NULL даёт NULL: `'hello' || NULL` --> NULL. Поэтому COALESCE часто нужен при построении строк. Запись `department_id::text` — приведение типов, о котором ниже.
+
+## Приведение типов — CAST
+
+В метке выше `department_id` — число, а `||` ожидает строки. Нужно явное преобразование.
+
+SQL — строго типизированный язык. CAST (англ. «привести, преобразовать») выполняет явное приведение:
 
 ```sql
 SELECT CAST('2024-01-15' AS date);
@@ -121,59 +158,33 @@ PostgreSQL иногда приводит типы автоматически. Н
 
 Арифметика с NULL: любая операция с NULL даёт NULL. `salary * 1.1` при `salary = NULL` вернёт NULL. Для защиты используется COALESCE: `COALESCE(salary, 0) * 1.1`.
 
-## Конкатенация строк
+## Стаж в отчёте — арифметика с датами
 
-Оператор `||` склеивает строки:
+Пятая колонка: стаж сотрудника. Нужно вычислить, сколько времени прошло с даты найма.
 
-```sql
-SELECT name || ' (' || COALESCE(department_id::text, '?') || ')' AS label
-FROM employees;
-```
+### AGE — разница между датами
 
-```
- label
------------------
- Анна (1)
- Борис (2)
- Вера (1)
- Глеб (2)
- Дина (1)
- Евгений (?)
-```
-
-Конкатенация с NULL даёт NULL: `'hello' || NULL` --> NULL. Поэтому COALESCE часто нужен при построении строк.
-
-## Функции для строк
-
-`length(text)` — длина строки в символах. `upper(text)` / `lower(text)` — верхний/нижний регистр. `trim(text)` — удаление пробелов по краям. `substring(text FROM start FOR length)` — подстрока. `replace(text, from, to)` — замена подстроки.
+`AGE(a, b)` возвращает интервал между двумя датами в человекочитаемом формате:
 
 ```sql
-SELECT upper(name), length(name) FROM employees WHERE id = 1;
+SELECT name, AGE(CURRENT_DATE, hire_date) AS tenure
+FROM employees
+WHERE id <= 3;
 ```
 
 ```
- upper | length
--------+--------
- АННА  |      4
+ name  | tenure
+-------+------------------------
+ Анна  | 4 years 11 mons 6 days
+ Борис | 5 years 7 mons 20 days
+ Вера  | 4 years 1 mon 11 days
 ```
 
-## Функции для дат
-
-### CURRENT_DATE, CURRENT_TIMESTAMP, NOW()
-
-`CURRENT_DATE` — текущая дата (тип `date`). `CURRENT_TIMESTAMP` / `NOW()` — текущая дата и время с часовым поясом:
-
-```sql
-SELECT CURRENT_DATE;        -- 2026-02-21
-SELECT CURRENT_TIMESTAMP;   -- 2026-02-21 14:30:00+00
-SELECT NOW();               -- то же, что CURRENT_TIMESTAMP
-```
-
-`CURRENT_DATE` и `CURRENT_TIMESTAMP` — стандарт SQL (без скобок). `NOW()` — расширение PostgreSQL.
-
-Внутри одной транзакции `NOW()` возвращает **одно и то же значение** — момент начала транзакции. Если нужно время, которое меняется по ходу выполнения — `clock_timestamp()` (PostgreSQL).
+С одним аргументом `AGE(date)` считает от CURRENT_DATE: `AGE(hire_date)` — то же, что `AGE(CURRENT_DATE, hire_date)`.
 
 ### EXTRACT — извлечение компонентов даты
+
+Стаж в годах — это не строка `4 years 11 mons`, а число. EXTRACT (англ. «извлечь») достаёт компонент из даты или интервала:
 
 ```sql
 SELECT name, hire_date,
@@ -196,7 +207,9 @@ WHERE id <= 3;
 
 `EXTRACT` возвращает `numeric`, не `integer`. PostgreSQL поддерживает альтернативный синтаксис-функцию `date_part('year', hire_date)` — эквивалент EXTRACT.
 
-### DATE_TRUNC — усечение до начала периода
+## Наймы по кварталам — DATE_TRUNC
+
+Шестая колонка: количество наймов по кварталам (для отчёта). Нужно «округлить» дату найма до начала квартала.
 
 `DATE_TRUNC(precision, timestamp)` обрезает дату до указанной точности — аналог округления вниз для дат:
 
@@ -211,44 +224,38 @@ SELECT DATE_TRUNC('year', TIMESTAMP '2025-03-15 14:30:00');
 Типичное применение — группировка по периодам:
 
 ```sql
-SELECT DATE_TRUNC('month', hire_date) AS month, COUNT(*)
+SELECT DATE_TRUNC('quarter', hire_date) AS quarter, COUNT(*)
 FROM employees
-GROUP BY DATE_TRUNC('month', hire_date)
-ORDER BY month;
+GROUP BY DATE_TRUNC('quarter', hire_date)
+ORDER BY quarter;
 ```
 
 ```
- month      | count
+ quarter    | count
 ------------+-------
- 2019-11-01 |     1
+ 2019-10-01 |     1
  2020-07-01 |     1
- 2021-03-01 |     1
+ 2021-01-01 |     1
  2022-01-01 |     1
- 2023-06-01 |     1
- 2024-02-01 |     1
+ 2023-04-01 |     1
+ 2024-01-01 |     1
 ```
 
 Доступные точности: microseconds, milliseconds, second, minute, hour, day, week, month, quarter, year.
 
-### AGE — разница между датами
+### CURRENT_DATE, CURRENT_TIMESTAMP, NOW()
 
-`AGE(a, b)` возвращает интервал между двумя датами в человекочитаемом формате:
+`CURRENT_DATE` — текущая дата (тип `date`). `CURRENT_TIMESTAMP` / `NOW()` — текущая дата и время с часовым поясом:
 
 ```sql
-SELECT name, AGE(CURRENT_DATE, hire_date) AS tenure
-FROM employees
-WHERE id <= 3;
+SELECT CURRENT_DATE;        -- 2026-02-21
+SELECT CURRENT_TIMESTAMP;   -- 2026-02-21 14:30:00+00
+SELECT NOW();               -- то же, что CURRENT_TIMESTAMP
 ```
 
-```
- name  | tenure
--------+------------------------
- Анна  | 4 years 11 mons 6 days
- Борис | 5 years 7 mons 20 days
- Вера  | 4 years 1 mon 11 days
-```
+`CURRENT_DATE` и `CURRENT_TIMESTAMP` — стандарт SQL (без скобок). `NOW()` — расширение PostgreSQL.
 
-С одним аргументом `AGE(date)` считает от CURRENT_DATE: `AGE(hire_date)` — то же, что `AGE(CURRENT_DATE, hire_date)`.
+Внутри одной транзакции `NOW()` возвращает **одно и то же значение** — момент начала транзакции. Если нужно время, которое меняется по ходу выполнения — `clock_timestamp()` (PostgreSQL).
 
 ### INTERVAL — арифметика с датами
 
@@ -314,28 +321,11 @@ SELECT INTERVAL '1 hour' * 3 + INTERVAL '30 minutes';  -- 03:30:00
 
 Ключевое различие: `date - date` возвращает `integer` (целое число дней), а `timestamp - timestamp` возвращает `interval` (который включает часы, минуты, секунды). Если нужно получить дробное число дней из интервала, извлекают эпоху: `EXTRACT(EPOCH FROM interval) / 86400`.
 
-## GREATEST и LEAST — min/max из списка значений
+## Зарплата в диапазоне — GREATEST и LEAST
+
+Последняя колонка: зарплата, ограниченная диапазоном 50000–100000 для внешнего отчёта. Нужно «обрезать» значения снизу и сверху.
 
 GREATEST и LEAST принимают несколько значений и возвращают наибольшее или наименьшее. В отличие от агрегатных MAX/MIN (работают по строкам), GREATEST/LEAST работают **по столбцам** одной строки:
-
-```sql
-SELECT name,
-       GREATEST(salary, bonus, commission) AS best_income,
-       LEAST(salary, bonus, commission) AS worst_income
-FROM employees;
-```
-
-Поведение с NULL: в PostgreSQL GREATEST и LEAST **игнорируют NULL**, если есть хотя бы одно не-NULL значение:
-
-```sql
-SELECT GREATEST(10, NULL, 5);   -- 10
-SELECT GREATEST(NULL, NULL);    -- NULL
-SELECT LEAST(10, NULL, 5);      -- 5
-```
-
-Это PostgreSQL-специфика. В стандарте SQL и в некоторых СУБД (Oracle) любой NULL делает результат NULL.
-
-Практический пример — ограничение значения (clamp):
 
 ```sql
 SELECT name, LEAST(GREATEST(salary, 50000), 100000) AS clamped_salary
@@ -351,6 +341,30 @@ WHERE salary IS NOT NULL;
  Вера     |         85000
  Глеб     |         70000
  Евгений  |         55000
+```
+
+Поведение с NULL: в PostgreSQL GREATEST и LEAST **игнорируют NULL**, если есть хотя бы одно не-NULL значение:
+
+```sql
+SELECT GREATEST(10, NULL, 5);   -- 10
+SELECT GREATEST(NULL, NULL);    -- NULL
+SELECT LEAST(10, NULL, 5);      -- 5
+```
+
+Это PostgreSQL-специфика. В стандарте SQL и в некоторых СУБД (Oracle) любой NULL делает результат NULL.
+
+## Функции для строк
+
+`length(text)` — длина строки в символах. `upper(text)` / `lower(text)` — верхний/нижний регистр. `trim(text)` — удаление пробелов по краям. `substring(text FROM start FOR length)` — подстрока. `replace(text, from, to)` — замена подстроки.
+
+```sql
+SELECT upper(name), length(name) FROM employees WHERE id = 1;
+```
+
+```
+ upper | length
+-------+--------
+ АННА  |      4
 ```
 
 ## Sources

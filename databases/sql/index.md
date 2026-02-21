@@ -23,13 +23,13 @@ SQL — декларативный язык для работы с реляци�
 Чтение данных — от простой фильтрации до оконных функций.
 
 - [SELECT и фильтрация](querying/00-select-and-filtering.md) — SELECT, FROM, WHERE, операторы, LIKE/ILIKE, BETWEEN, IN
-- [Сортировка и ограничение](querying/01-sorting-and-limiting.md) — ORDER BY, LIMIT/OFFSET, DISTINCT, DISTINCT ON
+- [Сортировка и ограничение](querying/01-sorting-and-limiting.md) — ORDER BY, LIMIT/OFFSET, DISTINCT
 - [Агрегация](querying/02-aggregation.md) — COUNT/SUM/AVG/MIN/MAX, GROUP BY, HAVING, FILTER, string_agg/array_agg
-- [Соединения (JOIN)](querying/03-joins.md) — псевдонимы таблиц, CROSS/INNER/LEFT/RIGHT/FULL, self-join, ON vs WHERE, USING, LATERAL
+- [Соединения (JOIN)](querying/03-joins.md) — псевдонимы таблиц, CROSS/INNER/LEFT/RIGHT/FULL, self-join, ON vs WHERE, USING
 - [Расширенная группировка](querying/04-grouping-sets.md) — GROUPING SETS, ROLLUP, CUBE, функция GROUPING()
 - [Подзапросы и CTE](querying/05-subqueries-and-cte.md) — скалярные, коррелированные, IN/EXISTS/ANY/ALL, NOT IN + NULL, WITH RECURSIVE
 - [Операции над множествами](querying/06-set-operations.md) — UNION, INTERSECT, EXCEPT и их ALL-варианты
-- [Оконные функции](querying/07-window-functions.md) — OVER, PARTITION BY, ранжирование, навигация, фреймы
+- [Оконные функции](querying/07-window-functions.md) — OVER, PARTITION BY, ранжирование, навигация, фреймы, DISTINCT ON, LATERAL
 
 ### Определение структуры (DDL)
 

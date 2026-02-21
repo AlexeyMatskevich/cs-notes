@@ -4,9 +4,9 @@
 
 ← [Индексы](../schema/04-indexes.md) | [Транзакции](01-transactions.md) →
 
-Запросы на чтение (SELECT) не меняют данные. Для добавления, изменения и удаления строк SQL предоставляет три команды: INSERT, UPDATE, DELETE. Эти команды составляют DML — Data Manipulation Language (англ. «язык манипулирования данными»).
+Запросы на чтение (SELECT) не меняют данные. Жизненный цикл данных в HR-системе за один рабочий день: онбординг нового сотрудника, пакетный найм, повышение, реструктуризация, увольнение, очистка staging-среды, ежедневный импорт с обработкой дубликатов. Каждая задача требует своей команды: INSERT, UPDATE, DELETE, TRUNCATE. Эти команды составляют DML — Data Manipulation Language (англ. «язык манипулирования данными»).
 
-## INSERT — добавление строк
+## Онбординг: Жанна выходит на работу — INSERT
 
 ```sql
 INSERT INTO employees (id, name, department_id, salary, hire_date)
@@ -21,7 +21,9 @@ VALUES (6, 18000);
 -- created_at и status получат значения по умолчанию
 ```
 
-### Вставка нескольких строк
+### Пакетный найм — несколько строк
+
+В компанию выходят сразу двое:
 
 ```sql
 INSERT INTO employees (id, name, department_id, salary, hire_date) VALUES
@@ -29,77 +31,9 @@ INSERT INTO employees (id, name, department_id, salary, hire_date) VALUES
 (9, 'Ирина',  1, 80000, '2024-08-15');
 ```
 
-### INSERT ... SELECT
+### Нужен id для badge — RETURNING
 
-Вставка из результата запроса:
-
-```sql
-INSERT INTO archived_orders (id, customer_id, total, created_at)
-SELECT id, customer_id, total, created_at
-FROM orders
-WHERE created_at < '2024-01-01';
-```
-
-## UPDATE — изменение строк
-
-```sql
-UPDATE employees
-SET salary = 95000
-WHERE name = 'Анна';
-```
-
-UPDATE изменяет **все строки**, удовлетворяющие WHERE. Без WHERE — все строки таблицы:
-
-```sql
-UPDATE employees SET salary = salary * 1.1;  -- повышение всем на 10%
-```
-
-Можно обновлять несколько столбцов:
-
-```sql
-UPDATE employees
-SET salary = 95000, department_id = 2
-WHERE id = 1;
-```
-
-### UPDATE с подзапросом
-
-```sql
-UPDATE employees e
-SET salary = salary * 1.1
-WHERE department_id = (
-    SELECT id FROM departments WHERE name = 'engineering'
-);
-```
-
-## DELETE — удаление строк
-
-```sql
-DELETE FROM employees WHERE id = 9;
-```
-
-DELETE удаляет **все строки**, удовлетворяющие WHERE. Без WHERE — все строки таблицы:
-
-```sql
-DELETE FROM employees;  -- удалить всё!
-```
-
-DELETE уважает FOREIGN KEY: если на строку ссылаются дочерние записи и каскадного удаления нет — ошибка.
-
-## TRUNCATE — быстрая очистка таблицы
-
-TRUNCATE (англ. «усечь, обрезать») удаляет **все строки** таблицы, но быстрее DELETE:
-
-```sql
-TRUNCATE employees;
-TRUNCATE employees RESTART IDENTITY;  -- и сбросить sequence
-```
-
-Разница: DELETE удаляет строки по одной и создаёт dead tuples (для MVCC и возможности ROLLBACK). TRUNCATE удаляет данные на уровне файлов — мгновенно, без dead tuples. Но TRUNCATE нельзя откатить в некоторых СУБД (в PostgreSQL — можно, он транзакционный).
-
-TRUNCATE также сбрасывает visibility map и FSM, поэтому не нужен последующий VACUUM.
-
-## RETURNING — получение результата (PostgreSQL)
+HR-системе нужен id нового сотрудника сразу после вставки — для печати бейджа и привязки к проектам. Без RETURNING пришлось бы делать отдельный SELECT.
 
 В PostgreSQL INSERT, UPDATE и DELETE могут возвращать данные изменённых строк:
 
@@ -115,6 +49,66 @@ RETURNING id, name;
  10 | Кирилл
 ```
 
+RETURNING особенно полезен для получения сгенерированного id после INSERT без дополнительного SELECT.
+
+### Архивирование заказов — INSERT...SELECT
+
+Заказы за прошлый год нужно перенести в архивную таблицу:
+
+```sql
+INSERT INTO archived_orders (id, customer_id, total, created_at)
+SELECT id, customer_id, total, created_at
+FROM orders
+WHERE created_at < '2024-01-01';
+```
+
+## Повышение Анне — UPDATE
+
+```sql
+UPDATE employees
+SET salary = 95000
+WHERE name = 'Анна';
+```
+
+### UPDATE без WHERE — опасность
+
+Весь отдел получает повышение 10%:
+
+```sql
+UPDATE employees SET salary = salary * 1.1
+WHERE department_id = 1;
+```
+
+Попробуем забыть WHERE:
+
+```sql
+UPDATE employees SET salary = salary * 1.1;  -- повышение ВСЕМ!
+```
+
+UPDATE изменяет **все строки**, удовлетворяющие WHERE. Без WHERE — все строки таблицы. На production это катастрофа. Правило: всегда проверять WHERE перед UPDATE.
+
+Можно обновлять несколько столбцов:
+
+```sql
+UPDATE employees
+SET salary = 95000, department_id = 2
+WHERE id = 1;
+```
+
+### Реструктуризация — UPDATE с подзапросом
+
+Все сотрудники engineering переходят в новый отдел:
+
+```sql
+UPDATE employees e
+SET department_id = 4
+WHERE department_id = (
+    SELECT id FROM departments WHERE name = 'engineering'
+);
+```
+
+Подзапрос вычисляет id engineering — не нужно помнить числовой id, достаточно имени.
+
 ```sql
 UPDATE employees SET salary = salary * 1.1
 WHERE department_id = 1
@@ -129,11 +123,42 @@ RETURNING name, salary;
  Дина |   NULL
 ```
 
-RETURNING особенно полезен для получения сгенерированного id после INSERT без дополнительного SELECT.
+RETURNING работает и с UPDATE — показывает **новые** значения изменённых строк.
 
-## INSERT ... ON CONFLICT — UPSERT (PostgreSQL)
+## Увольнение — DELETE
 
-UPSERT (update + insert) — вставка с обработкой конфликта уникальности:
+```sql
+DELETE FROM employees WHERE id = 9;
+```
+
+DELETE удаляет **все строки**, удовлетворяющие WHERE. Без WHERE — все строки таблицы:
+
+```sql
+DELETE FROM employees;  -- удалить всё!
+```
+
+DELETE уважает FOREIGN KEY: если на строку ссылаются дочерние записи и каскадного удаления нет — ошибка. Подробнее — в [ограничениях](../schema/01-constraints.md).
+
+## Сброс staging — TRUNCATE vs DELETE
+
+Staging-среду нужно полностью очистить перед тестированием. DELETE удалит все строки, но медленно:
+
+TRUNCATE (англ. «усечь, обрезать») удаляет **все строки** таблицы, но быстрее DELETE:
+
+```sql
+TRUNCATE employees;
+TRUNCATE employees RESTART IDENTITY;  -- и сбросить sequence
+```
+
+Разница: DELETE удаляет строки по одной и создаёт dead tuples (для MVCC и возможности ROLLBACK). TRUNCATE удаляет данные на уровне файлов — мгновенно, без dead tuples. В PostgreSQL TRUNCATE транзакционный — его можно откатить.
+
+TRUNCATE также сбрасывает visibility map и FSM, поэтому не нужен последующий VACUUM.
+
+## Ежедневный импорт — UPSERT
+
+Каждый день приходит файл с данными сотрудников. Если сотрудник уже есть (по email) — обновить имя. Если нет — вставить. Без UPSERT нужно два запроса или процедурная логика.
+
+INSERT ... ON CONFLICT (update + insert) — вставка с обработкой конфликта уникальности:
 
 ```sql
 INSERT INTO users (email, name)

@@ -4,103 +4,137 @@
 
 ← [Подзапросы и CTE](05-subqueries-and-cte.md) | [Оконные функции](07-window-functions.md) →
 
-Подзапросы вкладывают один запрос в другой. Но иногда нужно просто **объединить результаты** двух независимых запросов: показать в одном списке и сотрудников, и клиентов, или найти общие значения между двумя наборами.
+Подзапросы вкладывают один запрос в другой. Но иногда нужно просто **объединить результаты** двух независимых запросов. У компании есть таблица `employees` (сотрудники) и таблица `customers` (клиенты):
 
-UNION (англ. «объединение»), INTERSECT (англ. «пересечение»), EXCEPT (англ. «исключение») объединяют результаты нескольких SELECT в один набор строк.
+```
+employees:                    customers:
+ name     | email              name    | email
+----------+-----------        ---------+-------------
+ Анна     | anna@c.co          Alice   | alice@ext.co
+ Борис    | boris@c.co         Bob     | bob@ext.co
+ Анна     | anna@c.co          Анна    | anna@c.co
+```
 
-## UNION — объединение
+Анна — и сотрудник, и клиент (один и тот же email). Задачи: единый список рассылки, пересечение, разность.
 
-UNION объединяет результаты двух запросов, **удаляя дубликаты**:
+## Единый список рассылки — UNION
+
+UNION (англ. «объединение») объединяет результаты двух запросов, **удаляя дубликаты**:
 
 ```sql
-SELECT name FROM employees
+SELECT name, email FROM employees
 UNION
-SELECT name FROM customers;
+SELECT name, email FROM customers;
 ```
 
 ```
- name
-----------
- Alice
- Bob
- Charlie
- Анна
- Борис
- Вера
- Глеб
- Дина
- Евгений
+ name  | email
+-------+-------------
+ Alice | alice@ext.co
+ Bob   | bob@ext.co
+ Анна  | anna@c.co
+ Борис | boris@c.co
+```
+
+Анна появилась один раз — UNION убрал дубликат. Визуально:
+
+```
+  employees       customers
+  .-------.       .-------.
+  |       |       |       |
+  | Борис | Анна  | Alice |     UNION = всё вместе, без дубликатов
+  |       |       | Bob   |
+  '-------'       '-------'
 ```
 
 Требования к UNION: оба SELECT должны возвращать **одинаковое количество столбцов**, и типы столбцов должны быть совместимы. Имена столбцов берутся из первого SELECT.
 
-### UNION ALL — без удаления дубликатов
+### UNION ALL — с дубликатами
 
 UNION ALL сохраняет все строки, включая дубликаты:
 
 ```sql
-SELECT department_id FROM employees
+SELECT name, email FROM employees
 UNION ALL
-SELECT id FROM departments;
+SELECT name, email FROM customers;
 ```
 
-```
- department_id
---------------
-             1
-             2
-             1
-             2
-             1
-          NULL
-             1
-             2
-             3
-```
+Анна появится дважды. UNION ALL быстрее UNION, потому что не тратит ресурсы на дедупликацию. Если дубликаты не мешают или невозможны — используйте ALL.
 
-UNION ALL быстрее UNION, потому что не тратит ресурсы на дедупликацию. Если дубликаты не мешают или невозможны — используйте ALL.
-
-## INTERSECT — пересечение
+## Кто и сотрудник, и клиент? — INTERSECT
 
 INTERSECT (англ. «пересечение») возвращает строки, присутствующие в **обоих** результатах:
 
 ```sql
-SELECT department_id FROM employees WHERE salary > 80000
+SELECT name, email FROM employees
 INTERSECT
-SELECT department_id FROM employees WHERE hire_date >= '2021-01-01';
+SELECT name, email FROM customers;
 ```
 
 ```
- department_id
---------------
-             1
+ name | email
+------+----------
+ Анна | anna@c.co
 ```
 
-Сотрудники с зарплатой > 80000: отделы {1}. Нанятые после 2021: отделы {1, 2, NULL}. Пересечение: {1}.
+Только Анна есть в обеих таблицах.
+
+```
+  employees       customers
+  .-------.       .-------.
+  |       |///////|       |
+  | Борис |/ Анна/| Alice |     INTERSECT = только пересечение
+  |       |///////| Bob   |
+  '-------'       '-------'
+```
 
 INTERSECT ALL сохраняет дубликаты (по количеству совпадений).
 
-## EXCEPT — разность
+## Клиенты, не сотрудники — EXCEPT
 
 EXCEPT (англ. «исключение, кроме») возвращает строки из первого результата, **отсутствующие** во втором:
 
 ```sql
-SELECT id FROM departments
+SELECT name, email FROM customers
 EXCEPT
-SELECT department_id FROM employees WHERE department_id IS NOT NULL;
+SELECT name, email FROM employees;
 ```
 
 ```
- id
-----
-  3
+ name  | email
+-------+-------------
+ Alice | alice@ext.co
+ Bob   | bob@ext.co
 ```
 
-Все отделы: {1, 2, 3}. Отделы с сотрудниками: {1, 2}. Разность: {3} — отдел `hr`.
+Анна исключена — она есть среди сотрудников.
+
+```
+  employees       customers
+  .-------.       .-------.
+  |       |       |///////|
+  | Борис | Анна  |/Alice/|     EXCEPT = правая минус пересечение
+  |       |       |/ Bob /|
+  '-------'       |///////|
+                  '-------'
+```
 
 EXCEPT ALL — с учётом количества вхождений.
 
-## Порядок выполнения
+### EXCEPT vs LEFT JOIN + IS NULL
+
+Задачу «клиенты, не сотрудники» можно решить и через LEFT JOIN (из [соединений](03-joins.md)):
+
+```sql
+SELECT c.name, c.email
+FROM customers c
+LEFT JOIN employees e ON c.email = e.email
+WHERE e.email IS NULL;
+```
+
+Два подхода к одной задаче. EXCEPT компактнее, когда структура столбцов совпадает. LEFT JOIN гибче — позволяет сравнивать по произвольным столбцам и возвращать столбцы из обеих таблиц.
+
+## Порядок и ограничение результата
 
 Каждый SELECT в операции над множествами выполняет свой полный pipeline (FROM → WHERE → ... → SELECT). Операция применяется **после** завершения обоих pipeline.
 

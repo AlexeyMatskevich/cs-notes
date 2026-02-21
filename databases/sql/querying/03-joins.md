@@ -125,12 +125,7 @@ FULL OUTER JOIN departments d ON e.department_id = d.id;
 
 И Евгений, и `hr` в результате.
 
-```
-INNER JOIN       -- только строки с парой в обеих таблицах
-LEFT JOIN        -- все из левой + пары из правой (или NULL)
-RIGHT JOIN       -- все из правой + пары из левой (или NULL)
-FULL OUTER JOIN  -- все из обеих (NULL где нет пары)
-```
+Прогрессия идёт от вопроса «что делать со строками без пары?»: INNER JOIN отбрасывает их, LEFT JOIN сохраняет из левой таблицы (заполняя правую NULL-ами), RIGHT JOIN — зеркально из правой, а FULL OUTER JOIN сохраняет все строки из обеих таблиц.
 
 ## Паттерн «найти сирот»
 
@@ -214,57 +209,6 @@ NATURAL JOIN автоматически находит все столбцы с 
 
 NATURAL JOIN зависит от **имён столбцов**, а не от намерения разработчика. Если кто-то добавит столбец `name` в `departments`, NATURAL JOIN молча начнёт соединять и по `department_id`, и по `name` — запрос вернёт неправильный результат без ошибки. Правило: NATURAL JOIN не используется в production-коде. Всегда явный ON или USING.
 
-## LATERAL — подзапрос с доступом к текущей строке
-
-LATERAL (англ. «боковой») позволяет подзапросу в FROM ссылаться на столбцы предшествующих таблиц. Это как вложенный цикл: для каждой строки левой таблицы выполняется подзапрос.
-
-```sql
-SELECT d.name, top.employee_name, top.salary
-FROM departments d
-LEFT JOIN LATERAL (
-    SELECT e.name AS employee_name, e.salary
-    FROM employees e
-    WHERE e.department_id = d.id
-    ORDER BY e.salary DESC NULLS LAST
-    LIMIT 1
-) top ON true;
-```
-
-```
- name        | employee_name | salary
--------------+---------------+--------
- engineering | Анна          |  90000
- sales       | Глеб          |  70000
- hr          | NULL          |   NULL
-```
-
-Для каждого отдела подзапрос находит сотрудника с максимальной зарплатой. LATERAL ссылается на `d.id` из внешней таблицы — без LATERAL это было бы ошибкой. LEFT JOIN LATERAL сохраняет `hr`, у которого нет сотрудников.
-
-Подробнее о коррелированных подзапросах — в [подзапросах и CTE](05-subqueries-and-cte.md).
-
-LATERAL уникален в ситуациях, где для каждой строки нужно вызвать **set-returning функцию** — функцию, возвращающую несколько строк. Допустим, у сотрудников есть JSONB-поле `skills`:
-
-```sql
--- предположим: employees.skills jsonb, например '["sql", "python", "go"]'
-SELECT e.name, skill
-FROM employees e
-CROSS JOIN LATERAL jsonb_array_elements_text(e.skills) AS skill;
-```
-
-```
- name  | skill
--------+--------
- Анна  | sql
- Анна  | python
- Анна  | go
- Борис | sql
- Борис | java
-```
-
-`jsonb_array_elements_text` принимает массив конкретного сотрудника и возвращает набор строк — по одной на каждый элемент. Без LATERAL подзапрос в FROM не может ссылаться на `e.skills`.
-
-**LATERAL vs оконные функции.** Top-N внутри группы (как пример выше с лучшим сотрудником в отделе) можно решить и через `ROW_NUMBER() OVER (PARTITION BY ...)` — часто это проще. LATERAL незаменим там, где нужно **порождать строки** из значения каждой строки: развернуть массив, вызвать `generate_series`, передать параметр в табличную функцию.
-
 ## NULL в контексте JOIN
 
 NULL в столбце соединения означает «нет пары»: `NULL = значение` даёт NULL, условие ON не TRUE, строка не соединяется. При INNER JOIN такая строка исчезает. При LEFT JOIN — сохраняется с NULL в столбцах правой таблицы.
@@ -288,7 +232,7 @@ ON выполняется на шаге 1 (до WHERE). При LEFT JOIN ON и W
 
 ## Sources
 
-- PostgreSQL Documentation (v16): JOIN, LATERAL. <https://www.postgresql.org/docs/16/sql-select.html>
+- PostgreSQL Documentation (v16): JOIN. <https://www.postgresql.org/docs/16/sql-select.html>
 - PostgreSQL Documentation (v16): Join Types. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-JOIN>
 
 ---
