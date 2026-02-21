@@ -4,11 +4,12 @@
     "python312@latest",
     "uv@latest",
     "bun@latest",
-    "zlib@latest"
+    "zlib@latest",
+    "marksman@latest"
   ],
   "shell": {
     "init_hook": [
-      "export LD_LIBRARY_PATH=\"$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:$(nix eval --raw nixpkgs#zlib.out)/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\""
+      "source ./scripts/dev-setup.sh"
     ],
     "scripts": {
       "claude": "export LD_LIBRARY_PATH=\"$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:$(nix eval --raw nixpkgs#zlib.out)/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\" && claude"
