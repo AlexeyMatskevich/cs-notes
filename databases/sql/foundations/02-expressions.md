@@ -269,7 +269,48 @@ WHERE id <= 2;
  Борис | 2020-07-01 | 2020-09-29
 ```
 
-Разница между двумя `date` возвращает **integer** (количество дней): `'2025-03-15'::date - '2025-01-01'::date` = 73. Разница между двумя `timestamp` возвращает **interval**.
+Помимо прибавления интервала, с датами работает и обратная операция — вычитание. Тип результата зависит от типов операндов:
+
+```sql
+-- date - date = integer (количество дней)
+SELECT '2025-03-15'::date - '2025-01-01'::date;  -- 73
+
+-- timestamp - timestamp = interval
+SELECT '2025-03-15 14:00'::timestamp - '2025-03-01 09:30'::timestamp;
+-- 14 days 04:30:00
+
+-- date + integer = date (дата через N дней)
+SELECT '2025-01-01'::date + 30;  -- 2025-01-31
+
+-- date - integer = date (дата N дней назад)
+SELECT '2025-03-15'::date - 7;   -- 2025-03-08
+```
+
+Практический пример — сколько дней каждый сотрудник работает в компании:
+
+```sql
+SELECT name, CURRENT_DATE - hire_date AS days_employed
+FROM employees
+WHERE id <= 3;
+```
+
+```
+ name  | days_employed
+-------+--------------
+ Анна  |         1804
+ Борис |         2061
+ Вера  |          1466
+```
+
+Интервалы можно умножать и делить — это удобно для расчёта пропорций:
+
+```sql
+SELECT INTERVAL '1 day' * 365.25 AS year_approx;  -- 365 days 06:00:00
+SELECT INTERVAL '8 hours' / 2;                     -- 04:00:00
+SELECT INTERVAL '1 hour' * 3 + INTERVAL '30 minutes';  -- 03:30:00
+```
+
+Ключевое различие: `date - date` возвращает `integer` (целое число дней), а `timestamp - timestamp` возвращает `interval` (который включает часы, минуты, секунды). Если нужно получить дробное число дней из интервала, извлекают эпоху: `EXTRACT(EPOCH FROM interval) / 86400`.
 
 ## GREATEST и LEAST — min/max из списка значений
 
