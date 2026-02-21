@@ -2,12 +2,16 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
   "packages": [
     "python312@latest",
-    "uv@latest"
+    "uv@latest",
+    "bun@latest",
+    "zlib@latest"
   ],
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "export LD_LIBRARY_PATH=\"$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:$(nix eval --raw nixpkgs#zlib.out)/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\""
     ],
-    "scripts": {}
+    "scripts": {
+      "claude": "export LD_LIBRARY_PATH=\"$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:$(nix eval --raw nixpkgs#zlib.out)/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\" && claude"
+    }
   }
 }
