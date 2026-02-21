@@ -146,7 +146,15 @@ FROM employees
 WHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 2 AND salary IS NOT NULL);
 ```
 
-`salary > ANY (60000, 70000)` --> TRUE, если salary > 60000 (минимум из набора).
+`salary > ANY (60000, 70000)` --> TRUE, если salary > 60000 (минимум из набора):
+
+```
+ name | salary
+------+--------
+ Анна |  90000
+ Вера |  85000
+ Глеб |  70000
+```
 
 ALL (англ. «все») — TRUE, если условие выполняется **для всех** значений:
 
@@ -154,7 +162,14 @@ ALL (англ. «все») — TRUE, если условие выполняет�
 WHERE salary > ALL (SELECT salary FROM employees WHERE department_id = 2 AND salary IS NOT NULL)
 ```
 
-`salary > ALL (60000, 70000)` --> TRUE, если salary > 70000 (максимум из набора).
+`salary > ALL (60000, 70000)` --> TRUE, если salary > 70000 (максимум из набора):
+
+```
+ name | salary
+------+--------
+ Анна |  90000
+ Вера |  85000
+```
 
 При пустом подзапросе: `ANY` --> FALSE, `ALL` --> TRUE.
 

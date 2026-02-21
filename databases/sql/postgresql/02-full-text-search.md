@@ -160,6 +160,14 @@ WHERE body_tsv @@ plainto_tsquery('english', 'powerful database');
 -- эквивалентно: to_tsquery('english', 'powerful & database')
 ```
 
+```
+      title
+-------------------
+ PostgreSQL Basics
+```
+
+Только первая статья содержит оба слова — «powerful» и «database».
+
 `phraseto_tsquery` — фразовый поиск, слова должны идти рядом:
 
 ```sql
@@ -167,12 +175,28 @@ SELECT title FROM articles
 WHERE body_tsv @@ phraseto_tsquery('english', 'database system');
 ```
 
+```
+      title
+-------------------
+ PostgreSQL Basics
+```
+
+«database system» стоят рядом в первой статье. Во второй «database» и «access» — другой сосед.
+
 `websearch_to_tsquery` — синтаксис в стиле Google: кавычки для фраз, `-` для исключения, `or` для ИЛИ:
 
 ```sql
 SELECT title FROM articles
 WHERE body_tsv @@ websearch_to_tsquery('english', 'database -rails');
 ```
+
+```
+      title
+-------------------
+ PostgreSQL Basics
+```
+
+Обе первых статьи содержат «database», но вторая исключена по `-rails`.
 
 ## ts_headline — подсветка совпадений
 
