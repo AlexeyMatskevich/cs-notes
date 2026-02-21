@@ -2,6 +2,8 @@
 
 **Предпосылки:** [таблицы и типы](00-tables-and-types.md) (CREATE TABLE), [ограничения](01-constraints.md) (PRIMARY KEY, UNIQUE).
 
+← [Ограничения](01-constraints.md) | [Представления](03-views.md) →
+
 Сервис аналитики записывает события: клики, просмотры, покупки. За год накопилось 500 млн строк — 120 ГБ данных. Запросы по дате работают через индекс, но VACUUM на 120 ГБ занимает минуты, а удаление данных старше 90 дней через DELETE создаёт миллионы dead tuples и bloat.
 
 Партиционирование решает эту проблему: вместо одной огромной таблицы — набор отдельных таблиц (партиций), разделённых по значению ключа. Удаление старых данных — `DROP TABLE events_2025_11`, мгновенная операция.
@@ -137,3 +139,7 @@ DETACH + DROP — альтернатива `DELETE FROM events WHERE created_at 
 ## Sources
 
 - PostgreSQL Documentation (v16): Partitioning. <https://www.postgresql.org/docs/16/ddl-partitioning.html>
+
+---
+
+← [Ограничения](01-constraints.md) | [Представления](03-views.md) →

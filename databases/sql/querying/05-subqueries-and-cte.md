@@ -2,6 +2,8 @@
 
 **Предпосылки:** [соединения](03-joins.md) (JOIN, LATERAL), [агрегация](02-aggregation.md) (GROUP BY, агрегатные функции).
 
+← [Расширенная группировка](04-grouping-sets.md) | [Операции над множествами](06-set-operations.md) →
+
 Иногда результат одного запроса нужен внутри другого. «Покажи сотрудников, чья зарплата выше средней» — средняя сама по себе результат запроса. Подзапрос (subquery) — запрос, вложенный в другой запрос. CTE (Common Table Expression) — именованный подзапрос, определяемый через WITH.
 
 ## Скалярный подзапрос
@@ -289,3 +291,7 @@ SELECT * FROM subordinates;
 
 - PostgreSQL Documentation (v16): Subqueries, WITH (CTE). <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-WITH>
 - PostgreSQL Documentation (v16): EXISTS, IN, ANY, ALL. <https://www.postgresql.org/docs/16/functions-subquery.html>
+
+---
+
+← [Расширенная группировка](04-grouping-sets.md) | [Операции над множествами](06-set-operations.md) →

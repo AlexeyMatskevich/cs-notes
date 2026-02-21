@@ -2,6 +2,8 @@
 
 **Предпосылки:** [реляционная модель](../foundations/00-relational-model.md) (таблица, строка, столбец), [типы данных](../foundations/01-types-and-null.md) (числа, текст, даты, boolean, NULL).
 
+← [Оконные функции](../querying/07-window-functions.md) | [Ограничения](01-constraints.md) →
+
 До сих пор таблицы просто «существовали» — мы читали и анализировали данные. Теперь — как определить структуру: создать таблицу, задать столбцы с типами, настроить значения по умолчанию и автоматическую генерацию id.
 
 ## CREATE TABLE
@@ -138,3 +140,7 @@ DROP TABLE employees CASCADE;
 - PostgreSQL Documentation (v16): CREATE TABLE. <https://www.postgresql.org/docs/16/sql-createtable.html>
 - PostgreSQL Documentation (v16): ALTER TABLE. <https://www.postgresql.org/docs/16/sql-altertable.html>
 - PostgreSQL Documentation (v16): Identity Columns. <https://www.postgresql.org/docs/16/ddl-identity-columns.html>
+
+---
+
+← [Оконные функции](../querying/07-window-functions.md) | [Ограничения](01-constraints.md) →

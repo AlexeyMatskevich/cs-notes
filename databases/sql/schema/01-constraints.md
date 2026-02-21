@@ -2,6 +2,8 @@
 
 **Предпосылки:** [таблицы и типы](00-tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT).
 
+← [Таблицы и типы](00-tables-and-types.md) | [Партиционирование](02-partitioning.md) →
+
 Три микросервиса пишут в одну таблицу `orders`. Один вставляет заказы с отрицательной суммой, другой — заказы без пользователя, третий — дубликаты по `external_id`. Валидация на уровне приложения не спасла: один сервис обновили, в другом забыли проверку, третий вставлял через ручной SQL.
 
 Ограничения (constraints, англ. «ограничения, условия») решают эту проблему на уровне данных: база сама удерживает инварианты, на которые опирается код.
@@ -179,3 +181,7 @@ DEFERRABLE INITIALLY DEFERRED;
 
 - PostgreSQL Documentation (v16): Constraints. <https://www.postgresql.org/docs/16/ddl-constraints.html>
 - PostgreSQL Documentation (v16): CREATE TABLE, ALTER TABLE. <https://www.postgresql.org/docs/16/sql-createtable.html>
+
+---
+
+← [Таблицы и типы](00-tables-and-types.md) | [Партиционирование](02-partitioning.md) →

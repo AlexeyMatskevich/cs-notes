@@ -2,6 +2,8 @@
 
 **Предпосылки:** [агрегация](02-aggregation.md) (GROUP BY, HAVING, pipeline до шага 8).
 
+← [Агрегация](02-aggregation.md) | [Расширенная группировка](04-grouping-sets.md) →
+
 Все предыдущие запросы работали с одной таблицей. Но в реальных базах данные **разделены** по нескольким таблицам: сотрудники — отдельно, отделы — отдельно. Связь между ними — через общее значение (ключ). JOIN (англ. «соединение, объединение») комбинирует строки из разных таблиц.
 
 Две таблицы:
@@ -288,3 +290,7 @@ ON выполняется на шаге 1 (до WHERE). При LEFT JOIN ON и W
 
 - PostgreSQL Documentation (v16): JOIN, LATERAL. <https://www.postgresql.org/docs/16/sql-select.html>
 - PostgreSQL Documentation (v16): Join Types. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-JOIN>
+
+---
+
+← [Агрегация](02-aggregation.md) | [Расширенная группировка](04-grouping-sets.md) →

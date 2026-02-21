@@ -2,6 +2,8 @@
 
 **Предпосылки:** [сортировка и ограничение](01-sorting-and-limiting.md) (ORDER BY, DISTINCT, pipeline FROM → WHERE → SELECT → ORDER BY → LIMIT).
 
+← [Сортировка и ограничение](01-sorting-and-limiting.md) | [Соединения](03-joins.md) →
+
 До сих пор каждая строка результата соответствовала одной строке таблицы. Но вопрос «сколько всего сотрудников?» или «какая средняя зарплата по отделам?» требует **схлопнуть** набор строк в одно значение. Для этого нужны агрегатные функции и GROUP BY.
 
 ## Агрегатные функции
@@ -256,3 +258,7 @@ GROUP BY department_id;
 
 - PostgreSQL Documentation (v16): Aggregate Functions. <https://www.postgresql.org/docs/16/functions-aggregate.html>
 - PostgreSQL Documentation (v16): GROUP BY, HAVING. <https://www.postgresql.org/docs/16/sql-select.html>
+
+---
+
+← [Сортировка и ограничение](01-sorting-and-limiting.md) | [Соединения](03-joins.md) →

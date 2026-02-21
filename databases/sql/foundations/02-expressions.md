@@ -2,6 +2,8 @@
 
 **Предпосылки:** [типы данных и NULL](01-types-and-null.md) (типы, трёхзначная логика, IS NULL).
 
+← [Типы данных и NULL](01-types-and-null.md) | [SELECT и фильтрация](../querying/00-select-and-filtering.md) →
+
 Выражение в SQL — любая конструкция, которая вычисляется в значение: арифметика (`salary * 1.1`), вызов функции (`length(name)`), условная логика (`CASE WHEN ...`). Выражения можно использовать в SELECT, WHERE, ORDER BY, HAVING — везде, где ожидается значение.
 
 Три конструкции из этого файла — CASE, COALESCE и NULLIF — нужны повсюду в SQL, поэтому они вводятся здесь, до изучения запросов.
@@ -356,3 +358,7 @@ WHERE salary IS NOT NULL;
 - PostgreSQL Documentation (v16): Conditional Expressions (CASE, COALESCE, NULLIF). <https://www.postgresql.org/docs/16/functions-conditional.html>
 - PostgreSQL Documentation (v16): Type Conversion. <https://www.postgresql.org/docs/16/typeconv.html>
 - PostgreSQL Documentation (v16): String Functions, Date/Time Functions. <https://www.postgresql.org/docs/16/functions-string.html>, <https://www.postgresql.org/docs/16/functions-datetime.html>
+
+---
+
+← [Типы данных и NULL](01-types-and-null.md) | [SELECT и фильтрация](../querying/00-select-and-filtering.md) →

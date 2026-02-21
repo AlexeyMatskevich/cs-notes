@@ -2,6 +2,8 @@
 
 **Предпосылки:** [подзапросы и CTE](../querying/05-subqueries-and-cte.md) (подзапросы, CTE), [соединения](../querying/03-joins.md) (JOIN).
 
+← [Партиционирование](02-partitioning.md) | [Индексы](04-indexes.md) →
+
 Дашборд аналитики показывает количество сотрудников, среднюю зарплату и использование бюджета по отделам. Запрос — 3 JOIN, 2 подзапроса, 25 строк SQL. Каждое открытие страницы перезапускает этот запрос. Если тот же отчёт нужен в двух разных местах приложения — запрос дублируется, и любое изменение схемы требует правки в обоих местах.
 
 Представление (view, англ. «вид, взгляд») — именованный запрос, сохранённый в базе. Обращение к view выглядит как обращение к таблице, но данные вычисляются при каждом запросе.
@@ -122,3 +124,7 @@ CONCURRENTLY (PostgreSQL) требует UNIQUE INDEX на materialized view. М
 
 - PostgreSQL Documentation (v16): CREATE VIEW. <https://www.postgresql.org/docs/16/sql-createview.html>
 - PostgreSQL Documentation (v16): CREATE MATERIALIZED VIEW. <https://www.postgresql.org/docs/16/sql-creatematerializedview.html>
+
+---
+
+← [Партиционирование](02-partitioning.md) | [Индексы](04-indexes.md) →

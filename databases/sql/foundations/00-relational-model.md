@@ -2,6 +2,8 @@
 
 **Предпосылки:** базовое программирование (переменные, типы, функции).
 
+[Типы данных и NULL](01-types-and-null.md) →
+
 Интернет-магазин хранит данные о сотрудниках, отделах, заказах и клиентах. Эти данные связаны между собой: сотрудник работает в отделе, заказ принадлежит клиенту и обслуживается сотрудником. Первый вопрос, на который нужно ответить, прежде чем писать запросы — как организовать эти данные так, чтобы они оставались корректными и чтобы на любой вопрос можно было получить ответ.
 
 ## Плоская таблица и её проблемы
@@ -184,3 +186,7 @@ INSERT INTO orders VALUES
 - C.J. Date, 2003, *An Introduction to Database Systems* (8th ed.). Addison-Wesley.
 - Two-Bit History, 2017, *Important Papers: Codd and the Relational Model*. <https://twobithistory.org/2017/12/29/codd-relational-model.html>
 - PostgreSQL Documentation (v16). <https://www.postgresql.org/docs/16/>
+
+---
+
+[Типы данных и NULL](01-types-and-null.md) →

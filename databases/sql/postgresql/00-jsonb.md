@@ -1,6 +1,13 @@
 # JSONB
 
-**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [ограничения](../schema/01-constraints.md) (индексы).
+<details>
+<summary>Предпосылки</summary>
+
+[SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [ограничения](../schema/01-constraints.md) (индексы).
+
+</details>
+
+← [Транзакции](../modification/01-transactions.md) | [Массивы и диапазоны](01-arrays-and-ranges.md) →
 
 E-commerce платформа принимает платежи через 50 провайдеров. Каждый возвращает свой JSON: Stripe — `charge_id`, `balance_transaction`, `receipt_url`; PayPal — `payer_id`, `capture_id`, `links[]`. Создавать 50 nullable-столбцов (в основном NULL для каждой строки) — нормализация вредит: схема раздувается, ALTER TABLE на каждого нового провайдера, 95% значений пустые.
 
@@ -179,3 +186,7 @@ JSONB оправдан, когда: структура **варьируется 
 
 - PostgreSQL Documentation (v16): JSON Types. <https://www.postgresql.org/docs/16/datatype-json.html>
 - PostgreSQL Documentation (v16): JSON Functions and Operators. <https://www.postgresql.org/docs/16/functions-json.html>
+
+---
+
+← [Транзакции](../modification/01-transactions.md) | [Массивы и диапазоны](01-arrays-and-ranges.md) →

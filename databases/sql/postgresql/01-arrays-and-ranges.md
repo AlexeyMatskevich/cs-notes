@@ -2,6 +2,8 @@
 
 **Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md), [агрегация](../querying/02-aggregation.md) (array_agg).
 
+← [JSONB](00-jsonb.md) | [Полнотекстовый поиск](02-full-text-search.md) →
+
 Товару нужны теги: «electronics», «portable», «sale». Классический подход — junction table: `product_tags(product_id, tag_id)`, отдельная таблица `tags(id, name)`. Это три таблицы и два JOIN для получения тегов товара. Для простых атомарных меток без атрибутов и без двусторонних запросов («какие товары у тега?» не нужно) массив `TEXT[]` проще — одна таблица, один столбец, без JOIN.
 
 ## ARRAY — массив значений
@@ -191,3 +193,7 @@ CREATE INDEX bookings_during_idx ON bookings USING gist (during);
 
 - PostgreSQL Documentation (v16): Arrays. <https://www.postgresql.org/docs/16/arrays.html>
 - PostgreSQL Documentation (v16): Range Types. <https://www.postgresql.org/docs/16/rangetypes.html>
+
+---
+
+← [JSONB](00-jsonb.md) | [Полнотекстовый поиск](02-full-text-search.md) →

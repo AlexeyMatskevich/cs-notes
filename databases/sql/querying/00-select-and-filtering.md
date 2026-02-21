@@ -1,6 +1,13 @@
 # SELECT и фильтрация
 
-**Предпосылки:** [реляционная модель](../foundations/00-relational-model.md), [типы данных и NULL](../foundations/01-types-and-null.md), [выражения](../foundations/02-expressions.md).
+<details>
+<summary>Предпосылки</summary>
+
+[реляционная модель](../foundations/00-relational-model.md), [типы данных и NULL](../foundations/01-types-and-null.md), [выражения](../foundations/02-expressions.md).
+
+</details>
+
+← [Выражения](../foundations/02-expressions.md) | [Сортировка и ограничение](01-sorting-and-limiting.md) →
 
 Данные лежат в таблицах. Запрос — способ задать вопрос к этим данным. SQL-запрос описывает *что* нужно получить, а СУБД сама выбирает способ вычисления. Простейший вопрос: «покажи определённые столбцы из таблицы, оставив только строки, удовлетворяющие условию».
 
@@ -227,3 +234,7 @@ SELECT name, salary FROM employees WHERE salary <> 90000;
 ## Sources
 
 - PostgreSQL Documentation (v16): SELECT, WHERE, Pattern Matching. <https://www.postgresql.org/docs/16/sql-select.html>, <https://www.postgresql.org/docs/16/functions-matching.html>
+
+---
+
+← [Выражения](../foundations/02-expressions.md) | [Сортировка и ограничение](01-sorting-and-limiting.md) →

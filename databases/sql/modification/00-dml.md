@@ -2,6 +2,8 @@
 
 **Предпосылки:** [таблицы и типы](../schema/00-tables-and-types.md) (CREATE TABLE, DEFAULT), [ограничения](../schema/01-constraints.md) (NOT NULL, PK, FK, CHECK).
 
+← [Индексы](../schema/04-indexes.md) | [Транзакции](01-transactions.md) →
+
 Запросы на чтение (SELECT) не меняют данные. Для добавления, изменения и удаления строк SQL предоставляет три команды: INSERT, UPDATE, DELETE. Эти команды составляют DML — Data Manipulation Language (англ. «язык манипулирования данными»).
 
 ## INSERT — добавление строк
@@ -154,3 +156,7 @@ ON CONFLICT требует уникального индекса или огра
 - PostgreSQL Documentation (v16): INSERT, UPDATE, DELETE, TRUNCATE. <https://www.postgresql.org/docs/16/dml.html>
 - PostgreSQL Documentation (v16): RETURNING. <https://www.postgresql.org/docs/16/dml-returning.html>
 - PostgreSQL Documentation (v16): INSERT ON CONFLICT. <https://www.postgresql.org/docs/16/sql-insert.html#SQL-ON-CONFLICT>
+
+---
+
+← [Индексы](../schema/04-indexes.md) | [Транзакции](01-transactions.md) →

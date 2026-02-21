@@ -2,6 +2,8 @@
 
 **Предпосылки:** [агрегация](02-aggregation.md) (агрегатные функции, GROUP BY), [соединения](03-joins.md) (JOIN).
 
+← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
+
 Все предыдущие инструменты либо оставляют строки как есть (SELECT, WHERE, JOIN), либо схлопывают их в группы (GROUP BY). Оконные функции решают задачу, которая раньше была невозможна: вычислить агрегат **без потери строк**.
 
 Задача: «для каждого сотрудника показать его зарплату и среднюю зарплату по отделу». С GROUP BY средняя вычисляется, но строки схлопываются — имена теряются. Нужен инструмент, который добавит вычисленное значение к каждой строке.
@@ -332,3 +334,7 @@ NULL при ORDER BY внутри OVER влияет на порядок и фр�
 
 - PostgreSQL Documentation (v16): Window Functions. <https://www.postgresql.org/docs/16/tutorial-window.html>
 - PostgreSQL Documentation (v16): Window Function Calls. <https://www.postgresql.org/docs/16/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS>
+
+---
+
+← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →

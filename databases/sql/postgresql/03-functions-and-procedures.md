@@ -1,6 +1,13 @@
 # Функции и процедуры
 
-**Предпосылки:** [DML](../modification/00-dml.md) (INSERT, UPDATE), [выражения](../foundations/02-expressions.md) (CASE), [агрегация](../querying/02-aggregation.md).
+<details>
+<summary>Предпосылки</summary>
+
+[DML](../modification/00-dml.md) (INSERT, UPDATE), [выражения](../foundations/02-expressions.md) (CASE), [агрегация](../querying/02-aggregation.md).
+
+</details>
+
+← [Полнотекстовый поиск](02-full-text-search.md)
 
 Checkout в приложении: проверить наличие товара, списать со склада, создать заказ, записать лог. Четыре SQL-запроса — четыре round-trip'а между приложением и базой. При latency 5 мс на запрос — 20 мс только на сеть, не считая выполнения. Серверная функция выполняет ту же логику за один round-trip — вся логика рядом с данными, сетевой overhead минимален.
 
@@ -276,3 +283,7 @@ ROLLBACK;
 - PostgreSQL Documentation (v16): CREATE PROCEDURE. <https://www.postgresql.org/docs/16/sql-createprocedure.html>
 - PostgreSQL Documentation (v16): PL/pgSQL. <https://www.postgresql.org/docs/16/plpgsql.html>
 - PostgreSQL Documentation (v16): CREATE TRIGGER. <https://www.postgresql.org/docs/16/sql-createtrigger.html>
+
+---
+
+← [Полнотекстовый поиск](02-full-text-search.md)

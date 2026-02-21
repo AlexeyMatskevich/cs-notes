@@ -2,6 +2,8 @@
 
 **Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md) (LIKE), [GIN индекс](../../postgresql/indexes/01-gin.md).
 
+← [Массивы и диапазоны](01-arrays-and-ranges.md) | [Функции и процедуры](03-functions-and-procedures.md) →
+
 Таблица `articles` хранит статьи. Задача — найти все статьи, содержащие слово «database». `WHERE body LIKE '%database%'` работает, но у подхода два недостатка: LIKE не использует индекс (полный перебор таблицы) и не понимает словоформы — строка «databases» не совпадёт с шаблоном «database». Полнотекстовый поиск PostgreSQL решает обе проблемы.
 
 ## tsvector и tsquery
@@ -243,3 +245,7 @@ ALTER TABLE articles ADD COLUMN body_tsv TSVECTOR GENERATED ALWAYS AS (
 - PostgreSQL Documentation (v16): Full Text Search. <https://www.postgresql.org/docs/16/textsearch.html>
 - PostgreSQL Documentation (v16): Text Search Types. <https://www.postgresql.org/docs/16/datatype-textsearch.html>
 - PostgreSQL Documentation (v16): Text Search Functions. <https://www.postgresql.org/docs/16/functions-textsearch.html>
+
+---
+
+← [Массивы и диапазоны](01-arrays-and-ranges.md) | [Функции и процедуры](03-functions-and-procedures.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [подзапросы и CTE](05-subqueries-and-cte.md) (подзапросы, CTE).
 
+← [Подзапросы и CTE](05-subqueries-and-cte.md) | [Оконные функции](07-window-functions.md) →
+
 Подзапросы вкладывают один запрос в другой. Но иногда нужно просто **объединить результаты** двух независимых запросов: показать в одном списке и сотрудников, и клиентов, или найти общие значения между двумя наборами.
 
 UNION (англ. «объединение»), INTERSECT (англ. «пересечение»), EXCEPT (англ. «исключение») объединяют результаты нескольких SELECT в один набор строк.
@@ -139,3 +141,7 @@ A UNION B INTERSECT C
 ## Sources
 
 - PostgreSQL Documentation (v16): UNION, INTERSECT, EXCEPT. <https://www.postgresql.org/docs/16/sql-select.html#SQL-UNION>
+
+---
+
+← [Подзапросы и CTE](05-subqueries-and-cte.md) | [Оконные функции](07-window-functions.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [агрегация](02-aggregation.md) (GROUP BY, HAVING, агрегатные функции).
 
+← [Соединения](03-joins.md) | [Подзапросы и CTE](05-subqueries-and-cte.md) →
+
 GROUP BY даёт одноуровневые итоги: выручка по отделам или выручка по месяцам. Но аналитические отчёты часто требуют **подытогов по нескольким уровням**: выручка по отделам, по месяцам, по комбинации «отдел + месяц» и общий итог — в одном результате.
 
 Без GROUPING SETS приходится писать несколько запросов и объединять через UNION ALL. GROUPING SETS, ROLLUP (англ. «свёртка вверх») и CUBE (англ. «куб») решают эту задачу одним запросом.
@@ -159,3 +161,7 @@ GROUPING() доступна в SELECT и HAVING для различения ит
 ## Sources
 
 - PostgreSQL Documentation (v16): GROUPING SETS, CUBE, ROLLUP. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-GROUPING-SETS>
+
+---
+
+← [Соединения](03-joins.md) | [Подзапросы и CTE](05-subqueries-and-cte.md) →

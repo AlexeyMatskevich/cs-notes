@@ -2,6 +2,8 @@
 
 **Предпосылки:** [таблицы и типы](00-tables-and-types.md) (CREATE TABLE), [ограничения](01-constraints.md) (PRIMARY KEY, UNIQUE).
 
+← [Представления](03-views.md) | [DML — изменение данных](../modification/00-dml.md) →
+
 Таблица `orders` — 50 млн строк. Запрос `SELECT * FROM orders WHERE customer_id = 42` выполняется секунды: PostgreSQL читает **все** строки (Seq Scan) и проверяет условие для каждой. Ради одной строки сканируются миллионы — это как перебирать весь массив вместо обращения к хеш-таблице по ключу.
 
 Индекс — структура данных (обычно B-tree), которая позволяет найти нужные строки без полного сканирования.
@@ -166,3 +168,7 @@ REINDEX INDEX CONCURRENTLY idx_orders_customer;  -- PostgreSQL 12+
 - PostgreSQL Documentation (v16): CREATE INDEX. <https://www.postgresql.org/docs/16/sql-createindex.html>
 - PostgreSQL Documentation (v16): REINDEX. <https://www.postgresql.org/docs/16/sql-reindex.html>
 - PostgreSQL Documentation (v16): Index Types. <https://www.postgresql.org/docs/16/indexes-types.html>
+
+---
+
+← [Представления](03-views.md) | [DML — изменение данных](../modification/00-dml.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [DML](00-dml.md) (INSERT, UPDATE, DELETE), [ACID](../../acid.md).
 
+← [DML — изменение данных](00-dml.md) | [JSONB](../postgresql/00-jsonb.md) →
+
 Перевод денег между счетами: списание с одного и зачисление на другой. Если между двумя UPDATE произойдёт сбой — деньги списаны, но не зачислены. Транзакция решает эту проблему: группа операций выполняется **целиком или не выполняется вообще**.
 
 ## BEGIN, COMMIT, ROLLBACK
@@ -114,3 +116,7 @@ COMMIT;
 
 - PostgreSQL Documentation (v16): Transaction Management. <https://www.postgresql.org/docs/16/tutorial-transactions.html>
 - PostgreSQL Documentation (v16): SET TRANSACTION. <https://www.postgresql.org/docs/16/sql-set-transaction.html>
+
+---
+
+← [DML — изменение данных](00-dml.md) | [JSONB](../postgresql/00-jsonb.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [SELECT и фильтрация](00-select-and-filtering.md) (SELECT, FROM, WHERE, логический порядок выполнения).
 
+← [SELECT и фильтрация](00-select-and-filtering.md) | [Агрегация](02-aggregation.md) →
+
 Результат запроса — неупорядоченная коллекция строк. Порядок вывода без ORDER BY произволен и может меняться. Для управления порядком и объёмом результата SQL предоставляет ORDER BY, LIMIT/OFFSET и DISTINCT.
 
 ## ORDER BY — явный порядок
@@ -229,3 +231,7 @@ ORDER BY department_id, salary DESC NULLS LAST;
 
 - PostgreSQL Documentation (v16): ORDER BY, LIMIT, DISTINCT. <https://www.postgresql.org/docs/16/sql-select.html>
 - PostgreSQL Documentation (v16): DISTINCT ON. <https://www.postgresql.org/docs/16/sql-select.html#SQL-DISTINCT>
+
+---
+
+← [SELECT и фильтрация](00-select-and-filtering.md) | [Агрегация](02-aggregation.md) →
