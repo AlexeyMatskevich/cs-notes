@@ -108,7 +108,7 @@ FROM employees
 WHERE department_id NOT IN (SELECT department_id FROM employees);
 ```
 
-Подзапрос возвращает `{1, 2, NULL}`. Для любого `department_id = X` условие `X NOT IN (1, 2, NULL)` раскрывается как `X <> 1 AND X <> 2 AND X <> NULL`. Последнее сравнение `X <> NULL` --> NULL, и всё выражение --> NULL. Результат: **ноль строк**.
+Подзапрос возвращает `{1, 2, NULL}`. Для любого `department_id = X` условие `X NOT IN (1, 2, NULL)` раскрывается как `X <> 1 AND X <> 2 AND X <> NULL`. Последнее сравнение `X <> NULL` --> NULL ([трёхзначная логика](../foundations/01-types-and-null.md#трёхзначная-логика)), и всё выражение --> NULL. Результат: **ноль строк**.
 
 Защита: используйте `NOT EXISTS` вместо `NOT IN`, или добавляйте `WHERE ... IS NOT NULL` в подзапрос.
 

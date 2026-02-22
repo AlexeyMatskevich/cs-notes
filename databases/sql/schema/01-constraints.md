@@ -1,6 +1,6 @@
 # Ограничения (constraints)
 
-**Предпосылки:** [таблицы и типы](00-tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT).
+**Предпосылки:** [реляционная модель](../foundations/00-relational-model.md) (первичный ключ, внешний ключ, ссылочная целостность), [таблицы и типы](00-tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT).
 
 ← [Таблицы и типы](00-tables-and-types.md) | [Партиционирование](02-partitioning.md) →
 
@@ -46,7 +46,7 @@ UNIQUE запрещает дубликаты в столбце (или комб�
 
 ### UNIQUE и NULL
 
-`UNIQUE` не запрещает несколько NULL — потому что `NULL = NULL` в SQL возвращает NULL, не TRUE, и два NULL не считаются дубликатами:
+`UNIQUE` не запрещает несколько NULL — потому что `NULL = NULL` в SQL возвращает NULL, не TRUE ([трёхзначная логика](../foundations/01-types-and-null.md#трёхзначная-логика)), и два NULL не считаются дубликатами:
 
 ```sql
 CREATE TABLE emails (email TEXT UNIQUE);
