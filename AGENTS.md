@@ -37,7 +37,7 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   └── indexes/           # B-tree, GIN, GiST, Hash, BRIN, SP-GiST (6)
 │   ├── sql/
 │   │   ├── index.md               # SQL: study order, cross-links
-│   │   ├── foundations/           # relational model, types & NULL, expressions (3)
+│   │   ├── foundations/           # relational model, types & NULL, expressions, normalization (4)
 │   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE, set ops, windows, pagination (9)
 │   │   ├── schema/               # tables & types, constraints, partitioning, views (4)
 │   │   ├── modification/         # DML, transactions (2)

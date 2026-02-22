@@ -2,7 +2,7 @@
 
 **Предпосылки:** [типы данных и NULL](01-types-and-null.md) (типы, трёхзначная логика, IS NULL).
 
-← [Типы данных и NULL](01-types-and-null.md) | [SELECT и фильтрация](../querying/00-select-and-filtering.md) →
+← [Типы данных и NULL](01-types-and-null.md) | [Нормализация](03-normalization.md) →
 
 Выражение в SQL — любая конструкция, которая вычисляется в значение: арифметика (`salary * 1.1`), вызов функции (`length(name)`), условная логика (`CASE WHEN ...`). Выражения можно использовать в SELECT, WHERE, ORDER BY — везде, где ожидается значение.
 
@@ -376,4 +376,4 @@ SELECT upper(name), length(name) FROM employees WHERE id = 1;
 
 ---
 
-← [Типы данных и NULL](01-types-and-null.md) | [SELECT и фильтрация](../querying/00-select-and-filtering.md) →
+← [Типы данных и NULL](01-types-and-null.md) | [Нормализация](03-normalization.md) →

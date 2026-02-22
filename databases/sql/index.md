@@ -17,6 +17,7 @@ SQL — декларативный язык для работы с реляци�
 - [Реляционная модель](foundations/00-relational-model.md) — модель Кодда: отношения, реляционная алгебра, декларативность SQL
 - [Типы данных и NULL](foundations/01-types-and-null.md) — числа, текст, даты, boolean, трёхзначная логика
 - [Выражения](foundations/02-expressions.md) — CASE, COALESCE, NULLIF, CAST, приведение типов, функции даты и строк
+- [Нормализация](foundations/03-normalization.md) — функциональные зависимости, 1НФ–5НФ
 
 ### Запросы
 
