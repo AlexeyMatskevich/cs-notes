@@ -77,6 +77,8 @@ WHERE salary IS NOT NULL;
 
 Для каждой строки суммируются все предыдущие строки по порядку salary — нарастающий итог (running total). ORDER BY сузил окно: теперь функция видит не всю секцию, а строки от начала до текущей позиции.
 
+Без оконных функций нарастающий итог потребовал бы коррелированного подзапроса: `SELECT ..., (SELECT SUM(salary) FROM employees e2 WHERE e2.salary <= e1.salary) FROM employees e1`. `SUM(...) OVER (ORDER BY salary)` заменяет это одной строкой.
+
 ## Позиция по зарплате в отделе — ROW_NUMBER
 
 «Кто первый по зарплате в отделе?» ROW_NUMBER() присваивает уникальный последовательный номер каждой строке внутри секции:
@@ -169,9 +171,27 @@ WHERE salary IS NOT NULL;
 
 LAG(salary, 2) — значение через две строки назад. LAG(salary, 1, 0) — с дефолтным значением 0 вместо NULL.
 
+Без LAG пришлось бы нумеровать строки подзапросом и соединять таблицу саму с собой по номеру строки ± 1 — громоздкий self-join вместо одного вызова функции.
+
 ## Топ-зарплата отдела рядом с каждым — FIRST_VALUE
 
-FIRST_VALUE возвращает значение первой строки в фрейме:
+Задача: показать рядом с каждым сотрудником имя того, кто зарабатывает в отделе больше всех. Без оконных функций это решается через подзапрос с MAX и два JOIN:
+
+```sql
+SELECT e.name, e.department_id, e.salary, top.name AS top_earner
+FROM employees e
+JOIN (
+    SELECT department_id, MAX(salary) AS max_sal
+    FROM employees
+    WHERE salary IS NOT NULL
+    GROUP BY department_id
+) ms ON e.department_id = ms.department_id
+JOIN employees top
+    ON top.department_id = ms.department_id AND top.salary = ms.max_sal
+WHERE e.salary IS NOT NULL AND e.department_id IS NOT NULL;
+```
+
+Два JOIN и подзапрос. FIRST_VALUE делает то же одним проходом:
 
 ```sql
 SELECT name, department_id, salary,
@@ -180,17 +200,16 @@ SELECT name, department_id, salary,
            ORDER BY salary DESC NULLS LAST
        ) AS top_earner
 FROM employees
-WHERE salary IS NOT NULL;
+WHERE salary IS NOT NULL AND department_id IS NOT NULL;
 ```
 
 ```
- name     | department_id | salary | top_earner
-----------+---------------+--------+-----------
- Анна     |             1 |  90000 | Анна
- Вера     |             1 |  85000 | Анна
- Глеб     |             2 |  70000 | Глеб
- Борис    |             2 |  60000 | Глеб
- Евгений  |          NULL |  55000 | Евгений
+ name  | department_id | salary | top_earner
+-------+---------------+--------+-----------
+ Анна  |             1 |  90000 | Анна
+ Вера  |             1 |  85000 | Анна
+ Глеб  |             2 |  70000 | Глеб
+ Борис |             2 |  60000 | Глеб
 ```
 
 ### Ловушка LAST_VALUE

@@ -6,7 +6,37 @@
 
 GROUP BY даёт одноуровневые итоги: выручка по отделам или выручка по месяцам. Но аналитические отчёты часто требуют **подытогов по нескольким уровням**: выручка по отделам, по месяцам, по комбинации «отдел + месяц» и общий итог — в одном результате.
 
-Без GROUPING SETS приходится писать несколько запросов и объединять через UNION ALL. GROUPING SETS, ROLLUP (англ. «свёртка вверх») и CUBE (англ. «куб») решают эту задачу одним запросом. Все три конструкции — расширения GROUP BY: они работают на том же [шаге 3 порядка выполнения](02-aggregation.md#полный-порядок-выполнения-запроса), но генерируют несколько уровней группировки за один проход.
+Без GROUPING SETS приходится писать несколько запросов и объединять через UNION ALL:
+
+```sql
+-- по отделу и году
+SELECT department_id, extract(year FROM hire_date) AS year, COUNT(*), SUM(salary)
+FROM employees
+WHERE department_id IS NOT NULL AND salary IS NOT NULL
+GROUP BY department_id, year
+
+UNION ALL
+-- по отделу (итог по всем годам)
+SELECT department_id, NULL AS year, COUNT(*), SUM(salary)
+FROM employees
+WHERE department_id IS NOT NULL AND salary IS NOT NULL
+GROUP BY department_id
+
+UNION ALL
+-- по году (итог по всем отделам)
+SELECT NULL AS department_id, extract(year FROM hire_date) AS year, COUNT(*), SUM(salary)
+FROM employees
+WHERE department_id IS NOT NULL AND salary IS NOT NULL
+GROUP BY year
+
+UNION ALL
+-- общий итог
+SELECT NULL, NULL, COUNT(*), SUM(salary)
+FROM employees
+WHERE department_id IS NOT NULL AND salary IS NOT NULL;
+```
+
+Четыре GROUP BY, четыре прохода по таблице, одинаковый WHERE скопирован четырежды. GROUPING SETS, ROLLUP (англ. «свёртка вверх») и CUBE (англ. «куб») решают эту задачу одним запросом. Все три конструкции — расширения GROUP BY: они работают на том же [шаге 3 порядка выполнения](02-aggregation.md#полный-порядок-выполнения-запроса), но генерируют несколько уровней группировки за один проход.
 
 ## GROUPING SETS — явный набор группировок
 
