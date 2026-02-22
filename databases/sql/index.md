@@ -30,6 +30,7 @@ SQL — декларативный язык для работы с реляци�
 - [Подзапросы и CTE](querying/05-subqueries-and-cte.md) — скалярные, коррелированные, IN/EXISTS/ANY/ALL, NOT IN + NULL, WITH RECURSIVE
 - [Операции над множествами](querying/06-set-operations.md) — UNION, INTERSECT, EXCEPT и их ALL-варианты
 - [Оконные функции](querying/07-window-functions.md) — OVER, PARTITION BY, ранжирование, навигация, фреймы, DISTINCT ON, LATERAL
+- [Пагинация](querying/08-pagination.md) — OFFSET vs keyset, стабильный порядок, стоимость глубоких страниц, серверные курсоры
 
 ### Определение структуры (DDL)
 

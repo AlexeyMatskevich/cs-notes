@@ -7,7 +7,7 @@
 
 </details>
 
-← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
+← [Операции над множествами](06-set-operations.md) | [Пагинация](08-pagination.md) →
 
 ## Зарплата рядом со средней по отделу
 
@@ -485,4 +485,4 @@ NULL при ORDER BY внутри OVER влияет на порядок и фр�
 
 ---
 
-← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
+← [Операции над множествами](06-set-operations.md) | [Пагинация](08-pagination.md) →

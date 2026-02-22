@@ -33,12 +33,12 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   ├── concurrency/       # MVCC, anomalies, isolation levels, locks, patterns, mistakes, queues (7)
 │   │   ├── maintenance/       # VACUUM (1)
 │   │   ├── distribution/      # replication, sharding (2)
-│   │   ├── query-processing/  # planner, join order, subqueries/CTE, EXPLAIN, memory/spill, prepared stmts, slow queries, pagination (8)
+│   │   ├── query-processing/  # planner, join order, subqueries/CTE, EXPLAIN, memory/spill, prepared stmts, slow queries (7)
 │   │   └── indexes/           # B-tree, GIN, GiST, Hash, BRIN, SP-GiST (6)
 │   ├── sql/
 │   │   ├── index.md               # SQL: study order, cross-links
 │   │   ├── foundations/           # relational model, types & NULL, expressions (3)
-│   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE, set ops, windows (8)
+│   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE, set ops, windows, pagination (9)
 │   │   ├── schema/               # tables & types, constraints, partitioning, views (4)
 │   │   ├── modification/         # DML, transactions (2)
 │   │   └── postgresql/           # JSONB, arrays & ranges, FTS, functions & procedures (4)

@@ -62,7 +62,6 @@
 - [Память и spill](query-processing/04-memory-and-spill.md) — `work_mem`, сортировки и хеши, temp I/O
 - [Prepared statements](query-processing/05-prepared-statements.md) — generic plan vs custom plan, parameter sensitivity
 - [Диагностика медленных запросов](query-processing/06-diagnosing-slow-queries.md) — как быстро локализовать причину: оценки, I/O, spill, параметры
-- [Пагинация](query-processing/07-pagination.md) — `LIMIT/OFFSET` vs keyset, стабильный порядок и стоимость “дальних” страниц
 
 ### Распределение и масштабирование
 
