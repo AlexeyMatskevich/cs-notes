@@ -40,30 +40,51 @@ GROUP BY GROUPING SETS (
           NULL | NULL |     4 | 305000   <-- общий итог
 ```
 
-NULL в столбцах `department_id` и `year` означает «по всем значениям этого измерения». Но [NULL уже означает «значение неизвестно»](../foundations/01-types-and-null.md#null--отсутствие-значения) — как отличить итог от настоящего NULL в данных?
+NULL в столбцах `department_id` и `year` означает «по всем значениям этого измерения». Но [NULL уже означает «значение неизвестно»](../foundations/01-types-and-null.md#null--отсутствие-значения). Пока это не проблема — мы отфильтровали NULL в WHERE. А что если не фильтровать?
 
 ## GROUPING() — отличить итог от настоящего NULL
 
-Функция GROUPING() (англ. «группирование») возвращает 1, если столбец участвует в подытоге (т.е. NULL означает «по всем»), и 0, если значение реальное:
+Упростим запрос до одного измерения и уберём фильтр по `department_id`. Евгений (`department_id = NULL`) теперь попадает в результат:
 
 ```sql
-SELECT department_id,
-       GROUPING(department_id) AS is_dept_total,
-       COUNT(*), SUM(salary)
+SELECT department_id, COUNT(*), SUM(salary)
 FROM employees
-WHERE department_id IS NOT NULL AND salary IS NOT NULL
+WHERE salary IS NOT NULL
 GROUP BY GROUPING SETS ((department_id), ());
 ```
 
 ```
- department_id | is_dept_total | count |  sum
----------------+--------------+-------+--------
-             1 |            0 |     2 | 175000
-             2 |            0 |     2 | 130000
-          NULL |            1 |     4 | 305000
+ department_id | count |  sum
+---------------+-------+--------
+             1 |     2 | 175000
+             2 |     2 | 130000
+          NULL |     1 |  55000   <-- ?
+          NULL |     5 | 360000   <-- ?
 ```
 
-Строка с `is_dept_total = 1` — общий итог. NULL в `department_id` — не отсутствующий отдел, а «по всем отделам».
+Две строки с `department_id = NULL`. Одна — Евгений, реальный NULL: «отдел неизвестен». Другая — итог по всем отделам, синтетический NULL: «по всем значениям». Визуально они идентичны. `WHERE department_id IS NULL` вернёт обе — и Евгения, и итог.
+
+Функция GROUPING() (англ. «группирование») различает их. Добавим её в тот же запрос:
+
+```sql
+SELECT department_id,
+       GROUPING(department_id) AS is_total,
+       COUNT(*), SUM(salary)
+FROM employees
+WHERE salary IS NOT NULL
+GROUP BY GROUPING SETS ((department_id), ());
+```
+
+```
+ department_id | is_total | count |  sum
+---------------+----------+-------+--------
+             1 |        0 |     2 | 175000
+             2 |        0 |     2 | 130000
+          NULL |        0 |     1 |  55000   -- Евгений, реальный NULL
+          NULL |        1 |     5 | 360000   -- итог, синтетический NULL
+```
+
+`GROUPING(x) = 1` — столбец x исключён из текущего набора группировки, NULL синтетический. `GROUPING(x) = 0` — значение реальное (даже если это настоящий NULL). Фильтр для итоговой строки: `HAVING GROUPING(department_id) = 1` — точно итог, без ложных срабатываний на реальных NULL.
 
 ## ROLLUP — иерархическая свёртка
 
