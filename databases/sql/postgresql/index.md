@@ -23,6 +23,9 @@ PostgreSQL расширяет стандартный SQL типами данны
 - [Партиционирование](06-partitioning.md) — RANGE/LIST/HASH, pruning, retention
 - [Материализованные представления](07-materialized-views.md) — REFRESH, CONCURRENTLY
 
+### Изменение данных
+- [Составные DML в PostgreSQL](compound-dml.md) — UPDATE...FROM, DELETE...USING, writable CTEs, MERGE с DELETE (PG 17)
+
 ### Запросы
 - [DISTINCT ON](08-distinct-on.md) — top-1 в группе одной строкой
 

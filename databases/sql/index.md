@@ -57,6 +57,7 @@ DML не зависит от пагинации, но в порядке изуч
 
 - [DML](modification/00-dml.md) — INSERT, UPDATE, DELETE, TRUNCATE
 - [Транзакции](modification/01-transactions.md) — BEGIN/COMMIT/ROLLBACK, SAVEPOINT, уровни изоляции, ссылка на [ACID](../acid.md)
+- [Составные DML-операции](modification/02-compound-dml.md) — INSERT...SELECT, VALUES, MERGE
 
 ### PostgreSQL: расширения стандартного SQL
 

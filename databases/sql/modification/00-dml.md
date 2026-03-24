@@ -174,6 +174,8 @@ ON CONFLICT (email) DO NOTHING;  -- молча пропустить дублик
 
 ON CONFLICT требует уникального индекса или ограничения для определения конфликта.
 
+Когда ON CONFLICT недостаточно — нужен произвольный JOIN для определения совпадения, условные ветки обновления или комбинация нескольких DML в одном запросе — [составные DML-операции](02-compound-dml.md) покрывают MERGE и другие паттерны.
+
 ## Sources
 
 - PostgreSQL Documentation (v16): INSERT, UPDATE, DELETE, TRUNCATE. <https://www.postgresql.org/docs/16/dml.html>

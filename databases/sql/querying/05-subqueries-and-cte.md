@@ -205,7 +205,7 @@ WHERE e.salary > da.avg_salary;
 
 CTE улучшает читаемость: сложный запрос разбивается на именованные блоки. CTE можно ссылаться несколько раз в основном запросе.
 
-PostgreSQL с версии 12 может встроить нерекурсивный CTE в основной запрос — подробнее в [CTE в PostgreSQL](../../postgresql/query-processing/02-subqueries-and-cte.md).
+PostgreSQL с версии 12 может встроить нерекурсивный CTE в основной запрос — подробнее в [CTE в PostgreSQL](../../postgresql/query-processing/02-subqueries-and-cte.md). В PostgreSQL WITH может включать INSERT, UPDATE, DELETE — подробнее в [составных DML в PostgreSQL](../postgresql/compound-dml.md).
 
 ## WITH RECURSIVE — рекурсивные запросы
 
