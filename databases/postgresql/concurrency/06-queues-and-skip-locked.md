@@ -140,6 +140,12 @@ RETURNING id;
 
 Во всех случаях задача обработается повторно. Подход к защите — [idempotency](../../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов): обработчик должен быть написан так, чтобы повторное выполнение не создавало дублирующих побочных эффектов. Для внешних API — idempotency key. Для записей в PostgreSQL — `INSERT ... ON CONFLICT DO NOTHING` или проверка статуса перед выполнением.
 
+## Очереди и dead tuples
+
+Каждая смена статуса задачи (`queued` → `processing` → `done`/`failed`) и каждый retry создают новую версию строки — старая становится dead tuple. Таблица-очередь с высоким throughput генерирует dead tuples в разы быстрее типичной OLTP-таблицы: при 200 задачах в секунду и трёх сменах статуса на задачу — 600 dead tuples в секунду.
+
+Без частого [VACUUM](../maintenance/00-vacuum.md) таблица разбухает, а partial index `jobs_queue_idx` накапливает указатели на мёртвые строки, замедляя каждый poll воркера. Для таблиц-очередей стоит настроить autovacuum агрессивнее per-table — снизить `autovacuum_vacuum_scale_factor` и `autovacuum_vacuum_threshold` так, чтобы VACUUM запускался при меньшем накоплении dead tuples, чем на обычных таблицах. Конкретные значения зависят от размера таблицы и характера нагрузки.
+
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): `SELECT ... FOR UPDATE`, `SKIP LOCKED`, `NOWAIT`. <https://www.postgresql.org/docs/16/sql-select.html>, <https://www.postgresql.org/docs/16/explicit-locking.html>

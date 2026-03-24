@@ -7,7 +7,7 @@
 
 </details>
 
-← [Полнотекстовый поиск](02-full-text-search.md) | [Индексы в production](04-index-operations.md) →
+← [Полнотекстовый поиск](02-full-text-search.md) | [Триггеры](triggers.md) · [Индексы в production](04-index-operations.md) →
 
 Checkout в приложении: проверить наличие товара, списать со склада, создать заказ, записать лог. Четыре SQL-запроса — четыре round-trip'а между приложением и базой. При latency 5 мс на запрос — 20 мс только на сеть, не считая выполнения. Серверная функция выполняет ту же логику за один round-trip — вся логика рядом с данными, сетевой overhead минимален.
 
@@ -177,7 +177,7 @@ ON CONFLICT обрабатывает коллизию внутри одной о
 
 ## Процедуры
 
-Процедуры (PROCEDURE, начиная с PostgreSQL 11) отличаются от функций: не возвращают значение, но могут управлять транзакциями.
+Checkout-функция обрабатывает один заказ. Но ежедневная пакетная выверка — 50 000 заказов, каждый требует UPDATE. Одна транзакция на 50 000 UPDATE держит блокировки минутами и не позволяет освободить память до COMMIT. Нужен способ фиксировать промежуточные результаты. Процедуры (PROCEDURE, начиная с PostgreSQL 11) отличаются от функций: не возвращают значение, но могут управлять транзакциями.
 
 ```sql
 CREATE PROCEDURE transfer_funds(
@@ -212,7 +212,7 @@ CALL transfer_funds(1, 2, 1000);
 
 ## Управление функциями
 
-Замена существующей функции:
+Checkout-функция в production, бизнес-логика меняется — новая категория скидок. Нужно обновить функцию без удаления зависимых view. Замена существующей функции:
 
 ```sql
 CREATE OR REPLACE FUNCTION salary_grade(emp_salary INTEGER)
@@ -237,32 +237,9 @@ DROP FUNCTION IF EXISTS salary_grade(INTEGER);
 
 Имя функции и типы аргументов — её сигнатура. PostgreSQL допускает перегрузку: несколько функций с одним именем, но разными аргументами.
 
-## Триггерные функции
-
-Триггер (trigger, англ. «спусковой крючок») — функция, автоматически вызываемая при INSERT, UPDATE или DELETE:
-
-```sql
-CREATE FUNCTION update_modified_at()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    NEW.modified_at = NOW();
-    RETURN NEW;
-END;
-$$;
-
-CREATE TRIGGER set_modified_at
-BEFORE UPDATE ON orders
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_at();
-```
-
-При каждом UPDATE строки в `orders` PostgreSQL автоматически устанавливает `modified_at` в текущее время. `NEW` — ссылка на новую версию строки (после изменения), `OLD` — на старую (до изменения). `RETURNS TRIGGER` — специальный тип возврата для триггерных функций.
-
 ## Транзакционный DDL
 
-В большинстве СУБД (MySQL, Oracle) команды DDL (CREATE TABLE, ALTER TABLE, DROP TABLE) автоматически фиксируют транзакцию. Если внутри транзакции выполнить ALTER TABLE и затем ROLLBACK — ALTER уже зафиксирован, откат не произойдёт.
+Деплой новой версии checkout-функции вместе с ALTER TABLE в одной миграции — что произойдёт при ошибке? В большинстве СУБД (MySQL, Oracle) команды DDL (CREATE TABLE, ALTER TABLE, DROP TABLE) автоматически фиксируют транзакцию. Если внутри транзакции выполнить ALTER TABLE и затем ROLLBACK — ALTER уже зафиксирован, откат не произойдёт.
 
 PostgreSQL — исключение. DDL в PostgreSQL **транзакционный**:
 
@@ -279,13 +256,16 @@ ROLLBACK;
 
 Исключения: некоторые операции не транзакционны даже в PostgreSQL — `CREATE DATABASE`, `CREATE INDEX CONCURRENTLY` (подробнее в [индексах в production](04-index-operations.md)). Но основные DDL-команды (CREATE TABLE, ALTER TABLE, DROP TABLE) полностью транзакционны.
 
+## См. также
+
+- [Триггеры](triggers.md) — автоматический вызов функций при INSERT, UPDATE, DELETE
+
 ## Sources
 
 - PostgreSQL Documentation (v16): CREATE FUNCTION. <https://www.postgresql.org/docs/16/sql-createfunction.html>
 - PostgreSQL Documentation (v16): CREATE PROCEDURE. <https://www.postgresql.org/docs/16/sql-createprocedure.html>
 - PostgreSQL Documentation (v16): PL/pgSQL. <https://www.postgresql.org/docs/16/plpgsql.html>
-- PostgreSQL Documentation (v16): CREATE TRIGGER. <https://www.postgresql.org/docs/16/sql-createtrigger.html>
 
 ---
 
-← [Полнотекстовый поиск](02-full-text-search.md) | [Индексы в production](04-index-operations.md) →
+← [Полнотекстовый поиск](02-full-text-search.md) | [Триггеры](triggers.md) · [Индексы в production](04-index-operations.md) →

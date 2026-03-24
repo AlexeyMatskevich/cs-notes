@@ -43,17 +43,52 @@ Prepared statement — это заранее распарсенный и спл�
 
 ## Как это увидеть в EXPLAIN
 
-Самый простой способ — сравнить планы для двух форм:
+Воспроизводимый способ — принудительно переключить тип плана через `plan_cache_mode` и сравнить результаты для одного значения параметра.
 
-1. **С литералом** (план учитывает селективность конкретного значения)
-2. **С параметром** (план может стать generic)
+Подготовка: таблица событий с перекошенным распределением `status` и индексом на нём.
 
-Идея сравнения:
+```sql
+PREPARE event_query(text) AS
+  SELECT * FROM events WHERE status = $1 AND created_at > now() - interval '7 days';
+```
 
-- если для литерала план меняется в зависимости от значения — параметр‑чувствительность реальна;
-- если параметрная форма «застывает» на одном плане — вы видите проявление generic plan.
+Сначала заставляем PostgreSQL строить план с учётом конкретного значения:
 
-Дальше важно смотреть `rows` vs `actual rows`: generic plan обычно ошибается в оценке на конкретном значении параметра, и эта ошибка тянет за собой неправильный выбор join алгоритма/порядка, сортировок и памяти.
+```sql
+SET plan_cache_mode = 'force_custom_plan';
+EXPLAIN ANALYZE EXECUTE event_query('active');
+```
+
+```
+Index Scan using idx_events_status on events
+    (cost=0.43..1250.00 rows=1050 width=85) (actual time=0.03..1.6 rows=1038 loops=1)
+  Index Cond: (status = 'active')
+  Rows Removed by Filter: 12
+  Planning Time: 0.15 ms
+  Execution Time: 1.8 ms
+```
+
+Планировщик знает, что `active` — 1% таблицы, и выбирает Index Scan. Оценка `rows=1050` близка к `actual rows=1038` — план адекватен данным.
+
+Теперь заставляем generic plan — план без учёта значения параметра:
+
+```sql
+SET plan_cache_mode = 'force_generic_plan';
+EXPLAIN ANALYZE EXECUTE event_query('active');
+```
+
+```
+Seq Scan on events
+    (cost=0.00..35420.00 rows=500000 width=85) (actual time=0.02..418.5 rows=1038 loops=1)
+  Filter: (status = $1 AND created_at > ...)
+  Rows Removed by Filter: 985000
+  Planning Time: 0.05 ms
+  Execution Time: 420 ms
+```
+
+Generic plan не знает, что `$1` будет `'active'`. Он использует усреднённую селективность — `rows=500000` при `actual rows=1038`, ошибка в 480 раз. Планировщик выбирает Seq Scan как «более безопасный» вариант для полумиллиона строк. Для `'archived'` (99% строк) Seq Scan был бы оправдан, но для `'active'` — деградация в 200 раз по времени.
+
+`plan_cache_mode` — диагностический инструмент, а не production-решение. Если контраст между custom и generic планом значителен, это подтверждает parameter sensitivity. В production решение зависит от контекста: разделение на отдельные запросы для разных значений, использование `plan_cache_mode = 'force_custom_plan'` на конкретной сессии, или изменение формы запроса так, чтобы оптимальный план не зависел от параметра.
 
 ## Как это проявляется в приложении
 
