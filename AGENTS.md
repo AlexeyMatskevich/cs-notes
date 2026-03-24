@@ -2,12 +2,6 @@
 
 This repository is a collection of technical notes. Contributions should optimize for clarity, correctness, and future recall.
 
-## Serena MCP (required)
-
-- Activate Serena MCP at the start of each session for this repo and prefer Serena tools for navigation/search/editing when available.
-  - `mcp__serena__activate_project(project="technical")` (or pass the repo path)
-  - If onboarding is needed: `mcp__serena__onboarding()`
-
 ## File Map
 
 ```
