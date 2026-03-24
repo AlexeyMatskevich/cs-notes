@@ -1,6 +1,6 @@
 # GIN — обобщённый инвертированный индекс
 
-**Предпосылки:** [инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md).
+**Предпосылки:** [инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md), [JSONB](../../sql/postgresql/00-jsonb.md), [массивы и диапазоны](../../sql/postgresql/01-arrays-and-ranges.md).
 
 ← [B-tree](00-btree.md) | [GiST](02-gist.md) →
 

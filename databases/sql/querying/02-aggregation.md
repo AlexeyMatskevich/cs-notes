@@ -305,7 +305,7 @@ GROUP BY department_id;
   FILTER работает в обоих режимах — и с GROUP BY, и с OVER.
 ```
 
-Подробнее о режиме 2 и чисто оконных функциях — в [оконных функциях](07-window-functions.md).
+Подробнее о режиме 2 и чисто оконных функциях — в [оконных функциях](07-window-functions.md). При больших объёмах данных агрегация может не поместиться в память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
 
 ## Sources
 

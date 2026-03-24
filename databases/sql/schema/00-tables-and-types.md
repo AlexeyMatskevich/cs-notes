@@ -141,6 +141,8 @@ DROP TABLE employees CASCADE;
 
 Зависимости между таблицами подробнее — в [ограничениях](01-constraints.md).
 
+Как строки хранятся физически на диске — в [страницах и кортежах](../../postgresql/storage/01-pages-and-tuples.md).
+
 ## Sources
 
 - PostgreSQL Documentation (v16): CREATE TABLE. <https://www.postgresql.org/docs/16/sql-createtable.html>

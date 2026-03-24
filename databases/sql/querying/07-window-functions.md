@@ -7,7 +7,7 @@
 
 </details>
 
-← [Операции над множествами](06-set-operations.md) | [Пагинация](08-pagination.md) →
+← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
 
 ## Зарплата рядом со средней по отделу
 
@@ -337,7 +337,7 @@ WHERE salary IS NOT NULL;
 
 FILTER с чисто оконными функциями (ROW_NUMBER, RANK, LAG, LEAD) **не работает** — только с агрегатными функциями в оконном режиме.
 
-## Первая строка в группе — ROW_NUMBER + CTE → DISTINCT ON
+## Первая строка в группе — ROW_NUMBER + CTE
 
 Каноническая задача: «самый высокооплачиваемый в каждом отделе **с именем**». GROUP BY вычислит MAX(salary), но имя потеряется — в группе несколько имён, и PostgreSQL не знает, какое вернуть.
 
@@ -366,74 +366,9 @@ WHERE rn = 1;
  Евгений  |          NULL |  55000
 ```
 
-CTE `ranked` нумерует строки внутри каждого отдела по зарплате. Внешний запрос оставляет только первые. Этот подход работает в любой СУБД, поддерживающей оконные функции.
+CTE `ranked` нумерует строки внутри каждого отдела по зарплате. Внешний запрос оставляет только первые. Для top-N достаточно изменить условие на `rn <= N`. Этот подход работает в любой СУБД, поддерживающей оконные функции.
 
-### DISTINCT ON — PostgreSQL-shortcut
-
-В PostgreSQL ту же задачу решает DISTINCT ON:
-
-```sql
-SELECT DISTINCT ON (department_id) department_id, name, salary
-FROM employees
-WHERE salary IS NOT NULL
-ORDER BY department_id, salary DESC NULLS LAST;
-```
-
-```
- department_id | name     | salary
----------------+----------+--------
-             1 | Анна     |  90000
-             2 | Глеб     |  70000
-          NULL | Евгений  |  55000
-```
-
-Для каждого уникального `department_id` DISTINCT ON выбирает первую строку по ORDER BY. Требование: выражение в DISTINCT ON должно быть в начале ORDER BY.
-
-Когда что:
-- **ROW_NUMBER + CTE** — стандарт SQL, гибкий: легко получить top-2 или top-N (`WHERE rn <= N`), работает в любой СУБД.
-- **DISTINCT ON** — PostgreSQL-специфика, компактнее для top-1. Для top-N не подходит.
-
-## Top-N в группе — LATERAL
-
-«Покажи топ-2 по зарплате **в каждом** отделе». DISTINCT ON не подходит — он берёт только top-1. ROW_NUMBER + CTE работает (`WHERE rn <= 2`). Но есть ещё один подход — LATERAL.
-
-LATERAL (англ. «боковой») позволяет подзапросу в FROM ссылаться на столбцы предшествующих таблиц — как вложенный цикл, где для каждой строки внешней таблицы выполняется подзапрос:
-
-```sql
-SELECT d.name AS dept, top.employee_name, top.salary
-FROM departments d
-LEFT JOIN LATERAL (
-    SELECT e.name AS employee_name, e.salary
-    FROM employees e
-    WHERE e.department_id = d.id
-    ORDER BY e.salary DESC NULLS LAST
-    LIMIT 2
-) top ON true;
-```
-
-```
- dept        | employee_name | salary
--------------+---------------+--------
- engineering | Анна          |  90000
- engineering | Вера          |  85000
- sales       | Глеб          |  70000
- sales       | Борис         |  60000
- hr          | NULL          |   NULL
-```
-
-Для каждого отдела подзапрос выбирает двух лучших по зарплате. LATERAL ссылается на `d.id` из внешней таблицы — без LATERAL это было бы ошибкой. LEFT JOIN LATERAL сохраняет `hr`, у которого нет сотрудников. Это коррелированный подзапрос в FROM — по сути тот же механизм, что в [подзапросах](05-subqueries-and-cte.md), но здесь подзапрос порождает набор строк, а не одно значение.
-
-LATERAL незаменим там, где нужно **порождать строки** из значения каждой строки: развернуть массив, вызвать `generate_series`, передать параметр в табличную функцию.
-
-### Три подхода к «первая/лучшая строка в группе»
-
-| Подход | Top-1 | Top-N | Стандарт SQL | Компактность |
-|---|---|---|---|---|
-| ROW_NUMBER + CTE | да | да | да | средняя |
-| DISTINCT ON | да | нет | нет (PG) | высокая |
-| LATERAL | да | да | да* | средняя |
-
-\* LATERAL — стандарт SQL:1999, но не все СУБД его поддерживают.
+В PostgreSQL top-1 в группе решается короче — [DISTINCT ON](../postgresql/08-distinct-on.md). Альтернативный подход к top-N через коррелированный подзапрос в FROM — [LATERAL](05-subqueries-and-cte.md#lateral--подзапрос-с-доступом-к-внешним-строкам).
 
 ## Классификация оконных функций
 
@@ -497,13 +432,13 @@ FIRST_VALUE с сортировкой по возрастанию — перва
 
 NULL при ORDER BY внутри OVER влияет на порядок и фреймы. При RANGE NULL-значения группируются вместе (как в обычной сортировке). LAG/LEAD через NULL возвращают NULL без специальной обработки.
 
+Оконные функции с большими секциями потребляют значительную память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
+
 ## Sources
 
 - PostgreSQL Documentation (v16): Window Functions. <https://www.postgresql.org/docs/16/tutorial-window.html>
 - PostgreSQL Documentation (v16): Window Function Calls. <https://www.postgresql.org/docs/16/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS>
-- PostgreSQL Documentation (v16): DISTINCT ON. <https://www.postgresql.org/docs/16/sql-select.html#SQL-DISTINCT>
-- PostgreSQL Documentation (v16): LATERAL. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-LATERAL>
 
 ---
 
-← [Операции над множествами](06-set-operations.md) | [Пагинация](08-pagination.md) →
+← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →

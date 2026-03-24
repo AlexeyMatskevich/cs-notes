@@ -1,6 +1,6 @@
 # TOAST — хранение больших значений
 
-**Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md).
+**Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md), [типы данных и NULL](../../sql/foundations/01-types-and-null.md).
 
 ← [Страницы и кортежи](01-pages-and-tuples.md) | [Физическая структура хранения](03-physical-layout.md) →
 

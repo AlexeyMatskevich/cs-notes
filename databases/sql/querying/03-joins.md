@@ -237,6 +237,8 @@ NATURAL JOIN зависит от **имён столбцов**, а не от н�
 
 NULL в столбце соединения означает «нет пары»: `NULL = значение` даёт NULL, условие ON не TRUE, строка не соединяется. При INNER JOIN такая строка исчезает. При LEFT JOIN — сохраняется с NULL в столбцах правой таблицы.
 
+Как СУБД выбирает порядок соединений на практике — в [планировщике PostgreSQL](../../postgresql/query-processing/01-join-order.md).
+
 ## Sources
 
 - PostgreSQL Documentation (v16): JOIN. <https://www.postgresql.org/docs/16/sql-select.html>

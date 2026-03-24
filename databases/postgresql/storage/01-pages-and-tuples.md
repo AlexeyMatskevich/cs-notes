@@ -1,6 +1,6 @@
 # Страницы и кортежи — физическое хранение данных
 
-**Предпосылки:** [ACID](00-acid.md).
+**Предпосылки:** [ACID](00-acid.md), [таблицы и типы данных](../../sql/schema/00-tables-and-types.md).
 
 ← [ACID в PostgreSQL](00-acid.md) | [TOAST](02-toast.md) →
 

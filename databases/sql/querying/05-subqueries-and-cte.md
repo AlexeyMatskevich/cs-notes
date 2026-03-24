@@ -205,9 +205,7 @@ WHERE e.salary > da.avg_salary;
 
 CTE улучшает читаемость: сложный запрос разбивается на именованные блоки. CTE можно ссылаться несколько раз в основном запросе.
 
-### Материализация CTE в PostgreSQL
-
-До PostgreSQL 12 CTE всегда материализовались — результат записывался во временную таблицу. С версии 12 планировщик может «встроить» (inline) CTE в основной запрос, если CTE не рекурсивный, не имеет побочных эффектов и используется один раз. Подробнее — в [подзапросы и CTE в PostgreSQL](../../postgresql/query-processing/02-subqueries-and-cte.md).
+PostgreSQL с версии 12 может встроить нерекурсивный CTE в основной запрос — подробнее в [CTE в PostgreSQL](../../postgresql/query-processing/02-subqueries-and-cte.md).
 
 ## WITH RECURSIVE — рекурсивные запросы
 
@@ -297,10 +295,49 @@ SELECT * FROM subordinates;
 
 Для деревьев без циклов UNION ALL быстрее — дубликатов не будет. Если в данных возможны циклы (граф, а не дерево), UNION предотвратит бесконечную рекурсию: дубликат не добавится и процесс остановится. Дополнительная защита — ограничение глубины: `WHERE sub.level < 10` в рекурсивном шаге.
 
+## LATERAL — подзапрос с доступом к внешним строкам
+
+CTE с ROW_NUMBER нумерует **все** строки во **всех** группах, потом фильтрует — на миллионах строк работа избыточна. LATERAL подходит к задаче иначе: для каждой строки внешней таблицы выполняет отдельный подзапрос с LIMIT.
+
+«Покажи топ-2 по зарплате в каждом отделе»:
+
+```sql
+SELECT d.name AS dept, top.employee_name, top.salary
+FROM departments d
+LEFT JOIN LATERAL (
+    SELECT e.name AS employee_name, e.salary
+    FROM employees e
+    WHERE e.department_id = d.id
+    ORDER BY e.salary DESC NULLS LAST
+    LIMIT 2
+) top ON true;
+```
+
+```
+ dept        | employee_name | salary
+-------------+---------------+--------
+ engineering | Анна          |  90000
+ engineering | Вера          |  85000
+ sales       | Глеб          |  70000
+ sales       | Борис         |  60000
+ hr          | NULL          |   NULL
+```
+
+LATERAL (англ. «боковой», стандарт SQL:2003) позволяет подзапросу в FROM ссылаться на столбцы предшествующих таблиц — как вложенный цикл, где для каждой строки внешней таблицы выполняется подзапрос. Без LATERAL ссылка на `d.id` из подзапроса в FROM была бы ошибкой.
+
+LEFT JOIN LATERAL сохраняет `hr`, у которого нет сотрудников. Это коррелированный подзапрос в FROM — тот же механизм, что в коррелированных подзапросах выше, но здесь подзапрос порождает набор строк, а не одно значение.
+
+LATERAL незаменим там, где нужно **порождать строки** из значения каждой строки: развернуть массив, вызвать `generate_series`, передать параметр в табличную функцию.
+
+### ROW_NUMBER vs LATERAL
+
+ROW_NUMBER + CTE — стандартный и универсальный способ: нумерует все строки, фильтрует по номеру. При больших объёмах нумерация всех строк создаёт overhead. LATERAL с LIMIT обращается только к нужным строкам каждой группы — при наличии индекса по `(department_id, salary DESC)` выполняет N отдельных index scan'ов вместо одного полного прохода. Для top-1 PostgreSQL предлагает ещё более компактный вариант — [DISTINCT ON](../postgresql/08-distinct-on.md).
+
 ## Sources
 
 - PostgreSQL Documentation (v16): Subqueries, WITH (CTE). <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-WITH>
 - PostgreSQL Documentation (v16): EXISTS, IN, ANY, ALL. <https://www.postgresql.org/docs/16/functions-subquery.html>
+- PostgreSQL Documentation (v16): LATERAL. <https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-LATERAL>
 
 ---
 

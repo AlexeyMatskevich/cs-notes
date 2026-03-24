@@ -1,6 +1,6 @@
 # B-tree
 
-**Предпосылки:** [B+ дерево](../../../algorithms-and-data-structures/non-linear/06-b-plus-tree.md), [страницы и кортежи](../storage/01-pages-and-tuples.md) (ctid, структура страницы).
+**Предпосылки:** [B+ дерево](../../../algorithms-and-data-structures/non-linear/06-b-plus-tree.md), [страницы и кортежи](../storage/01-pages-and-tuples.md) (ctid, структура страницы), [CREATE INDEX — основы](../../sql/schema/04-indexes.md).
 
 ← [VACUUM](../maintenance/00-vacuum.md) | [GIN](01-gin.md) →
 

@@ -1,6 +1,6 @@
 # Порядок соединения таблиц (Join Ordering)
 
-**Предпосылки:** [планировщик запросов](00-planner.md) (cost model, методы доступа, алгоритмы соединения — nested loop, hash join, merge join), [динамическое программирование](../../../algorithms-and-data-structures/techniques/00-dynamic-programming.md) (идея «лучшее решение через лучшие подзадачи»).
+**Предпосылки:** [планировщик запросов](00-planner.md) (cost model, методы доступа, алгоритмы соединения — nested loop, hash join, merge join), [динамическое программирование](../../../algorithms-and-data-structures/techniques/00-dynamic-programming.md) (идея «лучшее решение через лучшие подзадачи»), [JOIN](../../sql/querying/03-joins.md) (виды соединений, семантика).
 
 ← [Планировщик запросов](00-planner.md) | [Подзапросы и CTE](02-subqueries-and-cte.md) →
 

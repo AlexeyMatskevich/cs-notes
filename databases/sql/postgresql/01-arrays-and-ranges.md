@@ -167,6 +167,8 @@ ADD CONSTRAINT bookings_no_overlap
 EXCLUDE USING gist (room_id WITH =, during WITH &&);
 ```
 
+Для `room_id WITH =` необходимо расширение `btree_gist` — подробнее в [EXCLUSION](05-exclusion-constraints.md).
+
 `room_id WITH =` — ограничение на одну и ту же комнату. `during WITH &&` — диапазоны не должны пересекаться. [GiST индекс](../../postgresql/indexes/02-gist.md) обеспечивает эффективную проверку — PostgreSQL не сканирует все бронирования, а проверяет только потенциальные конфликты через дерево.
 
 Для нескольких ресурсов (комната + оборудование) — дополнительные столбцы в EXCLUDE:

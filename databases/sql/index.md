@@ -4,7 +4,7 @@
 
 SQL — декларативный язык для работы с реляционными базами данных. В отличие от императивных языков, где программист описывает *как* вычислить результат, SQL описывает *что* нужно получить, а СУБД сама выбирает способ выполнения.
 
-Заметки организованы как самодостаточный курс: от реляционной модели до продвинутых конструкций. Все примеры используют PostgreSQL, но основная часть материала — стандартный SQL, применимый к любой СУБД. PostgreSQL-специфичные конструкции помечены в тексте, а крупные PG-расширения выделены в отдельную подпапку.
+Заметки организованы как самодостаточный курс: от реляционной модели до продвинутых конструкций. Все примеры используют PostgreSQL, но основная часть материала — стандартный SQL, применимый к любой СУБД. PostgreSQL-специфичные конструкции помечены в тексте, а крупные PG-расширения выделены в [отдельную подпапку](postgresql/index.md).
 
 ## Порядок изучения
 
@@ -28,34 +28,36 @@ SQL — декларативный язык для работы с реляци�
 - [Агрегация](querying/02-aggregation.md) — COUNT/SUM/AVG/MIN/MAX, GROUP BY, HAVING, FILTER, string_agg/array_agg
 - [Соединения (JOIN)](querying/03-joins.md) — псевдонимы таблиц, CROSS/INNER/LEFT/RIGHT/FULL, self-join, ON vs WHERE, USING
 - [Расширенная группировка](querying/04-grouping-sets.md) — GROUPING SETS, ROLLUP, CUBE, функция GROUPING()
-- [Подзапросы и CTE](querying/05-subqueries-and-cte.md) — скалярные, коррелированные, IN/EXISTS/ANY/ALL, NOT IN + NULL, WITH RECURSIVE
+- [Подзапросы и CTE](querying/05-subqueries-and-cte.md) — скалярные, коррелированные, IN/EXISTS/ANY/ALL, NOT IN + NULL, LATERAL, WITH RECURSIVE
 - [Операции над множествами](querying/06-set-operations.md) — UNION, INTERSECT, EXCEPT и их ALL-варианты
-- [Оконные функции](querying/07-window-functions.md) — OVER, PARTITION BY, ранжирование, навигация, фреймы, DISTINCT ON, LATERAL
-- [Пагинация](querying/08-pagination.md) — OFFSET vs keyset, стабильный порядок, стоимость глубоких страниц, серверные курсоры
+- [Оконные функции](querying/07-window-functions.md) — OVER, PARTITION BY, ранжирование, навигация, фреймы
 
 ### Определение структуры (DDL)
 
 Как создавать и изменять таблицы.
 
-- [Таблицы и типы](schema/00-tables-and-types.md) — CREATE/ALTER/DROP TABLE, типы данных, DEFAULT, IDENTITY/SERIAL
-- [Ограничения](schema/01-constraints.md) — NOT NULL, UNIQUE, PK, FK, CHECK, каскады, EXCLUSION
-- [Партиционирование](schema/02-partitioning.md) — RANGE, LIST, HASH-партиции, pruning
-- [Представления](schema/03-views.md) — CREATE VIEW, материализованные представления
-- [Индексы](schema/04-indexes.md) — CREATE INDEX, CONCURRENTLY, REINDEX, типы индексов, блокировки
+- [Таблицы и типы](schema/00-tables-and-types.md) — CREATE/ALTER/DROP TABLE, типы данных, DEFAULT, IDENTITY
+- [Ограничения](schema/01-constraints.md) — NOT NULL, UNIQUE, PK, FK, CHECK, каскады
+- [Партиционирование](schema/02-partitioning.md) — логическая таблица из физических частей, выбор ключа, trade-offs
+- [Представления](schema/03-views.md) — CREATE VIEW, обновляемые представления, view как слой доступа
+- [Индексы](schema/04-indexes.md) — CREATE INDEX, составные, частичные, покрывающие, expression-индексы
+
+### Пагинация
+
+Пагинация зависит от знания индексов, поэтому следует после DDL.
+
+- [Пагинация](querying/08-pagination.md) — OFFSET vs keyset, стабильный порядок, стоимость глубоких страниц
 
 ### Изменение данных
 
-- [DML](modification/00-dml.md) — INSERT, UPDATE, DELETE, TRUNCATE, RETURNING, UPSERT
-- [Транзакции](modification/01-transactions.md) — BEGIN/COMMIT/ROLLBACK, SAVEPOINT, ссылка на [ACID](../acid.md)
+- [DML](modification/00-dml.md) — INSERT, UPDATE, DELETE, TRUNCATE
+- [Транзакции](modification/01-transactions.md) — BEGIN/COMMIT/ROLLBACK, SAVEPOINT, уровни изоляции, ссылка на [ACID](../acid.md)
 
 ### PostgreSQL: расширения стандартного SQL
 
-Крупные возможности PostgreSQL, выходящие за рамки стандартного SQL.
+Крупные возможности PostgreSQL, выходящие за рамки стандартного SQL — типы данных, DDL-конструкции, query-фичи.
 
-- [JSONB](postgresql/00-jsonb.md) — операторы, функции, индексирование
-- [Массивы и диапазоны](postgresql/01-arrays-and-ranges.md) — ARRAY, unnest, range types
-- [Полнотекстовый поиск](postgresql/02-full-text-search.md) — tsvector, tsquery, GIN
-- [Функции и процедуры](postgresql/03-functions-and-procedures.md) — CREATE FUNCTION, PL/pgSQL
+→ [PostgreSQL: расширения SQL](postgresql/index.md)
 
 ## Как всё связано
 
@@ -63,7 +65,7 @@ SQL — декларативный язык для работы с реляци�
 
 **Декларативность vs контроль:** SQL описывает *что*, а не *как*. Это даёт СУБД свободу оптимизации, но лишает программиста прямого контроля над алгоритмами. Когда производительность критична, приходится понимать, как СУБД интерпретирует запрос — см. [планировщик PostgreSQL](../postgresql/query-processing/00-planner.md).
 
-**Стандарт vs реализация:** большинство конструкций в этих заметках — стандартный SQL. PostgreSQL расширяет стандарт: JSONB, массивы, DISTINCT ON, FILTER, RETURNING, LATERAL — эти расширения помечены в тексте. При переходе на другую СУБД стандартная часть переносится, расширения требуют адаптации.
+**Стандарт vs реализация:** большинство конструкций в этих заметках — стандартный SQL. PostgreSQL расширяет стандарт: JSONB, массивы, FTS, DISTINCT ON — эти расширения вынесены в [отдельный раздел](postgresql/index.md). При переходе на другую СУБД стандартная часть переносится, расширения требуют адаптации.
 
 ## См. также
 

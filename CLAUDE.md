@@ -37,10 +37,10 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── sql/
 │   │   ├── index.md               # SQL: study order, cross-links
 │   │   ├── foundations/           # relational model, types & NULL, expressions, normalization (4)
-│   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE, set ops, windows, pagination (9)
+│   │   ├── querying/             # SELECT, sorting, aggregation, JOINs, grouping sets, subqueries/CTE/LATERAL, set ops, windows, pagination (9)
 │   │   ├── schema/               # tables & types, constraints, partitioning, views, indexes (5)
-│   │   ├── modification/         # DML, transactions (2)
-│   │   └── postgresql/           # JSONB, arrays & ranges, FTS, functions & procedures (4)
+│   │   ├── modification/         # DML, transactions with anomalies (2)
+│   │   └── postgresql/           # JSONB, arrays, FTS, functions, index ops, exclusion, partitioning, mat views, DISTINCT ON (9)
 │   └── redis/
 │       ├── index.md
 │       ├── architecture/      # what is Redis, event loop, pipelining, logical databases (4)

@@ -133,29 +133,7 @@ INSERT INTO t(x) VALUES (NULL);  -- пройдёт! NULL > 0 --> NULL, не FALS
 
 Если NULL недопустим — добавьте NOT NULL.
 
-## EXCLUSION — запрет пересечений (PostgreSQL)
-
-EXCLUSION (англ. «исключение, невозможность одновременного существования») — для инвариантов сложнее уникальности. Типичный пример: бронирования не должны пересекаться по времени:
-
-```sql
-CREATE TABLE bookings (
-    room_id BIGINT NOT NULL,
-    during  TSRANGE NOT NULL
-);
-
-ALTER TABLE bookings
-ADD CONSTRAINT bookings_no_overlap
-EXCLUDE USING gist (
-    room_id WITH =,
-    during  WITH &&
-);
-```
-
-«Для одинакового `room_id` диапазоны `during` не могут пересекаться». Технически опирается на [GiST индекс](../../postgresql/indexes/02-gist.md).
-
-EXCLUDE USING GiST при добавлении на заполненную таблицу (`ALTER TABLE ADD CONSTRAINT ... EXCLUDE USING gist ...`) берёт `SHARE` lock — блокирует запись на время создания GiST-индекса **и** проверки всех существующих строк на конфликты. На большой таблице это минуты.
-
-Практический паттерн: создать GiST-индекс CONCURRENTLY заранее (подробнее в [индексах](04-indexes.md)), потом добавить EXCLUDE constraint — быстрее, потому что индекс уже существует.
+Для инвариантов сложнее равенства (запрет пересечений по времени, перекрытий по диапазонам) PostgreSQL добавляет [EXCLUSION constraint](../postgresql/05-exclusion-constraints.md).
 
 ## DEFERRABLE — отложенная проверка
 

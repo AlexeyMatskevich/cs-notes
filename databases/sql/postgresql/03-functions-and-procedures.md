@@ -7,7 +7,7 @@
 
 </details>
 
-← [Полнотекстовый поиск](02-full-text-search.md)
+← [Полнотекстовый поиск](02-full-text-search.md) | [Индексы в production](04-index-operations.md) →
 
 Checkout в приложении: проверить наличие товара, списать со склада, создать заказ, записать лог. Четыре SQL-запроса — четыре round-trip'а между приложением и базой. При latency 5 мс на запрос — 20 мс только на сеть, не считая выполнения. Серверная функция выполняет ту же логику за один round-trip — вся логика рядом с данными, сетевой overhead минимален.
 
@@ -277,7 +277,7 @@ ROLLBACK;
 
 Это означает, что миграции базы данных можно выполнять внутри транзакции. Если что-то пошло не так — ROLLBACK отменяет все изменения, включая DDL. База остаётся в консистентном состоянии.
 
-Исключения: некоторые операции не транзакционны даже в PostgreSQL — `CREATE DATABASE`, `CREATE INDEX CONCURRENTLY` (подробнее в [индексах](../schema/04-indexes.md)). Но основные DDL-команды (CREATE TABLE, ALTER TABLE, DROP TABLE) полностью транзакционны.
+Исключения: некоторые операции не транзакционны даже в PostgreSQL — `CREATE DATABASE`, `CREATE INDEX CONCURRENTLY` (подробнее в [индексах в production](04-index-operations.md)). Но основные DDL-команды (CREATE TABLE, ALTER TABLE, DROP TABLE) полностью транзакционны.
 
 ## Sources
 
@@ -288,4 +288,4 @@ ROLLBACK;
 
 ---
 
-← [Полнотекстовый поиск](02-full-text-search.md)
+← [Полнотекстовый поиск](02-full-text-search.md) | [Индексы в production](04-index-operations.md) →

@@ -1,6 +1,6 @@
 # Полнотекстовый поиск
 
-**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md) (LIKE), [GIN индекс](../../postgresql/indexes/01-gin.md).
+**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md) (LIKE).
 
 ← [Массивы и диапазоны](01-arrays-and-ranges.md) | [Функции и процедуры](03-functions-and-procedures.md) →
 

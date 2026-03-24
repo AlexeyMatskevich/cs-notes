@@ -7,7 +7,7 @@
 
 </details>
 
-← [Оконные функции](07-window-functions.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
+← [Индексы](../schema/04-indexes.md) | [DML — изменение данных](../modification/00-dml.md) →
 
 E-commerce площадка отображает заказы на dashboard. Таблица `orders`:
 
@@ -329,4 +329,4 @@ LIMIT 50;
 
 ---
 
-← [Оконные функции](07-window-functions.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
+← [Индексы](../schema/04-indexes.md) | [DML — изменение данных](../modification/00-dml.md) →
