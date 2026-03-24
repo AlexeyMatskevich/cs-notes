@@ -1,0 +1,3 @@
+[core]
+markdown.file_extensions = ["md"]
+text_sync = "full"

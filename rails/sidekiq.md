@@ -18,7 +18,7 @@
 
 ### Как Sidekiq устроен внутри
 
-Sidekiq использует **многопоточную модель** (не форки, как Resque), что делает его значительно более эффективным по памяти. Основные компоненты:
+Sidekiq использует **[многопоточную](../linux/foundations/03-threads.md) модель** (не форки, как Resque), что делает его значительно более эффективным по памяти. Основные компоненты:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -112,7 +112,7 @@ job_hash = {
 
 ## 2. Гарантии доставки и надёжность
 
-Sidekiq — реализация [at-least-once доставки](../system-design/08-delivery-guarantees.md) для фоновых задач в Rails. Job будет выполнен минимум один раз, но может быть выполнен повторно (при retry) или потерян (в edge cases). [Exactly-once на транспортном уровне невозможна](../system-design/08-delivery-guarantees.md#exactly-once-фундаментальное-ограничение) — критичные операции требуют [idempotency](../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) на уровне приложения.
+Sidekiq — реализация [at-least-once доставки](../system-design/08-delivery-guarantees.md) для фоновых задач в Rails. Job будет выполнен минимум один раз, но может быть выполнен повторно (при retry) или потерян (в edge cases). [Exactly-once на транспортном уровне невозможна](../system-design/08-delivery-guarantees.md#exactly-once-ровно-один-раз) — критичные операции требуют [idempotency](../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) на уровне приложения.
 
 ### Когда job может быть потерян (OSS версия)
 
