@@ -2,6 +2,8 @@
 
 **Предпосылки:** [планировщик запросов](00-planner.md) (cost model, алгоритмы соединения), [порядок соединения](01-join-order.md) (dynamic programming, flattening JOIN в плоский список), [подзапросы и CTE в SQL](../../sql/querying/05-subqueries-and-cte.md) (синтаксис, скалярные/коррелированные подзапросы, WITH RECURSIVE).
 
+← [Порядок соединения](01-join-order.md) | [EXPLAIN](03-explain.md) →
+
 Планировщик оптимизирует соединения, перебирая порядки через dynamic programming. Но SQL позволяет вкладывать запросы друг в друга — подзапросы в WHERE, FROM, SELECT — и каждый такой вложенный запрос создаёт границу. Ключевой вопрос для планировщика: растворить границу, включив таблицы подзапроса в общий join tree, или оставить подзапрос отдельной единицей планирования.
 
 ## Виды подзапросов
@@ -233,3 +235,7 @@ SELECT * FROM subordinates;
 - PostgreSQL Documentation (пример: v16): `WITH` / Common Table Expressions (включая `MATERIALIZED`). <https://www.postgresql.org/docs/16/queries-with.html>
 - PostgreSQL Documentation (пример: v16): `SELECT`, подзапросы, `EXISTS`/`IN`. <https://www.postgresql.org/docs/16/sql-select.html>
 - PostgreSQL Release Notes: v12 (изменение поведения CTE: возможное inlining). <https://www.postgresql.org/docs/12/release-12.html>
+
+---
+
+← [Порядок соединения](01-join-order.md) | [EXPLAIN](03-explain.md) →

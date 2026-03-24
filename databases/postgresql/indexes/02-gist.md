@@ -2,6 +2,8 @@
 
 **Предпосылки:** [B-tree](00-btree.md).
 
+← [GIN](01-gin.md) | [Hash Index](03-hash.md) →
+
 **GiST (Generalized Search Tree)** — обобщённое дерево поиска.
 
 **Generalized (обобщённый)** — от латинского generalis, "относящийся к роду/классу". Означает "не привязанный к конкретному типу данных, работающий с абстрактным интерфейсом".
@@ -315,3 +317,7 @@ GiST — фреймворк для пространственных и нест�
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): GiST, KNN search. <https://www.postgresql.org/docs/16/gist.html>
+
+---
+
+← [GIN](01-gin.md) | [Hash Index](03-hash.md) →

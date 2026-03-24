@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](00-string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
 
+← [String](00-string.md) | [List](02-list.md) →
+
 ## Проблема overhead'а
 
 При хранении объекта с полями отдельными STRING-ключами (`user:123:name`, `user:123:age`, `user:123:email`) каждый ключ несёт ~70 байт overhead: метаданные объекта, запись в глобальной хеш-таблице, запись в таблице TTL (если есть). Для объекта из 10 полей это ~700 байт служебных данных сверх полезной нагрузки. На миллионе пользователей разница между «10 STRING-ключей на профиль» и «1 HASH на профиль» — сотни мегабайт.
@@ -62,3 +64,7 @@ STRING-ключи истекают по отдельности: `user:123:sessio
 
 - Redis Documentation: Hashes. <https://redis.io/docs/data-types/hashes/>
 - Redis source: `src/listpack.c`, `src/dict.c`, `src/t_hash.c`
+
+---
+
+← [String](00-string.md) | [List](02-list.md) →

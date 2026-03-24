@@ -2,6 +2,8 @@
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [RDB](../persistence/00-rdb.md), [AOF](../persistence/01-aof.md), сеть (клиент/сервер).
 
+← [Проектирование ключей](../memory/02-key-design.md) | [Sentinel](01-sentinel.md) →
+
 ## В Redis: master и replicas
 
 Общая теория репликации и её компромиссов — в [репликации](../../../system-design/replication.md). Здесь — особенности реализации в Redis.
@@ -74,3 +76,7 @@ redis-cli WAIT 1 5000
 - Redis Documentation: Replication (Redis OSS 8.2). <https://redis.io/docs/management/replication/>
 - Redis config (Redis OSS 8.2): `min-replicas-to-write`, `min-replicas-max-lag`, `repl-backlog-size`, `repl-diskless-sync`. <https://redis.io/docs/latest/operate/oss_and_stack/management/config/>
 - Redis source: `src/replication.c`
+
+---
+
+← [Проектирование ключей](../memory/02-key-design.md) | [Sentinel](01-sentinel.md) →

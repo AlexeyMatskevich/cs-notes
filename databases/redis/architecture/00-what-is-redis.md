@@ -2,6 +2,8 @@
 
 **Предпосылки:** [ACID](../../acid.md), базовые структуры данных ([массив](../../../algorithms-and-data-structures/linear/01-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), [связный список](../../../algorithms-and-data-structures/linear/03-linked-list.md)).
 
+[Event loop](01-event-loop.md) →
+
 ## Структуры данных с сетевым доступом
 
 Программисты привыкли к структурам данных внутри процесса: хеш-таблица для быстрого поиска по ключу, список для очереди задач, множество для проверки уникальности. Проблема в том, что такие структуры живут в памяти одного процесса — другие процессы и серверы к ним доступа не имеют, а при рестарте приложения данные пропадают.
@@ -36,3 +38,7 @@ Redis при `INCR counter` находит значение в хеш-табли
 
 - Redis Documentation: Introduction. <https://redis.io/docs/about/>
 - Eric Brewer, «CAP Twelve Years Later», 2012. <https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/>
+
+---
+
+[Event loop](01-event-loop.md) →

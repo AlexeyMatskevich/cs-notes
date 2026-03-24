@@ -2,6 +2,8 @@
 
 **Предпосылки:** [ACID](../../acid.md).
 
+[Страницы и кортежи](01-pages-and-tuples.md) →
+
 [ACID](../../acid.md) описывает контракт транзакции в общем виде. PostgreSQL реализует каждую гарантию конкретными механизмами, и они переплетены: одна операция UPDATE задействует все четыре.
 
 ## Версионирование вместо перезаписи
@@ -51,3 +53,7 @@ PostgreSQL предоставляет три [уровня изоляции](../
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Transactions и Transaction Isolation. <https://www.postgresql.org/docs/16/tutorial-transactions.html>, <https://www.postgresql.org/docs/16/transaction-iso.html>
+
+---
+
+[Страницы и кортежи](01-pages-and-tuples.md) →

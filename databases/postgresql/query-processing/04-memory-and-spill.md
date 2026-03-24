@@ -2,6 +2,8 @@
 
 **Предпосылки:** [EXPLAIN](03-explain.md) (как смотреть `actual` и `BUFFERS`), [планировщик запросов](00-planner.md) (hash join, sort, aggregate), [буферный кеш](../durability/01-buffer-cache.md) (страницы и I/O).
 
+← [EXPLAIN](03-explain.md) | [Prepared statements](05-prepared-statements.md) →
+
 Одна и та же форма запроса может быть «быстрой» на одних данных и «внезапно медленной» на других, хотя индексы те же. Частая причина — переход из режима «всё в памяти» в режим «часть работы ушла на диск»: сортировки, хеш‑соединения и агрегации начинают писать во временные файлы, и latency перестаёт быть предсказуемой.
 
 ## Что именно «не помещается»
@@ -88,3 +90,7 @@ Spill часто появляется не из‑за изменения код
 
 - PostgreSQL Documentation (пример: v16): Resource Consumption (`work_mem`). <https://www.postgresql.org/docs/16/runtime-config-resource.html>
 - PostgreSQL Documentation (пример: v16): Using EXPLAIN (Sort/Hash details). <https://www.postgresql.org/docs/16/using-explain.html>
+
+---
+
+← [EXPLAIN](03-explain.md) | [Prepared statements](05-prepared-statements.md) →

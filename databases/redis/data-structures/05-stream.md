@@ -2,6 +2,8 @@
 
 **Предпосылки:** [List](02-list.md). Полезно знать Apache Kafka на уровне понятий topic, partition, consumer group.
 
+← [Sorted Set](04-sorted-set.md) | [HyperLogLog](06-hyperloglog.md) →
+
 ## Проблема надёжности
 
 [LIST](02-list.md) как очередь работает, но имеет фундаментальное ограничение: после `BRPOP` элемент исчез из Redis. Если обработчик получил сообщение, но упал до завершения обработки — сообщение потеряно. Это [at-most-once доставка](../../../system-design/08-delivery-guarantees.md): без подтверждения обработки гарантии нет. Нет способа перечитать, нет способа узнать, что именно было потеряно. Для фоновых задач с retry-логикой на уровне приложения это допустимо. Для потока платежей или аудит-лога — нет.
@@ -148,3 +150,7 @@ ID потока делят префикс миллисекунд, и внутр�
 - Redis Documentation: Streams. <https://redis.io/docs/data-types/streams/>
 - Redis Documentation: Streams tutorial. <https://redis.io/docs/data-types/streams-tutorial/>
 - Redis source: `src/t_stream.c`, `src/rax.c`
+
+---
+
+← [Sorted Set](04-sorted-set.md) | [HyperLogLog](06-hyperloglog.md) →

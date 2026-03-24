@@ -2,6 +2,8 @@
 
 **Предпосылки:** сеть (клиент/сервер, запрос/ответ), ключи в Redis.
 
+← [Pipelining](02-pipelining.md) | [String](../data-structures/00-string.md) →
+
 ## Что такое «логическая база»
 
 В одном экземпляре Redis может быть несколько логических баз (db `0`, `1`, ...). Это не отдельные процессы и не отдельные файлы — это несколько независимых пространств ключей внутри одного сервера.
@@ -37,3 +39,7 @@ redis-cli -n 1 GET env  # test
 
 - Redis Documentation: SELECT. <https://redis.io/commands/select/>
 - Redis Documentation: Keyspace. <https://redis.io/docs/manual/keyspace/>
+
+---
+
+← [Pipelining](02-pipelining.md) | [String](../data-structures/00-string.md) →

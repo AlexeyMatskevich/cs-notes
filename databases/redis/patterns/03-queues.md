@@ -2,6 +2,8 @@
 
 **Предпосылки:** [List](../data-structures/02-list.md), [Sorted Set](../data-structures/04-sorted-set.md), [Stream](../data-structures/05-stream.md), [атомарность одной команды](../atomicity/00-single-command.md).
 
+← [Распределённые блокировки](02-distributed-locks.md)
+
 После оформления заказа нужно отправить email, обработать изображение, обновить поисковый индекс. Эти задачи не должны выполняться в процессе, обрабатывающем HTTP-запрос, — они тяжёлые и некритичны по времени. Для этого нужна очередь: продюсер добавляет задачу, обработчик (отдельный процесс) забирает и выполняет. Redis предоставляет несколько структур с блокирующими операциями и атомарными перемещениями, на которых строятся очереди разной надёжности.
 
 ## Простая очередь на LIST
@@ -102,3 +104,7 @@ EVAL "
 
 - Redis Documentation: Patterns — Reliable queue. <https://redis.io/commands/rpoplpush/#pattern-reliable-queue>
 - Redis Documentation: Streams. <https://redis.io/docs/data-types/streams/>
+
+---
+
+← [Распределённые блокировки](02-distributed-locks.md)

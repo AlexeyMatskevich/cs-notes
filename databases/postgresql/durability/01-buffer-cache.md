@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](../storage/01-pages-and-tuples.md), [WAL](00-wal.md), [LRU-кэш](../../../algorithms-and-data-structures/linear/06-lru-cache.md) (как «идеальная» модель вытеснения).
 
+← [WAL](00-wal.md) | [MVCC](../concurrency/00-mvcc.md) →
+
 Диск медленнее памяти, а PostgreSQL читает и пишет **страницы** (обычно по 8 КБ). Если запросы постоянно вытягивают страницы с диска, время ответа начинает определяться I/O. Буферный кеш снижает цену I/O: горячие страницы остаются в памяти, а запись на диск происходит управляемо, в фоне.
 
 ## Проблема: повторное чтение с диска
@@ -193,3 +195,7 @@ OS page cache работает как «второй эшелон»: если с
 
 - PostgreSQL Documentation (пример: v16): Resource Consumption (`shared_buffers`), WAL Configuration (`full_page_writes`), `pg_stat_bgwriter`. <https://www.postgresql.org/docs/16/runtime-config-resource.html>, <https://www.postgresql.org/docs/16/runtime-config-wal.html>, <https://www.postgresql.org/docs/16/monitoring-stats.html>
 - PostgreSQL source (пример: REL_16_0): clock-sweep / `BM_MAX_USAGE_COUNT`. <https://github.com/postgres/postgres/blob/REL_16_0/src/backend/storage/buffer/freelist.c>, <https://github.com/postgres/postgres/blob/REL_16_0/src/include/storage/buf_internals.h>
+
+---
+
+← [WAL](00-wal.md) | [MVCC](../concurrency/00-mvcc.md) →

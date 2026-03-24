@@ -2,6 +2,8 @@
 
 **Предпосылки:** [планировщик запросов](00-planner.md) (cost model, методы доступа, алгоритмы соединения — nested loop, hash join, merge join), [динамическое программирование](../../../algorithms-and-data-structures/techniques/00-dynamic-programming.md) (идея «лучшее решение через лучшие подзадачи»).
 
+← [Планировщик запросов](00-planner.md) | [Подзапросы и CTE](02-subqueries-and-cte.md) →
+
 Планировщик выбирает метод доступа к каждой таблице и алгоритм соединения для каждой пары. Но когда в запросе несколько JOIN, появляется ещё одно измерение выбора: в каком порядке строить дерево соединений. Количество вариантов растёт взрывным образом:
 
 | Таблиц | Порядков соединения |
@@ -147,3 +149,7 @@ SET geqo_threshold = 14;
 - PostgreSQL Documentation (пример: v16): Query Planning и GEQO. <https://www.postgresql.org/docs/16/planner-optimizer.html>, <https://www.postgresql.org/docs/16/geqo.html>
 - PostgreSQL Documentation (пример: v16): Planner method configuration (`join_collapse_limit`, `from_collapse_limit`, `geqo_threshold`). <https://www.postgresql.org/docs/16/runtime-config-query.html>
 - Selinger et al. *Access Path Selection in a Relational Database Management System* (1979). <https://dl.acm.org/doi/10.1145/582095.582099>
+
+---
+
+← [Планировщик запросов](00-planner.md) | [Подзапросы и CTE](02-subqueries-and-cte.md) →

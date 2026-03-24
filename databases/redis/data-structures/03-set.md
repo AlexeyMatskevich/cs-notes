@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](00-string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), множество (математическое).
 
+← [List](02-list.md) | [Sorted Set](04-sorted-set.md) →
+
 ## Вопрос принадлежности
 
 Проверка прав. Запрос приходит, приложение проверяет: есть ли у user:42 роль "admin"? Если роли хранятся в [LIST](02-list.md) — ответ требует полного обхода: O(n). При одном запросе это незаметно. При миллионах запросов в секунду O(n) превращается из микросекунд в миллисекунды и становится узким местом. SET отвечает на тот же вопрос за O(1) — одна операция хеширования вместо обхода.
@@ -53,3 +55,7 @@ Redis автоматически переключает SET из intset в hasht
 
 - Redis Documentation: Sets. <https://redis.io/docs/data-types/sets/>
 - Redis source: `src/intset.c`, `src/t_set.c`
+
+---
+
+← [List](02-list.md) | [Sorted Set](04-sorted-set.md) →

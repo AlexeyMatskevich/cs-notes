@@ -2,6 +2,8 @@
 
 **Предпосылки:** [планировщик запросов](00-planner.md) (оценки, статистика, cost model), [B-tree](../indexes/00-btree.md) (типы сканирования: Index Scan/Bitmap/Index Only), [буферный кеш](../durability/01-buffer-cache.md) (страницы, cache hit vs read).
 
+← [Подзапросы и CTE](02-subqueries-and-cte.md) | [Память и spill](04-memory-and-spill.md) →
+
 Запрос может быть логически простым (`WHERE`, `JOIN`, `ORDER BY`), но выполняться очень по‑разному: полный перебор таблицы, точечный доступ через индекс, чтение по битмапу, сортировка, построение хеш‑таблицы, многократные проходы по одной и той же таблице. EXPLAIN нужен, чтобы увидеть выбранный способ выполнения и понять, что именно делает запрос дорогим: CPU, дисковый I/O, ошибочные оценки числа строк (`rows`) или «не тот» порядок операций.
 
 ## Два режима: EXPLAIN и EXPLAIN ANALYZE
@@ -87,3 +89,7 @@ Buffers: shared hit=1200 read=30 dirtied=2 written=0
 
 - PostgreSQL Documentation (пример: v16): `EXPLAIN`. <https://www.postgresql.org/docs/16/sql-explain.html>
 - PostgreSQL Documentation (пример: v16): Using EXPLAIN. <https://www.postgresql.org/docs/16/using-explain.html>
+
+---
+
+← [Подзапросы и CTE](02-subqueries-and-cte.md) | [Память и spill](04-memory-and-spill.md) →

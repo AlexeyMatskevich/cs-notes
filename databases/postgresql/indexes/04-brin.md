@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](../storage/01-pages-and-tuples.md), [B-tree](00-btree.md).
 
+← [Hash Index](03-hash.md) | [SP-GiST](05-spgist.md) →
+
 ## B-tree на упорядоченных данных
 
 Таблица логов, миллиард строк:
@@ -123,3 +125,7 @@ WITH (pages_per_range = 32, autosummarize = on);
 
 - PostgreSQL Documentation (пример: v16): BRIN. <https://www.postgresql.org/docs/16/brin.html>
 - PostgreSQL Release Notes: v9.5 (введение BRIN). <https://www.postgresql.org/docs/9.5/release-9-5.html>
+
+---
+
+← [Hash Index](03-hash.md) | [SP-GiST](05-spgist.md) →

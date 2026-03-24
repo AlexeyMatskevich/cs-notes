@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Что такое Redis](../architecture/00-what-is-redis.md), [event loop](../architecture/01-event-loop.md).
 
+← [Логические базы](../architecture/03-logical-databases.md) | [Hash](01-hash.md) →
+
 ## Один ключ, одно значение, время жизни
 
 Сессия с 30-минутным TTL. Счётчик запросов к API. Блокировка на операцию с заказом. Три разных задачи — но все сводятся к одному: положить значение под ключ, при необходимости задать время жизни, при необходимости добавить условие записи. STRING — базовый тип Redis, который покрывает все три случая. Значение — произвольные байты до 512 МБ: текст, число, сериализованный объект, бинарные данные.
@@ -84,3 +86,7 @@ SDS определяет, как Redis хранит байты. Но если з
 
 - Redis Documentation: Strings. <https://redis.io/docs/data-types/strings/>
 - Redis source: `src/sds.h`, `src/sds.c`, `src/object.c`
+
+---
+
+← [Логические базы](../architecture/03-logical-databases.md) | [Hash](01-hash.md) →

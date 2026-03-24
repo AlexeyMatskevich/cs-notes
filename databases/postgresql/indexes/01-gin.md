@@ -2,6 +2,8 @@
 
 **Предпосылки:** [инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md), [B-tree](00-btree.md).
 
+← [B-tree](00-btree.md) | [GiST](02-gist.md) →
+
 [Инвертированный индекс](../../../algorithms-and-data-structures/non-linear/08-inverted-index.md) «переворачивает» отношение: вместо «документ → элементы» хранит «элемент → список документов». GIN (Generalized Inverted Index) — обобщённая реализация этой идеи в PostgreSQL: он работает не только с текстом, а с любыми типами, которые можно разбить на элементы — массивами, JSONB, полнотекстовыми векторами. «Обобщённый» означает, что GIN — фреймворк, адаптируемый под разные типы данных через operator class. Появился в PostgreSQL 8.2 (2006).
 
 ## Почему B-tree не может заглянуть внутрь
@@ -186,3 +188,7 @@ GIN работает с дискретными элементами внутри
 
 - PostgreSQL Documentation (пример: v16): GIN. <https://www.postgresql.org/docs/16/gin.html>
 - PostgreSQL Documentation (пример: v16): Full Text Search, JSON types и JSONB operators. <https://www.postgresql.org/docs/16/textsearch.html>, <https://www.postgresql.org/docs/16/datatype-json.html>
+
+---
+
+← [B-tree](00-btree.md) | [GiST](02-gist.md) →

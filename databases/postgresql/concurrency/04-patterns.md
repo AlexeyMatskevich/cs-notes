@@ -2,6 +2,8 @@
 
 **Предпосылки:** [уровни изоляции](02-isolation-levels.md), [блокировки](03-locks.md), [DML](../../sql/modification/00-dml.md) (UPDATE, DELETE).
 
+← [Блокировки](03-locks.md) | [Распространённые ошибки](05-common-mistakes.md) →
+
 Уровни изоляции и блокировки — это механизмы. Выбор конкретного механизма зависит от того, какую операцию выполняет приложение и какие данные должны остаться согласованными. Рассмотрим, как этот выбор работает на примере платёжного сервиса интернет-магазина.
 
 ## Когда защита не нужна
@@ -213,3 +215,7 @@ DELETE FROM inventory WHERE id = 102;                -- "останется 3"
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Transaction Isolation и Explicit Locking (`SELECT ... FOR UPDATE`). <https://www.postgresql.org/docs/16/transaction-iso.html>, <https://www.postgresql.org/docs/16/explicit-locking.html>
+
+---
+
+← [Блокировки](03-locks.md) | [Распространённые ошибки](05-common-mistakes.md) →

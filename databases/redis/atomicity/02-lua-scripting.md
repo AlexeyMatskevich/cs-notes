@@ -2,6 +2,8 @@
 
 **Предпосылки:** [MULTI/EXEC](01-multi-exec.md), [event loop](../architecture/01-event-loop.md).
 
+← [MULTI/EXEC](01-multi-exec.md) | [RDB](../persistence/00-rdb.md) →
+
 ## Зачем Lua, если есть MULTI/EXEC
 
 MULTI/EXEC даёт атомарность, но не даёт условной логики: нельзя выполнить «прочитать X, если X > 0 — уменьшить, иначе — вернуть ошибку». Все команды в очереди определены заранее, до выполнения. Lua-скрипт снимает это ограничение: он выполняется атомарно внутри event loop и может содержать произвольную логику — условия, циклы, работу с результатами промежуточных команд.
@@ -78,3 +80,7 @@ FCALL my_unlock 1 lock:order:42 "owner-abc-123"
 - Redis Documentation: Scripting with Lua. <https://redis.io/docs/interact/programmability/eval-intro/>
 - Redis Documentation: Functions. <https://redis.io/docs/interact/programmability/functions-intro/>
 - Redis source: `src/scripting.c`, `src/function.c`
+
+---
+
+← [MULTI/EXEC](01-multi-exec.md) | [RDB](../persistence/00-rdb.md) →

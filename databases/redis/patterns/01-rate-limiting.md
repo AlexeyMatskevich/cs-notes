@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](../data-structures/00-string.md), [Hash](../data-structures/01-hash.md), [Sorted Set](../data-structures/04-sorted-set.md), [Lua-скрипты](../atomicity/02-lua-scripting.md).
 
+← [Кеширование](00-caching.md) | [Распределённые блокировки](02-distributed-locks.md) →
+
 Любой публичный API или веб-сервис сталкивается с необходимостью ограничить количество запросов от одного клиента за единицу времени. Без ограничений один агрессивный клиент (или бот) может исчерпать ресурсы сервера, ухудшив работу для остальных. Redis хорошо подходит для rate limiting: атомарные счётчики, микросекундная латентность и TTL позволяют реализовать проверку за одно обращение к Redis на каждый запрос.
 
 ## Fixed window
@@ -122,3 +124,7 @@ Token bucket допускает короткие всплески (если на
 
 - Redis Documentation: Rate limiting pattern. <https://redis.io/glossary/rate-limiting/>
 - Cloudflare blog, «How we built rate limiting capable of scaling to millions of domains», 2017
+
+---
+
+← [Кеширование](00-caching.md) | [Распределённые блокировки](02-distributed-locks.md) →

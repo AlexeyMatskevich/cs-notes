@@ -2,6 +2,10 @@
 
 **Предпосылки:** [String](../data-structures/00-string.md) (в том числе SDS), [Hash](../data-structures/01-hash.md), [List](../data-structures/02-list.md), [Set](../data-structures/03-set.md), [Sorted Set](../data-structures/04-sorted-set.md).
 
+← [AOF](../persistence/01-aof.md) | [Eviction](01-eviction.md) →
+
+Redis оборачивает каждое значение в структуру `redisObject`, а внутри коллекций автоматически переключается между компактной кодировкой (listpack, intset) и быстрой (hashtable, skiplist). Переключение происходит при превышении порогов по количеству элементов или длине — до этого момента данные занимают в разы меньше памяти. Понимание этой механики определяет выбор между одним ключом-хешем на тысячу полей и тысячей отдельных ключей — разница в потреблении может достигать 5–10×.
+
 ## redisObject: ~16 байт на каждое значение
 
 Каждое значение в Redis обёрнуто в структуру `redisObject` (`src/server.h`). В типичной 64-bit сборке она занимает ~16 байт:
@@ -48,3 +52,7 @@ Listpack подходит для коллекций из произвольны�
 
 - Redis Documentation: Memory optimization. <https://redis.io/docs/management/optimization/memory-optimization/>
 - Redis source: `src/server.h` (структура `redisObject`), `src/listpack.c`, `src/intset.c`
+
+---
+
+← [AOF](../persistence/01-aof.md) | [Eviction](01-eviction.md) →

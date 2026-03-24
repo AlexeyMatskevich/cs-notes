@@ -2,6 +2,8 @@
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (failover, кворум, split brain), [распределённый консенсус](../../../system-design/03-consensus.md) (leader election, кворум, терм), [репликация Redis](./00-replication.md), [Pub/Sub](../data-structures/08-pub-sub.md).
 
+← [Репликация](00-replication.md) | [Cluster](02-cluster.md) →
+
 ## Проблема: ручной failover
 
 Репликация даёт копии данных, но при падении мастера кто-то должен: обнаружить сбой, выбрать реплику, промоутировать её в мастер, перенаправить остальные реплики и клиентов на новый адрес. Ночью это означает: алерт будит дежурного инженера, инженер заходит на сервер, проверяет состояние, вручную выполняет `REPLICAOF NO ONE`, меняет конфигурацию остальных реплик, обновляет адрес в приложении — минуты простоя и высокий риск ошибки под давлением. Redis Sentinel автоматизирует весь этот цикл.
@@ -79,3 +81,7 @@ Sentinel решает задачу высокой доступности (HA): �
 
 - Redis Documentation: Sentinel (Redis OSS 8.2). <https://redis.io/docs/management/sentinel/>
 - Redis source: `src/sentinel.c`
+
+---
+
+← [Репликация](00-replication.md) | [Cluster](02-cluster.md) →

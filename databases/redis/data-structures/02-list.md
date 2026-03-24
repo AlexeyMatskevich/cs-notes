@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](00-string.md), [связный список](../../../algorithms-and-data-structures/linear/03-linked-list.md).
 
+← [Hash](01-hash.md) | [Set](03-set.md) →
+
 ## Проблема polling'а
 
 Воркер проверяет очередь каждые 100 миллисекунд. Очередь пуста 99% времени. За сутки — 864 000 бесполезных запросов: CPU тратится на отправку команды, Redis тратится на пустой ответ, сеть передаёт nil. Умножить на десять воркеров — почти 9 миллионов пустых циклов в сутки. LIST с `BRPOP` убирает всё это: воркер спит, пока не придёт работа.
@@ -76,3 +78,7 @@ Quicklist (`src/quicklist.c`) — двусвязный список, где ка
 
 - Redis Documentation: Lists. <https://redis.io/docs/data-types/lists/>
 - Redis source: `src/quicklist.c`, `src/quicklist.h`
+
+---
+
+← [Hash](01-hash.md) | [Set](03-set.md) →

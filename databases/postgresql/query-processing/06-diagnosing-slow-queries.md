@@ -2,6 +2,8 @@
 
 **Предпосылки:** [EXPLAIN](03-explain.md), [планировщик запросов](00-planner.md) (оценки и выбор плана), [B-tree](../indexes/00-btree.md) (индексы и типы сканов), [память и spill](04-memory-and-spill.md), [prepared statements](05-prepared-statements.md) (parameter sensitivity).
 
+← [Prepared statements](05-prepared-statements.md) | [Репликация](../distribution/00-replication.md) →
+
 Медленный запрос редко «просто медленный». Обычно он делает слишком много работы (читает/соединяет/сортирует слишком много строк) или делает нужную работу слишком дорогим способом (лишний I/O, spill, неверный join алгоритм, не сработало [partition pruning](../../sql/schema/02-partitioning.md)). Чтобы ускорить запрос, сначала нужно понять, что именно в нём дорого и почему оптимизатор выбрал такой путь.
 
 ## Шаг 1: получить факты, а не догадки
@@ -89,3 +91,7 @@ SELECT ...;
 
 - PostgreSQL Documentation (пример: v16): Using EXPLAIN. <https://www.postgresql.org/docs/16/using-explain.html>
 - PostgreSQL Documentation (пример: v16): `EXPLAIN`. <https://www.postgresql.org/docs/16/sql-explain.html>
+
+---
+
+← [Prepared statements](05-prepared-statements.md) | [Репликация](../distribution/00-replication.md) →

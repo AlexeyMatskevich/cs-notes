@@ -2,6 +2,8 @@
 
 **Предпосылки:** [репликация](../../../system-design/replication.md), [шардинг](../../../system-design/sharding.md), [репликация Redis](./00-replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md), [транзакции MULTI/EXEC](../atomicity/01-multi-exec.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [Pub/Sub](../data-structures/08-pub-sub.md), [TCP](../../../networking/transport/01-tcp.md) (cluster bus).
 
+← [Sentinel](01-sentinel.md) | [Кеширование](../patterns/00-caching.md) →
+
 ## Зачем нужен Redis Cluster
 
 Одиночный Redis ограничен ресурсами одной машины. Репликация (мастер → реплики) помогает переживать отказы и иногда масштабировать чтение, но она не решает ёмкость: на каждой реплике лежит тот же набор данных.
@@ -169,3 +171,7 @@ Redis Cluster использует фиксированное число сло�
 - Redis Documentation: Cluster. <https://redis.io/docs/management/scaling/>
 - Redis Documentation: Cluster specification. <https://redis.io/docs/reference/cluster-spec/>
 - Redis source: `src/cluster.c`
+
+---
+
+← [Sentinel](01-sentinel.md) | [Кеширование](../patterns/00-caching.md) →

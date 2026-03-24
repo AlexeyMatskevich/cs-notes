@@ -2,6 +2,8 @@
 
 **Предпосылки:** [планировщик запросов](00-planner.md) (оценки и выбор плана), [EXPLAIN](03-explain.md) (как сравнивать планы и фактическое время), [B-tree](../indexes/00-btree.md) (индексный vs последовательный доступ).
 
+← [Память и spill](04-memory-and-spill.md) | [Диагностика медленных запросов](06-diagnosing-slow-queries.md) →
+
 Одна из самых неприятных ситуаций в приложении — «один и тот же запрос иногда быстрый, иногда медленный» без изменений в данных и индексе. Частая причина — сочетание параметров и кэширования планов: PostgreSQL может строить план по‑разному для литерала `WHERE status = 'active'` и для параметра `WHERE status = $1`, а при повторном выполнении подготовленного запроса план может стать общим (generic) и перестать учитывать конкретное значение параметра.
 
 ## Что такое prepared statement
@@ -67,3 +69,7 @@ Prepared statement — это заранее распарсенный и спл�
 
 - PostgreSQL Documentation (пример: v16): Prepared statements (`PREPARE`/`EXECUTE`). <https://www.postgresql.org/docs/16/sql-prepare.html>, <https://www.postgresql.org/docs/16/sql-execute.html>
 - PostgreSQL Documentation (пример: v16): Plan caching (generic vs custom plan). <https://www.postgresql.org/docs/16/plpgsql-implementation.html#PLPGSQL-PLAN-CACHING>
+
+---
+
+← [Память и spill](04-memory-and-spill.md) | [Диагностика медленных запросов](06-diagnosing-slow-queries.md) →

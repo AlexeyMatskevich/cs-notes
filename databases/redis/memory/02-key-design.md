@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Внутренние кодировки](00-encodings.md), [event loop](../architecture/01-event-loop.md).
 
+← [Eviction](01-eviction.md) | [Репликация](../distribution/00-replication.md) →
+
 ## Именование ключей
 
 Redis не имеет таблиц и схем — все ключи живут в плоском пространстве имён внутри выбранной логической базы (db). Про db и команду `SELECT` см. [логические базы Redis](../architecture/03-logical-databases.md). Без конвенций именования ключи превращаются в хаос. Стандартная конвенция — разделение двоеточием: `тип:идентификатор:поле`.
@@ -68,3 +70,7 @@ Stream ведёт себя иначе: даже если записей не о�
 - Redis Documentation: Key naming conventions. <https://redis.io/docs/manual/keyspace/>
 - Redis Documentation: SCAN. <https://redis.io/commands/scan/>
 - Redis Documentation: UNLINK. <https://redis.io/commands/unlink/>
+
+---
+
+← [Eviction](01-eviction.md) | [Репликация](../distribution/00-replication.md) →

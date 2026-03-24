@@ -2,6 +2,8 @@
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [WAL](../durability/00-wal.md), [TCP](../../../networking/transport/01-tcp.md) (RTT).
 
+← [Диагностика медленных запросов](../query-processing/06-diagnosing-slow-queries.md) | [Шардирование](01-sharding.md) →
+
 Пока PostgreSQL живёт на одном сервере, он — единственная точка отказа. Сервер перезагружается, и на 30 секунд приложение не может ни читать, ни писать. Диск умирает — данные потеряны, если нет свежего бэкапа. Репликация решает обе проблемы: вторая (и третья) копия данных на другом сервере позволяет переключиться при сбое и разгрузить primary от части чтений.
 
 ## Physical replication: standby как точная копия
@@ -45,3 +47,7 @@ SELECT pg_is_in_recovery(); -- true на реплике, false на primary
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): High Availability, Warm Standby, Synchronous Replication, Replication Slots, Logical Replication. <https://www.postgresql.org/docs/16/high-availability.html>, <https://www.postgresql.org/docs/16/logical-replication.html>
+
+---
+
+← [Диагностика медленных запросов](../query-processing/06-diagnosing-slow-queries.md) | [Шардирование](01-sharding.md) →

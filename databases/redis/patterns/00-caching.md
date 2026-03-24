@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](../data-structures/00-string.md), [Hash](../data-structures/01-hash.md), [eviction](../memory/01-eviction.md), [архитектура кэширования](../../../system-design/07-caching.md) (уровни кэша, когерентность, инвалидация).
 
+← [Cluster](../distribution/02-cluster.md) | [Rate limiting](01-rate-limiting.md) →
+
 ## Cache-aside (lazy loading)
 
 Самый распространённый паттерн кеширования. Приложение сначала ищет данные в Redis. При попадании (cache hit) — возвращает из кеша. При промахе (cache miss) — загружает из основного хранилища (PostgreSQL, API), записывает в Redis с TTL и возвращает клиенту.
@@ -67,3 +69,7 @@ Cache-aside обновляет кеш при чтении. Альтернати�
 
 - Redis Documentation: Client-side caching. <https://redis.io/docs/manual/client-side-caching/>
 - Facebook Engineering, «Scaling Memcache at Facebook», 2013 (паттерны кеширования применимы и к Redis)
+
+---
+
+← [Cluster](../distribution/02-cluster.md) | [Rate limiting](01-rate-limiting.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [уровни изоляции](02-isolation-levels.md), [блокировки](03-locks.md), [паттерны](04-patterns.md).
 
+← [Практические паттерны](04-patterns.md) | [Очереди задач](06-queues-and-skip-locked.md) →
+
 [Паттерны](04-patterns.md) описывают правильные инструменты: атомарный SQL, FOR UPDATE, REPEATABLE READ + retry, SERIALIZABLE. Но знание инструмента не спасает, если ментальная модель работы PostgreSQL неточна. Каждая ошибка ниже — следствие конкретного заблуждения о том, как взаимодействуют MVCC, блокировки и уровни изоляции, и у каждой есть наблюдаемый эффект: потерянные данные, лишняя сериализация, разбухание таблиц или недоступность приложения.
 
 ## FOR UPDATE «на всякий случай»
@@ -104,3 +106,7 @@ ACCESS SHARE и ACCESS EXCLUSIVE несовместимы — миграция �
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Transaction Isolation, Explicit Locking, Routine Vacuuming. <https://www.postgresql.org/docs/16/transaction-iso.html>, <https://www.postgresql.org/docs/16/explicit-locking.html>, <https://www.postgresql.org/docs/16/routine-vacuuming.html>
+
+---
+
+← [Практические паттерны](04-patterns.md) | [Очереди задач](06-queues-and-skip-locked.md) →

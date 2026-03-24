@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Event loop](../architecture/01-event-loop.md), [List](02-list.md) (для сравнения), [TCP](../../../networking/transport/01-tcp.md) (соединение). Секция Sharded Pub/Sub использует понятия из [Redis Cluster](../distribution/02-cluster.md).
 
+← [Bitmap и Bitfield](07-bitmap-and-bitfield.md) | [Атомарность одной команды](../atomicity/00-single-command.md) →
+
 ## Проблема broadcast'а
 
 Инвалидация кеша. 8 серверов приложений, каждый держит локальный кеш цен товаров. Сервер 3 обновил цену product:42 в базе. У остальных 7 — устаревший кеш. Как сообщить всем одновременно? Не нужна персистентность — если сервер был выключен, он получит свежие данные при следующем cache miss. Не нужно подтверждение — отправитель не ждёт ответа. Нужно, чтобы все подключённые серверы услышали «invalidate product:42» прямо сейчас. Это broadcast — и именно его обеспечивает Pub/Sub. Pub/Sub решает [проблему когерентности локального кэша](../../../system-design/07-caching.md#когерентность-локальный-vs-внешний-кэш) через event-based инвалидацию.
@@ -62,3 +64,7 @@ Sharded Pub/Sub (Redis 7.0+, команды `SSUBSCRIBE`, `SUNSUBSCRIBE`, `SPUBL
 
 - Redis Documentation: Pub/Sub. <https://redis.io/docs/interact/pubsub/>
 - Redis Documentation: Sharded Pub/Sub. <https://redis.io/docs/interact/pubsub/#sharded-pubsub>
+
+---
+
+← [Bitmap и Bitfield](07-bitmap-and-bitfield.md) | [Атомарность одной команды](../atomicity/00-single-command.md) →

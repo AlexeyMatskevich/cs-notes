@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](../storage/01-pages-and-tuples.md), [B-tree](../indexes/00-btree.md) (типы сканирования: Index Scan, Bitmap Index Scan, Index Only Scan), [BRIN](../indexes/04-brin.md) (корреляция физического и логического порядка).
 
+← [SP-GiST](../indexes/05-spgist.md) | [Порядок соединения](01-join-order.md) →
+
 [SQL](../../sql/index.md) — декларативный язык. Запрос описывает *что* получить, а не *как*. Таблица `orders` — 10 млн строк, индекс по `status`. Запрос `WHERE status = 'pending'` может выполняться Index Scan (быстро обойти 5000 строк через индекс) или Seq Scan (прочитать все 10 млн строк). Разница — 2 мс vs 3 секунды. Выбор делает планировщик, и он основывает решение на статистике: если 'pending' — это 0.05% строк, Index Scan; если 80% — Seq Scan дешевле.
 
 Масштаб задачи растёт с количеством таблиц: запрос с тремя JOIN'ами даёт 6 вариантов порядка соединения, для каждого — три алгоритма (nested loop, hash, merge), плюс выбор метода доступа к каждой таблице. Даже такой простой запрос может иметь сотни возможных планов.
@@ -322,3 +324,7 @@ EXPLAIN SELECT * FROM users WHERE age > 30;
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Planner Statistics, `ANALYZE`, EXPLAIN, query planning cost parameters. <https://www.postgresql.org/docs/16/planner-stats.html>, <https://www.postgresql.org/docs/16/sql-analyze.html>, <https://www.postgresql.org/docs/16/using-explain.html>, <https://www.postgresql.org/docs/16/runtime-config-query.html>
+
+---
+
+← [SP-GiST](../indexes/05-spgist.md) | [Порядок соединения](01-join-order.md) →

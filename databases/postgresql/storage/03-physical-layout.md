@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md), [TOAST](02-toast.md).
 
+← [TOAST](02-toast.md) | [WAL](../durability/00-wal.md) →
+
 Страницы и кортежи описывают, как данные устроены *внутри* файла. TOAST показал, что большие значения выносятся в отдельные файлы. Но где все эти файлы находятся на диске, почему их имена — числа, а не имена таблиц, и почему у одной таблицы может быть пять-шесть файлов? Эти вопросы возникают, как только нужно разобраться с bloat, аномальным I/O или восстановлением после сбоя.
 
 ## Кластер, базы данных и объекты
@@ -98,3 +100,7 @@ FROM pg_class WHERE relname = 'orders';
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Database File Layout, System Catalogs (`pg_class`), `pg_relation_filepath`. <https://www.postgresql.org/docs/16/storage-file-layout.html>
+
+---
+
+← [TOAST](02-toast.md) | [WAL](../durability/00-wal.md) →

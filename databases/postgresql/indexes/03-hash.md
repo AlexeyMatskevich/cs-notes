@@ -2,6 +2,8 @@
 
 **Предпосылки:** [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), [B-tree](00-btree.md).
 
+← [GiST](02-gist.md) | [BRIN](04-brin.md) →
+
 Сервис сокращения URL хранит 200 млн записей: `original_url TEXT` (средняя длина ~300 байт) и `short_code TEXT` (8 байт). Основной запрос — `WHERE original_url = 'https://...'` (проверить, не создан ли уже short_code для этого URL). B-tree индекс по `original_url` хранит полные значения ключей: 200 млн × ~300 байт = ~56 ГБ индекса. Hash index по тому же столбцу хранит 4-байтовый хеш + 6-байтовый TID на запись: 200 млн × 10 байт = ~1.9 ГБ. Разница в 30 раз.
 
 ## Когда B-tree избыточен
@@ -116,3 +118,7 @@ Hash — нишевый инструмент для точечных запро�
 
 - PostgreSQL Documentation (пример: v16): Hash Indexes. <https://www.postgresql.org/docs/16/indexes-types.html>
 - PostgreSQL Release Notes: v10 (WAL для hash indexes). <https://www.postgresql.org/docs/10/release-10.html>
+
+---
+
+← [GiST](02-gist.md) | [BRIN](04-brin.md) →

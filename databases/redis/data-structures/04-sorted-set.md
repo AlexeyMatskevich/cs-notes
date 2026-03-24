@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Set](03-set.md), [связный список](../../../algorithms-and-data-structures/linear/03-linked-list.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), [skip list](../../../algorithms-and-data-structures/non-linear/09-skip-list.md).
 
+← [Set](03-set.md) | [Stream](05-stream.md) →
+
 ## Проблема порядка
 
 Лидерборд. Alice набрала 100 очков, Bob — 250, Carol — 175. Три вопроса: «Какой ранг у Carol?», «Кто в топ-10?», «Кто набрал от 100 до 200?». [SET](03-set.md) гарантирует уникальность, но не может ответить ни на один — у элементов нет порядка. Sorted Set (ZSET) добавляет каждому элементу числовой вес — score — и поддерживает автоматическую сортировку. Элементы упорядочены по score, при равных score — лексикографически по значению. (Префикс Z в командах — следствие того, что буква S уже занята командами SET; antirez выбрал Z как свободную букву для нового пространства команд.)
@@ -73,3 +75,7 @@ ZSET нужен O(log n) на операции с диапазонами и ра
 - Redis Documentation: Sorted Sets. <https://redis.io/docs/data-types/sorted-sets/>
 - William Pugh, «Skip Lists: A Probabilistic Alternative to Balanced Trees», 1990
 - Redis source: `src/t_zset.c`, структура `zskiplistNode`
+
+---
+
+← [Set](03-set.md) | [Stream](05-stream.md) →

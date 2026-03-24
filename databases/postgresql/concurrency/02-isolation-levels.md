@@ -2,6 +2,8 @@
 
 **Предпосылки:** [ACID](../../acid.md) (isolation), [MVCC](00-mvcc.md), [аномалии транзакций](01-anomalies.md).
 
+← [Аномалии транзакций](01-anomalies.md) | [Блокировки](03-locks.md) →
+
 SQL-стандарт определяет уровни изоляции через допускаемые аномалии, но ничего не говорит о реализации. PostgreSQL реализует их поверх MVCC, и разница между уровнями сводится к двум решениям: когда берётся snapshot и что делать при конфликте записи.
 
 ## PostgreSQL не реализует READ UNCOMMITTED
@@ -461,3 +463,7 @@ SIREAD lock на каждую строку требует памяти. Если
 
 - PostgreSQL Documentation (пример: v16): Transaction Isolation (включая SERIALIZABLE/SSI). <https://www.postgresql.org/docs/16/transaction-iso.html>
 - Cahill et al. *Serializable Isolation for Snapshot Databases* (SIGMOD 2008). <https://doi.org/10.1145/1376616.1376690>
+
+---
+
+← [Аномалии транзакций](01-anomalies.md) | [Блокировки](03-locks.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](01-pages-and-tuples.md).
 
+← [Страницы и кортежи](01-pages-and-tuples.md) | [Физическая структура хранения](03-physical-layout.md) →
+
 Страница вмещает ~8 КБ. Одна версия строки (heap tuple) должна поместиться в одну страницу. Как хранить TEXT на мегабайты?
 
 ## Проблема: tuple не влезает в страницу
@@ -193,3 +195,7 @@ TOAST решает проблему хранения больших значен
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): TOAST. <https://www.postgresql.org/docs/16/storage-toast.html>
+
+---
+
+← [Страницы и кортежи](01-pages-and-tuples.md) | [Физическая структура хранения](03-physical-layout.md) →

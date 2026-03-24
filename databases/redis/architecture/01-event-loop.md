@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Что такое Redis](00-what-is-redis.md), [процессы](../../../linux/foundations/02-processes.md) и [потоки](../../../linux/foundations/03-threads.md), [системные вызовы](../../../linux/foundations/01-cpu-modes-and-syscalls.md) (read, write), [файловые дескрипторы](../../../linux/foundations/04-file-descriptors.md).
 
+← [Что такое Redis](00-what-is-redis.md) | [Pipelining](02-pipelining.md) →
+
 ## Почему один поток
 
 Когда несколько потоков работают с одними и теми же данными, им нужна координация: замки на общие структуры, чтобы потоки не портили данные друг другу, и переключение процессора между потоками. Всё это стоит времени. Для in-memory хранилища, где сама операция занимает наносекунды, накладные расходы на координацию могут превысить стоимость самой операции.
@@ -49,3 +51,7 @@ Redis выбирает другой путь: один поток обрабат
 - Redis Documentation: Redis event library. <https://redis.io/docs/reference/internals/internals-rediseventlib/>
 - Antirez, «Lazy Redis is better Redis», 2015. <http://antirez.com/news/93>
 - Redis source: `src/ae.c`, `src/networking.c`
+
+---
+
+← [Что такое Redis](00-what-is-redis.md) | [Pipelining](02-pipelining.md) →

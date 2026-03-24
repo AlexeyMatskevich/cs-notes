@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](00-string.md), побитовые операции.
 
+← [HyperLogLog](06-hyperloglog.md) | [Pub/Sub](08-pub-sub.md) →
+
 ## Отслеживание миллионов бинарных состояний
 
 DAU-счётчик. 10 миллионов пользователей, нужно знать: сколько были активны сегодня? [SET](03-set.md) хранит каждый user_id как строку — при 10 миллионах это сотни мегабайт. Bitmap представляет те же данные как массив бит: один пользователь — один бит. 10 000 000 бит = 1.25 МБ. Экономия памяти впечатляет, но настоящий выигрыш — не в хранении. Побитовые операции позволяют вычислять retention, churn и когорты за миллисекунды, без загрузки данных на клиент.
@@ -85,3 +87,7 @@ BITFIELD player:123 OVERFLOW SAT INCRBY u8 0 300
 - Redis Documentation: Bitmaps. <https://redis.io/docs/data-types/bitmaps/>
 - Redis Documentation: Bitfields. <https://redis.io/docs/data-types/bitfields/>
 - Redis source: `src/bitops.c`
+
+---
+
+← [HyperLogLog](06-hyperloglog.md) | [Pub/Sub](08-pub-sub.md) →

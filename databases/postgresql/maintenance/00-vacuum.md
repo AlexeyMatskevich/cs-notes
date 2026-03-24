@@ -2,6 +2,8 @@
 
 **Предпосылки:** [MVCC](../concurrency/00-mvcc.md), [буферный кеш](../durability/01-buffer-cache.md), [страницы и кортежи](../storage/01-pages-and-tuples.md).
 
+← [Очереди задач](../concurrency/06-queues-and-skip-locked.md) | [B-tree](../indexes/00-btree.md) →
+
 Буферный кеш держит страницы в памяти, но на этих страницах накапливается мусор. MVCC создаёт версии строк, старые версии становятся dead tuples. Если их не убирать — таблицы разбухают, кеш заполняется мусором, производительность падает. VACUUM решает эту проблему.
 
 ## Откуда берутся dead tuples
@@ -332,10 +334,14 @@ SET idle_in_transaction_session_timeout = '5min';
 9. Файл таблицы не уменьшается — для этого нужен VACUUM FULL
 ```
 
-VACUUM поддерживает таблицы в рабочем состоянии. Следующий слой — как ускорить доступ к данным: [B-tree](../indexes/00-btree.md) покрывает точные совпадения и диапазоны.
+VACUUM поддерживает таблицы в рабочем состоянии, но не ускоряет поиск конкретных строк. За быстрый доступ к данным отвечают индексы: [B-tree](../indexes/00-btree.md) покрывает точные совпадения и диапазоны.
 
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Routine Vacuuming, Autovacuum, wraparound. <https://www.postgresql.org/docs/16/routine-vacuuming.html>
 - PostgreSQL Documentation (пример: v16): `pgstattuple`. <https://www.postgresql.org/docs/16/pgstattuple.html>
 - `pg_repack` (online table reorganization). <https://github.com/reorg/pg_repack>
+
+---
+
+← [Очереди задач](../concurrency/06-queues-and-skip-locked.md) | [B-tree](../indexes/00-btree.md) →

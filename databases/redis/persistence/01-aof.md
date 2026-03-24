@@ -1,6 +1,8 @@
 # AOF — журнал команд
 
-**Предпосылки:** [RDB](00-rdb.md), [файловые системы и fsync](../../../linux/foundations/06-filesystems.md), понятие write-ahead log.
+**Предпосылки:** [RDB](00-rdb.md), [файловые системы и fsync](../../../linux/foundations/06-filesystems.md), понятие write-ahead log ([WAL](../../postgresql/durability/00-wal.md)).
+
+← [RDB](00-rdb.md) | [Внутренние кодировки](../memory/00-encodings.md) →
 
 ## Запись каждой команды
 
@@ -57,3 +59,7 @@ save 900 1          -- RDB как дополнительный бэкап
 
 - Redis Documentation: Persistence — AOF. <https://redis.io/docs/management/persistence/>
 - Redis source: `src/aof.c`
+
+---
+
+← [RDB](00-rdb.md) | [Внутренние кодировки](../memory/00-encodings.md) →

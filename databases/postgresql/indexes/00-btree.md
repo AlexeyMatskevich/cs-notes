@@ -2,6 +2,8 @@
 
 **Предпосылки:** [B+ дерево](../../../algorithms-and-data-structures/non-linear/06-b-plus-tree.md), [страницы и кортежи](../storage/01-pages-and-tuples.md) (ctid, структура страницы).
 
+← [VACUUM](../maintenance/00-vacuum.md) | [GIN](01-gin.md) →
+
 PostgreSQL называет свой индекс "B-tree", но технически это **B+tree с модификациями**, основанный на статье Lehman & Yao (1981) — "Efficient Locking for Concurrent Operations on B-Trees". B-tree — индекс по умолчанию: при `CREATE INDEX` без указания метода PostgreSQL создаёт именно его.
 
 ## От Seq Scan к индексу
@@ -282,3 +284,7 @@ B-tree покрывает точные совпадения, диапазоны 
 
 - PostgreSQL Documentation (пример: v16): Indexes, B-tree, Index-Only Scans, operator classes, collations. <https://www.postgresql.org/docs/16/indexes.html>, <https://www.postgresql.org/docs/16/indexes-types.html>, <https://www.postgresql.org/docs/16/indexes-index-only-scans.html>, <https://www.postgresql.org/docs/16/indexes-opclass.html>, <https://www.postgresql.org/docs/16/collation.html>
 - Lehman, P., Yao, S. *Efficient Locking for Concurrent Operations on B-Trees* (1981). <https://doi.org/10.1145/319566.319567>
+
+---
+
+← [VACUUM](../maintenance/00-vacuum.md) | [GIN](01-gin.md) →

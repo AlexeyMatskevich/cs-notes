@@ -2,6 +2,8 @@
 
 **Предпосылки:** [шардинг](../../../system-design/sharding.md) (shard key, resharding), [репликация](./00-replication.md), [партиционирование](../../sql/schema/02-partitioning.md), базовая идея [хеширования](../../../algorithms-and-data-structures/linear/05-hash-table.md).
 
+← [Репликация](00-replication.md)
+
 Репликация решает проблему отказов и разгружает чтения, но не помогает, когда система упирается в пределы одного сервера. Допустим, сервис доставки еды обрабатывает 50 000 заказов в сутки. Таблица `orders` — 200 млн строк, 80 ГБ. Primary обслуживает 3000 запросов/сек на чтение и 500 транзакций/сек на запись. Реплики забирают часть чтений, но все 500 записей/сек всё равно идут в один primary. При росте до 2000 записей/сек primary упирается в CPU и I/O — реплики не помогут, потому что запись не масштабируется горизонтально через репликацию.
 
 Шардирование решает эту проблему: данные разносятся по нескольким независимым кластерам PostgreSQL, каждый обслуживает свою долю записей.
@@ -54,3 +56,7 @@ client -> app/router -> shard 0 (PostgreSQL + replicas)
 - Kleppmann, M. *Designing Data-Intensive Applications*: Replication, Partitioning (Sharding). <https://dataintensive.net/>
 - PostgreSQL Documentation (пример: v16): Partitioning. <https://www.postgresql.org/docs/16/ddl-partitioning.html>
 - Citus: Concepts. <https://docs.citusdata.com/en/v12.1/>
+
+---
+
+← [Репликация](00-replication.md)

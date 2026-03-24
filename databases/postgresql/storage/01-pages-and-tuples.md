@@ -2,6 +2,8 @@
 
 **Предпосылки:** [ACID](00-acid.md).
 
+← [ACID в PostgreSQL](00-acid.md) | [TOAST](02-toast.md) →
+
 Цена гарантий упирается в диск: случайный I/O дорогой, а данные нужно уметь обновлять без переписывания гигантских файлов.
 
 ## Фундаментальное ограничение: диск медленный
@@ -146,3 +148,7 @@ Line pointer занимает 4 байта и хранит: смещение tup
 
 - PostgreSQL Documentation (пример: v16): Database Page Layout, Database File Layout. <https://www.postgresql.org/docs/16/storage-page-layout.html>, <https://www.postgresql.org/docs/16/storage-file-layout.html>
 - Wikipedia: Hard disk drive performance characteristics (seek time, rotational latency, IOPS). <https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics>
+
+---
+
+← [ACID в PostgreSQL](00-acid.md) | [TOAST](02-toast.md) →

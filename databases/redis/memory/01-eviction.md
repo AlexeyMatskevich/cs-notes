@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Внутренние кодировки](00-encodings.md), [LRU](../../../algorithms-and-data-structures/linear/06-lru-cache.md) (least recently used), LFU (least frequently used).
 
+← [Внутренние кодировки](00-encodings.md) | [Проектирование ключей](02-key-design.md) →
+
 ## Проблема: память конечна
 
 Redis хранит всё в RAM. Без ограничений Redis растёт, пока операционная система не убьёт процесс ([OOM Killer](../../../linux/programming/05-memory-management.md)). Директива `maxmemory` устанавливает верхнюю границу потребления (например, `maxmemory 4gb`). Когда потребление достигает лимита, Redis применяет политику вытеснения (`maxmemory-policy`), чтобы освободить место для новых записей. Вытеснение происходит синхронно перед каждой write-командой: Redis проверяет потребление памяти, и если оно превышает `maxmemory`, удаляет ключи согласно политике до тех пор, пока не освободит достаточно места (или не вернёт ошибку при `noeviction`).
@@ -53,3 +55,7 @@ Redis не реализует точный LRU — это потребовало
 
 - Redis Documentation: Eviction. <https://redis.io/docs/reference/eviction/>
 - Redis source: `src/evict.c`
+
+---
+
+← [Внутренние кодировки](00-encodings.md) | [Проектирование ключей](02-key-design.md) →

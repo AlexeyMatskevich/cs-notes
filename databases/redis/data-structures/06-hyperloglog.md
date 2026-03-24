@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](00-string.md), [хеш-функция](../../../algorithms-and-data-structures/linear/05-hash-table.md) (детерминированность, равномерное распределение), [SET](03-set.md).
 
+← [Stream](05-stream.md) | [Bitmap и Bitfield](07-bitmap-and-bitfield.md) →
+
 ## Проблема: подсчёт уникальных элементов на масштабе
 
 Один счётчик уникальных элементов — тривиальная задача. [SET](03-set.md) с миллионом строк средней длины занимает порядка 50 МБ. На сервере с сотнями гигабайт RAM это ничего.
@@ -81,3 +83,7 @@ HyperLogLog не подходит, если нужен ответ на вопр�
 - Redis Documentation: HyperLogLog. <https://redis.io/docs/data-types/hyperloglogs/>
 - Philippe Flajolet et al., «HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm», 2007
 - Redis source: `src/hyperloglog.c`
+
+---
+
+← [Stream](05-stream.md) | [Bitmap и Bitfield](07-bitmap-and-bitfield.md) →

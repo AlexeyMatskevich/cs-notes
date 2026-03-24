@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Event loop](../architecture/01-event-loop.md).
 
+← [Pub/Sub](../data-structures/08-pub-sub.md) | [MULTI/EXEC](01-multi-exec.md) →
+
 ## Почему одна команда всегда атомарна
 
 Redis выполняет все команды в одном потоке, последовательно. Между началом и концом выполнения одной команды никакая другая команда не может вклиниться. Это фундаментальное следствие однопоточной модели: нет параллелизма — нет гонок.
@@ -27,3 +29,7 @@ Redis выполняет все команды в одном потоке, по�
 ## Sources
 
 - Redis Documentation: Transactions. <https://redis.io/docs/interact/transactions/>
+
+---
+
+← [Pub/Sub](../data-structures/08-pub-sub.md) | [MULTI/EXEC](01-multi-exec.md) →

@@ -2,6 +2,8 @@
 
 **Предпосылки:** [страницы и кортежи](../storage/01-pages-and-tuples.md).
 
+← [Физическая структура хранения](../storage/03-physical-layout.md) | [Буферный кеш](01-buffer-cache.md) →
+
 Страницы сделали обновления управляемыми, но не дали гарантию «COMMIT переживёт падение». Durability в PostgreSQL строится на журнале, который можно проиграть при восстановлении.
 
 ## Проблема: записывать на диск при каждом COMMIT слишком дорого
@@ -80,3 +82,7 @@ WAL гарантирует, что COMMIT переживёт сбой. Но да
 ## Sources
 
 - PostgreSQL Documentation (пример: v16): Write-Ahead Logging (WAL) и Checkpoints. <https://www.postgresql.org/docs/16/wal.html>, <https://www.postgresql.org/docs/16/runtime-config-wal.html>
+
+---
+
+← [Физическая структура хранения](../storage/03-physical-layout.md) | [Буферный кеш](01-buffer-cache.md) →

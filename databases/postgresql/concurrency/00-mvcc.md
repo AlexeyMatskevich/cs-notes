@@ -2,6 +2,8 @@
 
 **Предпосылки:** [ACID](../storage/00-acid.md), [страницы и кортежи](../storage/01-pages-and-tuples.md), [WAL](../durability/00-wal.md).
 
+← [Буферный кеш](../durability/01-buffer-cache.md) | [Аномалии транзакций](01-anomalies.md) →
+
 [Isolation](../storage/00-acid.md) гарантирует: параллельные транзакции не видят промежуточных состояний друг друга. Но реализация через блокировки чтения убивает производительность при высоком параллелизме.
 
 ## Блокировки не масштабируются
@@ -178,3 +180,7 @@ Snapshot решает вопрос видимости, но не все проб
 
 - PostgreSQL Documentation (пример: v16): MVCC и Transaction Isolation. <https://www.postgresql.org/docs/16/mvcc.html>, <https://www.postgresql.org/docs/16/transaction-iso.html>
 - PostgreSQL Documentation (пример: v16): VACUUM и wraparound. <https://www.postgresql.org/docs/16/routine-vacuuming.html>
+
+---
+
+← [Буферный кеш](../durability/01-buffer-cache.md) | [Аномалии транзакций](01-anomalies.md) →

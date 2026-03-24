@@ -2,6 +2,8 @@
 
 **Предпосылки:** [String](../data-structures/00-string.md), [Lua-скрипты](../atomicity/02-lua-scripting.md), [репликация](../distribution/00-replication.md), [AOF](../persistence/01-aof.md).
 
+← [Rate limiting](01-rate-limiting.md) | [Очереди](03-queues.md) →
+
 Два фоновых воркера (Sidekiq, Celery, любая очередь задач) одновременно берут в обработку один и тот же заказ. Оба читают заказ из базы, оба вызывают платёжный шлюз. Пользователю списывают деньги дважды: возврат, тикет в поддержку.
 
 Mutex в памяти процесса не помогает — воркеры живут в разных процессах, часто на разных серверах. Нужен общий ресурс, видимый всем по сети, с атомарной операцией «занять, если свободен».
@@ -101,3 +103,7 @@ Martin Kleppmann в статье «How to do distributed locking» (2016) кри
 - Redis Documentation: Distributed locks. <https://redis.io/docs/manual/patterns/distributed-locks/>
 - Martin Kleppmann, «How to do distributed locking», 2016. <https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html>
 - Salvatore Sanfilippo, «Is Redlock safe?», 2016. <http://antirez.com/news/101>
+
+---
+
+← [Rate limiting](01-rate-limiting.md) | [Очереди](03-queues.md) →
