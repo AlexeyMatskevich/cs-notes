@@ -81,6 +81,23 @@ This is a personal technical knowledge repository containing deep technical note
 │   └── kafka/
 │       ├── index.md
 │       └── architecture/      # broker, topic, partition, offset, replication, producer reliability, consumer internals, transactions (5 files)
+├── computer/
+│   ├── index.md               # hardware: CPU, cache, RAM, storage, buses
+│   ├── 00-cpu.md                  # pipeline, superscalar, OoO, branch prediction, CISC/RISC
+│   ├── 01-memory-hierarchy.md     # L1/L2/L3, cache line, tag/index/offset, locality
+│   ├── 02-cache-coherency.md      # MESI protocol, false sharing
+│   ├── 03-ram.md                  # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
+│   ├── 04-storage.md             # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
+│   ├── 05-buses-and-dma.md       # programmed I/O, DMA, interrupts, PCIe
+│   └── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout, endianness
+├── linux/
+│   ├── index.md               # Linux OS: study order, trade-offs
+│   ├── foundations/           # OS basics: processes, threads, fd, VM, FS, scheduler, permissions (9 files)
+│   ├── concurrency/           # synchronization, memory ordering, lock-free (3 files)
+│   ├── programming/           # signals, mmap, file I/O, sockets, epoll/io_uring, memory mgmt, IPC (7 files)
+│   ├── kernel/                # syscall internals, interrupts, drivers, network stack, kernel MM (5 files)
+│   ├── infrastructure/        # ELF/linking, terminals, tracing, boot (4 files)
+│   └── containers/            # namespaces, cgroups, overlay FS, seccomp, Docker (2 files)
 ├── ruby/
 │   ├── internal/
 │   │   ├── index.md                         # порядок изучения, связи между группами

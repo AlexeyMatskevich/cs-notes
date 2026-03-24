@@ -17,7 +17,17 @@
 
 ## Computer Systems / OS
 
-- [ ] Файловые дескрипторы (file descriptors): что это, зачем нужны, как ОС через них абстрагирует файлы/сокеты/пайпы.
-- [ ] Мультиплексирование ввода-вывода (I/O multiplexing): epoll, kqueue, select — как ОС позволяет одному потоку следить за тысячами сокетов. Связь с event loop Redis (`src/ae.c`).
-- [ ] `write()` vs `fsync()`/`fdatasync()`: page cache, flush, durability, почему latency `fsync` задаёт верхнюю границу throughput для “одна транзакция = один fsync” (на примерах WAL/AOF).
-- [ ] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё.
+- [x] Файловые дескрипторы → [linux/foundations/04-file-descriptors.md](../linux/foundations/04-file-descriptors.md)
+- [x] Мультиплексирование ввода-вывода → [linux/programming/04-io-multiplexing.md](../linux/programming/04-io-multiplexing.md)
+- [x] `write()` vs `fsync()` → [linux/foundations/06-filesystems.md](../linux/foundations/06-filesystems.md) (page cache, fsync) + [linux/programming/02-file-io.md](../linux/programming/02-file-io.md) (O_SYNC, O_DSYNC)
+- [x] ABI и размещение данных → [computer/06-abi-and-data-layout.md](../computer/06-abi-and-data-layout.md)
+- [x] Межпроцессное взаимодействие → [linux/programming/06-ipc.md](../linux/programming/06-ipc.md)
+- [x] Права доступа и capabilities → [linux/foundations/08-permissions-and-capabilities.md](../linux/foundations/08-permissions-and-capabilities.md)
+- [x] Управление памятью ядра → [linux/kernel/04-memory-management.md](../linux/kernel/04-memory-management.md)
+- [ ] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё. (Базовые заметки теперь существуют — осталось обновить AOF.)
+
+## Algorithms and Data Structures
+
+- [ ] Красно-чёрное дерево (самобалансирующийся BST) — используется в ядре Linux: CFS scheduler, epoll, VMA, ext4. Связано с `algorithms-and-data-structures/non-linear/03-bst.md`.
+- [ ] Ring buffer / кольцевой буфер — NIC DMA ring buffer, io_uring SQ/CQ, ext4 journal, NVMe command queues. Связано с `algorithms-and-data-structures/linear/04-stack-queue-deque.md`.
+- [ ] Trie (префиксное дерево) — FIB routing table (longest prefix match) в сетевом стеке ядра.
