@@ -120,6 +120,36 @@ RAM:        [0x7f00-0x7f3f]                    counter = 1  (обновлена)
 
 Core 1 получил актуальное значение. Когерентность сработала: запись ядра 0 стала видна ядру 1.
 
+```mermaid
+sequenceDiagram
+    participant C0 as Core 0 / L1
+    participant BUS as Interconnect / snoop
+    participant C1 as Core 1 / L1
+    participant RAM as RAM
+
+    C0->>BUS: BusRd counter
+    BUS->>RAM: fetch line
+    RAM-->>C0: line -> E
+
+    C1->>BUS: BusRd counter
+    BUS-->>C0: snoop BusRd
+    C0-->>C1: share line
+    Note over C0,C1: обе копии -> S
+
+    C0->>BUS: invalidate counter
+    BUS-->>C1: invalidate
+    C1-->>C0: ack
+    Note over C0: line -> M, counter = 1
+
+    C1->>BUS: BusRd counter
+    BUS-->>C0: snoop BusRd
+    C0-->>C1: cache-to-cache transfer
+    C0->>RAM: write back updated line
+    Note over C0,C1: обе копии -> S, counter = 1
+```
+
+Важный момент в этой последовательности: шина нужна не для каждого чтения, а только в точках смены владения или когда другой кеш уже держит более свежую копию, чем RAM. Пока линия локальна и не оспаривается, чтения и записи идут по цене обычного L1 hit.
+
 ## Полная диаграмма переходов MESI
 
 ```text
@@ -241,7 +271,17 @@ void *worker1(void *arg) {
 
 Протокол MESI оперирует целыми кеш-линиями. Когда Core 0 записывает в `thread0_counter`, он инвалидирует **всю** линию в кеше Core 1. Core 1 при следующей записи в `thread1_counter` обнаруживает, что линия в состоянии Invalid, и вынужден запрашивать актуальную копию у Core 0. Получает, переводит в Modified, записывает — и инвалидирует линию у Core 0. Пинг-понг, идентичный тому, что происходит с настоящим общим счётчиком.
 
-Процессор не знает и не может знать, что два потока пишут в разные байты одной линии. Гранулярность когерентности — 64 байта. Всё, что попало в одну линию, разделяется целиком.
+```mermaid
+flowchart LR
+    A["Одна кеш-линия:<br/>thread0_counter + thread1_counter"] --> B["Core 0 пишет thread0_counter"]
+    B --> C["Линия -> Modified в Core 0<br/>копия Core 1 -> Invalid"]
+    C --> D["Core 1 пишет thread1_counter"]
+    D --> E["Линия -> Modified в Core 1<br/>копия Core 0 -> Invalid"]
+    E --> F["Следующая запись Core 0<br/>снова требует передачу владения"]
+    F --> B
+```
+
+Процессор не знает и не может знать, что два потока пишут в разные байты одной линии. Гранулярность когерентности — 64 байта: для протокола это не «два независимых счётчика», а одна неделимая единица владения. Всё, что попало в одну линию, разделяется целиком.
 
 ### Масштаб проблемы
 
