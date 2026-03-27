@@ -62,7 +62,8 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   └── 04-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
 │   └── programmer-model/      # axis 2: what CPU promises to software
 │       ├── 00-isa.md              # CISC vs RISC, micro-ops, ARM vs x86
-│       └── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
+│       ├── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
+│       └── 02-simd.md              # SIMD: SSE, AVX, NEON, SVE, vectorization
 ├── system-design/
 │   ├── index.md               # system design: architecture, scalability, trade-offs
 │   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition

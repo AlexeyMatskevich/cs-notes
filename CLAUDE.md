@@ -92,7 +92,8 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   └── 04-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
 │   └── programmer-model/      # axis 2: what CPU promises to software
 │       ├── 00-isa.md              # CISC vs RISC, micro-ops, ARM vs x86
-│       └── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
+│       ├── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
+│       └── 02-simd.md              # SIMD: SSE, AVX, NEON, SVE, vectorization
 ├── linux/
 │   ├── index.md               # Linux OS: study order, trade-offs
 │   ├── foundations/           # OS basics: processes, threads, fd, VM, FS, scheduler, permissions (9 files)

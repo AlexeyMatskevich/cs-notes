@@ -24,6 +24,7 @@
 
 - [CISC и RISC](programmer-model/00-isa.md) — два подхода к набору команд, micro-ops, ARM vs x86
 - [ABI и размещение данных](programmer-model/01-abi-and-data-layout.md) — как компилятор, ОС и процессор договариваются о расположении данных
+- [SIMD и векторные расширения](programmer-model/02-simd.md) — одна инструкция на несколько элементов: SSE, AVX, NEON, SVE
 
 ## Как всё связано
 
