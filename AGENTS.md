@@ -51,6 +51,16 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   ├── 00–02             # clients/connections, data structures in practice, blocking pitfalls (3)
 │   │   └── practice/          # 14 case studies (bitmap-dau, hash-cart, HLL-visitors, etc.)
 │   └── sidekiq.md             # Sidekiq deep dive
+├── computer/
+│   ├── index.md               # hardware: CPU, cache, RAM, storage, buses
+│   ├── 00-cpu.md              # pipeline, superscalar, OoO, branch prediction
+│   ├── 01-memory-hierarchy.md # L1/L2/L3, cache line, tag/index/offset, locality
+│   ├── 02-cache-coherency.md  # MESI protocol, false sharing
+│   ├── 03-ram.md              # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
+│   ├── 04-storage.md          # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
+│   ├── 05-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
+│   ├── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
+│   └── 07-isa.md              # CISC vs RISC, micro-ops, ARM vs x86 energy efficiency
 ├── system-design/
 │   ├── index.md               # system design: architecture, scalability, trade-offs
 │   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition

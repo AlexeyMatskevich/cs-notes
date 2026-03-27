@@ -89,7 +89,8 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 03-ram.md                  # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
 │   ├── 04-storage.md             # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
 │   ├── 05-buses-and-dma.md       # programmed I/O, DMA, interrupts, PCIe
-│   └── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout, endianness
+│   ├── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout, endianness
+│   └── 07-isa.md                 # CISC vs RISC, micro-ops, ARM vs x86 energy efficiency
 ├── linux/
 │   ├── index.md               # Linux OS: study order, trade-offs
 │   ├── foundations/           # OS basics: processes, threads, fd, VM, FS, scheduler, permissions (9 files)
