@@ -51,6 +51,24 @@ double process_order(struct Order order) {
 Младшие адреса
 ```
 
+```mermaid
+sequenceDiagram
+    participant CALLER as caller / main
+    participant STACK as Stack (rsp)
+    participant PO as process_order
+    participant CT as calculate_total
+
+    CALLER->>STACK: call process_order<br/>push return address
+    CALLER->>PO: jump
+    Note over PO: извлечь order.price и order.quantity
+    PO->>STACK: call calculate_total<br/>push return address
+    PO->>CT: xmm0 = price<br/>rdi = quantity
+    CT-->>PO: xmm0 = total<br/>ret
+    PO-->>CALLER: xmm0 = total<br/>ret
+```
+
+Стек здесь хранит адреса возврата и локальные данные, а самые «горячие» аргументы и результат идут через регистры. Именно это и делает вызов функции одновременно вложенным и относительно дешёвым.
+
 System V AMD64 ABI требует, чтобы перед инструкцией `call` значение `rsp` было выровнено по 16 байтам. Причина — инструкции [SSE/AVX](02-simd.md) (`movaps`, `movdqa`) ожидают 16-байтовое выравнивание данных в стеке. Если `rsp` не делится на 16, эти инструкции генерируют аппаратное исключение. Сама `call` кладёт 8 байт адреса возврата, сдвигая `rsp` на 8, поэтому на входе в функцию `rsp` всегда смещён на 8 относительно 16. Функция восстанавливает выравнивание, вычитая из `rsp` нечётное количество 8-байтовых слов.
 
 ## Соглашение о вызовах: System V AMD64 ABI

@@ -163,13 +163,11 @@ FTL (Flash Translation Layer — слой трансляции flash-памят�
 ```mermaid
 flowchart LR
     OS["OS: write LBA 12345"] --> FTL["FTL"]
-    FTL --> OLD["Старая физическая страница<br/>блок 3, стр. 18"]
     FTL --> FREE["Выбрать следующую<br/>свободную страницу"]
     FREE --> PROG["Program:<br/>записать новые 4 КБ"]
     PROG --> MAP["Обновить mapping table:<br/>12345 -> блок 7, стр. 42"]
-    OLD --> STALE["Пометить старую страницу stale"]
-    MAP --> DONE["Запись завершена<br/>без erase в момент записи"]
-    STALE --> DONE
+    MAP --> STALE["Пометить старую страницу stale<br/>(блок 3, стр. 18)"]
+    STALE --> DONE["Запись завершена<br/>без erase в момент записи"]
 ```
 
 Ключевая идея FTL в том, что запись становится append-операцией, а не обновлением на месте. Именно это делает случайные 4 КБ записи вообще возможными на NAND: erase и перекопирование выталкиваются из критического пути записи в фоновую работу GC.
@@ -190,12 +188,12 @@ Write amplification бьёт дважды: снижает производите
 
 ```mermaid
 flowchart TB
-    USED["Блок со смесью страниц:<br/>valid + stale"] --> GC["Garbage collection выбирает victim block"]
-    TRIM["TRIM / Deallocate:<br/>ОС сообщает, какие LBA больше не нужны"] --> GC
+    LOW["Свободных страниц мало"] --> GC["GC выбирает victim block<br/>(максимум stale страниц)"]
     GC --> COPY["Скопировать только valid страницы<br/>в другой блок"]
     COPY --> ERASE["Erase всего блока<br/>2-5 мс"]
     ERASE --> FREE["256 чистых страниц<br/>возвращаются в free pool"]
     FREE --> FUTURE["Будущие записи снова идут append-ом"]
+    TRIM["TRIM от ОС:<br/>пометить страницы stale"] -.-> GC
 ```
 
 TRIM помогает не записью данных, а уменьшением объёма копирования перед erase. Чем больше страниц FTL уже знает как stale, тем дешевле GC и тем ниже write amplification.
