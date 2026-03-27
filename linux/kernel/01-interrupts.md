@@ -1,6 +1,6 @@
 # Прерывания
 
-**Предпосылки:** [механизм системных вызовов](00-syscall-internals.md) (вход в ядро, pt_regs), [шины и DMA](../../computer/05-buses-and-dma.md) (прерывания, DMA-передачи).
+**Предпосылки:** [механизм системных вызовов](00-syscall-internals.md) (вход в ядро, pt_regs), [шины и DMA](../../computer/data-path/04-buses-and-dma.md) (прерывания, DMA-передачи).
 
 ← [Механизм системных вызовов](00-syscall-internals.md) | [Устройства и драйверы](02-devices-and-drivers.md) →
 

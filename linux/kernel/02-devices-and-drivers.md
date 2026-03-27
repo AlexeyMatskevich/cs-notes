@@ -3,7 +3,7 @@
 <details>
 <summary>Предпосылки</summary>
 
-[прерывания](01-interrupts.md) (top/bottom half, обработчики устройств), [файловые дескрипторы](../foundations/04-file-descriptors.md) (fd -> inode -> file_operations), [шины и DMA](../../computer/05-buses-and-dma.md) (PCIe, DMA, MMIO).
+[прерывания](01-interrupts.md) (top/bottom half, обработчики устройств), [файловые дескрипторы](../foundations/04-file-descriptors.md) (fd -> inode -> file_operations), [шины и DMA](../../computer/data-path/04-buses-and-dma.md) (PCIe, DMA, MMIO).
 
 </details>
 

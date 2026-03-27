@@ -86,7 +86,7 @@ Index Tuple (внутренний узел):
 
 Двусвязность (наличие `btpo_prev`) нужна для обратного обхода. `SELECT * FROM orders ORDER BY created_at DESC LIMIT 100` спускается до самого правого листа и идёт влево — в плане это `Index Scan Backward`.
 
-Для каждого найденного ключа Index Scan ходит в heap по ctid — это random I/O ([HDD vs SSD](../../../computer/04-storage.md)). Если запрос возвращает десятки тысяч строк, разбросанных по разным страницам heap, random I/O становится узким местом.
+Для каждого найденного ключа Index Scan ходит в heap по ctid — это random I/O ([HDD vs SSD](../../../computer/data-path/03-storage.md)). Если запрос возвращает десятки тысяч строк, разбросанных по разным страницам heap, random I/O становится узким местом.
 
 ## Bitmap Index Scan: средняя селективность
 

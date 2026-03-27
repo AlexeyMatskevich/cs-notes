@@ -3,7 +3,7 @@
 <details>
 <summary>Предпосылки</summary>
 
-[синхронизация](00-synchronization.md) (CAS, атомарные операции, мьютекс), [когерентность кешей](../../computer/02-cache-coherency.md) (MESI, store buffer, cache line transfer).
+[синхронизация](00-synchronization.md) (CAS, атомарные операции, мьютекс), [когерентность кешей](../../computer/data-path/01-cache-coherency.md) (MESI, store buffer, cache line transfer).
 
 </details>
 

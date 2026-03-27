@@ -52,15 +52,17 @@ This repository is a collection of technical notes. Contributions should optimiz
 │   │   └── practice/          # 14 case studies (bitmap-dau, hash-cart, HLL-visitors, etc.)
 │   └── sidekiq.md             # Sidekiq deep dive
 ├── computer/
-│   ├── index.md               # hardware: CPU, cache, RAM, storage, buses
+│   ├── index.md               # hardware: CPU, two axes (data-path, programmer-model)
 │   ├── 00-cpu.md              # pipeline, superscalar, OoO, branch prediction
-│   ├── 01-memory-hierarchy.md # L1/L2/L3, cache line, tag/index/offset, locality
-│   ├── 02-cache-coherency.md  # MESI protocol, false sharing
-│   ├── 03-ram.md              # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
-│   ├── 04-storage.md          # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
-│   ├── 05-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
-│   ├── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
-│   └── 07-isa.md              # CISC vs RISC, micro-ops, ARM vs x86 energy efficiency
+│   ├── data-path/             # axis 1: where data travels and how fast
+│   │   ├── 00-memory-hierarchy.md # L1/L2/L3, cache line, tag/index/offset, locality
+│   │   ├── 01-cache-coherency.md  # MESI protocol, false sharing
+│   │   ├── 02-ram.md              # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
+│   │   ├── 03-storage.md          # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
+│   │   └── 04-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
+│   └── programmer-model/      # axis 2: what CPU promises to software
+│       ├── 00-isa.md              # CISC vs RISC, micro-ops, ARM vs x86
+│       └── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
 ├── system-design/
 │   ├── index.md               # system design: architecture, scalability, trade-offs
 │   ├── 00-cap-theorem.md      # CAP theorem: consistency vs availability during partition

@@ -3,7 +3,7 @@
 <details>
 <summary>Предпосылки</summary>
 
-[виртуальная память](../foundations/05-virtual-memory.md) (страницы, TLB, page fault, overcommit, OOM killer), [отображение памяти](01-memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/03-ram.md) (NUMA).
+[виртуальная память](../foundations/05-virtual-memory.md) (страницы, TLB, page fault, overcommit, OOM killer), [отображение памяти](01-memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/data-path/02-ram.md) (NUMA).
 
 </details>
 
@@ -209,7 +209,7 @@ resources:
 
 ## NUMA: неоднородная память
 
-На серверах с несколькими процессорами (сокетами) каждый процессор имеет собственный контроллер памяти и собственные модули RAM. Эта архитектура называется [NUMA](../../computer/03-ram.md) (Non-Uniform Memory Access, неоднородный доступ к памяти). Доступ к «своей» памяти (local access) занимает ~80 нс, а к памяти другого процессора (remote access) — ~140 нс, потому что запрос проходит через межпроцессорную шину (QPI (QuickPath Interconnect) у Intel, Infinity Fabric у AMD).
+На серверах с несколькими процессорами (сокетами) каждый процессор имеет собственный контроллер памяти и собственные модули RAM. Эта архитектура называется [NUMA](../../computer/data-path/02-ram.md) (Non-Uniform Memory Access, неоднородный доступ к памяти). Доступ к «своей» памяти (local access) занимает ~80 нс, а к памяти другого процессора (remote access) — ~140 нс, потому что запрос проходит через межпроцессорную шину (QPI (QuickPath Interconnect) у Intel, Infinity Fabric у AMD).
 
 ```text
        Сокет 0                          Сокет 1

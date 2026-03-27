@@ -82,15 +82,17 @@ This is a personal technical knowledge repository containing deep technical note
 │       ├── index.md
 │       └── architecture/      # broker, topic, partition, offset, replication, producer reliability, consumer internals, transactions (5 files)
 ├── computer/
-│   ├── index.md               # hardware: CPU, cache, RAM, storage, buses
-│   ├── 00-cpu.md                  # pipeline, superscalar, OoO, branch prediction, CISC/RISC
-│   ├── 01-memory-hierarchy.md     # L1/L2/L3, cache line, tag/index/offset, locality
-│   ├── 02-cache-coherency.md      # MESI protocol, false sharing
-│   ├── 03-ram.md                  # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
-│   ├── 04-storage.md             # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
-│   ├── 05-buses-and-dma.md       # programmed I/O, DMA, interrupts, PCIe
-│   ├── 06-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout, endianness
-│   └── 07-isa.md                 # CISC vs RISC, micro-ops, ARM vs x86 energy efficiency
+│   ├── index.md               # hardware: CPU, two axes (data-path, programmer-model)
+│   ├── 00-cpu.md              # pipeline, superscalar, OoO, branch prediction
+│   ├── data-path/             # axis 1: where data travels and how fast
+│   │   ├── 00-memory-hierarchy.md # L1/L2/L3, cache line, tag/index/offset, locality
+│   │   ├── 01-cache-coherency.md  # MESI protocol, false sharing
+│   │   ├── 02-ram.md              # DRAM, row buffer, banks, ranks, channels, DDR, NUMA
+│   │   ├── 03-storage.md          # HDD (seek, IOPS), SSD (NAND, FTL), NVMe
+│   │   └── 04-buses-and-dma.md    # programmed I/O, DMA, interrupts, PCIe
+│   └── programmer-model/      # axis 2: what CPU promises to software
+│       ├── 00-isa.md              # CISC vs RISC, micro-ops, ARM vs x86
+│       └── 01-abi-and-data-layout.md # calling convention, stack frame, alignment, struct layout
 ├── linux/
 │   ├── index.md               # Linux OS: study order, trade-offs
 │   ├── foundations/           # OS basics: processes, threads, fd, VM, FS, scheduler, permissions (9 files)

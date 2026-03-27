@@ -20,7 +20,7 @@
 - [x] Файловые дескрипторы → [linux/foundations/04-file-descriptors.md](../linux/foundations/04-file-descriptors.md)
 - [x] Мультиплексирование ввода-вывода → [linux/programming/04-io-multiplexing.md](../linux/programming/04-io-multiplexing.md)
 - [x] `write()` vs `fsync()` → [linux/foundations/06-filesystems.md](../linux/foundations/06-filesystems.md) (page cache, fsync) + [linux/programming/02-file-io.md](../linux/programming/02-file-io.md) (O_SYNC, O_DSYNC)
-- [x] ABI и размещение данных → [computer/06-abi-and-data-layout.md](../computer/06-abi-and-data-layout.md)
+- [x] ABI и размещение данных → [computer/programmer-model/01-abi-and-data-layout.md](../computer/programmer-model/01-abi-and-data-layout.md)
 - [x] Межпроцессное взаимодействие → [linux/programming/06-ipc.md](../linux/programming/06-ipc.md)
 - [x] Права доступа и capabilities → [linux/foundations/08-permissions-and-capabilities.md](../linux/foundations/08-permissions-and-capabilities.md)
 - [x] Управление памятью ядра → [linux/kernel/04-memory-management.md](../linux/kernel/04-memory-management.md)
