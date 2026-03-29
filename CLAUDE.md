@@ -84,6 +84,7 @@ This is a personal technical knowledge repository containing deep technical note
 ├── computer/
 │   ├── index.md               # hardware: CPU, two axes (data-path, programmer-model)
 │   ├── 00-cpu.md              # pipeline, superscalar, OoO, branch prediction
+│   ├── atomic-instructions.md # CAS, LL/SC, LOCK prefix: bridge between both axes
 │   ├── data-path/             # axis 1: where data travels and how fast
 │   │   ├── 00-memory-hierarchy.md # L1/L2/L3, cache line, tag/index/offset, locality
 │   │   ├── 01-cache-coherency.md  # MESI protocol, false sharing
