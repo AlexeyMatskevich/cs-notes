@@ -106,11 +106,11 @@ shared_buffers = 128GB
 cat /sys/kernel/mm/transparent_hugepage/enabled
 # [always] madvise never
 
-# Отключить THP полностью
+# Отключить обычную автоматическую политику THP
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 ```
 
-Три режима: `always` (THP для всех процессов), `madvise` (только для регионов, помеченных `madvise(MADV_HUGEPAGE)`), `never` (отключены).
+Три режима: `always` (THP для всех процессов), `madvise` (только для регионов, помеченных `madvise(MADV_HUGEPAGE)`), `never` (отключена обычная автоматическая политика). `never` убирает fault-time и фоновый коллапс в рамках стандартной THP-политики, но не является абсолютным запретом на huge-page collapse для всех механизмов ядра — в современных ядрах остаётся, например, явный `MADV_COLLAPSE`.
 
 ### Проблемы THP для баз данных
 
@@ -122,7 +122,7 @@ THP выглядит удобно, но для баз данных создаё�
 
 **Непредсказуемая задержка `khugepaged`.** Демон сканирует адресное пространство и копирует данные при объединении страниц. Копирование 2 МБ данных занимает ~1 мс. Если `khugepaged` копирует страницу, которую процесс активно использует, процесс испытывает паузу — ему нужно дождаться завершения копирования и обновления page table. Предсказать, когда `khugepaged` решит объединить конкретную группу страниц, невозможно.
 
-Поэтому Redis, MongoDB, Oracle рекомендуют отключать THP. PostgreSQL рекомендует использовать статические huge pages (`huge_pages = on`) вместо THP. В production-окружении типичная настройка — `echo never > /sys/kernel/mm/transparent_hugepage/enabled` в скрипте инициализации и ручное резервирование через `nr_hugepages`.
+Поэтому Redis, MongoDB, Oracle рекомендуют отключать автоматическую политику THP. PostgreSQL рекомендует использовать статические huge pages (`huge_pages = on`) вместо THP. В production-окружении типичная настройка — `echo never > /sys/kernel/mm/transparent_hugepage/enabled` в скрипте инициализации и ручное резервирование через `nr_hugepages`.
 
 Huge pages зарезервированы под буферный пул — 128 ГБ изъяты из общего пула. Оставшиеся 128 ГБ RAM делят между собой ОС, мониторинг, бэкап-агент и другие сервисы. Суммарные запросы `malloc()` могут превысить доступную физическую RAM.
 
@@ -322,6 +322,7 @@ awk '/^Pss:/ {total += $2} END {print total, "kB"}' /proc/$(pidof postgres)/smap
 - Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager*: https://www.kernel.org/doc/gorman/
 - `man 5 proc` — /proc filesystem: https://man7.org/linux/man-pages/man5/proc.5.html
 - Linux kernel documentation: Documentation/admin-guide/mm/: https://www.kernel.org/doc/html/latest/admin-guide/mm/index.html
+- Linux kernel documentation: Transparent Hugepage Support: https://docs.kernel.org/admin-guide/mm/transhuge.html
 - Jonathan Corbet, 2011, *Transparent huge pages* — LWN.net: https://lwn.net/Articles/423584/
 - PostgreSQL documentation: huge_pages, overcommit: https://www.postgresql.org/docs/current/kernel-resources.html
 

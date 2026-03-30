@@ -94,7 +94,7 @@ $ ldd hello
 Динамический линкер (`ld-linux.so`, часть glibc) выполняет работу до того, как программа начнёт выполняться:
 
 1. Читает секцию `.dynamic` исполняемого файла — список необходимых библиотек (`DT_NEEDED`).
-2. Ищет каждую библиотеку по путям: `DT_RPATH`/`DT_RUNPATH` из ELF, переменная `LD_LIBRARY_PATH`, кеш `/etc/ld.so.cache` (собранный `ldconfig` из путей в `/etc/ld.so.conf`), стандартные `/lib` и `/usr/lib`.
+2. Ищет каждую библиотеку по комбинации путей: `DT_RPATH`/`DT_RUNPATH` из ELF, переменная `LD_LIBRARY_PATH`, кеш `/etc/ld.so.cache` (собранный `ldconfig` из путей в `/etc/ld.so.conf`), стандартные `/lib` и `/usr/lib`.
 3. Загружает найденные `.so` через `mmap()`. Если у библиотеки есть свои `DT_NEEDED` — рекурсивно загружает и их.
 4. Разрешает символы: сопоставляет неопределённые символы программы (вроде `printf`) с экспортированными символами библиотек. Для этого обходит хеш-таблицы символов (`.gnu.hash` или `.hash`) каждой загруженной библиотеки.
 5. Применяет **перемещения** (relocations): записывает финальные адреса в GOT, заполняет указатели на функции и данные.
@@ -268,14 +268,14 @@ NixOS решает задачу радикально: каждая версия 
 
 Две версии glibc сосуществуют в файловой системе. Программа A может зависеть от glibc 2.38, программа B — от glibc 2.39, и обе работают одновременно.
 
-Как линкер находит правильную версию? Через **RPATH** — путь поиска библиотек, записанный прямо в ELF-файл. Nix при сборке прописывает в каждый бинарник абсолютный RPATH в `/nix/store`:
+Как линкер находит правильную версию? Через путь поиска библиотек, записанный прямо в ELF-файл. Исторически это `RPATH`, но современные бинарники Nix обычно используют **RUNPATH** (`DT_RUNPATH`) — именно его и показывает `readelf`:
 
 ```
 $ readelf -d /nix/store/xyz-hello/bin/hello | grep RUNPATH
   RUNPATH: /nix/store/abc123-glibc-2.38/lib
 ```
 
-Динамический линкер проверяет `DT_RUNPATH` из ELF прежде, чем обращаться к `LD_LIBRARY_PATH` или `/etc/ld.so.cache`. Бинарник всегда находит конкретную версию библиотеки, с которой был собран — независимо от того, что установлено в системе. В `/nix/store` нет `/usr/lib`, нет глобального `ldconfig`, нет конфликтов версий. Цена — каждый бинарник несёт абсолютные пути, привязанные к хешам `/nix/store`, и не работает на обычном дистрибутиве без патчинга ELF (`patchelf --set-rpath`).
+Для обычного процесса динамический линкер сначала учитывает `LD_LIBRARY_PATH`, затем `DT_RUNPATH` бинарника, потом `/etc/ld.so.cache` и стандартные каталоги. На NixOS `RUNPATH` уже содержит абсолютные пути в `/nix/store`, поэтому бинарник находит именно те библиотеки, с которыми был собран. В `/nix/store` нет `/usr/lib`, нет глобального `ldconfig`, нет конфликтов версий. Цена — каждый бинарник несёт абсолютные пути, привязанные к хешам `/nix/store`, и не работает на обычном дистрибутиве без патчинга ELF (`patchelf --set-rpath`).
 
 </details>
 
@@ -295,7 +295,7 @@ Shell вызывает `fork()`, потомок вызывает `execve("./hell
 
 - Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 41-42: Shared Libraries — https://man7.org/tlpi/
 - John R. Levine, 1999, *Linkers and Loaders* — Chapter 10: Dynamic Linking and Loading — https://www.iecc.com/linker/
-- `man 8 ld-linux` — https://man7.org/linux/man-pages/man8/ld-linux.8.html
+- `man 8 ld-linux.so` — https://man7.org/linux/man-pages/man8/ld-linux.so.8.html
 - `man 3 dlopen` — https://man7.org/linux/man-pages/man3/dlopen.3.html
 - `readelf(1)`, `ldd(1)` — https://man7.org/linux/man-pages/man1/readelf.1.html
 
