@@ -8,11 +8,11 @@
 
 ## Прошивка: от электричества до первого кода
 
-Нажатие кнопки питания замыкает цепь, блок питания стабилизирует напряжение и выставляет сигнал Power Good. Процессор начинает выполнение с фиксированного адреса -- на x86-64 это `0xFFFFFFF0`, последние 16 байт адресного пространства, где лежит прошивка (firmware) в SPI-флеш на материнской плате.
+Нажатие кнопки питания замыкает цепь, блок питания стабилизирует напряжение и выставляет сигнал Power Good (сигнал готовности питания). Процессор начинает выполнение с фиксированного адреса -- на x86-64 это `0xFFFFFFF0`, последние 16 байт адресного пространства, где лежит прошивка (firmware) в SPI-флеш на материнской плате.
 
 На современных машинах прошивка -- это UEFI (Unified Extensible Firmware Interface), пришедший на смену BIOS. Главное отличие: BIOS (Basic Input/Output System) работал в 16-битном реальном режиме процессора, мог адресовать только 1 МБ RAM и предоставлял примитивные сервисы через программные прерывания (INT 13h для чтения диска, INT 10h для вывода на экран). UEFI работает в 64-битном режиме, имеет собственные драйверы устройств, понимает файловую систему FAT32 (File Allocation Table), поддерживает сеть (PXE-загрузка — Preboot Execution Environment — без отдельного PXE ROM) и предоставляет ядру структурированные таблицы вместо таблиц прерываний реального режима.
 
-UEFI выполняет две критические задачи. Первая -- инициализация оперативной памяти: контроллер памяти подбирает тайминги для установленных DIMM-модулей (Dual Inline Memory Module), прогоняет тренировку сигналов (memory training). Процессор перебирает комбинации задержек (CAS latency, tRCD, tRP) и тестирует стабильность чтения/записи на каждой. Этот процесс занимает 2-5 секунд и объясняет паузу между включением и первым изображением на экране. До завершения memory training процессор работает только с кешем (Cache-as-RAM, обычно L3 -- несколько мегабайт) -- обращаться к DRAM ещё нельзя. Именно поэтому код прошивки и стек помещаются в кеш, а сама прошивка хранится не в RAM, а в SPI-флеш (Serial Peripheral Interface) -- энергонезависимой микросхеме ёмкостью 16-32 МБ.
+UEFI выполняет две критические задачи. Первая -- инициализация оперативной памяти: контроллер памяти подбирает тайминги для установленных DIMM-модулей (Dual Inline Memory Module), прогоняет тренировку сигналов (memory training). Процессор перебирает комбинации задержек (CAS latency, tRCD, tRP) и тестирует стабильность чтения/записи на каждой. Этот процесс занимает 2-5 секунд и объясняет паузу между включением и первым изображением на экране. До завершения memory training процессор работает только с кешем (Cache-as-RAM — использование кеша в роли оперативной памяти, обычно L3 -- несколько мегабайт) -- обращаться к DRAM ещё нельзя. Именно поэтому код прошивки и стек помещаются в кеш, а сама прошивка хранится не в RAM, а в SPI-флеш (Serial Peripheral Interface) -- энергонезависимой микросхеме ёмкостью 16-32 МБ.
 
 Вторая задача -- обнаружение оборудования. UEFI перечисляет устройства на шинах PCIe (Peripheral Component Interconnect Express) и USB, инициализирует видеоконтроллер (иначе экран останется чёрным), проверяет целостность прошивки (Secure Boot верифицирует подписи EFI-приложений по ключам, зашитым в NVRAM — Non-Volatile RAM). Результат обнаружения UEFI сохраняет в таблицах, которые позже передаст ядру. Ключевая из них -- **e820 memory map** (или её EFI-эквивалент `EFI_MEMORY_DESCRIPTOR`): она описывает, какие диапазоны физической памяти доступны, какие зарезервированы прошивкой, а какие заняты ACPI-таблицами (Advanced Configuration and Power Interface). Без этой карты ядро не знает, куда можно записывать данные, а куда нельзя -- попытка использовать зарезервированный диапазон приведёт к порче прошивки или зависанию.
 
@@ -106,7 +106,7 @@ root=/dev/nvme0n1p2 ro quiet loglevel=3 init=/sbin/init
 
 ## initramfs: разрыв замкнутого круга
 
-initramfs (initial RAM filesystem) -- сжатый cpio-архив, который загрузчик помещает в RAM рядом с ядром. Ядро распаковывает его в экземпляр tmpfs и монтирует как временную корневую файловую систему `/`. Внутри -- минимальный набор: busybox (или systemd в initramfs-варианте), модули ядра для дискового контроллера (NVMe, AHCI — Advanced Host Controller Interface, virtio-blk), модули файловых систем (ext4, Btrfs), инструменты для LUKS (`cryptsetup`), LVM (`lvm`), mdadm для RAID. Посмотреть содержимое initramfs можно через `lsinitcpio /boot/initramfs-linux.img` (Arch) или `lsinitrd /boot/initramfs-$(uname -r).img` (Fedora).
+initramfs (initial RAM filesystem) -- сжатый cpio-архив (cpio — формат архивирования файлов, проще tar), который загрузчик помещает в RAM рядом с ядром. Ядро распаковывает его в экземпляр tmpfs и монтирует как временную корневую файловую систему `/`. Внутри -- минимальный набор: busybox (или systemd в initramfs-варианте), модули ядра для дискового контроллера (NVMe, AHCI — Advanced Host Controller Interface, virtio-blk), модули файловых систем (ext4, Btrfs), инструменты для LUKS (`cryptsetup`), LVM (`lvm`), mdadm для RAID. Посмотреть содержимое initramfs можно через `lsinitcpio /boot/initramfs-linux.img` (Arch) или `lsinitrd /boot/initramfs-$(uname -r).img` (Fedora).
 
 Более ранний механизм -- initrd (initial ramdisk) -- работал иначе: ядро создавало блочное устройство в RAM, форматировало его в ext2 и монтировало. Это требовало встроенного драйвера ext2 и двойного копирования данных (из архива в ramdisk, потом из ramdisk в page cache при чтении). initramfs использует tmpfs -- файловую систему, живущую непосредственно в page cache, без промежуточного блочного устройства. Данные копируются один раз, экономия памяти составляет примерно размер самого архива (20-60 МБ).
 
@@ -183,7 +183,7 @@ PID 1 -- не просто первый процесс, а процесс с у�
 |       |    | 2-5 s  |    | EFISTUB    |    | IDT     |    | /sysroot |
 +-------+    +--------+    +------------+    +---------+    +----------+
                                                                  |
-                                                           pivot_root
+                                                           switch_root
                                                                  |
                                                                  v
                                               +----------+    +-------+
@@ -241,9 +241,12 @@ Startup finished in 4.512s (firmware) + 1.201s (loader) + 2.834s (kernel) + 5.11
 
 ## Sources
 
-- Linux kernel documentation: `Documentation/admin-guide/kernel-parameters.txt`
-- `man 2 pivot_root`, `man 8 agetty`
-- `dmesg`, `cat /proc/cmdline`, `systemd-analyze`, `efibootmgr -v`
+- Linux kernel documentation: `Documentation/admin-guide/kernel-parameters.txt` — https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+- Linux kernel documentation: `ramfs-rootfs-initramfs` — https://www.kernel.org/doc/html/latest/filesystems/ramfs-rootfs-initramfs.html
+- `man 2 pivot_root` — https://man7.org/linux/man-pages/man2/pivot_root.2.html
+- `man 8 switch_root` — https://man7.org/linux/man-pages/man8/switch_root.8.html
+- `man 8 agetty` — https://man7.org/linux/man-pages/man8/agetty.8.html
+- `man 5 systemd.unit` — https://man7.org/linux/man-pages/man5/systemd.unit.5.html
 
 ---
 

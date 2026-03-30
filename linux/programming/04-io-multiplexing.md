@@ -167,9 +167,9 @@ int main(void) {
 
 `epoll` поддерживает два режима уведомления о готовности fd.
 
-**Level-triggered (LT)** — режим по умолчанию. `epoll_wait` сообщает о fd, пока в его буфере есть данные. Если `read()` прочитал часть данных, а в буфере осталось ещё, следующий `epoll_wait` вернёт этот fd снова. Режим прощает ошибки: даже если программа прочитала не всё, она получит повторное уведомление. Redis использует LT — код проще, а для его нагрузочного профиля (короткие команды, маленькие пакеты) разница в производительности минимальна.
+**Level-triggered (LT, по уровню)** — режим по умолчанию. `epoll_wait` сообщает о fd, пока в его буфере есть данные. Если `read()` прочитал часть данных, а в буфере осталось ещё, следующий `epoll_wait` вернёт этот fd снова. Режим прощает ошибки: даже если программа прочитала не всё, она получит повторное уведомление. Redis использует LT — код проще, а для его нагрузочного профиля (короткие команды, маленькие пакеты) разница в производительности минимальна.
 
-**Edge-triggered (ET)** — уведомление приходит только при изменении состояния fd: из «не готов» в «готов». Если пришёл пакет и `epoll_wait` вернул fd, но программа прочитала не все данные, повторного уведомления не будет — до прихода следующего пакета. Программа обязана вычитать буфер до `EAGAIN` при каждом событии. Пропуск означает зависший fd, с которого данные никогда не прочитаются.
+**Edge-triggered (ET, по фронту)** — уведомление приходит только при изменении состояния fd: из «не готов» в «готов». Если пришёл пакет и `epoll_wait` вернул fd, но программа прочитала не все данные, повторного уведомления не будет — до прихода следующего пакета. Программа обязана вычитать буфер до `EAGAIN` при каждом событии. Пропуск означает зависший fd, с которого данные никогда не прочитаются.
 
 ```
 LT (level-triggered):                ET (edge-triggered):
@@ -422,9 +422,13 @@ io_uring даёт выигрыш, когда узким местом стано�
 
 ## Sources
 
-- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 63: Alternative I/O Models
-- Jens Axboe, 2019, *Efficient IO with io_uring* — https://kernel.dk/io_uring.pdf
-- `man 7 epoll`, `man 2 io_uring_enter`, `man 2 timerfd_create`, `man 2 signalfd`, `man 2 eventfd`
+- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 63: Alternative I/O Models: https://man7.org/tlpi/
+- Jens Axboe, 2019, *Efficient IO with io_uring*: https://kernel.dk/io_uring.pdf
+- `man 7 epoll`: https://man7.org/linux/man-pages/man7/epoll.7.html
+- `man 2 io_uring_enter`: https://man7.org/linux/man-pages/man2/io_uring_enter.2.html
+- `man 2 timerfd_create`: https://man7.org/linux/man-pages/man2/timerfd_create.2.html
+- `man 2 signalfd`: https://man7.org/linux/man-pages/man2/signalfd.2.html
+- `man 2 eventfd`: https://man7.org/linux/man-pages/man2/eventfd.2.html
 
 ---
 

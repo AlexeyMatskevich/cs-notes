@@ -96,7 +96,7 @@ let value = DATA.load(Relaxed);
 
 ### Переупорядочивание процессором (store buffer)
 
-Даже если компилятор сохранил порядок, процессор может нарушить его. Обе записи попадают в store buffer — очередь из ~56 записей (Intel Skylake), где ядро «паркует» store, не дожидаясь завершения когерентного протокола. Запись `DATA = 42` и запись `READY = true` попадают в разные кеш-линии. Каждая запись ждёт своего RFO (Request For Ownership) — запроса на получение кеш-линии в состоянии Modified. RFO для `READY` может завершиться раньше, чем RFO для `DATA`, если линия с `READY` уже ближе к нужному состоянию. Тогда `READY = true` выйдет из store buffer в кеш раньше, чем `DATA = 42`.
+Даже если компилятор сохранил порядок, процессор может нарушить его. Обе записи попадают в store buffer (буфер записи) — очередь, в которой ядро процессора «паркует» store, не дожидаясь завершения когерентного протокола. Размер буфера зависит от микроархитектуры: 56 записей в Intel Skylake, 72 в Alder Lake P-core; на ARM и RISC-V размеры другие. Запись `DATA = 42` и запись `READY = true` попадают в разные кеш-линии. Каждая запись ждёт своего RFO (Request For Ownership) — запроса на получение кеш-линии в состоянии Modified. RFO для `READY` может завершиться раньше, чем RFO для `DATA`, если линия с `READY` уже ближе к нужному состоянию. Тогда `READY = true` выйдет из store buffer в кеш раньше, чем `DATA = 42`.
 
 ```text
 Ядро 0 (поток A)
@@ -115,7 +115,7 @@ let value = DATA.load(Relaxed);
 
 Поток B видит `READY == true`, читает `DATA` — и получает устаревшее значение 0. Данные ещё не покинули store buffer ядра 0.
 
-На x86 (с моделью TSO — Total Store Order) store-store переупорядочивание не происходит: записи выходят из store buffer строго в порядке программы. Поэтому сценарий с `data/ready` работает на x86 даже с Relaxed. Но на ARM, RISC-V и Power — не работает: эти архитектуры разрешают store-store reordering.
+На x86 (с моделью TSO — Total Store Order, полный порядок записей) store-store переупорядочивание не происходит: записи выходят из store buffer строго в порядке программы. Поэтому сценарий с `data/ready` работает на x86 даже с Relaxed. Но на ARM, RISC-V и Power — не работает: эти архитектуры разрешают store-store reordering.
 
 ## Модель памяти: контракт, а не описание железа
 
@@ -139,7 +139,7 @@ let value = DATA.load(Relaxed);
 
 ## Acquire + Release = happens-before
 
-Release и Acquire работают в паре. Когда поток B выполняет Acquire-load и видит значение, записанное потоком A через Release-store, возникает отношение **happens-before**: всё, что A сделал до Release, гарантированно видно B после Acquire.
+Release и Acquire работают в паре. Когда поток B выполняет Acquire-load и видит значение, записанное потоком A через Release-store, возникает отношение **happens-before** («выполняется-до»): всё, что A сделал до Release, гарантированно видно B после Acquire.
 
 ```rust
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
@@ -274,9 +274,9 @@ let total = COUNTER.load(Ordering::Relaxed);
 
 ## Sources
 
-- Herb Sutter, 2012, *atomic<> Weapons: The C++ Memory Model and Modern Hardware* — video lectures
-- Paul E. McKenney, 2005, *Memory Ordering in Modern Microprocessors* — Linux Journal
-- C++11 Standard §29, Rust Reference §8.3 — atomic operations and memory ordering
+- Herb Sutter, 2012, *atomic<> Weapons: The C++ Memory Model and Modern Hardware* — https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/
+- Paul E. McKenney, 2005, *Memory Ordering in Modern Microprocessors* — https://www.kernel.org/doc/Documentation/memory-barriers.txt
+- Intel Corporation, 2024, *Intel 64 and IA-32 Architectures Software Developer's Manual* — Vol. 3A, Chapter 9: Memory Ordering — https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
 
 ---
 

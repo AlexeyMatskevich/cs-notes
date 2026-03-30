@@ -9,7 +9,7 @@
 
 ← [Планировщик](07-scheduler.md) | [Синхронизация](../concurrency/00-synchronization.md) →
 
-Планировщик распределяет процессорное время: CFS выбирает поток с наименьшим vruntime, вытеснение через аппаратный таймер гарантирует, что ни один поток не захватит ядро навсегда. Но планировщик решает только вопрос «кому дать CPU». Он не спрашивает, имеет ли процесс право читать `/etc/shadow`, привязываться к порту 80 или отправлять сигнал чужому процессу. Эти вопросы принадлежат другой подсистеме ядра -- контролю доступа (access control).
+Планировщик распределяет процессорное время: выбирает поток с наименьшим vruntime, вытеснение через аппаратный таймер гарантирует, что ни один поток не захватит ядро навсегда. Но планировщик решает только вопрос «кому дать CPU». Он не спрашивает, имеет ли процесс право читать `/etc/shadow`, привязываться к порту 80 или отправлять сигнал чужому процессу. Эти вопросы принадлежат другой подсистеме ядра -- контролю доступа (access control).
 
 Рассмотрим конкретную ситуацию. Nginx обслуживает HTTP-трафик на порту 80. Для привязки к порту ниже 1024 требуются привилегии. Конфигурационные файлы в `/etc/nginx/` должны быть доступны только администратору и самому Nginx. Логи в `/var/log/nginx/` принадлежат определённому пользователю. Статические файлы сайта в `/var/www/` читаются Nginx, но не модифицируются. Если на той же машине работает PostgreSQL, его процессы не должны иметь доступа к конфигурации Nginx, а Nginx -- к файлам базы данных. Как ядро обеспечивает все эти границы?
 
@@ -156,7 +156,7 @@ Nginx master process обычно запускается с umask 022 или 027
 
 Вернёмся к Nginx. Для привязки к порту 80 (порт ниже 1024 -- «привилегированный порт» в терминологии Unix) процесс исторически должен был работать как root. Но root имеет полный контроль над системой: может читать любой файл, убивать любой процесс, загружать модули ядра, менять настройки сети. Nginx нужен один конкретный привилегий -- привязка к низкому порту. Давать ради этого доступ ко всей системе -- нарушение принципа наименьших привилегий (principle of least privilege).
 
-Linux capabilities (появились в ядре 2.6.24, полная реализация -- в 2.6.26) разбивают привилегии root на ~40 независимых флагов. Каждый флаг разрешает конкретную операцию:
+Linux capabilities (процессные capabilities появились в ядре 2.2, 1999 год; файловые capabilities — возможность назначать capabilities исполняемым файлам через расширенные атрибуты — добавлены в 2.6.24, 2008 год) разбивают привилегии root на ~40 независимых флагов. Каждый флаг разрешает конкретную операцию:
 
 **`CAP_NET_BIND_SERVICE`** -- привязка к привилегированным портам (ниже 1024). Это единственная capability, нужная Nginx для работы на порту 80.
 
@@ -306,12 +306,14 @@ DAC имеет фундаментальное ограничение: он до�
 
 ## Sources
 
-- Michael Kerrisk, 2010, *The Linux Programming Interface* -- Chapters 9, 15, 39: Process Credentials, File Attributes, Capabilities
-- Robert Love, 2010, *Linux Kernel Development* -- Chapter 17: Access Control
-- `man 7 capabilities` -- полный список capabilities и механизм наследования
-- `man 2 setuid`, `man 2 setgid` -- семантика сброса привилегий
-- `man 1 setcap`, `man 1 getcap` -- файловые capabilities
-- `man 2 open` -- алгоритм проверки прав при открытии файла
+- Michael Kerrisk, 2010, *The Linux Programming Interface* -- Chapters 9, 15, 39: Process Credentials, File Attributes, Capabilities — https://man7.org/tlpi/
+- Robert Love, 2010, *Linux Kernel Development* -- Chapter 17: Access Control — https://www.oreilly.com/library/view/linux-kernel-development/9780768696974/
+- `man 7 capabilities` -- полный список capabilities и механизм наследования — https://man7.org/linux/man-pages/man7/capabilities.7.html
+- `man 2 setuid` -- семантика сброса привилегий — https://man7.org/linux/man-pages/man2/setuid.2.html
+- `man 2 setgid` -- семантика сброса привилегий — https://man7.org/linux/man-pages/man2/setgid.2.html
+- `man 8 setcap` -- файловые capabilities — https://man7.org/linux/man-pages/man8/setcap.8.html
+- `man 8 getcap` -- файловые capabilities — https://man7.org/linux/man-pages/man8/getcap.8.html
+- `man 2 open` -- алгоритм проверки прав при открытии файла — https://man7.org/linux/man-pages/man2/open.2.html
 
 ---
 

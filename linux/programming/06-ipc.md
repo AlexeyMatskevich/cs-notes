@@ -50,7 +50,7 @@ PostgreSQL при запуске создаёт сегмент разделяе�
 
 Семафор (semaphore) обобщает мьютекс до счётчика. Значение семафора показывает, сколько единиц ресурса доступно. `sem_wait()` (ждать) уменьшает счётчик на 1: если значение было больше нуля — поток проходит, если ноль — блокируется до тех пор, пока кто-то не вызовет `sem_post()`. `sem_post()` (сигнализировать) увеличивает счётчик на 1 и будит одного ожидающего.
 
-Разница с мьютексом принципиальна: мьютекс привязан к владельцу — только захвативший поток может его освободить. Семафор — безличный счётчик: один процесс может вызвать `sem_wait()`, другой — `sem_post()`. Это делает семафоры инструментом для сценариев «producer-consumer» между процессами.
+Разница с мьютексом принципиальна: мьютекс привязан к владельцу — только захвативший поток может его освободить. Семафор — безличный счётчик: один процесс может вызвать `sem_wait()`, другой — `sem_post()`. Это делает семафоры инструментом для сценариев «producer-consumer» (производитель-потребитель) между процессами.
 
 PostgreSQL использует семафоры для ожидания лёгких блокировок (lightweight locks, LWLock). Когда worker хочет модифицировать буферную страницу, он пытается захватить LWLock. Если блокировка свободна — захват происходит через атомарную операцию CAS (Compare-And-Swap) без участия ядра, за десятки наносекунд. Если блокировка занята — worker добавляет себя в очередь ожидания и засыпает на `sem_wait()`. Когда владелец освобождает блокировку, он вызывает `sem_post()` для первого ожидающего, и тот просыпается. Семафор здесь не защищает ресурс напрямую — он служит механизмом ожидания: быстрый путь (fast path) обходится без семафора, медленный путь (contention path) использует его для усыпления и пробуждения.
 
@@ -150,7 +150,7 @@ mq_close(mq);
 
 Внутри ядра очередь реализована как буфер в RAM. Лимиты настраиваются через `/proc/sys/fs/mqueue/`: `msg_max` (максимальное число сообщений на очередь, по умолчанию 10), `msgsize_max` (максимальный размер одного сообщения, по умолчанию 8192 байт), `queues_max` (максимальное число очередей в системе). При попытке создать очередь с параметрами, превышающими лимиты, `mq_open()` вернёт `EINVAL`.
 
-Когда буфер очереди полон, `mq_send()` блокируется, пока получатель не извлечёт сообщение — встроенный backpressure, аналогичный заполнению буфера pipe. `mq_timedsend()` позволяет ограничить время ожидания.
+Когда буфер очереди полон, `mq_send()` блокируется, пока получатель не извлечёт сообщение — встроенный backpressure (обратное давление — замедление производителя при переполнении), аналогичный заполнению буфера pipe. `mq_timedsend()` позволяет ограничить время ожидания.
 
 На практике POSIX очереди сообщений используются реже, чем сокеты или разделяемая память. Их ниша — случаи, когда нужен структурированный обмен с приоритетами без накладных расходов на установку соединения: демоны, координирующие этапы обработки (один процесс готовит данные, другой записывает).
 
@@ -283,7 +283,7 @@ int receive_fd(int unix_sock) {
 
 nginx использует этот механизм при горячем обновлении (hot upgrade). Master-процесс старой версии открывает слушающий сокет на порту 80/443 и передаёт его через Unix domain socket новому master-процессу. Новый процесс принимает дескриптор и начинает обслуживать входящие соединения, не прерывая трафик — порт не нужно закрывать и повторно привязывать.
 
-systemd использует тот же принцип для socket activation: systemd создаёт сокеты до запуска сервиса и передаёт дескрипторы через переменные окружения `LISTEN_FDS` и `LISTEN_PID`. Сервис получает уже открытые и привязанные сокеты — не нужно вызывать `bind()` и `listen()` самому. Это позволяет запускать сервис по первому входящему соединению: systemd слушает порт, при поступлении запроса стартует сервис и передаёт ему сокет.
+systemd использует тот же принцип для socket activation (активация по сокету): systemd создаёт сокеты до запуска сервиса и передаёт дескрипторы через переменные окружения `LISTEN_FDS` и `LISTEN_PID`. Сервис получает уже открытые и привязанные сокеты — не нужно вызывать `bind()` и `listen()` самому. Это позволяет запускать сервис по первому входящему соединению: systemd слушает порт, при поступлении запроса стартует сервис и передаёт ему сокет.
 
 Механизм `SCM_RIGHTS` передаёт не только сокеты — любой файловый дескриптор: обычный файл, pipe, eventfd, timerfd, даже другой Unix domain socket. Можно передать несколько дескрипторов в одном сообщении, упаковав массив `int` в `CMSG_DATA`. Ограничение — `SCM_RIGHTS` работает только через Unix domain socket, не через TCP/UDP и не через pipe.
 
@@ -316,12 +316,16 @@ systemd использует тот же принцип для socket activation
 
 ## Sources
 
-- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapters 45--57: IPC
-- `man 7 sem_overview`, `man 7 mq_overview`, `man 7 sysvipc`
-- `man 3 sem_open`, `man 3 sem_init`, `man 3 mq_open`
-- `man 7 unix` — Unix domain sockets, `SCM_RIGHTS`
-- PostgreSQL source: `src/backend/storage/ipc/` — реализация IPC в PostgreSQL
-- W. Richard Stevens, Stephen A. Rago, 2013, *Advanced Programming in the UNIX Environment* — 3rd edition, Chapters 15, 17
+- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapters 45--57: IPC: https://man7.org/tlpi/
+- `man 7 sem_overview`: https://man7.org/linux/man-pages/man7/sem_overview.7.html
+- `man 7 mq_overview`: https://man7.org/linux/man-pages/man7/mq_overview.7.html
+- `man 7 sysvipc`: https://man7.org/linux/man-pages/man7/sysvipc.7.html
+- `man 3 sem_open`: https://man7.org/linux/man-pages/man3/sem_open.3.html
+- `man 3 sem_init`: https://man7.org/linux/man-pages/man3/sem_init.3.html
+- `man 3 mq_open`: https://man7.org/linux/man-pages/man3/mq_open.3.html
+- `man 7 unix` — Unix domain sockets, `SCM_RIGHTS`: https://man7.org/linux/man-pages/man7/unix.7.html
+- PostgreSQL source: `src/backend/storage/ipc/` — реализация IPC в PostgreSQL: https://github.com/postgres/postgres/tree/master/src/backend/storage/ipc
+- W. Richard Stevens, Stephen A. Rago, 2013, *Advanced Programming in the UNIX Environment* — 3rd edition, Chapters 15, 17: https://www.pearson.com/en-us/subject-catalog/p/advanced-programming-in-the-unix-environment/P200000009506/
 
 ---
 

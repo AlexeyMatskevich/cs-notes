@@ -107,7 +107,7 @@ int main(void) {
 
 **setsockopt() с SO_REUSEADDR** решает практическую проблему. После завершения TCP-соединения сокет попадает в состояние `TIME_WAIT` на 60 секунд (значение `2 * MSL`, MSL — Maximum Segment Lifetime, максимальное время жизни сегмента в сети). Если сервер перезапустился в этом окне, `bind()` вернёт `EADDRINUSE` — адрес занят. `SO_REUSEADDR` разрешает привязку к порту, на котором ещё висят сокеты в `TIME_WAIT`. Практически каждый TCP-сервер устанавливает эту опцию.
 
-**listen()** переводит сокет из состояния «создан» в состояние «принимает входящие соединения». Аргумент `backlog` (здесь 128) задаёт размер **accept queue** — очереди соединений, полностью прошедших TCP three-way handshake, но ещё не извлечённых вызовом `accept()`. Отдельно существует **SYN queue** для соединений в процессе handshake (ограничена `net.ipv4.tcp_max_syn_backlog`). Когда accept queue заполнена, ядро не отбрасывает SYN нового клиента — оно перестаёт отвечать финальным ACK, и соединение зависает на стороне клиента. В Linux параметр `backlog` ограничен сверху значением `net.core.somaxconn` (по умолчанию 4096). nginx и PostgreSQL обычно устанавливают backlog в 511 и 128 соответственно.
+**listen()** переводит сокет из состояния «создан» в состояние «принимает входящие соединения». Аргумент `backlog` (здесь 128) задаёт размер **accept queue** (очередь принятых соединений) — соединений, полностью прошедших TCP three-way handshake, но ещё не извлечённых вызовом `accept()`. Отдельно существует **SYN queue** (очередь полуоткрытых соединений) для соединений в процессе handshake (ограничена `net.ipv4.tcp_max_syn_backlog`). Когда accept queue заполнена, ядро не отбрасывает SYN нового клиента — оно перестаёт отвечать финальным ACK, и соединение зависает на стороне клиента. В Linux параметр `backlog` ограничен сверху значением `net.core.somaxconn` (по умолчанию 4096). nginx и PostgreSQL обычно устанавливают backlog в 511 и 128 соответственно.
 
 **accept()** извлекает из очереди первое установленное соединение и возвращает **новый** дескриптор. Это ключевой момент: `server_fd` продолжает слушать, а `client_fd` привязан к конкретному клиенту. Серверный сокет один, а клиентских — столько, сколько принято соединений. После обработки запроса `client_fd` закрывается, а `server_fd` остаётся открытым на весь срок жизни сервера.
 
@@ -157,7 +157,7 @@ int main(void) {
 }
 ```
 
-`connect()` блокируется до завершения handshake (обычно один RTT (Round-Trip Time, время обхода) — ~0.5 мс на loopback, ~50-200 мс через интернет). Ядро само выбирает для клиента произвольный порт из диапазона `ip_local_port_range` (по умолчанию 32768-60999). Порт на стороне клиента называется ephemeral port — он существует, пока живёт соединение.
+`connect()` блокируется до завершения handshake (обычно один RTT (Round-Trip Time, время обхода) — ~0.5 мс на loopback, ~50-200 мс через интернет). Ядро само выбирает для клиента произвольный порт из диапазона `ip_local_port_range` (по умолчанию 32768-60999). Порт на стороне клиента называется ephemeral port (эфемерный порт) — он существует, пока живёт соединение.
 
 ## Что происходит при write() на сокет
 
@@ -245,7 +245,7 @@ int flag = 1;
 setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
 ```
 
-**SO_SNDBUF и SO_RCVBUF** устанавливают размер буферов отправки и приёма. Обычно авто-настройка ядра справляется, но для bulk transfer через высоколатентные каналы (bandwidth-delay product > размера буфера по умолчанию) ручная настройка увеличивает пропускную способность:
+**SO_SNDBUF и SO_RCVBUF** устанавливают размер буферов отправки и приёма. Обычно авто-настройка ядра справляется, но для bulk transfer через высоколатентные каналы (bandwidth-delay product (произведение пропускной способности на задержку) > размера буфера по умолчанию) ручная настройка увеличивает пропускную способность:
 
 ```c
 int bufsize = 4 * 1024 * 1024;  // 4 MB
@@ -297,9 +297,12 @@ nginx использует директиву `sendfile on` для раздач�
 
 ## Sources
 
-- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapters 56-61: Sockets
-- W. Richard Stevens, 2003, *Unix Network Programming* — Volume 1
-- `man 2 socket`, `man 2 bind`, `man 7 tcp`, `man 2 sendfile`
+- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapters 56-61: Sockets: https://man7.org/tlpi/
+- W. Richard Stevens, 2003, *Unix Network Programming* — Volume 1: https://www.pearson.com/en-us/subject-catalog/p/unix-network-programming-volume-1-the-sockets-networking-api/P200000009464/
+- `man 2 socket`: https://man7.org/linux/man-pages/man2/socket.2.html
+- `man 2 bind`: https://man7.org/linux/man-pages/man2/bind.2.html
+- `man 7 tcp`: https://man7.org/linux/man-pages/man7/tcp.7.html
+- `man 2 sendfile`: https://man7.org/linux/man-pages/man2/sendfile.2.html
 
 ---
 

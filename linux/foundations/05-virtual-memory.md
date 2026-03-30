@@ -351,9 +351,9 @@ Overcommit контролируется через `/proc/sys/vm/overcommit_memo
 
 ## Sources
 
-- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 49: Memory Mappings
-- Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager*
-- Intel Corporation, 2024, *Intel 64 and IA-32 Architectures Software Developer's Manual* — Volume 3A: System Programming Guide, Chapter 4: Paging
+- Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 49: Memory Mappings — https://man7.org/tlpi/
+- Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager* — https://www.kernel.org/doc/gorman/
+- Intel Corporation, 2024, *Intel 64 and IA-32 Architectures Software Developer's Manual* — Volume 3A: System Programming Guide, Chapter 4: Paging — https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
 
 ---
 

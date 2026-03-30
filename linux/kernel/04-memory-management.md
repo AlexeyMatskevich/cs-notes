@@ -29,7 +29,7 @@ Node 0, zone   Normal   1234  876  432  210  98  41  18   7   3   1   0
 
 Одиннадцать чисел — количество свободных блоков каждого порядка от 0 до 10. На нашем сервере после нескольких часов работы блоков order 9-10 (2048 и 4096 страниц, нужных для непрерывных аллокаций) может не быть вовсе — физическая память фрагментирована. Это одна из причин, по которой huge pages (2 МБ = order 9) [резервируют заранее](../programming/05-memory-management.md), при загрузке системы, пока RAM не фрагментирована.
 
-Buddy allocator быстр — выделение и освобождение за O(1) в типичном случае. Но у него есть фундаментальная проблема: минимальная единица выдачи — одна страница (4 КБ). Ядро постоянно создаёт объекты значительно меньшего размера: `struct task_struct` (~8 КБ), `struct inode` (~600 байт), `struct sk_buff` (~240 байт), `struct dentry` (~200 байт). Выделять 4 КБ страницу под 200-байтовый dentry — расход в 20 раз.
+Buddy allocator быстр — выделение и освобождение за O(1) в типичном случае. Но у него есть фундаментальная проблема: минимальная единица выдачи — одна страница (4 КБ). Ядро постоянно создаёт объекты значительно меньшего размера: `struct task_struct` (~8 КБ), `struct inode` (~600 байт), `struct sk_buff` (~240 байт), `struct dentry` (~192 байта). Выделять 4 КБ страницу под 192-байтовый dentry — расход в 20 раз.
 
 ## Slab/SLUB: аллокатор для мелких объектов
 
@@ -128,7 +128,7 @@ inode_cache            12800     13440       608       6            1
 
 **Частая ошибка:** паника при виде низкого MemFree. Администратор добавляет RAM или перезагружает сервер.
 
-**Правильное объяснение:** MemFree — фреймы, не используемые вообще ничем. На загруженном сервере это число *должно* быть маленьким: ядро заполняет свободную память page cache, кешируя файлы для ускорения I/O. Метрика `MemAvailable` в `/proc/meminfo` показывает реальный запас: MemFree + reclaimable page cache + reclaimable slab. На нашем сервере MemFree = 200 МБ, но MemAvailable = 4 ГБ — 3.8 ГБ page cache можно сбросить без последствий.
+**Правильное объяснение:** MemFree — фреймы, не используемые вообще ничем. На загруженном сервере это число *должно* быть маленьким: ядро заполняет свободную память page cache, кешируя файлы для ускорения I/O. Метрика `MemAvailable` в `/proc/meminfo` показывает реальный запас: MemFree + reclaimable (высвобождаемый) page cache + reclaimable slab. На нашем сервере MemFree = 200 МБ, но MemAvailable = 4 ГБ — 3.8 ГБ page cache можно сбросить без последствий.
 
 </details>
 
@@ -170,7 +170,7 @@ perf trace -e 'vmscan:mm_vmscan_direct_reclaim_begin' \
 
 **Порог.** Когда доля грязных страниц от общей памяти превышает `dirty_background_ratio` (по умолчанию 10%), ядро будит flusher threads для активной записи, не дожидаясь таймера. Это фоновый writeback — процессы продолжают работать.
 
-Но если доля грязных страниц превышает `dirty_ratio` (по умолчанию 20%), ядро начинает **throttling**: процесс, вызвавший `write()`, блокируется до тех пор, пока фоновый writeback не снизит количество грязных страниц ниже порога. Это защитный механизм: без него процесс мог бы генерировать грязные страницы быстрее, чем диск способен их записывать, и вся RAM оказалась бы заполнена грязными данными, которые невозможно ни сбросить (нужно ждать I/O), ни отбросить (данные потеряются).
+Но если доля грязных страниц превышает `dirty_ratio` (по умолчанию 20%), ядро начинает **throttling** (троттлинг — принудительное торможение): процесс, вызвавший `write()`, блокируется до тех пор, пока фоновый writeback не снизит количество грязных страниц ниже порога. Это защитный механизм: без него процесс мог бы генерировать грязные страницы быстрее, чем диск способен их записывать, и вся RAM оказалась бы заполнена грязными данными, которые невозможно ни сбросить (нужно ждать I/O), ни отбросить (данные потеряются).
 
 ```
 Доля грязных страниц
@@ -226,12 +226,14 @@ OOM killer вызывается из контекста direct reclaim: функ
 
 ## Sources
 
-- Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager*
-- Robert Love, 2010, *Linux Kernel Development* — Chapters 12-15: Memory Management, The Page Cache and Page Writeback
-- Linux kernel documentation: Documentation/admin-guide/mm/ — https://www.kernel.org/doc/html/latest/admin-guide/mm/
-- `cat /proc/buddyinfo`, `cat /proc/slabinfo`, `cat /proc/meminfo`
-- `man 5 proc` — /proc filesystem
-- Daniel P. Bovet, Marco Cesati, 2005, *Understanding the Linux Kernel* — 3rd Edition, O'Reilly, Chapters 8-9: Memory Management
+- Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager*: https://www.kernel.org/doc/gorman/
+- Robert Love, 2010, *Linux Kernel Development* — Chapters 12-15: Memory Management, The Page Cache and Page Writeback: https://www.oreilly.com/library/view/linux-kernel-development/9780768696974/
+- Linux kernel documentation: Documentation/admin-guide/mm/: https://www.kernel.org/doc/html/latest/admin-guide/mm/
+- `cat /proc/buddyinfo`: https://man7.org/linux/man-pages/man5/proc.5.html
+- `cat /proc/slabinfo`: https://man7.org/linux/man-pages/man5/proc.5.html
+- `cat /proc/meminfo`: https://man7.org/linux/man-pages/man5/proc_meminfo.5.html
+- `man 5 proc` — /proc filesystem: https://man7.org/linux/man-pages/man5/proc.5.html
+- Daniel P. Bovet, Marco Cesati, 2005, *Understanding the Linux Kernel* — 3rd Edition, O'Reilly, Chapters 8-9: Memory Management: https://www.oreilly.com/library/view/understanding-the-linux/0596005652/
 
 ---
 
