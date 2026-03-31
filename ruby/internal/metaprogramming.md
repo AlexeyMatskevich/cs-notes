@@ -1,6 +1,8 @@
 # Метапрограммирование
 
-**Предпосылки:** [Определение методов](methods/01-method-definition.md) — CREF, `definemethod`, `class << obj`, self vs CREF. [Блоки](blocks.md) — замыкания, EP, stack-to-heap, Proc.
+**Предпосылки:** [Определение методов](methods/01-method-definition.md) — CREF, `definemethod`, `class << obj`, self vs CREF. [Блоки](blocks.md) (опирается на серию VM-заметок: [компиляция](vm/01-compilation.md), [исполнение](vm/02-execution.md), [управление потоком](vm/03-control-flow.md)) — замыкания, EP, stack-to-heap, Proc.
+
+← [Блоки](blocks.md) | [Array](collections/00-array.md) →
 
 В [заметке об определении методов](methods/01-method-definition.md) мы видели, что `def` всегда работает через CREF — лексическую область. Но `def` не создаёт замыкания: тело метода не видит локальных переменных окружающего scope. В [заметке о блоках](blocks.md) — обратная ситуация: блок является замыканием, он видит окружение через EP. Метапрограммирование в Ruby — это способы совместить оба механизма: менять, куда попадает метод (CREF), и что видит его код (EP).
 
@@ -128,6 +130,8 @@ Refinements действуют **лексически**: после `using` до
 
 ## Две оси — одна таблица
 
+Пять способов определить метод различаются по двум осям: куда попадает метод (в текущий класс или в singleton class) и что видит его тело (замыкание текущего scope или нет).
+
 ```
                    куда метод          замыкание     self внутри
 def                CREF (лекс. обл.)   нет           receiver
@@ -145,3 +149,7 @@ eval               CREF вызова         да            из окружен
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 9: метапрограммирование и замыкания.
 - Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `eval_intern.h` (CREF_SINGLETON — CREF_FL_SINGLETON/IMEMO_FL_USER3, строка 240; CREF_CLASS — строка 182; CREF_CLASS_FOR_DEFINITION — строка 193), `vm_insnhelper.c` (refined dispatch — строка 4957), `vm_eval.c` (specific_eval — строка 2269, yield_under — строка 2188, rb_obj_instance_eval — строка 2338), `vm_method.c` (resolve_refined_method — строка 2027, make_method_entry_refined — строка 1229), `vm.c` (invoke_block — строка 1738, invoke_iseq_block_from_c — строка 1776), `eval.c` (add_activated_refinement — строка 1514).
+
+---
+
+← [Блоки](blocks.md) | [Array](collections/00-array.md) →

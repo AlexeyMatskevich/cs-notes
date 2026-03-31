@@ -2,6 +2,8 @@
 
 **Предпосылки:** [Исполнение](02-execution.md) — фреймы, PC/SP/CFP, стек вызовов, push/pop при вызове метода.
 
+← [Исполнение](02-execution.md) | [Объекты и классы](../object-model/00-objects-and-classes.md) →
+
 В [предыдущей заметке](02-execution.md) VM шагала по инструкциям линейно: PC двигался вперёд, инструкция за инструкцией. Но `if`, `while`, `break` требуют менять направление. Как YARV реализует переходы?
 
 Переходы бывают двух масштабов. Простой — прыжок внутри одного ISeq: `if`, `while`, `until`. Сложный — прыжок через границу scope: `break` из блока должен покинуть текущий фрейм и вернуть управление в родительский. Проследим оба на конкретной программе:
@@ -115,3 +117,7 @@ puts RubyVM::InstructionSequence.compile('10.times { |n| break if n == 5 }').dis
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 4: управление потоком.
 - Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `insns.def` (branchunless, branchif, jump, throw), `iseq.h` (catch table types).
+
+---
+
+← [Исполнение](02-execution.md) | [Объекты и классы](../object-model/00-objects-and-classes.md) →

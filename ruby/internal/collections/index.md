@@ -1,6 +1,11 @@
 # Коллекции: внутреннее устройство Array, Hash, String
 
-**Предпосылки:** [Объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, klass), [GC](../gc.md) (VWA, слоты, страницы, write barrier), [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
+<details>
+<summary>Предпосылки</summary>
+
+[Объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, klass), [GC](../gc.md) (VWA, слоты, страницы, write barrier), [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
+
+</details>
 
 Для пользовательских объектов Ruby хранит инстанс-переменные в обобщённой структуре `RObject`. Но встроенные типы — Array, Hash, String — работают с данными настолько часто, что обобщённое представление было бы расточительным. Каждый из них получил собственную C-структуру (`RArray`, `RHash`, `RString`), оптимизированную под конкретный паттерн доступа: последовательный, ассоциативный, текстовый.
 
@@ -25,3 +30,8 @@ Array вводит паттерн embedded/heap, который повторяе
 **Copy-on-Write в массивах и строках:** создание подмассива (`ary[1..3]`) или подстроки (`str[0..4]`) не копирует данные — дочерний объект разделяет буфер родителя. Копирование откладывается до момента модификации. Хеши не используют CoW — их структура данных не допускает простого разделения буфера.
 
 **GC и коллекции:** при записи ссылки в массив или хеш срабатывает [write barrier](../gc.md) для корректной работы generational и incremental GC. Shared-корни (массивы и строки, чей буфер разделяется) закрепляются как pinned — GC compaction не может их переместить, пока на них есть ссылки.
+
+## Sources
+
+- CRuby source: `array.c`, `hash.c`, `string.c` — collection implementations: https://github.com/ruby/ruby
+- Pat Shaughnessy, 2013, *Ruby Under a Microscope* — chapters on Array, Hash, String internals

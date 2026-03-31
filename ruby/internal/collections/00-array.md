@@ -1,6 +1,13 @@
 # Array
 
-**Предпосылки:** [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction).
+<details>
+<summary>Предпосылки</summary>
+
+[динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction).
+
+</details>
+
+← [Метапрограммирование](../metaprogramming.md) | [Hash](01-hash.md) →
 
 Динамический массив хранит элементы в непрерывном буфере и растёт при переполнении — эти принципы одинаковы в любом языке. Вопрос реализации: где именно лежит этот буфер? В Ruby ответ зависит от размера массива. Маленький массив помещает элементы прямо в слот объекта — без malloc, без указателя, с минимальным расстоянием до CPU-кеша. Когда элементов становится больше, чем вмещает слот, Ruby выделяет отдельный буфер. Эти два режима — embedded и heap — определяют внутреннюю жизнь `RArray`.
 
@@ -22,7 +29,7 @@ Heap (флаг не установлен):
 └─────────────────┴─────┴──────┴─────┘
 ```
 
-В embedded-режиме длина массива кодируется прямо во flags заголовка, а элементы (`VALUE`, 8 байт каждый) лежат сразу после заголовка. Нет ни указателя, ни отдельной аллокации — один cache line захватывает и метаданные, и данные.
+В embedded-режиме длина массива кодируется прямо во flags заголовка, а элементы (`VALUE`, 8 байт каждый) лежат сразу после заголовка. Нет ни указателя, ни отдельной аллокации — один cache line захватывает и метаданные, и данные. Embedded режим держит данные рядом с метаданными по принципу [пространственной локальности](../../../computer/data-path/00-memory-hierarchy.md): одно обращение к памяти загружает и заголовок, и данные.
 
 В heap-режиме объект хранит длину (`len`), ёмкость (`capa`) и указатель (`ptr`) на буфер, выделенный через malloc. Доступ к элементам требует разыменования указателя — второе обращение к памяти, потенциально на другой странице.
 
@@ -131,8 +138,14 @@ GC compaction перемещает объекты, чтобы освободит
 Compaction:  GC перемещает в больший слот → может вернуться в embedded
 ```
 
-## Источники
+## Sources
 
-- `array.c`, `include/ruby/internal/core/rarray.h` — CRuby source
+- CRuby source: `array.c` — Array implementation: https://github.com/ruby/ruby/blob/master/array.c
+- CRuby source: `include/ruby/internal/core/rarray.h` — RArray struct: https://github.com/ruby/ruby/blob/master/include/ruby/internal/core/rarray.h
+- Ruby docs: `Array`: https://docs.ruby-lang.org/en/master/Array.html
 - Peter Zhu, *Variable Width Allocation* — RubyKaigi 2022
 - Pat Shaughnessy, *Ruby Under a Microscope* — Ch. 2: How Ruby Stores Data Internally
+
+---
+
+← [Метапрограммирование](../metaprogramming.md) | [Hash](01-hash.md) →

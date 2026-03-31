@@ -2,24 +2,9 @@
 
 **Предпосылки:** [Объекты и классы](00-objects-and-classes.md) — RObject, массив значений ivar, RBasic, shape_id (кратко).
 
+← [Модули](01-modules.md) | [Диспетчеризация методов](../methods/00-method-dispatch.md) →
+
 В [заметке об объектах](00-objects-and-classes.md) мы видели, что `RObject` хранит массив *значений* инстанс-переменных — без имён. `"Leonhard"` лежит в ячейке 0, `"Euler"` — в ячейке 1. Но как Ruby узнаёт, что `@first_name` — это ячейка 0, а `@last_name` — ячейка 1?
-
-Дизассемблер показывает подсказку:
-
-```ruby
-code = 'def full_name; "#{@first_name} #{@last_name}"; end'
-puts RubyVM::InstructionSequence.compile(code).disasm
-```
-
-```
-== disasm: #<ISeq:full_name@<compiled>:1 (1,0)-(1,46)>
-0000 getinstancevariable                    :@first_name, <is:0>
-...
-0009 getinstancevariable                    :@last_name, <is:1>
-...
-```
-
-У каждой инструкции `getinstancevariable` два операнда: имя переменной (`:@first_name`) и кеш-слот (`<is:0>`, `<is:1>`). Этот кеш-слот — ключ к быстрому доступу к переменным. Но прежде чем разобраться в кеше, нужно понять, как Ruby вообще сопоставляет имя с индексом.
 
 ## Имя → индекс: хеш-таблица на класс
 
@@ -138,7 +123,26 @@ newton = Physicist.new;     newton.first_name = "Isaac";    newton.last_name = "
 
 ## Инлайн-кеш в действии
 
-Теперь можем разобрать, как работает `getinstancevariable :@first_name, <is:0>`:
+Дизассемблер показывает, как байткод использует этот механизм:
+
+```ruby
+code = 'def full_name; "#{@first_name} #{@last_name}"; end'
+puts RubyVM::InstructionSequence.compile(code).disasm
+```
+
+```
+== disasm: #<ISeq:full_name@<compiled>:1 (1,0)-(1,46)>
+0000 getinstancevariable                    :@first_name, <is:0>
+...
+0009 getinstancevariable                    :@last_name, <is:1>
+...
+```
+
+У каждой инструкции `getinstancevariable` два операнда: имя переменной (`:@first_name`) и кеш-слот (`<is:0>`, `<is:1>`). Именно в этом слоте и хранится пара `(shape_id, index)`.
+
+По идее это похоже на [аппаратные кеши процессора](../../../computer/data-path/00-memory-hierarchy.md) — запомнить результат дорогого поиска, но не путать: shape cache — software-уровень.
+
+Теперь разберём, как работает `getinstancevariable :@first_name, <is:0>`:
 
 1. VM читает `shape_id` объекта из заголовка.
 2. Из кеш-слота `<is:0>` атомарно читает пару `(cached_shape_id, cached_index)`, упакованную в одно 64-битное число.
@@ -203,3 +207,7 @@ YJIT использует формы ещё эффективнее: при ко�
 - Jemma Issroff, 2022, «Implementing Object Shapes in CRuby» — RubyKaigi talk, введение shapes в CRuby.
 - Chris Seaton, 2015, «Specialising Dynamic Techniques for Implementing the Ruby Programming Language» — PhD thesis, оригинальная идея shapes для Ruby.
 - Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `shape.h` (rb_shape_t, shape_id_t, SHAPE_MAX_VARIATIONS, rb_attr_index_cache), `shape.c` (дерево переходов, вариации, performance warning), `vm_insnhelper.c` (vm_getivar — hot path, fill_ivar_cache — заполнение при промахе), `vm_core.h` (iseq_inline_iv_cache_entry), `insns.def` (getinstancevariable, setinstancevariable).
+
+---
+
+← [Модули](01-modules.md) | [Диспетчеризация методов](../methods/00-method-dispatch.md) →

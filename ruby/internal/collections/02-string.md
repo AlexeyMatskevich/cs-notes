@@ -1,6 +1,13 @@
 # String
 
-**Предпосылки:** [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](00-array.md) (embedded/heap-паттерн, Copy-on-Write).
+<details>
+<summary>Предпосылки</summary>
+
+[объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](00-array.md) (embedded/heap-паттерн, Copy-on-Write).
+
+</details>
+
+← [Hash](01-hash.md) | [Управление памятью в Ruby](../gc.md) →
 
 [Array](00-array.md) ввёл паттерн embedded/heap: данные либо в слоте объекта, либо в отдельном буфере через malloc. Строки используют тот же паттерн — `RString` содержит union, переключающийся между inline-хранением и указателем. Но у строк есть два дополнительных измерения. Байты нужно интерпретировать: одна и та же последовательность `[0xC3, 0xA9]` — это "e" в UTF-8, но два символа "Ã©" в ISO-8859-1. А неизменяемые строки можно дедуплицировать — хранить в единственном экземпляре на весь процесс.
 
@@ -146,8 +153,14 @@ a.object_id == b.object_id  # => true — один объект в памяти
 
 fstrings применяются автоматически для символов (`:foo` хранит строковое представление как fstring), frozen-литералов и ключей хешей. В типичном Rails-приложении сотни одинаковых строк (`"id"`, `"name"`, `"created_at"`) превращаются в единичные fstring-объекты — экономия памяти пропорциональна числу повторений.
 
-## Источники
+## Sources
 
-- `string.c`, `include/ruby/internal/core/rstring.h` — CRuby source
+- CRuby source: `string.c` — String implementation: https://github.com/ruby/ruby/blob/master/string.c
+- CRuby source: `include/ruby/internal/core/rstring.h` — RString struct: https://github.com/ruby/ruby/blob/master/include/ruby/internal/core/rstring.h
+- Ruby docs: `String`: https://docs.ruby-lang.org/en/master/String.html
 - Pat Shaughnessy, *Ruby Under a Microscope* — Ch. 2: How Ruby Stores String Data
 - Peter Zhu, *Variable Width Allocation* — RubyKaigi 2022
+
+---
+
+← [Hash](01-hash.md) | [Управление памятью в Ruby](../gc.md) →

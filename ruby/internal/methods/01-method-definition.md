@@ -1,6 +1,13 @@
 # Определение методов
 
-**Предпосылки:** [Компиляция](../vm/01-compilation.md) — ISeq. [Исполнение](../vm/02-execution.md) — фреймы, `self`, EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — метакласс, singleton-класс, m_tbl. [Модули](../object-model/01-modules.md) — поиск методов по цепочке super, лексическая область (CREF).
+<details>
+<summary>Предпосылки</summary>
+
+[Компиляция](../vm/01-compilation.md) — ISeq. [Исполнение](../vm/02-execution.md) — фреймы, `self`, EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — метакласс, singleton-класс, m_tbl. [Модули](../object-model/01-modules.md) — поиск методов по цепочке super, лексическая область (CREF).
+
+</details>
+
+← [Диспетчеризация методов](00-method-dispatch.md) | [Блоки](../blocks.md) →
 
 В [заметке о компиляции](../vm/01-compilation.md) мы видели, что `def` создаёт отдельный ISeq для тела метода. В [заметках о модулях](../object-model/01-modules.md) и [диспетчеризации](00-method-dispatch.md) — как Ruby находит метод по цепочке `super` и вызывает его. Но один шаг пропущен: как скомпилированный ISeq попадает в таблицу методов класса?
 
@@ -165,3 +172,7 @@ Mathematician.new.greet   # NoMethodError
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 9: метапрограммирование и замыкания.
 - Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `method.h` (rb_cref_t — строка 45), `vm_insnhelper.c` (vm_env_cref — строка 863, vm_cref_push — строка 1037, vm_define_method — строка 6018, vm_find_or_create_class_by_id — строка 5966), `vm_method.c` (rb_method_entry_make — строка 1313, rb_add_method_iseq — строка 1601), `vm.c` (vm_cref_new0 — строка 315), `compile.c` (definemethod — строка 11364, definesmethod — строка 11381), `vm_core.h` (VM_ENV_DATA_INDEX_ME_CREF — строка 1420).
+
+---
+
+← [Диспетчеризация методов](00-method-dispatch.md) | [Блоки](../blocks.md) →

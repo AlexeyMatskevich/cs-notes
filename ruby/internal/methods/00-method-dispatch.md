@@ -1,6 +1,13 @@
 # Диспетчеризация методов
 
-**Предпосылки:** [Исполнение](../vm/02-execution.md) — фреймы (METHOD, CFUNC, BLOCK), push/pop, PC/SP/EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — m_tbl, klass, super, метакласс. [Модули](../object-model/01-modules.md) — iclass, include/prepend в цепочке super, поиск методов по цепочке. [Формы](../object-model/02-shapes.md) — shape_id, инлайн-кеш для переменных.
+<details>
+<summary>Предпосылки</summary>
+
+[Исполнение](../vm/02-execution.md) — фреймы (METHOD, CFUNC, BLOCK), push/pop, PC/SP/EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — m_tbl, klass, super, метакласс. [Модули](../object-model/01-modules.md) — iclass, include/prepend в цепочке super, поиск методов по цепочке. [Формы](../object-model/02-shapes.md) — shape_id, инлайн-кеш для переменных.
+
+</details>
+
+← [Формы объектов](../object-model/02-shapes.md) | [Определение методов](01-method-definition.md) →
 
 В [заметке о модулях](../object-model/01-modules.md) мы видели, как Ruby находит метод: начинает с класса получателя, проверяет таблицу методов, не нашёл — переходит по `super` к следующему. Но нашёл — и что дальше? `full_name` определён через `def`, `first_name` — через `attr_reader`, `times` — встроенный C-метод. Все три найдены по одному алгоритму, но вызываются совершенно по-разному. И ещё вопрос: неужели Ruby проходит по цепочке на *каждый* вызов?
 
@@ -79,7 +86,7 @@ euler.singleton_class.ancestors
 
 Обход цепочки на каждый вызов — заметная цена. В горячем цикле `euler.first_name` вызывается миллионы раз, а метод каждый раз лежит в том же месте. Можно ли запомнить результат?
 
-Каждый call site в скомпилированных инструкциях хранит **callcache** (`rb_callcache` в `vm_callinfo.h`) — кеш из трёх полей: класс получателя, найденный метод и указатель на функцию вызова.
+Каждый call site в скомпилированных инструкциях хранит **callcache** (`rb_callcache` в `vm_callinfo.h`) — кеш из трёх полей: класс получателя, найденный метод и указатель на функцию вызова. Callcache — software-аналог [аппаратного кеша](../../../computer/data-path/00-memory-hierarchy.md): запомнить результат дорогого поиска, чтобы не повторять его при каждом вызове.
 
 Рядом с callcache лежит **callinfo** (`rb_callinfo`) — неизменное описание вызова: имя метода, количество аргументов, флаги (есть ли блок, splat, keyword-аргументы). Callinfo не меняется; callcache обновляется при каждом промахе.
 
@@ -230,3 +237,7 @@ Bare `super` (без аргументов) автоматически перед
 
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — глава 4: диспетчеризация методов.
 - Исходники Ruby (коммит `0d4538b57d`, 2026-01-10): `method.h` (rb_method_type_t — 12 типов, строка 117; rb_method_entry_t, rb_callable_method_entry_t — описание найденного метода; METHOD_ENTRY_INVALIDATED — флаг инвалидации), `vm_callinfo.h` (rb_callinfo — описание вызова, строка 65; rb_callcache — инлайн-кеш, строка 278), `vm_insnhelper.c` (vm_search_method_fastpath — горячий путь кеша, строка 2357; vm_call_method — проверка видимости, строка 5004; vm_call_method_each_type — dispatch switch, строка 4865; vm_call_ivar — IVAR без фрейма, строка 4060), `vm_method.c` (search_method0 — обход super chain, строка 1686), `insns.def` (opt_send_without_block, invokesuper, opt_plus — инструкции вызова).
+
+---
+
+← [Формы объектов](../object-model/02-shapes.md) | [Определение методов](01-method-definition.md) →

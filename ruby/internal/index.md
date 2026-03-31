@@ -73,3 +73,8 @@ eval, instance_eval, define_method, refinements. Зависит от опред�
 **Объектная модель vs Коллекции:** Обобщённый `RObject` хранит ivar в массиве, а klass определяет поведение. Встроенные типы (Array, Hash, String) заменяют `RObject` специализированными структурами (`RArray`, `RHash`, `RString`), оптимизированными под конкретный паттерн доступа. Все начинаются с `RBasic` — поэтому `klass`, GC-флаги и shapes работают одинаково для любого объекта.
 
 **Коллекции vs GC:** VWA из GC напрямую влияет на производительность коллекций: чем крупнее слот, тем больше данных хранится в embedded-режиме без malloc. Write barrier из generational GC срабатывает при каждой записи в массив или хеш. Compaction может переместить коллекцию в больший слот, вернув её из heap в embedded.
+
+## Sources
+
+- CRuby source repository: https://github.com/ruby/ruby
+- Pat Shaughnessy, 2013, *Ruby Under a Microscope* — Ruby internals from tokenization to GC

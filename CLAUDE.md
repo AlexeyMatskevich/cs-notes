@@ -127,7 +127,8 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   ├── metaprogramming.md               # eval, instance_eval, define_method, refinements
 │   │   ├── gc.md                            # GC: mark-sweep, generational, incremental, compaction
 │   │   └── jit.md                           # JIT: YJIT (BBV), ZJIT (method-based), guards, invalidation
-│   └── ruby_concurrency_notes.md            # threads, GIL, fibers
+│   ├── index.md                         # Ruby: study order, internal vs concurrency
+│   └── ruby-concurrency.md                  # threads, GVL, Fiber, Ractor, серверы
 └── wip/                        # unfinished drafts
     ├── rust-async-multithreading.md
     └── topic-queue.md

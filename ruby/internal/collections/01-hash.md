@@ -1,6 +1,13 @@
 # Hash
 
-**Предпосылки:** [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](00-array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты).
+<details>
+<summary>Предпосылки</summary>
+
+[хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](00-array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты).
+
+</details>
+
+← [Array](00-array.md) | [String](02-string.md) →
 
 [Array](00-array.md) даёт доступ по числовому индексу за O(1). Но HTTP-заголовки, опции метода, конфигурация — это пары ключ-значение, где ключ не число, а строка или символ. Поиск по ключу в массиве — перебор всех элементов, O(n). [Хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md) решает это за O(1) через хеш-функцию и массив бакетов. Но в Ruby-программе большинство хешей маленькие — 3–7 ключей: `params`, `options`, заголовки отдельного HTTP-ответа. Поддерживать полноценную хеш-таблицу с массивом бакетов ради пяти пар расточительно: вычисление хеша, деление по модулю, косвенное обращение через массив индексов дороже, чем пройти по пяти парам последовательно.
 
@@ -24,7 +31,7 @@ AR table (≤8 элементов):
 └────────────────────┴──────────────────────────────────────────┘
 ```
 
-AR table размещается прямо в слоте объекта `RHash`, сразу после заголовка — без отдельной аллокации. Вся структура (~136 байт) помещается в два cache lines процессора (по 64 байта).
+AR table размещается прямо в слоте объекта `RHash`, сразу после заголовка — без отдельной аллокации. Вся структура (~136 байт) помещается в два cache lines процессора (по 64 байта). Последовательный обход 8 hints выигрывает за счёт [пространственной локальности кеша](../../../computer/data-path/00-memory-hierarchy.md) — все 8 байт hints лежат рядом в памяти.
 
 ### Поиск: hints вместо полного хеширования
 
@@ -122,8 +129,14 @@ struct RHash {
 
 Данные AR table или ST table размещаются после `ifnone` прямо в слоте — без отдельной аллокации для маленьких хешей. Флаги `RHASH_AR_TABLE_P` / `RHASH_ST_TABLE_P` в заголовке `RBasic.flags` определяют текущее представление — их проверяет каждая операция чтения и записи, чтобы выбрать правильный путь кода.
 
-## Источники
+## Sources
 
-- `hash.c`, `st.c`, `include/ruby/internal/core/rhash.h` — CRuby source
+- CRuby source: `hash.c` — Hash implementation: https://github.com/ruby/ruby/blob/master/hash.c
+- CRuby source: `st.c` — ST table (open addressing hash table): https://github.com/ruby/ruby/blob/master/st.c
+- Ruby docs: `Hash`: https://docs.ruby-lang.org/en/master/Hash.html
 - Vladimir Makarov, *New Hash Table Strategy for Ruby* — описание перехода на open addressing
 - Jean-Philippe Aumasson, Daniel J. Bernstein, *SipHash: a fast short-input PRF* — спецификация SipHash
+
+---
+
+← [Array](00-array.md) | [String](02-string.md) →

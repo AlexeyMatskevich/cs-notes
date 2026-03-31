@@ -1,6 +1,13 @@
 # Токенизация и парсинг
 
-**Предпосылки:** базовое понимание, что Ruby — интерпретируемый язык; [дерево](../../../algorithms-and-data-structures/non-linear/01-tree.md) (узлы с дочерними элементами); [стек](../../../algorithms-and-data-structures/linear/04-stack-queue-deque.md) (LIFO — последний вошёл, первый вышел).
+<details>
+<summary>Предпосылки</summary>
+
+базовое понимание, что Ruby — интерпретируемый язык; [дерево](../../../algorithms-and-data-structures/non-linear/01-tree.md) (узлы с дочерними элементами); [стек](../../../algorithms-and-data-structures/linear/04-stack-queue-deque.md) (LIFO — последний вошёл, первый вышел).
+
+</details>
+
+[Компиляция](01-compilation.md) →
 
 Каждый раз, когда вы запускаете Ruby-скрипт, ваш код проходит три превращения, прежде чем хоть что-то выполнится. Ruby берёт текст, разбирает его на части и трижды собирает в другом формате:
 
@@ -286,3 +293,7 @@ ruby --dump=parsetree -e '10.times do |n| puts n end'
 - Pat Shaughnessy, 2013, *Ruby Under a Microscope* — главы 1–2: токенизация, парсинг, LALR.
 - Kevin Newton, 2024, *The Prism Parser* — доклад о дизайне Prism.
 - Ruby 3.4.0 Release Notes — Prism как парсер по умолчанию: https://www.ruby-lang.org/en/news/2024/12/25/ruby-3-4-0-released/
+
+---
+
+[Компиляция](01-compilation.md) →
