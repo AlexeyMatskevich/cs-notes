@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a personal technical knowledge repository containing deep technical notes in Russian. Notes follow a narrative "story" pattern designed for understanding and retention, not reference lookup.
+This is a personal technical knowledge repository containing deep technical notes in Russian. Notes optimize for understanding and retention through linked facts, explicit dependencies, and causal explanation; index and overview files may be more map-like.
 
 ## File Map
 
 ```
 .
-├── styleguide.md              # writing methodology for all notes
-├── structure-guide.md         # structural patterns for notes
+├── styleguide.md              # writing guide and pedagogy of understanding
+├── structure-guide.md         # file structure and markup patterns
 ├── networking/
 │   ├── index.md               # networking: study order, how-it-all-connects, URL-to-page path
 │   ├── foundations/            # Ethernet, IP, DHCP, NAT, IPv6 (5 files)
@@ -144,29 +144,25 @@ No build step or runtime. Quick checks:
 
 **Read `styleguide.md` before writing or editing notes.** Key rules:
 
-1. **Narrative principle:** every document is a connected story, not a reference. Choose a narrative thread (axis) for the document — goal→problem→solution→result, chain of trade-offs, entity lifecycle, request/data path, or system layers. All threads are equal; pick the one that fits the topic best. Each concept should follow from the previous one through causal links.
+1. `styleguide.md` is the main writing guide. It defines how to design a strong note before writing, how to unfold it for the reader, and how to self-review it afterward. It is not a section template.
 
-2. **No styleguide vocabulary in final text:** The styleguide uses its own methodology terms internally ("нарратив", "мостик", "нить повествования", "граф зависимостей", "конечный эффект" as a methodology concept, "атомарное понятие", "уровень 0/1/2/3"). These terms must never leak into the notes. Technical terms ("массив", "B-tree", "транзакция") are fine. Normal Russian transitional phrases ("сначала разберём", "перейдём к", "выше мы говорили", "позже увидим") are also fine — they are natural language, not meta-language.
+2. No styleguide vocabulary in final text, and no self-referential commentary about what the document is doing. The note should talk about the subject, not about its own pedagogy.
 
-3. **No self-referential commentary about the document structure:** Avoid sentences that describe what the document/section is doing instead of explaining the subject matter (e.g. "В этой части мы прошли по цепочке компромиссов", "Следующий кусок пазла"). The text should talk about the topic, not about itself. This does NOT mean removing ordinary transitions — phrases like "сначала разберём X, потом перейдём к Y" are normal and improve readability.
+3. No prompt/session leakage. Avoid headings or sentences that only exist because of the current chat or author intent.
 
-4. **Layered disclosure for complex topics:** When a topic has 3+ interdependent components (e.g., MVCC = xmin/xmax + CLOG + Snapshot), start with an abstract layer — a compact mental model of the whole mechanism before diving into each component. Layer 0 = what it does and how parts connect; Layer 1 = each component in detail; Layer 2 = edge cases and optimizations.
+4. `Предпосылки` is the strict contract for technical knowledge: anything technical not explained in the note must be explicitly listed there. The repo-wide baseline is only non-technical human basics.
 
-5. **Dependency order:** Never use a term before defining it. Before writing a section, list its dependencies and ensure each is either already explained, in prerequisites, or explained right now.
+5. Never use a term before it is explained or declared in `Предпосылки`.
 
-6. **Prerequisites section:** Start documents/parts with explicit "Предпосылки" stating what reader should already know.
+6. For explanatory notes, use the full causal pedagogy from `styleguide.md`: motivation, point of entry, scenario, effect, gradual disclosure, and detail-on-demand. For `index.md`, overview, and reference-like files, not every explanatory default applies, but the invariants still do.
 
-7. **Concrete effects:** Trace every mechanism to observable outcomes (latency, memory, OOM, CPU), not abstract statements.
+7. For fundamental or branch-opening notes, prefer role before name. For complex interdependent systems, start with a compact whole-system map before component details.
 
-8. **Code anchors:** When introducing implementation names (`heap_page`, `rb_heap_t`), bind them to human concepts: "страница кучи (`struct heap_page`)". Include what it is, where it lives, and why it matters now.
+8. Trace mechanisms to observable effects and to the conditions where the concept becomes the right tool.
 
-9. **Prose over lists:** Bullet points break narrative flow. Use prose when possible.
+9. When using implementation names (`heap_page`, `rb_heap_t`), bind them to human concepts and explain what they are, where they live, and why they matter now.
 
-10. **No prompt/session leakage in notes:** The final text must not contain wording or structure that exists only because of the current conversation/prompt (even if the chat is not mentioned directly). Avoid “author intent” framing like “Чтобы почувствовать…”, “Дадим ментальную модель…”, “по просьбе…”. Headings should describe *what* is being explained, not *why the author decided to include it*. Causal “чтобы” is fine when it describes the system itself (e.g., “Чтобы обеспечить durability, PostgreSQL пишет WAL”).
-
-11. **Scenario-driven:** each note is built around a realistic scenario that threads through the document. Every technical detail (command, structure, parameter) is introduced at the moment the scenario creates a need for it — not in documentation order. Test: remove all technical details; the scenario alone should read as a coherent story of problems and solutions.
-
-12. **Cross-layer linking, not duplication:** concepts belong to the abstraction layer where they're defined (system-design → technology-specific → applied). Lower-level notes reference the upper level instead of re-explaining. If a statement is true for any message broker (not just Redis Stream), it belongs in `system-design/`, not in `redis/`.
+10. Keep concepts on their abstraction layer. Shared theory belongs above technology-specific implementation details, and adding new notes may require cascading updates to neighboring materials.
 
 ## File Organization
 
@@ -178,6 +174,7 @@ No build step or runtime. Quick checks:
 - Each themed directory has an `index.md` (study order, cross-links, "Как всё связано" trade-offs section)
 - Shared theory used by multiple technologies → extract to parent level (e.g. `system-design/replication.md`, `system-design/sharding.md`)
 - Cross-link related notes with relative links at the point of first mention
+- `structure-guide.md` owns navigation, `<details>`, tables, and other markup patterns
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections
 - When adding a new note, check for cascading changes: update `index.md`, cross-references in neighboring files, and the file map above

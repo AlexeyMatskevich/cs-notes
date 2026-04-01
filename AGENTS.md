@@ -6,8 +6,8 @@ This repository is a collection of technical notes. Contributions should optimiz
 
 ```
 .
-├── styleguide.md              # writing methodology for all notes
-├── structure-guide.md         # structural patterns for notes
+├── styleguide.md              # writing guide and pedagogy of understanding
+├── structure-guide.md         # file structure and markup patterns
 ├── networking/
 │   ├── index.md               # networking: study order, how-it-all-connects
 │   ├── foundations/            # Ethernet, IP, DHCP, NAT, IPv6 (5 files)
@@ -102,7 +102,8 @@ There is no build step or runtime for this repo.
 
 ## Coding Style & Naming Conventions
 
-- Follow `styleguide.md` for the writing “story” pattern (goal → problem → solution → result) and terminology rules.
+- Follow `styleguide.md` for note-writing principles: pedagogy of understanding, `Предпосылки` contract, dependency order, narrative/scenario guidance, and self-check.
+- Follow `structure-guide.md` for file structure, navigation, `<details>`, tables, and other markup patterns.
 - Notes must not “leak” the prompt/session: the final text should read as standalone subject matter, without “author intent” phrasing that exists only because of the current chat (e.g., headings like “Чтобы почувствовать…” or “по просьбе…”).
 - Use a single `#` title per note; use `##` for major sections; keep headings descriptive.
 - Use fenced code blocks with language tags (e.g. ```sql, ```rust) and keep examples minimal but runnable.
