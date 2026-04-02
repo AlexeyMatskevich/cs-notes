@@ -6,7 +6,7 @@ action: block
 conditions:
   - field: file_path
     operator: regex_match
-    pattern: (algorithms|computer|databases|linux|messaging|networking|rails|ruby|system-design)/.*\.md$
+    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design)/.*\.md$
   - field: new_text
     operator: regex_match
     pattern: (?i)нарратив|нить повествования|мостик(?!ов)|послойное раскрытие|граф зависимостей|конечный эффект|сквозной сценарий|обучающая архитектура|нарративный вход|нулевой вход

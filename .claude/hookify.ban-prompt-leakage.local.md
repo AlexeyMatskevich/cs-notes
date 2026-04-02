@@ -6,7 +6,7 @@ action: warn
 conditions:
   - field: file_path
     operator: regex_match
-    pattern: (algorithms|computer|databases|linux|messaging|networking|rails|ruby|system-design)/.*\.md$
+    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design)/.*\.md$
   - field: new_text
     operator: regex_match
     pattern: (?i)[Чч]тобы читателю|[Чч]тобы было проще понять|[Дд]ля лучшего понимания|[Пп]о просьбе|[Кк]ак вы просили|[Вв] этой сессии|[Дд]ля наглядности рассмотрим|[Чч]тобы закрепить понимание

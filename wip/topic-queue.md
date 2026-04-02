@@ -26,6 +26,10 @@
 - [x] Управление памятью ядра → [linux/kernel/04-memory-management.md](../linux/kernel/04-memory-management.md)
 - [ ] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё. (Базовые заметки теперь существуют — осталось обновить AOF.)
 
+## Programming
+
+- [ ] Двоичное представление данных: биты, байты, почему одна ячейка (байт = 8 бит) хранит числа от 0 до 255, как компьютер представляет числа, текст, инструкции. Может быть отдельной заметкой или секцией в `programming/01-assembler.md` (где впервые появляется «одна ячейка = 0-255»).
+
 ## Algorithms and Data Structures
 
 - [ ] Красно-чёрное дерево (самобалансирующийся BST) — используется в ядре Linux: CFS scheduler, epoll, VMA, ext4. Связано с `algorithms-and-data-structures/non-linear/03-bst.md`.

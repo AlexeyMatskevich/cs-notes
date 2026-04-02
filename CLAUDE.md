@@ -12,6 +12,21 @@ This is a personal technical knowledge repository containing deep technical note
 .
 ├── styleguide.md              # writing guide and pedagogy of understanding
 ├── structure-guide.md         # file structure and markup patterns
+├── programming/
+│   ├── index.md               # programming: entry point for the entire repo
+│   ├── 00-what-is-programming.md  # program, processor, memory, I/O
+│   ├── 01-assembler.md            # mnemonics, registers, addresses, pain of manual management
+│   ├── 02-variables-and-types.md  # named memory, primitive types, dynamic vs static typing
+│   ├── 03-conditions-and-io.md    # if/else, boolean logic, gets/puts
+│   ├── 04-loops.md                # while, goto → structured programming, imperative paradigm
+│   ├── 05-functions.md            # named code, parameters, return, scope
+│   ├── 06-collections.md          # array, dynamic array, hash
+│   ├── 07-oop.md                  # classes, objects, methods, inheritance, polymorphism
+│   ├── 08-fp.md                   # immutability, map/select/reduce, closures
+│   ├── 09-memory.md               # stack, heap, pointers, references, GC, ownership
+│   ├── 10-errors-and-exceptions.md # error codes, exceptions, Result
+│   ├── 11-compilation-and-interpretation.md # compiler, interpreter, VM, bytecode
+│   └── examples/                  # runnable code examples referenced from notes
 ├── networking/
 │   ├── index.md               # networking: study order, how-it-all-connects, URL-to-page path
 │   ├── foundations/            # Ethernet, IP, DHCP, NAT, IPv6 (5 files)
