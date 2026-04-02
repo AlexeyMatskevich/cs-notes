@@ -151,7 +151,9 @@ For creating new notes, use the 4-phase flow (`.claude/commands/`):
 
 State between phases persists in `wip/<slug>-{research,design,review}.md`.
 
-Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-time: no metalanguage, no self-reference, no prompt leakage, no interview framing, no CIS location leak, no wide Unicode arrows.
+Skills use approach B: they instruct the agent to **read specific styleguide sections at runtime** rather than duplicating rules. This keeps rules in one place (styleguide.md) and ensures the agent loads the actual content when needed.
+
+Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-time: no metalanguage, no self-reference, no prompt leakage, no interview framing, no CIS location leak, no wide Unicode arrows. Use `/hookify:list` to see all active rules.
 
 ## Writing Style Requirements
 
@@ -177,6 +179,8 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 
 10. Keep concepts on their abstraction layer. Shared theory belongs above technology-specific implementation details, and adding new notes may require cascading updates to neighboring materials.
 
+11. When rules conflict, follow the priority hierarchy from `styleguide.md` §0.3: invariants (prerequisites contract, no metalanguage) > narrative (scenario before mechanics, bridges) > completeness (lifecycle, effects, etymology) > style (prose vs lists, code anchors).
+
 ## File Organization
 
 **Read `structure-guide.md` for full structural patterns.** Key rules:
@@ -197,6 +201,16 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 - **No interview/preparation framing:** notes are technical material, never "interview prep". Words like "собеседование", "интервью", "подготовка к интервью" must not appear.
 - **Classical CS examples only:** cities → San Francisco, New York, London, Tokyo. Companies → Amazon, Netflix, Twitter/X, Google. People → Alice, Bob, Charlie. No references to the author or their location.
 - **ASCII diagrams — no wide Unicode arrows:** Characters `▼`, `▲`, `►`, `◄`, `▶` render wider than a standard monospace character and break diagram alignment. Use ASCII equivalents: `v`, `^`, `>`, `<`. Standard arrows `→`, `←`, `↑`, `↓` are fine in prose but avoid them inside box-drawing diagrams where alignment matters.
+
+## Gotchas
+
+Common agent mistakes when writing notes (hookify rules catch some mechanically, but awareness helps):
+
+- **Author bias (curse of knowledge):** if YOU understand something, it doesn't mean a reader with only the declared Prerequisites will. Every technical concept needs either explanation or a Prerequisites entry.
+- **Metalanguage leakage:** terms like "нарратив", "мостик", "послойное раскрытие" are styleguide vocabulary for the author — they must never appear in notes.
+- **Feature-list arc:** listing capabilities in documentation order instead of building a story where each step creates the need for the next.
+- **CIS location leakage:** agent may use author's location context (Almaty, Moscow, UTC+5) in examples. Always use classical CS examples.
+- **Structure before pedagogy:** file structure (how many files, what order) should be derived from the narrative arc, not decided independently.
 
 ## Commits
 
