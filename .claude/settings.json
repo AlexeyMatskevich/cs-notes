@@ -1,7 +1,6 @@
 {
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "claude-mem@thedotmack": true,
     "commit-commands@claude-plugins-official": true,
     "hookify@claude-plugins-official": true
   }
