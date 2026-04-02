@@ -140,6 +140,19 @@ No build step or runtime. Quick checks:
 - Find unfinished items: `rg "TODO|FIXME" .`
 - Note lengths: `wc -w *.md`
 
+## Writing Flow
+
+For creating new notes, use the 4-phase flow (`.claude/commands/`):
+
+1. `/note-research <topic>` — explore repo + collaborative brainstorm with author
+2. `/note-design <slug>` — pedagogical design (8 questions) → file structure from arc → integration plan
+3. `/note-draft <slug>` — write content following approved design, hookify guards active
+4. `/note-review <slug>` — 3 parallel reviewers: structural, checklist (33 items), naive reader (mental model building by 5-line blocks)
+
+State between phases persists in `wip/<slug>-{research,design,review}.md`.
+
+Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-time: no metalanguage, no self-reference, no prompt leakage, no interview framing, no CIS location leak, no wide Unicode arrows.
+
 ## Writing Style Requirements
 
 **Read `styleguide.md` before writing or editing notes.** Key rules:
