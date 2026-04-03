@@ -1,6 +1,6 @@
 # ABI и размещение данных
 
-**Предпосылки:** [процессор](../00-cpu.md) (регистры, конвейер), [CISC и RISC](00-isa.md) (ISA, micro-ops, CISC vs RISC).
+**Предпосылки:** [порядок байтов](../../foundations/05-endianness.md), [процессор](../00-cpu.md) (регистры, конвейер), [CISC и RISC](00-isa.md) (ISA, micro-ops, CISC vs RISC).
 
 ← [CISC и RISC](00-isa.md) | [SIMD и векторные расширения](02-simd.md) →
 
