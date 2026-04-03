@@ -1,6 +1,6 @@
 seller = {
   "name" => "Alice Store",
-  "country" => "KZ",
+  "country" => "US",
   "verification_state" => "verified",
   "blocked" => false,
   "active" => true,
@@ -54,7 +54,7 @@ invoice = {
   "commission_cents" => 2_400,
   "paid" => false,
   "overdue_days" => 3,
-  "country" => "KZ"
+  "country" => "US"
 }
 
 support_case = {
