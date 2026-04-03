@@ -153,7 +153,7 @@ This is a personal technical knowledge repository containing deep technical note
 │   │   └── jit.md                           # JIT: YJIT (BBV), ZJIT (method-based), guards, invalidation
 │   ├── index.md                         # Ruby: study order, internal vs concurrency
 │   └── ruby-concurrency.md                  # threads, GVL, Fiber, Ractor, серверы
-└── wip/                        # unfinished drafts
+└── wip/                        # unfinished drafts + note-flow process artifacts (*-research/design/review.md)
     ├── rust-async-multithreading.md
     └── topic-queue.md
 ```

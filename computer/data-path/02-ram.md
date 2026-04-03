@@ -1,6 +1,6 @@
 # Оперативная память
 
-**Предпосылки:** [когерентность кешей](01-cache-coherency.md) (cache line, MESI, false sharing).
+**Предпосылки:** [бит, байт](../../foundations/00-binary-and-bytes.md), [когерентность кешей](01-cache-coherency.md) (cache line, MESI, false sharing).
 
 ← [Когерентность кешей](01-cache-coherency.md) | [Хранилище](03-storage.md) →
 

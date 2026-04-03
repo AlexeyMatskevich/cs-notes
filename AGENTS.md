@@ -8,6 +8,14 @@ This repository is a collection of technical notes. Contributions should optimiz
 .
 ├── styleguide.md              # writing guide and pedagogy of understanding
 ├── structure-guide.md         # file structure and markup patterns
+├── foundations/
+│   ├── index.md               # foundations: study order, dependency graph
+│   ├── 00-binary-and-bytes.md     # bit, byte, binary, hex, interpretation
+│   ├── 01-integers.md             # unsigned, signed, two's complement, overflow
+│   ├── 02-bitwise-operations.md   # AND, OR, XOR, NOT, shifts, masks, flags
+│   ├── 03-floating-point.md       # IEEE 754, normalization, special values, precision
+│   ├── 04-text-encoding.md        # ASCII, code pages, Unicode, UTF-8, grapheme clusters
+│   └── 05-endianness.md           # little-endian, big-endian, network byte order
 ├── programming/
 │   ├── index.md               # programming: entry point for the whole repo
 │   ├── 00-what-is-programming.md  # program, processor, memory, I/O

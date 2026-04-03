@@ -1,6 +1,6 @@
 # ELF и линковка
 
-**Предпосылки:** [виртуальная память](../foundations/05-virtual-memory.md) (mmap, demand paging, ASLR), [процессы](../foundations/02-processes.md) (exec, fork+exec).
+**Предпосылки:** [бит, байт, hex](../../foundations/00-binary-and-bytes.md), [виртуальная память](../foundations/05-virtual-memory.md) (mmap, demand paging, ASLR), [процессы](../foundations/02-processes.md) (exec, fork+exec).
 
 ← [Управление памятью ядра](../kernel/04-memory-management.md) | [Терминалы](01-terminals.md) →
 

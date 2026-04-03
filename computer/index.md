@@ -50,6 +50,7 @@
 
 ## См. также
 
+- [Основы представления данных](../foundations/index.md) — бит, байт, двоичная система, целые числа, float, кодировки — фундамент, на который опирается этот раздел
 - [Linux](../linux/index.md) — операционная система, которая управляет этим оборудованием
 - [PostgreSQL: буферный кеш](../databases/postgresql/durability/01-buffer-cache.md) — shared_buffers и page cache как прикладной пример иерархии памяти
 - [PostgreSQL: WAL](../databases/postgresql/durability/00-wal.md) — sequential I/O как сознательный выбор ради производительности

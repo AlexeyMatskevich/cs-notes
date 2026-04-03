@@ -1,6 +1,6 @@
 # Внутренние кодировки
 
-**Предпосылки:** [String](../data-structures/00-string.md) (в том числе SDS), [Hash](../data-structures/01-hash.md), [List](../data-structures/02-list.md), [Set](../data-structures/03-set.md), [Sorted Set](../data-structures/04-sorted-set.md).
+**Предпосылки:** [бит, байт](../../../foundations/00-binary-and-bytes.md), [String](../data-structures/00-string.md) (в том числе SDS), [Hash](../data-structures/01-hash.md), [List](../data-structures/02-list.md), [Set](../data-structures/03-set.md), [Sorted Set](../data-structures/04-sorted-set.md).
 
 ← [AOF](../persistence/01-aof.md) | [Eviction](01-eviction.md) →
 
