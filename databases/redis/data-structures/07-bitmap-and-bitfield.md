@@ -1,6 +1,6 @@
 # Bitmap и Bitfield
 
-**Предпосылки:** [String](00-string.md), побитовые операции.
+**Предпосылки:** [String](00-string.md), [побитовые операции](../../../foundations/02-bitwise-operations.md).
 
 ← [HyperLogLog](06-hyperloglog.md) | [Pub/Sub](08-pub-sub.md) →
 
