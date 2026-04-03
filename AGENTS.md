@@ -8,6 +8,22 @@ This repository is a collection of technical notes. Contributions should optimiz
 .
 ├── styleguide.md              # writing guide and pedagogy of understanding
 ├── structure-guide.md         # file structure and markup patterns
+├── programming/
+│   ├── index.md               # programming: entry point for the whole repo
+│   ├── 00-what-is-programming.md  # program, processor, memory, I/O
+│   ├── 01-assembler.md            # mnemonics, registers, addresses
+│   ├── 02-variables-and-types.md  # named memory, primitive types, typing
+│   ├── 03-conditions-and-io.md    # if/else, boolean logic, input/output
+│   ├── 04-loops.md                # while, goto, structured programming
+│   ├── 05-functions.md            # named code, parameters, scope, call stack
+│   ├── 06-collections.md          # array, dynamic array, hash
+│   ├── 07-memory.md               # stack, heap, references, pointers, GC, ownership
+│   ├── 08-oop.md                  # classes, objects, methods, encapsulation
+│   ├── 09-inheritance-and-polymorphism.md  # class families, shared contract, dispatch
+│   ├── 10-fp.md                   # immutable transformations, map/select/reduce
+│   ├── 11-errors-and-exceptions.md # error codes, exceptions, Result
+│   ├── 12-compilation-and-interpretation.md # AOT, VM, direct interpretation
+│   └── examples/                  # runnable Ruby examples for the course
 ├── networking/
 │   ├── index.md               # networking: study order, how-it-all-connects
 │   ├── foundations/            # Ethernet, IP, DHCP, NAT, IPv6 (5 files)

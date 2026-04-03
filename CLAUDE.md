@@ -21,11 +21,12 @@ This is a personal technical knowledge repository containing deep technical note
 │   ├── 04-loops.md                # while, goto → structured programming, imperative paradigm
 │   ├── 05-functions.md            # named code, parameters, return, scope
 │   ├── 06-collections.md          # array, dynamic array, hash
-│   ├── 07-oop.md                  # classes, objects, methods, inheritance, polymorphism
-│   ├── 08-fp.md                   # immutability, map/select/reduce, closures
-│   ├── 09-memory.md               # stack, heap, pointers, references, GC, ownership
-│   ├── 10-errors-and-exceptions.md # error codes, exceptions, Result
-│   ├── 11-compilation-and-interpretation.md # compiler, interpreter, VM, bytecode
+│   ├── 07-memory.md               # stack, heap, references, pointers, GC, ownership
+│   ├── 08-oop.md                  # classes, objects, methods, encapsulation
+│   ├── 09-inheritance-and-polymorphism.md  # shared base behavior, subtype-specific behavior, common dispatch
+│   ├── 10-fp.md                   # immutable transformations, map/select/reduce
+│   ├── 11-errors-and-exceptions.md # error codes, exceptions, Result
+│   ├── 12-compilation-and-interpretation.md # AOT, VM, direct interpretation, compile time vs runtime
 │   └── examples/                  # runnable code examples referenced from notes
 ├── networking/
 │   ├── index.md               # networking: study order, how-it-all-connects, URL-to-page path
