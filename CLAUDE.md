@@ -12,7 +12,7 @@ Each domain has an `index.md` with study order, cross-links, and trade-offs. Use
 
 | Directory | What's inside |
 |-----------|--------------|
-| `styleguide.md` | Writing guide: pedagogy of understanding, 8-question design, self-check |
+| `styleguide.md` | Writing guide: pedagogy of understanding, design before writing, self-check |
 | `structure-guide.md` | File structure: naming, navigation, markup patterns, cascade rules |
 | `foundations/` | Bits, bytes, binary, integers, bitwise ops, IEEE 754, text encoding, endianness (6 notes) |
 | `programming/` | From "what is a program" through variables, loops, functions, collections, OOP, FP, errors, compilation (13 notes + examples/) |
@@ -40,13 +40,17 @@ No build step or runtime. Quick checks:
 For creating new notes, use the 4-phase flow (`.claude/commands/`):
 
 1. `/note-research <topic>` — explore repo + collaborative brainstorm with author
-2. `/note-design <slug>` — pedagogical design (8 questions) → file structure from arc → integration plan
-3. `/note-draft <slug>` — write content following approved design, hookify guards active
-4. `/note-review <slug>` — 3 parallel reviewers: structural, checklist (33 items), naive reader (mental model building by 5-line blocks)
+2. `/note-design <slug>` — draft explanation using prerequisite content → reader-agent perspective → concrete design artifacts → file structure from arc → integration plan
+3. `/note-draft <slug>` — write → naive reader agent per file → series uniformity check → integration
+4. `/note-review <slug>` — parallel reviewers: structural, checklist, naive reader (mental model building by 5-line blocks)
 
 State between phases persists in `wip/<slug>-{research,design,review}.md`.
 
-Skills use approach B: they instruct the agent to **read specific styleguide sections at runtime** rather than duplicating rules. This keeps rules in one place (styleguide.md) and ensures the agent loads the actual content when needed.
+### Prompt design principle
+
+**Commands describe what to produce, with constraints that require topic-specific content.** Every design step produces a concrete artifact (draft paragraph, cause-effect chain, example) grounded in specific prerequisite files. Naive reader agents provide perspective by simulating a reader who knows only the declared prerequisites.
+
+Skills instruct the agent to **read specific styleguide sections at runtime** rather than duplicating rules. This keeps rules in one place (styleguide.md) and ensures the agent loads the actual content when needed.
 
 Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-time: no metalanguage, no self-reference, no prompt leakage, no interview framing, no CIS location leak, no wide Unicode arrows. Use `/hookify:list` to see all active rules.
 
@@ -106,6 +110,7 @@ Common agent mistakes when writing notes (hookify rules catch some mechanically,
 - **Feature-list arc:** listing capabilities in documentation order instead of building a story where each step creates the need for the next.
 - **CIS location leakage:** agent may use author's location context (Almaty, Moscow, UTC+5) in examples. Always use classical CS examples.
 - **Structure before pedagogy:** file structure (how many files, what order) should be derived from the narrative arc, not decided independently.
+- **"Don't think about elephants" effect:** negative instructions in prompts activate the patterns they prohibit. Commands should describe what to produce with constraints that require specific content — concrete artifacts grounded in prerequisite files make generic output structurally impossible.
 
 ## Commits
 
