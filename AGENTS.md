@@ -37,3 +37,12 @@ This folder is not currently a Git work tree, so there is no existing commit sty
 
 - Never include secrets, private endpoints, or internal credentials in notes.
 - For non-obvious claims, add a short “Sources” section with links and relevant version numbers.
+
+## Review-Only Default
+
+Default mode for this repository is read-only.
+
+- Requests to inspect, verify, review, audit, explain, summarize, compare, trace history, or check facts must be handled without modifying files.
+- Do not create, edit, rewrite, rename, move, delete, stage, or commit files unless the primary task is to change repository contents.
+- When the request is ambiguous, assume no edits.
+- For review tasks, return findings, confirmations, inaccuracies, and proposed changes in the response only. The repository must remain unchanged.

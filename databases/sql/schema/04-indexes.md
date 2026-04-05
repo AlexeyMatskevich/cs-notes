@@ -117,7 +117,7 @@ ON orders (customer_id, created_at) INCLUDE (total);
 
 По умолчанию СУБД создаёт B-tree — подходит для `=`, `<`, `>`, `BETWEEN`, `IN`. Для поиска внутри составных значений (JSONB, массивы, полнотекстовый поиск) применяется GIN, для диапазонных типов и геометрии — GiST, для поиска только по равенству — Hash, для огромных append-only таблиц — BRIN. Подробности каждого типа — в [PostgreSQL: индексы](../../postgresql/indexes/00-btree.md).
 
-Создание и обслуживание индексов на production-таблицах требует осторожности — [PostgreSQL: индексы в production](../postgresql/04-index-operations.md).
+Создание и обслуживание индексов на production-таблицах требует осторожности — [PostgreSQL: индексы в production](../postgresql/04-index-operations.md). Создание индексов как часть миграции (включая уникальные индексы для constraints) — [миграции](../../migrations/00-safe-schema-changes.md).
 
 ## Sources
 

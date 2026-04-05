@@ -20,6 +20,7 @@ Each domain has an `index.md` with study order, cross-links, and trade-offs. Use
 | `algorithms-and-data-structures/` | Linear (array, list, hash, LRU…), non-linear (tree, BST, heap, B-tree…), techniques (19 notes) |
 | `databases/postgresql/` | Storage, durability, concurrency (MVCC, locks), query processing, indexes (29 notes) |
 | `databases/sql/` | Relational model, querying, schema, modification, PG-specific extensions (32 notes) |
+| `databases/migrations/` | Safe schema changes, schema evolution (expand-contract, backfilling, deploy ordering) (2 notes + index) |
 | `databases/redis/` | Architecture, atomicity, data structures, distribution, memory, patterns, persistence (29 notes) |
 | `rails/` | Redis in Rails (practice cases), Sidekiq |
 | `system-design/` | CAP, consistency, consensus, load balancing, reliability, caching, queues, API, microservices (15 notes + cases/) |

@@ -67,8 +67,11 @@ Row-level locks защищают данные. Но что если одна т�
 | Операция | Lock |
 |----------|------|
 | SELECT | ACCESS SHARE |
+| SELECT ... FOR SHARE | ROW SHARE |
 | UPDATE, DELETE, INSERT | ROW EXCLUSIVE |
-| CREATE INDEX CONCURRENTLY | SHARE UPDATE EXCLUSIVE |
+| CREATE INDEX CONCURRENTLY, VALIDATE CHECK | SHARE UPDATE EXCLUSIVE |
+| ADD FK (validated / NOT VALID) | SHARE ROW EXCLUSIVE (обе таблицы) |
+| VALIDATE FK | SHARE UPDATE EXCLUSIVE (child) + ROW SHARE (parent) |
 | CREATE INDEX | SHARE |
 | ALTER TABLE, DROP TABLE | ACCESS EXCLUSIVE |
 
@@ -202,7 +205,7 @@ end
 
 **Почему FOR UPDATE в "хорошем" примере?** Без него каждый `find` + `update` — отдельная блокировка. С FOR UPDATE мы явно берём все нужные блокировки сразу, в правильном порядке, до начала изменений.
 
-Блокировки дают механизм координации. Выбор между блокировками и уровнями изоляции зависит от конкретного сценария — [практические паттерны](04-patterns.md) помогают сделать этот выбор.
+Блокировки дают механизм координации. Выбор между блокировками и уровнями изоляции зависит от конкретного сценария — [практические паттерны](04-patterns.md) помогают сделать этот выбор. Как блокировки влияют на DDL в production — [миграции](../../migrations/00-safe-schema-changes.md).
 
 ## Sources
 

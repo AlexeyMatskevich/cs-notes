@@ -18,7 +18,7 @@ PostgreSQL расширяет стандартный SQL типами данны
 - [Триггеры](triggers.md) — автоматический вызов функций при DML
 
 ### Production DDL
-- [Индексы в production](04-index-operations.md) — CONCURRENTLY, REINDEX
+- [Индексы в production](04-index-operations.md) — CONCURRENTLY, REINDEX, USING INDEX
 - [EXCLUSION](05-exclusion-constraints.md) — запрет пересечений
 - [Партиционирование](06-partitioning.md) — RANGE/LIST/HASH, pruning, retention
 - [Материализованные представления](07-materialized-views.md) — REFRESH, CONCURRENTLY

@@ -26,7 +26,7 @@ PostgreSQL делает два прохода по таблице. Первый 
 
 ## Сбой при CONCURRENTLY — INVALID индекс
 
-При сбое CONCURRENTLY оставляет индекс в состоянии INVALID (англ. «недействительный»). Такой индекс не используется для запросов, но занимает место и замедляет запись — каждый INSERT и UPDATE обновляет его. Нужно удалить (`DROP INDEX idx_name`) и создать заново.
+При сбое CONCURRENTLY оставляет индекс в состоянии INVALID (англ. «недействительный»). Такой индекс не используется планировщиком для запросов, но занимает место и замедляет запись — каждый INSERT и UPDATE обновляет его. Для уникальных индексов INVALID-состояние может быть особенно опасным. Если сбой произошёл во второй фазе build-а (индекс уже помечен `indisready = true` в `pg_index`), PostgreSQL продолжает проверять уникальность при INSERT даже через INVALID-индекс, отклоняя строки-дубликаты. Если сбой в первой фазе (`indisready = false`), индекс не enforce uniqueness, но всё равно замедляет запись. Нужно удалить (`DROP INDEX CONCURRENTLY idx_name` — обычный DROP INDEX берёт ACCESS EXCLUSIVE и блокирует все запросы; как и CREATE INDEX CONCURRENTLY, DROP INDEX CONCURRENTLY не работает внутри транзакции) и создать заново.
 
 Проверка:
 
@@ -51,6 +51,23 @@ REINDEX INDEX CONCURRENTLY idx_orders_customer;  -- PostgreSQL 12+
 ```
 
 `REINDEX CONCURRENTLY` — неблокирующий аналог. Создаёт новый индекс рядом со старым, затем подменяет. Альтернативный подход: создать новый индекс CONCURRENTLY с другим именем, затем DROP старый.
+
+## USING INDEX — привязка индекса к constraint
+
+`ADD UNIQUE(col)` и `ADD PRIMARY KEY(col)` строят уникальный индекс под ACCESS EXCLUSIVE — блокировка на всё время построения. USING INDEX позволяет привязать уже существующий индекс к constraint без повторного построения:
+
+```sql
+CREATE UNIQUE INDEX CONCURRENTLY idx_orders_external_id ON orders (external_id);
+
+ALTER TABLE orders ADD CONSTRAINT orders_external_id_uq
+  UNIQUE USING INDEX idx_orders_external_id;
+```
+
+Первый шаг — неблокирующее построение (SHARE UPDATE EXCLUSIVE). Второй — мгновенная привязка (ACCESS EXCLUSIVE на микросекунды). Ограничение: не работает для партиционированных таблиц (PostgreSQL 9.2+, только не-партиционированные).
+
+**Предусловие для live-таблиц:** если uniqueness создаётся впервые, во время CONCURRENTLY build дубликаты могут проскочить (uniqueness не enforce до второй фазы). На таблице с активными writes необходимо приостановить запись в столбец + дождаться завершения in-flight транзакций перед запуском build. Полный workflow с защитой от дубликатов — в [миграциях](../../migrations/00-safe-schema-changes.md).
+
+Для PRIMARY KEY столбец должен быть NOT NULL до USING INDEX — иначе PostgreSQL выполнит implicit SET NOT NULL с полным сканированием таблицы под ACCESS EXCLUSIVE. Безопасное добавление NOT NULL — там же.
 
 ## Sources
 
