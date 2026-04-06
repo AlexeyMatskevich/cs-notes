@@ -17,7 +17,7 @@ ZADD leaderboard 175 "carol"
 
 ZSCORE leaderboard "carol"                   -- → 175
 ZRANK leaderboard "carol"                    -- → 1 (второе место по возрастанию, индекс с 0)
-ZREVRANK leaderboard "carol"                 -- → 1 (второе с конца)
+ZREVRANK leaderboard "carol"                 -- → 1 (серебро: bob=0, carol=1, alice=2)
 
 ZRANGE leaderboard 0 2 REV WITHSCORES       -- топ-3 по убыванию (Redis 6.2+)
 -- → [["bob", 250], ["carol", 175], ["alice", 100]]

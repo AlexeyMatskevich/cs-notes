@@ -1,6 +1,6 @@
 # Set
 
-**Предпосылки:** [String](00-string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), множество (математическое).
+**Предпосылки:** [String](00-string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
 
 ← [List](02-list.md) | [Sorted Set](04-sorted-set.md) →
 
