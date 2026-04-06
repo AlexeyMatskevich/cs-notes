@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Review Notes"
+  short_description: "Deep review and repair of technical notes"
+  default_prompt: "Use $deep-review-notes to deeply review and improve the notes in `databases/redis`."
