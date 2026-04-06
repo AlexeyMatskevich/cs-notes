@@ -21,6 +21,7 @@ Read the live `styleguide.md`, `structure-guide.md`, and, when present, reposito
 - Avoid formulaic rewrites. The repaired note must read like a natural standalone explanation, not like a text that was merely made to pass review.
 - Treat the repository as a layered curriculum, not as isolated folders. Understand where the current material sits in the broader teaching graph and how it depends on lower layers or feeds higher ones.
 - Treat deletion as expensive. If a passage feels problematic, first ask whether it is wrong, misplaced, too detailed for this layer, or simply needs to move to another file. Do not delete useful information just because the current section cannot carry it well.
+- Treat `Предпосылки` and integrated links as complementary tools. `Предпосылки` define what the reader may know; local links and anchors disambiguate what the current sentence is pointing at, especially when wording differs from the prerequisite file.
 
 ## Workflow
 
@@ -42,9 +43,29 @@ Read the live `styleguide.md`, `structure-guide.md`, and, when present, reposito
 
 ### 3. Run Parallel Reviewer Lenses
 
-If subagents are available and the task benefits from parallel pressure, spawn independent reviewers. Pass concrete file paths, not vague folder names.
+If subagents are available and the task benefits from parallel pressure, spawn independent reviewers. The point of parallel review is not to assemble a committee or average opinions. The point is to put the text under several different kinds of pressure that correspond to how explanatory notes succeed or fail.
 
-Use the prompts in [references/reviewer-lenses.md](references/reviewer-lenses.md) and adapt them to the exact files. Prefer distinct lenses rather than duplicate reviewers.
+Use the prompts in [references/reviewer-lenses.md](references/reviewer-lenses.md) and adapt them to the exact files. Prefer distinct lenses rather than duplicate reviewers. Each reviewer should own one deep question about the note, not a generic mandate to "check quality".
+
+Before spawning reviewers:
+- pass exact file paths, order, relevant prerequisite files, and nearby files when the lens needs them;
+- tell the reviewer whether the target is a single note, a short sequence, or a folder-level cluster;
+- keep the prompt narrow enough that the model can think, not just enumerate;
+- do not leak your diagnosis, intended rewrite, or preferred conclusion.
+
+A strong reviewer prompt does four things:
+- states the lens's real goal in terms of reader understanding or note placement;
+- tells the reviewer what not to optimize for;
+- asks for a small number of high-leverage findings instead of a long checklist dump;
+- asks for root-cause thinking and repair direction, not only local complaints.
+
+A strong reviewer report usually contains:
+- a short thesis about what the note seems to be trying to teach and where it succeeds or fails;
+- as many findings as are actually needed to explain the problem shape; sometimes one root cause is enough, sometimes several distinct issues matter;
+- for each finding: symptom, why it harms understanding, likely root cause, and preferred class of fix;
+- one highest-leverage rewrite direction or restructuring move.
+
+Weak reviewer reports sound like restated checklist bullets, line-by-line proofreading, or generic "needs more motivation / more detail / clearer wording" comments that do not explain what cognitive failure they observed.
 
 Recommended lenses:
 - `prerequisites`
@@ -56,13 +77,18 @@ Recommended lenses:
 - `reader`
 
 Recommended model split:
-- `reader` -> `gpt-5.3-codex-spark` with `low` reasoning effort by default. This lens is intentionally constrained, repetitive, and adversarial; optimize for speed. If it starts drifting from the 5-line method, raise it to `medium`.
-- `prerequisites` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs careful boundary judgment but not the heaviest model.
-- `entry` -> `gpt-5.4-mini` with `high` reasoning effort. This lens is about reader motivation and the felt need for the concept.
-- `narrative` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs continuity judgment across sections.
-- `effect` -> `gpt-5.4-mini` with `high` reasoning effort by default; upgrade to `gpt-5.4` with `medium` or `high` reasoning when the topic is especially subtle or mechanism-heavy.
-- `layers` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs graph and boundary awareness across nearby notes.
-- `factcheck` -> `gpt-5.4` with `medium` or `high` reasoning effort. Use the strongest reviewer here because factual precision and source interpretation matter more than speed.
+- `reader` -> `gpt-5.3-codex-spark` with `low` reasoning effort by default. This lens should be rigid, repetitive, and narrow. Give it a fixed ontology and a fixed method. Optimize for speed and friction detection, not sophistication. If it starts drifting from the 5-line method, raise it to `medium`.
+- `prerequisites` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs contract judgment, not brute-force sophistication. Prompt it around one deep question: can the declared reader actually follow the note?
+- `entry` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs felt motivation, scenario recognition, and restraint against generic hooks or "why it matters" filler.
+- `narrative` -> `gpt-5.4-mini` with `high` reasoning effort. This lens should track causal flow and catch the moment the note turns reference-like or documentation-shaped.
+- `effect` -> `gpt-5.4-mini` with `high` reasoning effort by default; upgrade to `gpt-5.4` with `medium` or `high` reasoning when the topic is especially subtle or mechanism-heavy. This lens needs to judge whether the note leaves the reader able to explain, choose, and reason.
+- `layers` -> `gpt-5.4-mini` with `high` reasoning effort. This lens needs graph and boundary awareness across nearby notes and should think in terms of move/split/link, not deletion.
+- `factcheck` -> `gpt-5.4` with `medium` or `high` reasoning effort. Use the strongest reviewer here because factual precision, version scoping, source interpretation, and safe simplification judgment matter more than speed.
+
+Prompt freedom should match the model:
+- for `gpt-5.3-codex-spark`, use tight process constraints and a fixed output shape;
+- for `gpt-5.4-mini`, ask one interpretive question and ask for argued findings only where they materially help explain the note's failure or success;
+- for `gpt-5.4`, allow broader search and synthesis but require evidence and source discipline.
 
 Keep final editorial judgment in the main agent. If model availability changes, preserve the intent of the split: fastest model for `reader`, strongest model for `factcheck`, and a careful mid-to-strong model for the interpretive reviewers.
 
@@ -109,6 +135,7 @@ Rules for reviewer agents:
 - When rewriting, design the causal arc first: what question opens the section, what each paragraph adds to the reader model, and what concrete understanding the section should leave behind.
 - Keep the final prose free of prompt leakage, styleguide vocabulary, and formulaic repair artifacts.
 - Before deleting material, explicitly ask: should this be corrected, compressed, moved, split into another note, linked upward or downward, or actually removed? Deletion is the last option, not the default cleanup move.
+- When a concept is allowed by `Предпосылки` but the local wording may still leave lexical doubt, add an integrated cross-link at the first meaningful use. If the target file is broad, prefer a heading anchor to the exact subsection.
 
 ### 5. Run Before/After Regression Review
 
@@ -148,7 +175,8 @@ If a verification pass reveals a new problem, fix it and restart the relevant pa
 Use `structure-guide.md` mechanically after the content work:
 - naming and numbering
 - `prev/next` navigation
-- cross-links at first mention
+- cross-links at first meaningful mention
+- anchors when a whole-file link would be too broad
 - `index.md` updates
 - bidirectional links where expected
 - cascading fixes in adjacent notes
