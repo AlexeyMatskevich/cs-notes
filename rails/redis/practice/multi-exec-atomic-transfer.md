@@ -4,7 +4,7 @@
 
 ## Гонка без транзакции
 
-`INCR` атомарен сам по себе, но если логика требует прочитать значение, принять решение и записать результат — между чтением и записью может вклиниться другой процесс:
+Каждая отдельная команда Redis атомарна, но последовательность `GET` → решение → `SET` -- нет. Между чтением и записью сервер успевает обработать команду от другого клиента, и тот перезаписывает значение на основе уже устаревших данных:
 
 ```ruby
 REDIS.with do |r|
@@ -26,18 +26,22 @@ def transfer(from_id, to_id, amount)
   key_to   = "balance:user:#{to_id}"
 
   REDIS.with do |r|
+    # WATCH помечает ключи для наблюдения:
+    # если кто-то изменит их до EXEC — транзакция отменится
     r.watch(key_from, key_to) do |conn|
       balance = conn.get(key_from).to_i
 
       if balance < amount
-        conn.unwatch
+        conn.unwatch  # снимаем наблюдение, транзакции не будет
         return :insufficient_funds
       end
 
+      # MULTI открывает транзакцию — команды буферизуются, не выполняются
       result = conn.multi do |tx|
         tx.decrby(key_from, amount)
         tx.incrby(key_to, amount)
       end
+      # EXEC выполняет буфер атомарно; nil — конфликт (WATCH сработал)
 
       result ? :ok : :conflict
     end
