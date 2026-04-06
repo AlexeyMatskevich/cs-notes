@@ -1,6 +1,6 @@
 # Объектно-ориентированное программирование
 
-**Предпосылки:** [Коллекции](06-collections.md) (массивы, хеши), [Память](07-memory.md) (общие данные, изменение по ссылке).
+**Предпосылки:** [Функции](05-functions.md) (определение функции, параметры), [Коллекции](06-collections.md) (массивы, хеши), [Память](07-memory.md) (общие данные, изменение по ссылке).
 
 <- [Память](07-memory.md) | [Наследование и полиморфизм](09-inheritance-and-polymorphism.md) ->
 
@@ -32,84 +32,55 @@
 
 ```ruby
 class Seller
-  attr_reader :name, :country
-
-  def initialize(name, country:, verification_state:, blocked:, active:, balance_cents:, rating:)
+  def initialize(name, verified, balance_cents)
     @name = name
-    @country = country
-    @verification_state = verification_state
-    @blocked = blocked
-    @active = active
+    @verified = verified
     @balance_cents = balance_cents
-    @rating = rating
   end
 
-  def display_name
-    @name + " (" + @country + ")"
-  end
-
-  def blocked?
-    @blocked || !@active
+  def name
+    @name
   end
 
   def can_withdraw?
-    @verification_state == "verified" &&
-      !blocked? &&
-      @balance_cents >= 10_000
+    @verified && @balance_cents >= 10_000
   end
 
-  def risk_badge
-    return "blocked" if blocked?
-    return "watch" if @rating < 4.0
-    "normal"
-  end
-
-  def suspend
-    @blocked = true
+  def deposit(amount)
+    @balance_cents = @balance_cents + amount
   end
 end
 ```
 
-Этот код вводит несколько новых конструкций Ruby. Разберём каждую.
+`class Seller ... end` описывает тип объекта. Всё между `class` и `end` относится к продавцу как к сущности: и данные, и операции над ними.
 
-**`class Seller ... end`** описывает тип объекта. Всё между `class` и `end` принадлежит этому типу: и данные, и операции над ними.
+`def initialize(...)` — специальный метод, который Ruby вызывает при создании нового объекта. Значения `name`, `verified` и `balance_cents` приходят снаружи, а `@name`, `@verified` и `@balance_cents` становятся состоянием конкретного продавца. Префикс `@` показывает: это данные объекта, доступные его методам.
 
-**`def initialize(name, country:, ...)`** — метод, который Ruby вызывает автоматически при создании объекта. Аргументы вроде `country:` — именованные: при вызове нужно писать `country: "US"`, а не надеяться на правильный порядок. Это удобнее позиционных параметров из [Функций](05-functions.md), когда параметров много.
+Метод — это та же функция, но привязанная к объекту. `name` возвращает имя продавца, `can_withdraw?` проверяет правило, `deposit` меняет баланс.
 
-**`@name`, `@country`, `@blocked`, ...** — переменные экземпляра. Префикс `@` означает, что переменная принадлежит конкретному объекту и доступна из любого его метода. Обычные переменные (без `@`) живут только внутри одного метода, как мы уже видели в [области видимости](05-functions.md).
+Такой ход встречается не только в Ruby. В Java и C# данные и методы тоже собирают в `class`. В Rust ту же роль часто играет пара `struct` + `impl`: данные лежат в структуре, а связанные операции описываются рядом.
 
-**`attr_reader :name, :country`** создаёт методы для чтения: после этой строки код снаружи может вызвать `seller.name` и получить значение `@name`. Без `attr_reader` доступ к `@name` извне невозможен. `:name` здесь — символ (symbol), неизменяемое имя; он указывает, для какой переменной создать метод чтения.
-
-**`display_name`, `blocked?`, `can_withdraw?`, `risk_badge`, `suspend`** — методы объекта. Знак `?` в конце имени — Ruby-соглашение для методов, которые отвечают на вопрос да/нет и возвращают `true` или `false`.
-
-`Seller.new(...)` создаёт новый объект и вызывает `initialize` с переданными аргументами. Точка в `seller.display_name` означает «вызвать метод `display_name` у объекта `seller`» — это dot-нотация, общий способ обращения к методам объекта:
+`Seller.new(...)` создаёт новый объект и вызывает `initialize`. Точка в `seller.name` означает «вызвать метод `name` у объекта `seller`»:
 
 ```ruby
-seller = Seller.new(
-  "Alice Store",
-  country: "US",
-  verification_state: "verified",
-  blocked: false,
-  active: true,
-  balance_cents: 18_000,
-  rating: 4.7
-)
+seller = Seller.new("Alice Store", true, 9_000)
 
-puts seller.display_name
-puts seller.can_withdraw?
-seller.suspend
-puts seller.risk_badge
+puts seller.name
+puts seller.can_withdraw?   # false
+
+seller.deposit(2_000)
+puts seller.can_withdraw?   # true
 ```
 
-Теперь правила работы с продавцом собраны рядом с самими данными. Точно так же в большом коде отдельными классами обычно становятся `PayoutRequest`, `Listing`, `Shipment`, `Refund`, `Invoice` и другие сущности.
+Теперь правило вывода денег и изменение баланса живут рядом с данными продавца. Внешнему коду больше не нужно помнить, в каком хеше лежит `balance_cents` и какой ещё флаг надо проверить.
 
 ## Инкапсуляция
 
 Инкапсуляция (от лат. capsula — «коробочка») означает: объект сам контролирует, как его меняют.
 
-В примере выше код снаружи не может просто так записать `@blocked = true` или подменить правило `can_withdraw?` в случайном месте файла. Изменение идёт через `suspend`, а чтение важных состояний — через `blocked?`, `can_withdraw?` и `risk_badge`.
+В таком дизайне внешний код не пишет что-то вроде `seller["balance_cents"] = seller["balance_cents"] + 2000`. Он вызывает `deposit`, а проверку делает через `can_withdraw?`. Это не технический запрет, а договор о границах: состояние меняется через понятные точки входа.
 
-Так код снаружи видит меньше деталей. Это снова снижает нагрузку на чтение: чтобы понять, как можно изменить продавца, достаточно посмотреть публичные методы класса.
+Так код снаружи видит меньше деталей. Чтобы понять, как можно работать с продавцом, достаточно посмотреть методы класса.
 
 Класс окупается тогда, когда у сущности есть данные **и** правила работы с ними. Если данные просто передаются из функции в функцию без собственного поведения — хеша достаточно.
 
@@ -119,12 +90,16 @@ puts seller.risk_badge
 
 ```ruby
 sellers = [
-  Seller.new("Alice Store", country: "US", verification_state: "verified", blocked: false, active: true, balance_cents: 18_000, rating: 4.7),
-  Seller.new("North Goods", country: "PL", verification_state: "pending", blocked: false, active: true, balance_cents: 7_000, rating: 3.9)
+  Seller.new("Alice Store", true, 18_000),
+  Seller.new("North Goods", false, 7_000)
 ]
 
 sellers.each do |seller|
-  puts seller.display_name + ": " + seller.risk_badge
+  if seller.can_withdraw?
+    puts seller.name + ": payout ready"
+  else
+    puts seller.name + ": payout blocked"
+  end
 end
 ```
 
