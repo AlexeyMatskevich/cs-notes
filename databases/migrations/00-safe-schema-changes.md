@@ -9,11 +9,11 @@
 
 ← [Обзор серии](index.md) | [Эволюция схемы](01-schema-evolution.md) →
 
-Добавить столбец на таблицу в dev — мгновенно. На `orders` с 50 миллионами строк та же операция может занять минуты и заблокировать все запросы. Разница — не в команде, а в том, что PostgreSQL делает под блокировкой: обновить запись в системном каталоге — микросекунды, или перезаписать каждую строку таблицы — минуты.
+Добавить столбец на таблицу в dev — мгновенно. На `orders` с 50 миллионами строк та же операция может занять минуты и заблокировать все запросы. Разница — не в команде, а в том, что PostgreSQL делает под блокировкой: обновить запись в системном каталоге (внутренние таблицы PostgreSQL, где хранится информация о структуре всех таблиц, столбцов и ограничений) — микросекунды, или перезаписать каждую строку таблицы — минуты.
 
 ## Стоимость DDL-операций
 
-Безопасность операции определяют три характеристики: уровень блокировки, тип действия (metadata / scan / rewrite) и длительность.
+Безопасность операции определяют три характеристики: уровень блокировки, тип действия (metadata / scan / rewrite) и длительность. ACCESS EXCLUSIVE на микросекунды (metadata) — не проблема. ACCESS EXCLUSIVE на минуты (rewrite или full scan) — катастрофа: все запросы к таблице, включая SELECT, заблокированы. Длительность зависит не от уровня блокировки, а от типа действия.
 
 **Столбцы и переименование:**
 
@@ -43,18 +43,18 @@
 
 | Операция | Блокировка | Действие | Длительность |
 |----------|-----------|----------|-------------|
-| CREATE INDEX | SHARE | build | пропорционально размеру; блокирует writes |
+| CREATE INDEX | SHARE | build | пропорционально размеру; блокирует writes, reads продолжают работать |
 | CREATE INDEX CONCURRENTLY | SHARE UPDATE EXCLUSIVE | two-phase build | дольше; не блокирует DML |
 
-ACCESS EXCLUSIVE на микросекунды (metadata) — не проблема. ACCESS EXCLUSIVE на минуты (rewrite или full scan) — катастрофа. Длительность зависит не от уровня блокировки, а от типа действия.
-
-При этом даже мгновенный ACCESS EXCLUSIVE попадает в [очередь блокировок](../postgresql/concurrency/03-locks.md). Если в момент ALTER TABLE долгий SELECT держит ACCESS SHARE, ALTER TABLE ждёт — а все последующие запросы выстраиваются за ним. Ожидание в секунды терпимо. В минуты — весь трафик к таблице встаёт.
+Даже мгновенный ACCESS EXCLUSIVE попадает в [очередь блокировок](../postgresql/concurrency/03-locks.md#table-level-locks--защита-структуры-таблицы): если долгий SELECT держит ACCESS SHARE, ALTER TABLE ждёт — а все последующие запросы выстраиваются за ним. Ожидание в секунды терпимо. В минуты — весь трафик к таблице встаёт.
 
 Таблицы предполагают одно действие на один ALTER TABLE. При объединении нескольких действий (`ALTER TABLE t ADD COLUMN ..., ALTER COLUMN ...`) PostgreSQL берёт самую строгую блокировку и удерживает до конца — metadata в паре с rewrite получает блокировку на всё время rewrite.
 
 Операции с полным сканированием или перезаписью таблицы под ACCESS EXCLUSIVE опасны. Но у многих есть безопасные альтернативы.
 
 ## Ограничения без полного сканирования
+
+ADD CHECK и ADD FOREIGN KEY проверяют каждую существующую строку под ACCESS EXCLUSIVE — на 50M строк таблица заблокирована на минуты. Но проверку можно разделить на два шага: зарегистрировать ограничение мгновенно, а существующие данные проверить позже под лёгкой блокировкой.
 
 ### CHECK и FK — NOT VALID и VALIDATE
 
@@ -75,7 +75,7 @@ ALTER TABLE orders ADD CONSTRAINT orders_amount_positive
 ALTER TABLE orders VALIDATE CONSTRAINT orders_amount_positive;
 ```
 
-Для FK — VALIDATE сканирует обе таблицы (дочернюю и родительскую). На больших таблицах VALIDATE конфликтует с [VACUUM](../postgresql/maintenance/00-vacuum.md) и другим DDL — долгий VALIDATE может задержать очистку.
+Для FK — VALIDATE сканирует обе таблицы (дочернюю и родительскую). На больших таблицах VALIDATE конфликтует с [VACUUM](../postgresql/maintenance/00-vacuum.md) (фоновая очистка мёртвых версий строк) и другим DDL — долгий VALIDATE может задержать очистку.
 
 ### NOT NULL
 
@@ -104,7 +104,7 @@ CHECK, FK и NOT NULL можно добавить в два шага. Уника
 
 `ADD UNIQUE(col)` и `ADD PRIMARY KEY(col)` берут ACCESS EXCLUSIVE и строят уникальный индекс — блокировка на всё время построения. На 50M строк — минуты.
 
-Безопасный путь: создать уникальный индекс [неблокирующим способом](../sql/postgresql/04-index-operations.md), затем привязать constraint к готовому индексу через USING INDEX:
+Безопасный путь: создать уникальный индекс [неблокирующим способом](../sql/postgresql/04-index-operations.md#create-index-concurrently), затем привязать constraint к готовому индексу через [USING INDEX](../sql/postgresql/04-index-operations.md#using-index--привязка-индекса-к-constraint):
 
 ```sql
 -- 1. SHARE UPDATE EXCLUSIVE — не блокирует DML
@@ -116,7 +116,7 @@ ALTER TABLE orders ADD CONSTRAINT orders_external_id_uq
   UNIQUE USING INDEX idx_orders_external_id;
 ```
 
-USING INDEX привязывает существующий индекс к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [частичные](../sql/schema/04-indexes.md#частичный-индекс) и [expression-индексы](../sql/schema/04-indexes.md#expression-индекс) привязать нельзя. Не поддерживается для партиционированных таблиц.
+USING INDEX привязывает существующий индекс к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [частичные](../sql/schema/04-indexes.md#частичный-индекс) и [expression-индексы](../sql/schema/04-indexes.md#expression-индекс) привязать нельзя. Не поддерживается для партиционированных таблиц (таблиц, разбитых на части по ключу партиционирования).
 
 Для PRIMARY KEY — тот же рецепт, но столбец должен быть NOT NULL **до** USING INDEX. Если столбец nullable, PostgreSQL выполняет неявный SET NOT NULL с полным сканированием под ACCESS EXCLUSIVE — блокирующая операция. Безопасная последовательность: сначала safe NOT NULL через CHECK-паттерн (см. выше), затем USING INDEX.
 
@@ -134,13 +134,13 @@ GROUP BY external_id
 HAVING COUNT(*) > 1;
 ```
 
-[CONCURRENTLY build](../sql/postgresql/04-index-operations.md) проходит в две фазы. В первой уникальность ещё не проверяется — дубликаты, вставленные в это время, приведут к сбою build во второй фазе. Порядок:
+[CONCURRENTLY build](../sql/postgresql/04-index-operations.md#create-index-concurrently) проходит в две фазы. В первой уникальность ещё не проверяется — дубликаты, вставленные в это время, приведут к сбою build во второй фазе. Порядок:
 
 1. Проверить дубликаты (SQL выше), вычистить если есть
 2. Приостановить writes в столбец (переключатель в коде приложения), дождаться завершения in-flight транзакций
 3. Запустить build
 4. Если успех — возобновить writes
-5. Если сбой — удалить [INVALID-индекс](../sql/postgresql/04-index-operations.md) (`DROP INDEX CONCURRENTLY`), разобраться с причиной, повторить с шага 3
+5. Если сбой — удалить [INVALID-индекс](../sql/postgresql/04-index-operations.md#сбой-при-concurrently--invalid-индекс) (`DROP INDEX CONCURRENTLY`), разобраться с причиной, повторить с шага 3
 
 Writes приостановлены на время build, не на время DROP — DROP просто убирает сломанный индекс.
 
@@ -158,7 +158,7 @@ PostgreSQL 11+ сохраняет default в системном каталоге
 
 Fast default с `CURRENT_TIMESTAMP` мгновенный по блокировкам, но все существующие строки получают **один** timestamp — время начала транзакции, в которой выполняется ALTER TABLE (потому что `CURRENT_TIMESTAMP` = `now()` = время начала транзакции). Для audit-столбцов (`created_at`, `updated_at`) это тихое искажение: миллионы строк с одинаковым временем, не соответствующим реальности.
 
-Если существующие строки должны получить реальные значения — столбец добавляется nullable без DEFAULT, данные заполняются отдельно ([backfill](01-schema-evolution.md)), default ставится для будущих записей:
+Если существующие строки должны получить реальные значения — столбец добавляется nullable без DEFAULT, данные заполняются отдельно ([backfill](01-schema-evolution.md#backfilling)), default ставится для будущих записей:
 
 ```sql
 -- 1. Nullable, без DEFAULT (мгновенно)
@@ -178,7 +178,7 @@ ALTER TABLE orders ALTER COLUMN region SET DEFAULT 'unknown';
 
 ### lock_timeout — защита от очереди
 
-[lock_timeout](../postgresql/concurrency/03-locks.md) ограничивает время ожидания блокировки. Если ALTER TABLE не получил блокировку за заданное время — операция отменяется, очередь не растёт:
+[lock_timeout](../postgresql/concurrency/03-locks.md#table-level-locks--защита-структуры-таблицы) ограничивает время ожидания блокировки. Если ALTER TABLE не получил блокировку за заданное время — операция отменяется, очередь не растёт:
 
 ```sql
 SET lock_timeout = '5s';
@@ -220,6 +220,8 @@ CREATE INDEX CONCURRENTLY не работает в транзакции, поэ�
 
 ## Диагностика
 
+`pg_stat_activity` — системное представление, по одной строке на каждое серверное соединение: текущий запрос, состояние, время начала транзакции. `pg_index` — системный каталог индексов, включая флаг валидности.
+
 ```sql
 -- Долгие открытые транзакции (блокируют DDL, мешают VACUUM)
 SELECT pid, usename, state, query,
@@ -245,7 +247,7 @@ WHERE state = 'idle in transaction'
   AND datname = current_database();
 ```
 
-Если приложение использует [реплики](../postgresql/distribution/00-replication.md) — при длительных backfill-операциях следить за replication lag: массовые UPDATE генерируют [WAL](../postgresql/durability/00-wal.md) (Write-Ahead Log — журнал предзаписи), replica может отставать.
+Если приложение использует [реплики](../postgresql/distribution/00-replication.md) — при длительных backfill-операциях следить за replication lag: массовые UPDATE генерируют [WAL](../postgresql/durability/00-wal.md#решение-write-ahead-log-wal) (Write-Ahead Log — журнал, в который PostgreSQL записывает изменения до их применения к данным), replica может отставать.
 
 ## Практические правила
 
@@ -264,7 +266,7 @@ WHERE state = 'idle in transaction'
 - ADD FK NOT VALID (обе таблицы)
 
 **App-unsafe** — DDL мгновенный, код ломается при rolling deploy:
-- DROP COLUMN, RENAME COLUMN → [expand-contract](01-schema-evolution.md)
+- DROP COLUMN, RENAME COLUMN → [expand-contract](01-schema-evolution.md#expand-contract)
 
 **Downtime / expand-contract:**
 - ALTER COLUMN TYPE с перезаписью

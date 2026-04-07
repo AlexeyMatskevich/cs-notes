@@ -51,7 +51,7 @@
 
 ### Проектирование схемы
 
-Практический DDL (CREATE TABLE, constraints, партиционирование) — в [SQL: определение структуры](../sql/schema/00-tables-and-types.md). PG-специфичные расширения (JSONB, массивы, полнотекстовый поиск, функции) — в [SQL: PostgreSQL](../sql/postgresql/index.md).
+Практический DDL (CREATE TABLE, constraints, партиционирование) — в [SQL: определение структуры](../sql/schema/00-tables-and-types.md). PG-специфичные расширения (JSONB, массивы, полнотекстовый поиск, функции) — в [SQL: PostgreSQL](../sql/postgresql/index.md). Безопасное применение DDL на production-базах (блокировки, timeout discipline, expand-contract) — в [Миграциях](../migrations/index.md).
 
 ### Планировщик запросов
 

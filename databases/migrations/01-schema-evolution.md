@@ -34,13 +34,15 @@ ALTER TABLE orders ADD COLUMN region TEXT;
 UPDATE orders SET region = 'unknown' WHERE region IS NULL;
 ```
 
-Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт ROW EXCLUSIVE — SELECT продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
+Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт [ROW EXCLUSIVE](../postgresql/concurrency/03-locks.md#автоматические-блокировки-при-записи) — уровень блокировки, который PostgreSQL автоматически берёт при UPDATE. ROW EXCLUSIVE совместим с ACCESS SHARE (SELECT), поэтому чтение продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
 
 ## Совместимость кода и схемы
 
+Разделение на отдельные транзакции решает проблему блокировок — но создаёт новую. Между транзакциями проходит время, и в этом окне работает код, который ничего не знает о промежуточном состоянии схемы.
+
 Добавили столбец `region`. Следующий шаг — deploy нового кода, который пишет в `region`. Между миграцией и завершением deploy — окно, в котором одна версия кода работает с двумя состояниями схемы.
 
-При rolling deploy окно ещё шире: часть instances работает со старым кодом, часть с новым — одновременно. Каждая версия должна корректно работать с текущей схемой. Это **backward compatibility constraint** (англ. «ограничение обратной совместимости»).
+При rolling deploy (постепенная замена instances: новые поднимаются, старые останавливаются по одному) окно ещё шире: часть instances работает со старым кодом, часть с новым — одновременно. Каждая версия должна корректно работать с текущей схемой. Это **backward compatibility constraint** (англ. «ограничение обратной совместимости»).
 
 Два порядка выполнения:
 
@@ -70,9 +72,9 @@ Expand-contract (англ. «расширить — сжать»; также par
 ALTER TABLE orders ADD COLUMN region TEXT;  -- nullable, без DEFAULT
 ```
 
-Столбец nullable и без DEFAULT. Зачем — в секции Backfilling.
+Столбец nullable и без DEFAULT. Если добавить DEFAULT (например, `'unknown'`), все существующие строки сразу получат non-NULL значение — и backfill не сможет отличить уже обработанные строки от необработанных (`WHERE region IS NULL` ничего не найдёт).
 
-**2. Deploy dual-write** — rolling deploy кода, который записывает `region` при каждом INSERT и UPDATE.
+**2. Deploy dual-write** (англ. «двойная запись» — код пишет и в старую, и в новую структуру) — rolling deploy кода, который записывает `region` при каждом INSERT и UPDATE.
 
 **Gate:** все instances обновлены. Ни один writer не вставляет строки без `region`. Без этого gate backfill бесполезен — новые строки без `region` появляются быстрее, чем backfill их заполняет.
 
@@ -82,7 +84,7 @@ ALTER TABLE orders ADD COLUMN region TEXT;  -- nullable, без DEFAULT
 
 **4. Switch reads** — переключить чтение на `region`. Три gate перед переключением:
 
-**Gate A — transaction drain.** Транзакции, начатые до deploy dual-write, могут закоммитить строки без `region` после завершения backfill. Нужен application-level deploy barrier: все instances подтверждают переход на dual-write (health check, deploy orchestrator). `pg_stat_activity` не заменяет барьер — запрос может начаться до rollout, но открыть транзакцию позже, и `xact_start` будет новее cutoff.
+**Gate A — transaction drain.** Транзакции, начатые до deploy dual-write, могут закоммитить строки без `region` после завершения backfill. Если начать backfill без этого gate — такие поздние коммиты создадут строки с `region IS NULL`, которые backfill уже пропустил, и convergence check на следующем шаге покажет ненулевой count. Нужен application-level deploy barrier: все instances подтверждают переход на dual-write (health check, deploy orchestrator). `pg_stat_activity` не заменяет барьер — запрос может начаться до rollout, но открыть транзакцию позже, и `xact_start` будет новее cutoff.
 
 <details>
 <summary>Операционные детали transaction drain</summary>
@@ -108,7 +110,7 @@ WHERE xact_start < $deploy_timestamp
 
 </details>
 
-**Gate B — convergence.** Критерий зависит от типа миграции:
+**Gate B — convergence.** Если переключить чтение до convergence, код увидит NULL в строках, которые backfill ещё не обработал. Критерий зависит от типа миграции:
 
 ```sql
 -- Добавление столбца: все строки заполнены
@@ -117,7 +119,7 @@ SELECT COUNT(*) FROM orders WHERE region IS NULL;  -- должен быть 0
 
 Проверять **дважды** с интервалом >= максимальное время жизни транзакции (для web-приложений: 30-60 секунд). Если повторная проверка показывает новые NULL — late commits, нужен ещё один tail-sweep + повторная проверка.
 
-**Gate C — replica catch-up** (если приложение читает с [реплик](../postgresql/distribution/00-replication.md)). Захватить LSN (Log Sequence Number — позиция в [WAL](../postgresql/durability/00-wal.md), журнале предзаписи) на primary непосредственно перед переключением чтения:
+**Gate C — replica catch-up** (если приложение читает с [реплик](../postgresql/distribution/00-replication.md)). Без этого gate приложение переключит чтение на `region`, но replica ещё не применила backfill — запросы увидят NULL вместо данных. Захватить LSN (Log Sequence Number — позиция в WAL) на primary непосредственно перед переключением чтения:
 
 ```sql
 -- На primary:
@@ -132,7 +134,7 @@ SELECT pg_last_wal_replay_lsn() >= $cutover_lsn;  -- true = caught up
 **5. Contract** — убрать старую структуру:
 
 ```sql
--- Через safe CHECK-паттерн (см. Безопасные изменения схемы)
+-- Через safe CHECK-паттерн (см. [NOT NULL](00-safe-schema-changes.md#not-null))
 ALTER TABLE orders ADD CONSTRAINT orders_region_nn CHECK (region IS NOT NULL) NOT VALID;
 ALTER TABLE orders VALIDATE CONSTRAINT orders_region_nn;
 ALTER TABLE orders ALTER COLUMN region SET NOT NULL;
@@ -160,13 +162,13 @@ ALTER TABLE orders DROP CONSTRAINT orders_region_nn;
 
 ## Backfilling
 
-Backfill выполняется внутри expand-фазы, после deploy dual-write (шаг 3). Один UPDATE на 50M строк — ROW EXCLUSIVE, но: блокирует строки на время UPDATE, генерирует гигабайты [WAL](../postgresql/durability/00-wal.md) (Write-Ahead Log — журнал, в который PostgreSQL записывает изменения до их применения к данным), может вызвать replication lag и помешать [VACUUM](../postgresql/maintenance/00-vacuum.md).
+Backfill выполняется внутри expand-фазы, после deploy dual-write (шаг 3). Один UPDATE на 50M строк — ROW EXCLUSIVE, но: блокирует строки на время UPDATE, генерирует гигабайты [WAL](../postgresql/durability/00-wal.md) (Write-Ahead Log — журнал, в который PostgreSQL записывает изменения до их применения к данным), может вызвать replication lag и помешать [VACUUM](../postgresql/maintenance/00-vacuum.md) (фоновой очистке мёртвых версий строк).
 
 **Правило: столбец для backfill добавляется nullable, без DEFAULT.** Если ADD COLUMN с DEFAULT (например, `DEFAULT 'unknown'`), все существующие строки сразу получают non-NULL значение → `WHERE region IS NULL` ничего не находит → backfill считает себя завершённым, хотя данные содержат placeholder, а не реальные значения.
 
 ### Batch по диапазонам
 
-Для таблиц с числовым PK ([BIGSERIAL, IDENTITY](../sql/schema/00-tables-and-types.md)) — разбить на range windows:
+Для таблиц с числовым PK ([BIGSERIAL, IDENTITY](../sql/schema/00-tables-and-types.md#конкурентная-вставка--serial-и-identity)) — разбить на range windows:
 
 ```sql
 UPDATE orders SET region = compute_region(shipping_address)
@@ -178,11 +180,11 @@ WHERE id BETWEEN 10001 AND 20000 AND region IS NULL;
 
 `AND region IS NULL` — idempotent guard: при повторе батча (restart, ошибка) строки не обрабатываются дважды. Пауза между батчами ограничивает lock duration, WAL volume и replication lag.
 
-На sparse PK (пробелы от удалений) часть батчей будет пустой — лишняя работа, не потеря данных. Для UUID ключей range windows не применимы.
+На sparse PK (пробелы от удалений) часть батчей будет пустой — лишняя работа, не потеря данных. Для UUID ключей range windows не применимы — нужен другой подход.
 
 ### Cursor-based batch
 
-Для любого монотонного PK — cursor с high-water mark. `$last_id` — последний обработанный ключ (переменная приложения или checkpoint-таблица):
+Cursor с high-water mark работает для любого монотонного PK, включая sparse. `$last_id` — последний обработанный ключ (переменная приложения или checkpoint-таблица):
 
 ```sql
 WITH batch AS (
@@ -202,7 +204,7 @@ WHERE orders.id = batch.id AND orders.region IS NULL;
 
 ### Late-commit и tail-sweep
 
-Sequence выделяет id до commit и не откатывает его. Транзакция может получить id = 5000, не коммитить, пока backfill пройдёт мимо, и коммитить позже — строка останется с `region IS NULL` навсегда. Это **late-commit hazard**.
+Sequence выделяет id до commit и не откатывает его. Транзакция может получить id = 5000, но не коммитить. Cursor-based batch проходит `id > 4000 LIMIT 10000` — строки с id = 5000 ещё нет (транзакция не закоммичена, строка невидима). Cursor двигает `$last_id` дальше. Транзакция коммитит позже — строка появляется с `region IS NULL`, но backfill уже ушёл вперёд. Строка останется незаполненной навсегда. Это **late-commit hazard**. Range windows подвержены той же проблеме: батч `WHERE id BETWEEN 4001 AND 14000` не увидит незакоммиченную строку с id = 5000.
 
 Решение — **tail-sweep** после основного прохода. Финальный батчированный проход без cursor, по `WHERE region IS NULL`:
 
