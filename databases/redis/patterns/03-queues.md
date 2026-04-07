@@ -93,7 +93,7 @@ EVAL "
 | Приоритеты | `BRPOP` нескольких LIST или ZSET |
 | Consumer groups, подтверждение, повторное чтение | Stream |
 
-Для критичных задач (платежи, заказы) Redis-очередь — не замена message broker (RabbitMQ, Kafka). При падении Redis без персистентности задачи в очереди теряются — платёж не обработан, заказ завис. Streams приближаются к гарантиям message broker ([at-least-once](../../../system-design/08-delivery-guarantees.md) через `XACK`), но в пределах RAM и одного кластера.
+Для критичных задач (платежи, заказы) Redis-очередь — не замена message broker (RabbitMQ, Kafka). При падении Redis без персистентности задачи в очереди теряются — платёж не обработан, заказ завис. Streams приближаются к гарантиям message broker ([at-least-once](../../../system-design/08-delivery-guarantees.md) — сообщение доставляется хотя бы один раз, возможны дубликаты — через `XACK`), но в пределах RAM и одного кластера.
 
 ## См. также
 

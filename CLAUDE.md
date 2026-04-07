@@ -112,6 +112,7 @@ Common agent mistakes when writing notes (hookify rules catch some mechanically,
 - **CIS location leakage:** agent may use author's location context (Almaty, Moscow, UTC+5) in examples. Always use classical CS examples.
 - **Structure before pedagogy:** file structure (how many files, what order) should be derived from the narrative arc, not decided independently.
 - **"Don't think about elephants" effect:** negative instructions in prompts activate the patterns they prohibit. Commands should describe what to produce with constraints that require specific content — concrete artifacts grounded in prerequisite files make generic output structurally impossible.
+- **Atomicity has multiple meanings across the repo:** CPU-level atomicity (`computer/atomic-instructions.md`) = indivisible instruction via hardware (LOCK prefix, LL/SC). ACID atomicity (`databases/acid.md`) = all-or-nothing for a transaction group. Redis atomicity (`databases/redis/atomicity/`) = no interleaving because of single-threaded event loop. When writing about atomicity, link to the right definition for the context and clarify which sense is meant.
 
 ## Commits
 
