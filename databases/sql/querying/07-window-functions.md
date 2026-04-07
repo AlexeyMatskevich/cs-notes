@@ -432,7 +432,7 @@ FIRST_VALUE с сортировкой по возрастанию — перва
 
 NULL при ORDER BY внутри OVER влияет на порядок и фреймы. При RANGE NULL-значения группируются вместе (как в обычной сортировке). LAG/LEAD через NULL возвращают NULL без специальной обработки.
 
-Оконные функции с большими секциями потребляют значительную память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
+В PostgreSQL оконные функции с большими секциями потребляют значительную память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
 
 ## Sources
 

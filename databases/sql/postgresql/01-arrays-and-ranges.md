@@ -1,6 +1,6 @@
 # Массивы и диапазоны
 
-**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md), [агрегация](../querying/02-aggregation.md) (array_agg).
+**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md), [агрегация](../querying/02-aggregation.md) (array_agg), [индексы](../schema/04-indexes.md) (CREATE INDEX, GIN, GiST).
 
 ← [JSONB](00-jsonb.md) | [Полнотекстовый поиск](02-full-text-search.md) →
 

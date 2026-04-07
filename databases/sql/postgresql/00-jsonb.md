@@ -3,7 +3,7 @@
 <details>
 <summary>Предпосылки</summary>
 
-[SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [ограничения](../schema/01-constraints.md) (индексы).
+[SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [индексы](../schema/04-indexes.md) (CREATE INDEX, типы индексов).
 
 </details>
 

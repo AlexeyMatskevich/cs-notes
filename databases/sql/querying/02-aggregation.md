@@ -291,7 +291,7 @@ GROUP BY department_id;
              2 | {Борис,Глеб}
 ```
 
-Все три коллектора (string_agg, array_agg, jsonb_agg) — расширения PostgreSQL.
+`array_agg` входит в стандарт SQL:2008, `string_agg` аналогичен стандартной функции `LISTAGG` (SQL:2016). `jsonb_agg` — расширение PostgreSQL.
 
 ## Классификация агрегатных функций
 
@@ -305,7 +305,7 @@ GROUP BY department_id;
   FILTER работает в обоих режимах — и с GROUP BY, и с OVER.
 ```
 
-Подробнее о режиме 2 и чисто оконных функциях — в [оконных функциях](07-window-functions.md). При больших объёмах данных агрегация может не поместиться в память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
+Подробнее о режиме 2 и чисто оконных функциях — в [оконных функциях](07-window-functions.md). В PostgreSQL при больших объёмах данных агрегация может не поместиться в память — подробнее в [memory и spill](../../postgresql/query-processing/04-memory-and-spill.md).
 
 ## Sources
 

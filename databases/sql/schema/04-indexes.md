@@ -16,10 +16,12 @@ CREATE INDEX idx_orders_customer ON orders (customer_id);
 
 После создания индекса PostgreSQL использует Index Scan вместо Seq Scan — проходит по дереву индекса и сразу находит строки с `customer_id = 42`, не трогая остальные 49 999 999 строк.
 
-Проверка через EXPLAIN:
+Проверка через EXPLAIN — команду PostgreSQL, которая показывает план выполнения запроса (какие шаги СУБД предпримет и какова их ожидаемая стоимость):
 
 ```
 -- До индекса:
+EXPLAIN SELECT * FROM orders WHERE customer_id = 42;
+
 Seq Scan on orders  (cost=0.00..1125000.00 rows=50 width=120)
   Filter: (customer_id = 42)
 
@@ -28,7 +30,7 @@ Index Scan using idx_orders_customer on orders  (cost=0.56..8.58 rows=50 width=1
   Index Cond: (customer_id = 42)
 ```
 
-Стоимость снизилась на порядки — вместо чтения всей таблицы PostgreSQL обходит B-tree.
+`Seq Scan` — последовательный просмотр всей таблицы, `Index Scan` — поиск через индекс. Стоимость снизилась на порядки. Подробнее о чтении планов — в [EXPLAIN](../../postgresql/query-processing/03-explain.md).
 
 ## Уникальный индекс
 
@@ -46,7 +48,7 @@ CREATE INDEX idx_orders_customer_date ON orders (customer_id, created_at);
 
 Составной (composite) индекс по нескольким столбцам. B-tree отсортирован сначала по первому столбцу, внутри каждого значения — по второму. Индекс `(customer_id, created_at)` — как телефонная книга, упорядоченная по фамилии, а внутри фамилии — по имени.
 
-Отсюда **leftmost prefix principle**: индекс эффективен для запросов, использующих столбцы слева направо. Запрос по `customer_id` — да, по `customer_id + created_at` — да, **только** по `created_at` — традиционно нет, потому что без customer_id дерево не знает, в какую ветку идти.
+Отсюда **leftmost prefix principle**: индекс эффективен для запросов, использующих столбцы слева направо. Запрос по `customer_id` — да, по `customer_id + created_at` — да, **только** по `created_at` — традиционно нет, потому что без customer_id индекс не может эффективно сузить область поиска.
 
 ```
 -- оба столбца: Index Scan
@@ -96,7 +98,7 @@ CREATE INDEX idx_orders_payload_type ON orders ((payload ->> 'type'));
 
 Запрос `SELECT created_at, total FROM orders WHERE customer_id = 42` с индексом `(customer_id, created_at)` находит строки через индекс, но за значением `total` обращается к основной таблице. Каждое такое обращение — random I/O.
 
-INCLUDE (SQL:2016) добавляет дополнительные столбцы в leaf pages индекса:
+INCLUDE добавляет дополнительные столбцы в leaf pages индекса:
 
 ```sql
 CREATE INDEX idx_orders_covering
@@ -105,7 +107,7 @@ ON orders (customer_id, created_at) INCLUDE (total);
 
 Теперь СУБД может ответить на запрос только из индекса — обращение к таблице не нужно (в PostgreSQL это называется Index Only Scan). Столбцы в INCLUDE не влияют на сортировку — они просто хранятся рядом с записями индекса.
 
-После массовых обновлений СУБД может обращаться к таблице для проверки видимости строк — Index Only Scan временно теряет преимущество. Подробности — в [B-tree](../../postgresql/indexes/00-btree.md).
+После массовых обновлений СУБД может обращаться к таблице для проверки видимости строк — Index Only Scan временно теряет преимущество. Подробности — в [B-tree](../../postgresql/indexes/00-btree.md#index-only-scan-обход-без-heap).
 
 ## Когда индекс не нужен
 

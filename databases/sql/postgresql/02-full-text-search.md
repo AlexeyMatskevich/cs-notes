@@ -1,6 +1,6 @@
 # Полнотекстовый поиск
 
-**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md) (LIKE).
+**Предпосылки:** [SELECT и фильтрация](../querying/00-select-and-filtering.md) (LIKE), [индексы](../schema/04-indexes.md) (CREATE INDEX, GIN).
 
 ← [Массивы и диапазоны](01-arrays-and-ranges.md) | [Функции и процедуры](03-functions-and-procedures.md) →
 
@@ -88,7 +88,7 @@ ALTER TABLE articles ADD COLUMN body_tsv TSVECTOR
 CREATE INDEX articles_body_tsv_idx ON articles USING gin (body_tsv);
 ```
 
-Столбец `body_tsv` автоматически обновляется при изменении `body`. [GIN индекс](../../postgresql/indexes/01-gin.md) ускоряет поиск по оператору `@@`:
+`GENERATED ALWAYS AS (...) STORED` — вычисляемый столбец (generated column): PostgreSQL автоматически рассчитывает значение из выражения при каждом INSERT и UPDATE исходного столбца. Значение хранится на диске (`STORED`), поэтому читается без повторных вычислений. [GIN индекс](../../postgresql/indexes/01-gin.md) ускоряет поиск по оператору `@@`:
 
 ```sql
 SELECT title FROM articles WHERE body_tsv @@ to_tsquery('english', 'database');
@@ -235,7 +235,7 @@ FROM (
 
 GIN индекс медленнее B-tree на UPDATE и INSERT — каждое изменение tsvector обновляет инвертированный индекс. Для bulk load выгоднее удалить индекс, загрузить данные, пересоздать: три операции быстрее, чем миллион инкрементальных обновлений.
 
-Параметр `fastupdate` (по умолчанию включён) смягчает проблему: новые записи попадают в pending list и объединяются с основным индексом batch'ами. Цена — первый запрос после накопления pending list чуть медленнее (merge происходит при чтении). Подробнее о структуре GIN — в [GIN индексе](../../postgresql/indexes/01-gin.md).
+Параметр `fastupdate` (по умолчанию включён) смягчает проблему: новые записи попадают в pending list и объединяются с основным индексом batch'ами при VACUUM или по достижении `gin_pending_list_limit`. Цена — запросы дополнительно сканируют pending list, что замедляет чтение пропорционально его размеру. Подробнее о структуре GIN — в [GIN индексе](../../postgresql/indexes/01-gin.md#запись-pending-list-как-компромисс).
 
 ## Многоязычный поиск
 

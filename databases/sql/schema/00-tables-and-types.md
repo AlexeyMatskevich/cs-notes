@@ -97,12 +97,12 @@ IDENTITY (стандарт SQL) тоже использует sequence, но о�
 
 ### Дырки в id
 
-Вызов `nextval()` **не откатывается** вместе с транзакцией:
+Вызов `nextval()` **не откатывается** вместе с транзакцией (транзакция — группа операций, выполняемых целиком или отменяемых целиком; подробнее в [транзакциях](../modification/01-transactions.md)):
 
 ```sql
-BEGIN;
+BEGIN;      -- открыть транзакцию
 INSERT INTO users(email) VALUES ('a@example.com'); -- id=100
-ROLLBACK;
+ROLLBACK;   -- отменить все изменения
 
 INSERT INTO users(email) VALUES ('b@example.com'); -- id=101, не 100
 ```
