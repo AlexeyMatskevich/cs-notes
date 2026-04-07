@@ -715,28 +715,23 @@ Ruby использует двухуровневую схему:
 
 GC ставит VM‑барьер: все Ractor’ы доходят до безопасной точки и останавливаются. При incremental marking это серия коротких остановок вместо одной длинной.
 
-### Будущее: Ractor-local GC
+На пользовательском уровне это означает: Ractor даёт изоляцию и параллелизм Ruby-кода, но GC в текущем CRuby по-прежнему координируется глобально между ractor’ами.
 
-Концепция от Sasada (RubyKaigi 2025):
+## Что может измениться дальше
 
-```
-SHAREABLE HEAP (глобальный, GC требует паузы всех Ractor'ов)
-            ^              ^              ^
-     ┌──────────┐   ┌──────────┐   ┌──────────┐
-     │ Ractor 1 │   │ Ractor 2 │   │ Ractor 3 │
-     │ local GC │   │ local GC │   │ local GC │
-     └──────────┘   └──────────┘   └──────────┘
-```
+*Этот раздел — не часть текущей модели, а направление экспериментов в CRuby.*
 
-Каждый Ractor собирает свой локальный мусор независимо. В Ruby 4.0 (декабрь 2025) ractor-local GC ещё не реализован; Sasada анонсировал его как направление дальнейшей работы.
+В обсуждениях развития CRuby есть идея **ractor-local GC**: локальные, non-shareable объекты каждого ractor'а собирать независимо, а глобальную координацию оставлять только для shareable heap. Такой дизайн обещает уменьшить число ситуаций, где GC должен останавливать все ractor’ы сразу.
+
+Пока это нужно воспринимать именно как roadmap/эксперимент. Текущую реализацию CRuby по-прежнему стоит понимать так: память ractor’ов изолирована на уровне модели объектов, но GC остаётся глобально координируемым механизмом VM.
 
 ## Сравнение GC: CRuby vs JRuby vs TruffleRuby
 
 Если приложению критичны минимальные паузы GC или настоящий параллелизм на CPU, выбор реализации Ruby начинает иметь значение.
 
-JRuby и TruffleRuby работают на JVM, где доступен широкий выбор сборщиков и режимов: параллельные потоки GC, конкурентные фазы (часть работы идёт параллельно с программой), эвакуационные/компактирующие стратегии. В обмен — другая модель производительности (прогрев, JIT) и другое “поведение по памяти”.
+JRuby и TruffleRuby работают на JVM, где доступен широкий выбор сборщиков и режимов: параллельные потоки GC, конкурентные фазы (часть работы идёт параллельно с программой), эвакуационные/компактирующие стратегии. В обмен — другая модель производительности: часть ускорения приходит после прогрева, когда рантайм успевает скомпилировать горячий код в машинный код, и другое “поведение по памяти”.
 
-CRuby движется в этом направлении (modular GC и эксперименты с MMTk), но пока отстаёт. Для большинства приложений это не критично, но для latency‑sensitive систем JRuby/TruffleRuby могут дать преимущество.
+CRuby тоже движется в этом направлении (modular GC и эксперименты с MMTk), но его GC пока остаётся более консервативным. Для большинства приложений это не критично, но для latency‑sensitive систем JRuby/TruffleRuby могут дать преимущество.
 
 ---
 
@@ -810,8 +805,8 @@ GC в MRI — результат 15 лет эволюции: от простог
 Первый внешний GC — библиотека на основе **MMTk** (Memory Management Toolkit), фреймворка для реализации и экспериментов с различными GC-алгоритмами:
 
 ```bash
-## Требует сборки Ruby с --with-modular-gc=<dir>
-make install-modular-gc MODULAR_GC=mmtk
+# Требует сборки Ruby с --with-modular-gc
+make modular-gc MODULAR_GC=mmtk
 RUBY_GC_LIBRARY=mmtk ruby script.rb
 ```
 
@@ -820,6 +815,8 @@ RUBY_GC_LIBRARY=mmtk ruby script.rb
 - CRuby source: `gc.c`, `gc/` directory — GC implementation: https://github.com/ruby/ruby/blob/master/gc.c
 - Ruby docs: `GC` module: https://docs.ruby-lang.org/en/master/GC.html
 - Ruby docs: `ObjectSpace`: https://docs.ruby-lang.org/en/master/ObjectSpace.html
+- Ruby 3.4.0 Release Notes — Modular GC: https://www.ruby-lang.org/en/news/2024/12/25/ruby-3-4-0-released/
+- Koichi Sasada, RubyKaigi 2025, *Toward Ractor local GC*: https://rubykaigi.org/2025/presentations/ko1.html
 - Peter Zhu, 2022, *Variable Width Allocation*: https://blog.peterzhu.ca/variable-width-allocation/
 - Peter Zhu, Matt Valentine-House, 2022, *Garbage Compaction for Ruby*: https://shopify.engineering/ruby-garbage-collection-compaction
 

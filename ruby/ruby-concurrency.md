@@ -68,7 +68,7 @@ p results #=> [0, 10, 20, 30]
 
 ### I/O overlap: потоки полезны даже с GVL
 
-Когда поток вызывает blocking I/O (`socket.read`, `File.read`, `sleep`), MRI отпускает GVL (Global VM Lock — о нём ниже). Другие потоки могут выполнять Ruby-код, пока первый спит в ядре:
+Когда поток вызывает blocking I/O (`socket.read`, `File.read`, `sleep`), MRI отпускает GVL (Global VM Lock — о нём ниже). Другие потоки могут выполнять Ruby-код, пока первый ждёт завершения системного вызова и спит в [режиме ядра](../linux/foundations/01-cpu-modes-and-syscalls.md):
 
 ```text
 Время    Thread #1          Thread #2              Thread #3
@@ -124,13 +124,13 @@ GVL защищает внутренние структуры VM: таблицы 
 
 GVL реализован через `pthread_mutex_t` + `pthread_cond_t`. При освобождении GVL Ruby будит одного ожидающего потока через `pthread_cond_signal`. Вход/выход из GVL включает барьеры памяти ([модель памяти](../linux/concurrency/01-memory-ordering.md)), поэтому записи одного потока видны потоку, который следующим захватил GVL. В MRI проблем с visibility нет.
 
-Timer thread периодически (~10 мс) ставит флаг прерывания. Поток, держащий GVL, проверяет этот флаг между байткод-инструкциями. Когда накопленное время достигает кванта (по умолчанию 100 мс), поток отдаёт GVL. В Ruby 3.4+ квант настраивается через `RUBY_THREAD_TIMESLICE` (в миллисекундах).
+Timer thread периодически ставит флаг прерывания. Поток, держащий GVL, проверяет этот флаг между байткод-инструкциями и при необходимости уступает GVL другому потоку. С Ruby 3.4 квант можно настраивать через `RUBY_THREAD_TIMESLICE` (в миллисекундах).
 
 ```text
-GVL (контролируемые точки): Thread A выполняет Ruby --(каждые ~10ms)--> timer interrupt
-                                                                       между инструкциями
-                                                                           |
-                                                       (накопил квант) --> отдаёт GVL -> Thread B
+GVL (контролируемые точки): Thread A выполняет Ruby --(timer interrupt)--> флаг проверяется
+                                                                           между инструкциями
+                                                                                |
+                                                            (нужно уступить) --> отдаёт GVL -> Thread B
 ```
 
 ### Когда GVL отпускается
@@ -216,9 +216,16 @@ GVL ограничивает CPU-параллелизм. Потоки полез
 
 ### Почему потоки дорогие для массовой конкурентности
 
-Каждый pthread получает стек (по умолчанию 8 МБ [виртуальной памяти](../linux/foundations/05-virtual-memory.md)). Для 10 000 одновременных соединений — 10 000 потоков — это 80 ГБ виртуальных адресов и заметная нагрузка на [планировщик](../linux/foundations/07-scheduler.md): переключение контекста стоит 1-5 мкс, а при 10 000 потоков планировщик тратит CPU на выбор следующего кандидата.
+Каждый pthread резервирует под стек заметный объём [виртуальной памяти](../linux/foundations/05-virtual-memory.md) (на Linux это часто мегабайты на поток). Для 10 000 одновременных соединений — 10 000 потоков — это десятки гигабайт виртуального адресного пространства и заметная нагрузка на [планировщик](../linux/foundations/07-scheduler.md): переключение контекста стоит микросекунды, а при большом числе потоков ядро тратит CPU на выбор следующего кандидата.
 
-Fiber — корутина с собственным стеком, но значительно дешевле потока. Стек Fiber по умолчанию 128 КБ (vs 8 МБ у pthread), а переключение не требует перехода в ядро.
+Fiber — корутина с собственным стеком, но значительно дешевле потока. В 64-bit CRuby дефолтные stack budgets для `Thread` составляют 256 KiB VM stack и 1024 KiB machine stack, а для `Fiber` — 128 KiB и 512 KiB. Переключение между fiber происходит внутри runtime в [пользовательском режиме](../linux/foundations/01-cpu-modes-and-syscalls.md), без отдельного системного вызова на сам факт переключения.
+
+<details>
+<summary>Подробности: настройка размеров стека</summary>
+
+Размеры thread/fiber stack в CRuby можно менять через переменные окружения `RUBY_THREAD_VM_STACK_SIZE`, `RUBY_THREAD_MACHINE_STACK_SIZE`, `RUBY_FIBER_VM_STACK_SIZE` и `RUBY_FIBER_MACHINE_STACK_SIZE`.
+
+</details>
 
 ### Fiber: resume, yield, обмен значениями
 
@@ -529,7 +536,7 @@ JRuby и TruffleRuby не имеют глобальной блокировки �
 
 **JRuby** компилирует Ruby в байткод JVM. Ruby Thread — это Java thread. Внутренние структуры интерпретатора (method tables, constant tables, require/autoload) защищены отдельными локами, а не одним глобальным. Пользовательские `Array` и `Hash` не защищены — это осознанный выбор: блокировка на каждый контейнер замедлила бы однопоточный код.
 
-**TruffleRuby** тоже выполняет Ruby-код параллельно. Два режима запуска: `--native` (быстрый старт, по умолчанию) и `--jvm` (лучшая peak-производительность). В отличие от JRuby, TruffleRuby постепенно делает базовые структуры thread-safe: `Hash` на современных версиях безопасен при конкурентном доступе, есть `TruffleRuby::ConcurrentMap` для высоконагруженных сценариев.
+**TruffleRuby** тоже выполняет Ruby-код параллельно. Есть native- и JVM-режимы запуска: native обычно стартует быстрее, JVM чаще выигрывает на длинных прогретых нагрузках. Но отсутствие GVL не делает обычные `Array` и `Hash` автоматически безопасными для общего мутируемого состояния: как и в JRuby, здесь нужно явно проектировать синхронизацию.
 
 Отсутствие GVL означает: race conditions — не теоретическая, а практическая проблема. Код, который "работает" в MRI из-за сериализации через GVL, может ломаться в JRuby/TruffleRuby:
 
@@ -540,7 +547,7 @@ array = []
   Thread.new { 1000.times { array << 1 } }
 end.each(&:join)
 
-array.size  # MRI: 10000. JRuby: может быть меньше или ConcurrentModificationError.
+array.size  # MRI часто 10000; на JRuby/TruffleRuby результат недетерминирован.
 ```
 
 Видимость памяти — ещё одна реальная проблема без GVL. Паттерн "data + ready flag" без синхронизации не работает: один поток может записать `@data = 42` и `@ready = true`, а другой увидеть `@ready == true` с устаревшим `@data`. В MRI GVL обеспечивает happens-before через барьеры; в JRuby/TruffleRuby нужна явная синхронизация. Подробности о том, почему x86 часто "прощает" такие ошибки, а ARM — нет, в [модели памяти](../linux/concurrency/01-memory-ordering.md).
@@ -583,12 +590,13 @@ ref.compare_and_set(old_value, new_value)          # CAS
 - Ruby 4.0.0 release announcement (2025-12-25): https://www.ruby-lang.org/en/news/2025/12/25/ruby-4-0-0-released/
 - Ruby 4.0.0 NEWS (Ractor changes): https://docs.ruby-lang.org/en/4.0/NEWS/NEWS-4_0_0_md.html
 - Ruby 3.3.0 NEWS (M:N thread scheduler, `RUBY_MN_THREADS`, `RUBY_MAX_CPU`): https://docs.ruby-lang.org/en/3.3/NEWS/NEWS-3_3_0_md.html
-- Ruby feature #20861 (`RUBY_THREAD_TIMESLICE`, default quantum 100ms): https://bugs.ruby-lang.org/issues/20861
+- Ruby feature #20861 (`RUBY_THREAD_TIMESLICE`): https://bugs.ruby-lang.org/issues/20861
 - Ruby manpage env vars (`RUBY_THREAD_TIMESLICE`, `RUBY_MN_THREADS`, `RUBY_MAX_CPU`): https://github.com/ruby/ruby/blob/master/man/ruby.1
 - Ruby internal concurrency (timer thread, interrupts): https://docs.ruby-lang.org/en/master/contributing/concurrency_guide_md.html
 - Ruby docs: `Thread#native_thread_id`: https://docs.ruby-lang.org/en/4.0/Thread.html#method-i-native_thread_id
 - Ruby docs: `Thread#status`: https://docs.ruby-lang.org/en/4.0/Thread.html#method-i-status
 - Ruby docs: `Fiber` / `Fiber.schedule` / `Fiber::Scheduler`: https://docs.ruby-lang.org/en/master/Fiber.html, https://docs.ruby-lang.org/en/master/Fiber/Scheduler.html
+- Ruby docs: default thread/fiber VM and machine stack sizes (`RUBY_THREAD_*_STACK_SIZE`, `RUBY_FIBER_*_STACK_SIZE`): https://docs.ruby-lang.org/en/3.3/NEWS/NEWS-2_0_0.html#label-RubyVM
 - Ruby docs (Ruby 3.3): Ractor (legacy `yield`/`take`): https://docs.ruby-lang.org/en/3.3/ractor_md.html
 - Ruby docs: `Ractor::Port`: https://docs.ruby-lang.org/en/4.0/Ractor/Port.html
 - Ruby docs: Ractor (shareable objects, globals, class vars, constants): https://docs.ruby-lang.org/en/4.0/Ractor.html
@@ -598,7 +606,6 @@ ref.compare_and_set(old_value, new_value)          # CAS
 - concurrent-ruby (README, `concurrent-ruby-ext`): https://github.com/ruby-concurrency/concurrent-ruby
 - TruffleRuby additions (`full_memory_barrier`, atomics): https://www.graalvm.org/22.0/reference-manual/ruby/TruffleRubyAdditions/index.html
 - TruffleRuby runtime configurations (`--native`/`--jvm`): https://www.graalvm.org/22.0/reference-manual/ruby/
-- TruffleRuby 33 release (thread-safe `Hash`, `ConcurrentMap`): https://www.graalvm.org/2026/01/13/truffleruby-33-released/
 - io-event selectors (epoll/kqueue/select): https://github.com/socketry/io-event/blob/main/lib/io/event/selector/epoll.rb, https://github.com/socketry/io-event/blob/main/lib/io/event/selector/kqueue.rb, https://github.com/socketry/io-event/blob/main/lib/io/event/selector/select.rb
 - Puma documentation: https://puma.io/
 - Falcon documentation: https://socketry.github.io/falcon/
