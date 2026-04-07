@@ -63,7 +63,7 @@ COMMIT
 
 Нужно [temporal decoupling](09-message-queues.md) — развязка записи заказа и обновления read-моделей по времени. Запись фиксирует факт и завершается; read-модели обновляются позже, асинхронно.
 
-Background job через Sidekiq — первый вариант. `after_commit` callback в Rails ставит задачу: `SyncOrderToElasticsearchJob.perform_async(order_id)`. Retry с backoff из коробки, обновление per-event (секунды, не минуты). Работает для трёх потребителей — три джоба на каждый заказ:
+Background job через [Sidekiq](../rails/sidekiq/00-architecture.md) — первый вариант. `after_commit` callback в Rails ставит задачу: `SyncOrderToElasticsearchJob.perform_async(order_id)`. Retry с backoff из коробки, обновление per-event (секунды, не минуты). Работает для трёх потребителей — три джоба на каждый заказ:
 
 ```ruby
 after_commit :enqueue_sync_jobs
@@ -97,7 +97,7 @@ end
                 (подписались сами, Orders не знает о них)
 ```
 
-Ключевое различие: команда подразумевает знание получателя и ожидаемого действия; событие — нет. Команда — «сделай вот это». Событие — «вот что произошло». В Sidekiq-варианте Orders отправлял команды. В pub/sub — публикует события.
+Ключевое различие: команда подразумевает знание получателя и ожидаемого действия; событие — нет. Команда — «сделай вот это». Событие — «вот что произошло». В Sidekiq-варианте Orders отправлял команды ([command vs event в Sidekiq](../rails/sidekiq/05-job-design.md#command-vs-event-модель-интеграции)). В pub/sub — публикует события.
 
 ## CQRS
 

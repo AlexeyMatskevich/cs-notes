@@ -97,8 +97,8 @@ EVAL "
 
 ## См. также
 
-- [Очередь email на LIST в Rails](../../../rails/redis/practice/list-background-queue.md) — LPUSH/BRPOP, capped list
-- [Sidekiq](../../../rails/sidekiq.md) — фоновые задачи через Redis LIST + BRPOP
+- [Очередь email на LIST в Rails](../../../rails/redis/practice/list-background-queue.md) — LPUSH/BRPOP
+- [Sidekiq](../../../rails/sidekiq/index.md) — фреймворк фоновых задач: [BasicFetch (BRPOP) vs SuperFetch (LMOVE)](../../../rails/sidekiq/02-guarantees.md) как конкретная инстанциация простой и reliable queue
 
 ## Sources
 
