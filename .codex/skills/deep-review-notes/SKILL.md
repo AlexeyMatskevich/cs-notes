@@ -16,9 +16,11 @@ Read the live `styleguide.md`, `structure-guide.md`, and, when present, reposito
 - Treat notes as teaching artifacts, not as benchmark samples. Do not treat the text as test data, a fill-in-the-blank template, or a checklist target.
 - Optimize for retention through connected ideas. A fact that is technically correct but disconnected, unmotivated, or unsupported by the reader model is still a problem.
 - Use `styleguide.md` as a reasoning system. Read the relevant sections to understand the intent behind the rule, then judge the note against that intent. Use mini-checklists only at the end as a guardrail.
-- Let reviewer agents create pressure from different angles, but keep judgment and editing in the main agent. Do not outsource the final editorial pass.
+- Let reviewer agents create pressure from different angles, but keep final editorial judgment and all note-writing in one dedicated editor. That editor must use `gpt-5.4` with `xhigh` reasoning effort. Do not outsource the final editorial pass to lighter models or split writing across multiple agents.
+- Treat planning as part of the editorial work, not as admin overhead. After reviewer reports arrive, the dedicated editor should synthesize them into a custom repair plan with stages, dependencies, and intended reader effects before touching the files.
 - Fix root causes before symptoms. When five local issues come from one bad section design, rewrite the section instead of polishing the symptoms.
 - Avoid formulaic rewrites. The repaired note must read like a natural standalone explanation, not like a text that was merely made to pass review.
+- Do not turn note repair into a template pipeline. This repository contains teaching material, so the editor and reviewers must think, interpret, and criticize with real freedom. Use structure only to sharpen reasoning, never to replace it.
 - Treat the repository as a layered curriculum, not as isolated folders. Understand where the current material sits in the broader teaching graph and how it depends on lower layers or feeds higher ones.
 - Treat deletion as expensive. If a passage feels problematic, first ask whether it is wrong, misplaced, too detailed for this layer, or simply needs to move to another file. Do not delete useful information just because the current section cannot carry it well.
 - Treat `Предпосылки` and integrated links as complementary tools. `Предпосылки` define what the reader may know; local links and anchors disambiguate what the current sentence is pointing at, especially when wording differs from the prerequisite file.
@@ -44,6 +46,12 @@ Read the live `styleguide.md`, `structure-guide.md`, and, when present, reposito
 ### 3. Run Parallel Reviewer Lenses
 
 If subagents are available and the task benefits from parallel pressure, spawn independent reviewers. The point of parallel review is not to assemble a committee or average opinions. The point is to put the text under several different kinds of pressure that correspond to how explanatory notes succeed or fail.
+
+Editor model lock:
+- the agent that performs any repository edits under this skill must be `gpt-5.4` with `xhigh` reasoning effort;
+- if the current agent is not running as `gpt-5.4` with `xhigh`, spawn exactly one dedicated editing worker with that configuration before making file changes;
+- reviewer subagents may use the lighter models described below, but they are review-only and must not write the final note text;
+- keep all actual note edits in that dedicated editor thread so the writing voice and editorial judgment stay unified.
 
 Use the prompts in [references/reviewer-lenses.md](references/reviewer-lenses.md) and adapt them to the exact files. Prefer distinct lenses rather than duplicate reviewers. Each reviewer should own one deep question about the note, not a generic mandate to "check quality".
 
@@ -89,8 +97,9 @@ Prompt freedom should match the model:
 - for `gpt-5.3-codex-spark`, use tight process constraints and a fixed output shape;
 - for `gpt-5.4-mini`, ask one interpretive question and ask for argued findings only where they materially help explain the note's failure or success;
 - for `gpt-5.4`, allow broader search and synthesis but require evidence and source discipline.
+- except for the deliberately rigid `reader` lens, do not over-template prompts or outputs; preserve enough freedom that the agent can genuinely reason, criticize, and propose non-obvious repair directions.
 
-Keep final editorial judgment in the main agent. If model availability changes, preserve the intent of the split: fastest model for `reader`, strongest model for `factcheck`, and a careful mid-to-strong model for the interpretive reviewers.
+Keep final editorial judgment in the dedicated `gpt-5.4` with `xhigh` editor. If model availability changes for reviewers, preserve the intent of the split: fastest model for `reader`, strongest model for `factcheck`, and a careful mid-to-strong model for the interpretive reviewers.
 
 Do not use any fixed conflict-resolution order between reviewer lenses:
 - treat apparent disagreement between reviewers as diagnostic pressure, not as a voting problem;
@@ -126,18 +135,34 @@ Rules for reviewer agents:
 - Reuse reviewer threads for follow-up clarification instead of respawning near-identical agents.
 - Do not let reviewer output become the final answer. Reviewer reports are inputs to editing.
 
-### 4. Edit as the Main Agent
+### 4. Synthesize and Plan Before Editing
+
+- Read reviewer reports as evidence, not as a queue of commands.
+- Build one explicit repair plan before touching the files. The plan should identify:
+  - the central teaching failure or opportunity;
+  - the target teaching shape for the note or sequence after repair;
+  - the ordered stages of work;
+  - the edit batches inside each stage;
+  - what reader question or misunderstanding each batch is meant to close;
+  - the main risks of regression, over-cleanup, or layer drift.
+- Organize batches by cognitive dependency and root cause, not by file order or convenience.
+- Before each edit batch, stop and think through why this batch exists now, what alternatives were rejected, and what the local text should let the reader understand afterward.
+- If the emerging diff falsifies the plan, update the plan before continuing. Do not blindly finish a stale batch sequence just because it was written earlier.
+- Do not convert reviewer output into a mechanical template such as "intro, definition, bullet list, example" unless the note itself genuinely demands that shape. The plan must fit the material, not the other way around.
+
+### 5. Edit as the Dedicated Editor
 
 - Read reviewer reports.
 - If a report is weak, vague, or unconvincing, ask that reviewer to clarify before acting on it.
-- Edit the notes yourself, file by file, keeping the whole series in view.
+- Edit the notes yourself as the dedicated `gpt-5.4` with `xhigh` editor, file by file, keeping the whole series in view.
+- Execute the repair plan in batches and think again before each batch, not only once at the start.
 - Prefer the smallest intervention that fixes the real problem, but rewrite aggressively when the current section is structurally wrong.
 - When rewriting, design the causal arc first: what question opens the section, what each paragraph adds to the reader model, and what concrete understanding the section should leave behind.
 - Keep the final prose free of prompt leakage, styleguide vocabulary, and formulaic repair artifacts.
 - Before deleting material, explicitly ask: should this be corrected, compressed, moved, split into another note, linked upward or downward, or actually removed? Deletion is the last option, not the default cleanup move.
 - When a concept is allowed by `Предпосылки` but the local wording may still leave lexical doubt, add an integrated cross-link at the first meaningful use. If the target file is broad, prefer a heading anchor to the exact subsection.
 
-### 5. Run Before/After Regression Review
+### 6. Run Before/After Regression Review
 
 After edits, compare the new text against the pre-edit baseline.
 
@@ -152,7 +177,7 @@ After edits, compare the new text against the pre-edit baseline.
 - If the edited version is cleaner but teaches less, treat that as a regression.
 - If the diff suggests that one large hidden cause produced many local edits, revisit the root problem instead of polishing the diff line by line.
 
-### 6. Verify in at Least 10 Passes
+### 7. Verify in at Least 10 Passes
 
 After edits, reread the changed text at least 10 times with a fresh lens each pass. Do not mechanically reread the same way.
 
@@ -170,7 +195,7 @@ Suggested passes:
 
 If a verification pass reveals a new problem, fix it and restart the relevant passes.
 
-### 7. Run Structural Review Last
+### 8. Run Structural Review Last
 
 Use `structure-guide.md` mechanically after the content work:
 - naming and numbering

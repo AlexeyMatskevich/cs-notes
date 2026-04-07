@@ -15,6 +15,7 @@ Before judging, each reviewer should reconstruct:
 General rules for every reviewer:
 - Read the specified live sections of `styleguide.md` first.
 - Treat the guide as a way of thinking, not as a pass/fail checklist.
+- Except for the intentionally rigid `reader` lens, do not let the prompt turn you into a template machine. Keep enough interpretive freedom to notice non-obvious failures, competing explanations, and better repair directions.
 - Prefer the smallest set of findings that explains the note's real problem shape. If one root cause explains many symptoms, report the root cause instead of inflating the list.
 - For each finding, explain the symptom, why it harms understanding or retention, the likely root cause, and the class of fix that fits best.
 - If the text is working, say why. Do not invent issues to fill space.
@@ -33,6 +34,7 @@ Weak output:
 - `gpt-5.3-codex-spark` should get a rigid method, fixed categories, and a narrow task.
 - `gpt-5.4-mini` should get one deep interpretive question plus clear anti-goals.
 - `gpt-5.4` can be more open-ended, but it still needs evidence discipline and a strong output contract.
+- Use templates as guardrails, not as substitutes for thought. Outside the `reader` lens, prompts should preserve room for real interpretation, criticism, and alternative hypotheses.
 
 ## Run-Specific Briefing Template
 
