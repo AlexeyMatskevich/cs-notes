@@ -6,7 +6,7 @@ SaaS-платформа управляет доступом к фичам. У к
 
 LIST не подходит: проверка `SISMEMBER` — O(1), проверка в LIST — O(n). LIST допускает дубликаты — добавление одного и того же разрешения дважды приведёт к дублям. HASH не подходит: нет встроенных операций пересечения и объединения. ZSET — score не нужен.
 
-SET даёт O(1) проверку принадлежности и серверные операции над множествами:
+SET даёт O(1) проверку принадлежности и серверные операции над множествами. Здесь полезно разделить два вопроса: проверка одного конкретного права и получение полного набора прав. Для первого не нужен временный union-ключ; для второго пригодятся `SUNION`, `SINTER` и `SDIFF`.
 
 ```ruby
 class PermissionManager
@@ -20,18 +20,30 @@ class PermissionManager
   end
 
   # Проверка конкретного разрешения по всем ролям пользователя
+  # Роли обычно немногочисленны, поэтому достаточно pipelined SISMEMBER
   def can?(user_id, permission)
     @redis.with do |r|
       roles = r.smembers("user:#{user_id}:roles")
-      role_keys = roles.map { |role| "role:#{role}:permissions" }
-      return false if role_keys.empty?
+      return false if roles.empty?
 
-      # SUNIONSTORE объединяет все разрешения всех ролей в одно множество
-      tmp_key = "tmp:perms:#{user_id}:#{SecureRandom.hex(4)}"
-      r.sunionstore(tmp_key, *role_keys)
-      result = r.sismember(tmp_key, permission)
-      r.del(tmp_key)
-      result
+      checks = r.pipelined do |pipe|
+        roles.each do |role|
+          pipe.sismember("role:#{role}:permissions", permission)
+        end
+      end
+
+      checks.any?
+    end
+  end
+
+  # Полный итоговый набор прав — например, для админки или отладки
+  def effective_permissions(user_id)
+    @redis.with do |r|
+      roles = r.smembers("user:#{user_id}:roles")
+      role_keys = roles.map { |role| "role:#{role}:permissions" }
+      return [] if role_keys.empty?
+
+      r.sunion(*role_keys)
     end
   end
 
@@ -51,6 +63,6 @@ class PermissionManager
 end
 ```
 
-[`SINTER`](../../../databases/redis/data-structures/03-set.md) (пересечение), `SUNION` (объединение) и `SDIFF` (разность) выполняются на сервере за один round-trip. Альтернатива — загрузить оба набора в Ruby и вычислить пересечение в памяти приложения — это дороже по трафику и CPU.
+[`SINTER`](../../../databases/redis/data-structures/03-set.md) (пересечение), `SUNION` (объединение) и `SDIFF` (разность) выполняют саму операцию на стороне Redis. Клиент получает уже готовый результат, а не собирает его поэлементно в Ruby.
 
-Метод `can?` выполняет 4 команды (`SMEMBERS`, `SUNIONSTORE`, `SISMEMBER`, `DEL`) — 4 round-trip. При частых проверках стоит объединить их через [pipelining](../../../databases/redis/architecture/02-pipelining.md) или кешировать итоговый набор прав в отдельный SET с TTL.
+Метод `can?` не пишет временные ключи и сводит проверки по ролям в один [pipeline](../../../databases/redis/architecture/02-pipelining.md). Если таких проверок очень много, итоговый набор прав обычно материализуют в отдельный `user:*:permissions` и пересобирают при изменении ролей.

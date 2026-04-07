@@ -36,11 +36,7 @@ class UniqueVisitorTracker
     page_keys = @redis.with { |r| r.scan_each(match: "uv:*:#{date.iso8601}").to_a }
     return 0 if page_keys.empty?
 
-    merge_key = "uv:site:#{date.iso8601}"
-    @redis.with do |r|
-      r.pfmerge(merge_key, *page_keys)
-      r.pfcount(merge_key)
-    end
+    @redis.with { |r| r.pfcount(*page_keys) }
   end
 end
 ```

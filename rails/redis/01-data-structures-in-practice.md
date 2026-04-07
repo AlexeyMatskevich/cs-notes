@@ -4,7 +4,11 @@
 
 <- [Клиенты и соединения](00-clients-and-connections.md) | [Команды, блокирующие Redis](02-blocking-pitfalls.md) ->
 
-Каждая структура Redis решает задачу, которую другие структуры решают плохо или не решают вообще. Ниже — конкретные бизнес-сценарии из Rails-приложений, сгруппированные от простых операций с одним ключом к координации между процессами.
+Структуру Redis выбирают не по сходству с предметной областью, а по минимальному набору операций, который нужен приложению. Нужен TTL и атомарный счётчик — STRING. Нужны частичные обновления одного объекта — HASH. Нужны порядок и блокирующее ожидание — LIST. Нужны приоритеты и ранги — ZSET. Нужна рассылка всем процессам — Pub/Sub. Нужны история и подтверждение обработки — Stream.
+
+Ниже — конкретные Rails-сценарии, сгруппированные от простых операций с одним ключом к координации между процессами.
+
+Почти в каждом сценарии Redis закрывает не только локальную задачу структуры данных, но и системный trade-off: [rate limiting](../../system-design/06-reliability-patterns.md#rate-limiting-ограничение-входящей-нагрузки), [когерентность локального кэша](../../system-design/07-caching.md#когерентность-локальный-vs-внешний-кэш), [очередь против pub/sub](../../system-design/09-message-queues.md#point-to-point-и-pubsub), [acknowledgment](../../system-design/09-message-queues.md#acknowledgment) и [гарантии доставки](../../system-design/08-delivery-guarantees.md).
 
 **Одно значение, один ключ.** [Rate limiter на STRING](practice/string-rate-limiter.md) — атомарный счётчик с TTL для ограничения запросов партнёров. [Корзина checkout на HASH](practice/hash-checkout-cart.md) — несколько полей заказа, обновляемых независимо без гонки. [Ограниченный лог активности на LIST](practice/list-capped-activity-log.md) — LPUSH + LTRIM для хранения последних N действий.
 
@@ -14,7 +18,7 @@
 
 **Координация и гарантии.** [Аудит-лог платежей на Stream](practice/stream-payment-audit.md) — consumer groups для параллельной обработки несколькими сервисами с гарантией [at-least-once](../../system-design/08-delivery-guarantees.md#at-least-once-не-менее-одного-раза) (каждое сообщение доставлено хотя бы один раз). [Атомарный перевод через MULTI/EXEC](practice/multi-exec-atomic-transfer.md) — оптимистичная блокировка с `WATCH` и retry. [Распределённая блокировка на STRING](practice/string-distributed-lock.md) — SET NX EX + Lua для защиты от двойной обработки Sidekiq-джобов. [Защита от cache stampede](practice/string-cache-stampede.md) — блокировка на перестроение и early expiration.
 
-**Межпроцессная рассылка.** [Инвалидация кеша через Pub/Sub](practice/pub-sub-cache-invalidation.md) — fire-and-forget рассылка всем Puma-воркерам. [ActionCable через Pub/Sub](practice/pub-sub-actioncable.md) — координация WebSocket'ов между Puma-процессами через Redis-подписку.
+**Межпроцессная рассылка.** [Инвалидация кеша через Pub/Sub](practice/pub-sub-cache-invalidation.md) — рассылка всем Puma-воркерам без подтверждений и без хранения истории. [ActionCable через Pub/Sub](practice/pub-sub-actioncable.md) — координация WebSocket'ов между Puma-процессами через Redis-подписку.
 
 ---
 

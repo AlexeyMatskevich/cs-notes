@@ -40,8 +40,15 @@ end
 # Gemfile
 gem 'redlock'
 
-# Использование
-lock_manager = Redlock::Client.new([ENV['REDIS_URL']])
+# Важно: один URL = один Redis = та же единая точка отказа.
+# Для Redlock нужны несколько независимых Redis-инстансов.
+lock_manager = Redlock::Client.new([
+  ENV.fetch("REDIS_LOCK_1_URL"),
+  ENV.fetch("REDIS_LOCK_2_URL"),
+  ENV.fetch("REDIS_LOCK_3_URL"),
+  ENV.fetch("REDIS_LOCK_4_URL"),
+  ENV.fetch("REDIS_LOCK_5_URL")
+])
 
 lock_manager.lock("resource:order:123", 5000) do |locked|
   if locked
@@ -52,4 +59,17 @@ lock_manager.lock("resource:order:123", 5000) do |locked|
 end
 ```
 
-Когда достаточно базового `with_lock`: идемпотентные операции, координация между воркерами одного приложения. Когда нужен `redlock`: потеря блокировки при падении Redis приводит к двойным платежам или повреждению данных. Для финансовых операций, где даже Redlock не гарантирует защиту от GC-пауз клиента, нужны fencing tokens (монотонно возрастающий номер, который передаётся вместе с запросом к ресурсу; ресурс отклоняет запросы с номером меньше уже принятого) — подробнее в [теории распределённых блокировок](../../../databases/redis/patterns/02-distributed-locks.md#fencing-tokens).
+Базовый `with_lock` на одном Redis уменьшает вероятность двойной обработки, но не делает её невозможной при падении Redis, failover или долгой паузе клиента. Поэтому его применяют там, где операция уже [идемпотентна](../../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) или дубль можно пережить.
+
+Redlock уменьшает риск потери блокировки из-за отказа одного Redis, но не решает проблему «клиент завис дольше TTL и продолжил работу со старой блокировкой». Поэтому даже с Redlock для необратимых действий нужны внешние гарантии: идемпотентные ключи в платёжном шлюзе, уникальные ограничения в базе, fencing tokens или все вместе.
+
+Практическое правило:
+
+- один Redis + `SET NX EX` + Lua — координация и снижение дублей;
+- несколько независимых Redis + Redlock — если блокировки на одном узле уже недостаточно;
+- деньги, инвентарь, необратимые внешние действия — не полагаться только на lock, держать защиту на стороне ресурса.
+
+## Sources
+
+- Redis docs: distributed locks. <https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/>
+- Redlock gem. <https://github.com/leandromoreira/redlock-rb>

@@ -2,9 +2,9 @@
 
 **Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [Stream](../../../databases/redis/data-structures/05-stream.md).
 
-Платёжная система записывает каждую операцию (создание платежа, подтверждение, возврат) в лог. Несколько сервисов читают этот лог параллельно: один обновляет баланс мерчанта, другой отправляет уведомления, третий строит аналитику. Каждый сервис обрабатывает каждое событие ровно один раз. Если сервис упал — он должен продолжить с того места, где остановился.
+Платёжная система записывает каждую операцию (создание платежа, подтверждение, возврат) в лог. Несколько сервисов читают этот лог параллельно: один обновляет баланс мерчанта, другой отправляет уведомления, третий строит аналитику. Нельзя терять события, а после сбоя сервис должен продолжить чтение. При этом нужно принять важное ограничение: повторная доставка возможна, значит обработчики должны быть [идемпотентны](../../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов).
 
-LIST с `BRPOP` не подходит: элемент удаляется при чтении, и если обработчик упал после `BRPOP`, но до завершения обработки — событие потеряно. Pub/Sub не подходит: сообщения не сохраняются, пропущенное — потеряно навсегда. Stream с consumer groups решает обе проблемы:
+LIST с `BRPOP` не подходит: элемент удаляется при чтении, и если обработчик упал после `BRPOP`, но до завершения обработки — событие потеряно. Pub/Sub не подходит: сообщения не сохраняются, пропущенное — потеряно навсегда. Stream с consumer groups решает обе проблемы: хранит историю и даёт [at-least-once](../../../system-design/08-delivery-guarantees.md#at-least-once-не-менее-одного-раза) доставку внутри каждой группы.
 
 ```ruby
 # Инициализация (один раз, например в db/seeds.rb или initializer)
@@ -33,21 +33,24 @@ end
 
 # Консьюмер: сервис баланса мерчанта
 class MerchantBalanceWorker
-  def run(consumer_name)
-    REDIS.with do |r|
-      loop do
-        entries = r.xreadgroup(
-          "balance_updaters", consumer_name,
-          "payments:events", ">",
-          count: 10, block: 5000
-        )
-        next unless entries&.any?
+  def initialize
+    # BLOCK удерживает соединение, поэтому у стрим-воркера оно своё.
+    @redis = Redis.new(url: ENV.fetch("REDIS_STREAMS_URL", ENV.fetch("REDIS_URL")))
+  end
 
-        entries.each do |_stream, messages|
-          messages.each do |id, fields|
-            update_merchant_balance(fields)
-            r.xack("payments:events", "balance_updaters", id)
-          end
+  def run(consumer_name)
+    loop do
+      entries = @redis.xreadgroup(
+        "balance_updaters", consumer_name,
+        "payments:events", ">",
+        count: 10, block: 5000
+      )
+      next unless entries&.any?
+
+      entries.each do |_stream, messages|
+        messages.each do |id, fields|
+          update_merchant_balance(fields)
+          @redis.xack("payments:events", "balance_updaters", id)
         end
       end
     end
@@ -55,7 +58,7 @@ class MerchantBalanceWorker
 end
 ```
 
-Каждая consumer group (`balance_updaters`, `notifiers`, `analytics`) получает каждое сообщение независимо. Внутри группы сообщения распределяются между воркерами — ровно один воркер обрабатывает каждое сообщение. `XACK` подтверждает обработку. Если воркер упал между `XREADGROUP` и `XACK`, сообщение остаётся в pending-списке. Другой воркер может забрать зависшие сообщения с помощью `XAUTOCLAIM`:
+Каждая consumer group (`balance_updaters`, `notifiers`, `analytics`) получает каждое сообщение независимо. Внутри группы новое сообщение в каждый момент времени принадлежит одному воркеру, пока не подтверждено через `XACK`. Если воркер упал между `XREADGROUP` и `XACK`, сообщение остаётся в pending-списке. Другой воркер может забрать зависшие сообщения с помощью `XAUTOCLAIM`:
 
 ```ruby
 # Перехват зависших сообщений (запускать периодически)
@@ -72,4 +75,14 @@ def claim_stale_messages(group, consumer_name, stream, idle_ms: 60_000)
 end
 ```
 
+Если `MerchantBalanceWorker` упал после `update_merchant_balance(fields)`, но до `XACK`, другое приложение позже перезаберёт то же сообщение и вызовет обработчик повторно. Поэтому эффект обработки нужно делать идемпотентным: например, сохранять `stream message ID` или бизнесовый `payment_id + event` в таблице обработанных событий и не проводить одну и ту же операцию дважды.
+
+В терминах [очередей сообщений](../../../system-design/09-message-queues.md#две-модели-очередь-сообщений-и-лог) Stream здесь ближе к логу, чем к простой очереди: события сохраняются, читаются по позиции и могут быть перечитаны после сбоя.
+
 [Stream](../../../databases/redis/data-structures/05-stream.md) хранит историю: `XRANGE` позволяет перечитать прошлые события для отладки или восстановления. `XTRIM` с `MAXLEN` ограничивает размер потока, чтобы не расходовать память бесконечно.
+
+## Sources
+
+- Redis documentation: `XREADGROUP`. <https://redis.io/docs/latest/commands/xreadgroup/>
+- Redis documentation: `XAUTOCLAIM`. <https://redis.io/docs/latest/commands/xautoclaim/>
+- Redis documentation: Streams. <https://redis.io/docs/latest/develop/data-types/streams/>
