@@ -47,6 +47,4 @@ class CheckoutCart
 end
 ```
 
-Два Puma-процесса могут одновременно вызвать `set_shipping` и `apply_promo` — каждый пишет в своё поле, конфликта нет. С JSON в STRING второй процесс перезаписал бы изменения первого. `HINCRBY` работает для числовых полей (количество товаров) без read-modify-write.
-
-Подробнее: [HASH](../../../databases/redis/data-structures/01-hash.md).
+Два Puma-процесса могут одновременно вызвать `set_shipping` и `apply_promo` — каждый пишет в своё поле, конфликта нет. С JSON в STRING второй процесс перезаписал бы изменения первого. [`HINCRBY`](../../../databases/redis/data-structures/01-hash.md) работает для числовых полей (количество товаров) без read-modify-write.

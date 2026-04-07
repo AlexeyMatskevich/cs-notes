@@ -72,7 +72,8 @@ Quicklist (`src/quicklist.c`) — двусвязный список, где ка
 
 ## См. также
 
-- [Очередь email на LIST в Rails](../../../rails/redis/practice/list-background-queue.md) — LPUSH/BRPOP, capped list
+- [Очередь email на LIST в Rails](../../../rails/redis/practice/list-background-queue.md) — LPUSH/BRPOP
+- [Ограниченный лог активности на LIST в Rails](../../../rails/redis/practice/list-capped-activity-log.md) — LPUSH/LTRIM, capped list
 
 ## Sources
 

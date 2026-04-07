@@ -46,16 +46,26 @@ class CallQueue
     @redis.with { |r| r.zrem(@key, call_id) }
   end
 
-  # Звонки, ожидающие больше 30 секунд (мониторинг SLA)
+  # Звонки, ожидающие больше max_wait_seconds
+  # (мониторинг SLA — Service Level Agreement, договорное время ответа оператора)
+  #
+  # Составной score смешивает приоритет и время, поэтому простой ZRANGEBYSCORE
+  # не может отфильтровать «все звонки старше X секунд» независимо от приоритета.
+  # Обходим всю очередь и фильтруем в Ruby — при типичном размере очереди
+  # (десятки-сотни звонков) это не проблема.
   def stale_calls(max_wait_seconds: 30)
-    threshold_score = 1 * PRIORITY_MULTIPLIER + (PRIORITY_MULTIPLIER - (Time.now.to_f - max_wait_seconds))
+    cutoff_time = Time.now.to_f - max_wait_seconds
+
     @redis.with do |r|
-      r.zrangebyscore(@key, "-inf", threshold_score)
+      r.zrangebyscore(@key, "-inf", "+inf", with_scores: true)
+       .select { |_member, score|
+         timestamp = PRIORITY_MULTIPLIER - (score % PRIORITY_MULTIPLIER)
+         timestamp < cutoff_time
+       }
+       .map(&:first)
     end
   end
 end
 ```
 
-`ZREVRANK` за O(log n) возвращает позицию элемента — клиент видит «Вы 5-й в очереди». `ZREM` удаляет конкретный элемент из середины за O(log n). `ZRANGEBYSCORE` выбирает элементы по диапазону score — полезно для мониторинга SLA. Ни одна другая структура Redis не даёт все четыре операции одновременно.
-
-Подробнее: [ZSET](../../../databases/redis/data-structures/04-sorted-set.md).
+[`ZREVRANK`](../../../databases/redis/data-structures/04-sorted-set.md) за O(log n) возвращает позицию элемента — клиент видит «Вы 5-й в очереди». `ZREM` удаляет конкретный элемент из середины за O(log n). `ZRANGEBYSCORE` выбирает элементы по диапазону score — полезно для мониторинга SLA. Ни одна другая структура Redis не даёт все четыре операции одновременно.

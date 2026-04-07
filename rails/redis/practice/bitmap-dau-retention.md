@@ -56,7 +56,7 @@ class ActivityTracker
 end
 ```
 
-`BITOP AND` вычисляет пересечение двух дней за O(n) байт (1.25 МБ при 10 миллионах пользователей) без передачи данных клиенту. `BITOP OR` объединяет 7 дней для WAU. Bitmap эффективен при плотных числовых ID. Если ID разреженные (UUID), бо́льшая часть бит останется нулевой — для таких случаев лучше HyperLogLog (без ответа на «был ли конкретный?») или SET.
+[`BITOP AND`](../../../databases/redis/data-structures/07-bitmap-and-bitfield.md) вычисляет пересечение двух дней за O(n) байт (1.25 МБ при 10 миллионах пользователей) без передачи данных клиенту. `BITOP OR` объединяет 7 дней для WAU. Bitmap эффективен при плотных числовых ID. Если ID разреженные (UUID), бо́льшая часть бит останется нулевой — для таких случаев лучше HyperLogLog (без ответа на «был ли конкретный?») или SET.
 
 ## BITFIELD: компактные числовые поля
 
@@ -75,5 +75,3 @@ REDIS.with do |r|
   r.bitfield("player:#{user_id}", "OVERFLOW", "SAT", "INCRBY", "u16", 8, 100)
 end
 ```
-
-Подробнее: [Bitmap и Bitfield](../../../databases/redis/data-structures/07-bitmap-and-bitfield.md).

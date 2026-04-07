@@ -51,6 +51,6 @@ class PermissionManager
 end
 ```
 
-`SINTER` (пересечение), `SUNION` (объединение) и `SDIFF` (разность) выполняются на сервере за один round-trip. Альтернатива — загрузить оба набора в Ruby и вычислить пересечение в памяти приложения — это дороже по трафику и CPU.
+[`SINTER`](../../../databases/redis/data-structures/03-set.md) (пересечение), `SUNION` (объединение) и `SDIFF` (разность) выполняются на сервере за один round-trip. Альтернатива — загрузить оба набора в Ruby и вычислить пересечение в памяти приложения — это дороже по трафику и CPU.
 
-Подробнее: [SET](../../../databases/redis/data-structures/03-set.md).
+Метод `can?` выполняет 4 команды (`SMEMBERS`, `SUNIONSTORE`, `SISMEMBER`, `DEL`) — 4 round-trip. При частых проверках стоит объединить их через [pipelining](../../../databases/redis/architecture/02-pipelining.md) или кешировать итоговый набор прав в отдельный SET с TTL.

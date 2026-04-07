@@ -37,19 +37,6 @@ class EmailWorker
 end
 ```
 
-`BRPOP` — ключевая операция. Воркер отдаёт соединение Redis'у и засыпает. Redis будит его только при появлении элемента в списке. Без `BRPOP` пришлось бы делать `RPOP` в цикле с `sleep` — это polling, который тратит CPU и добавляет задержку до величины `sleep`.
+[`BRPOP`](../../../databases/redis/data-structures/02-list.md) — ключевая операция. Воркер отдаёт соединение Redis'у и засыпает. Redis будит его только при появлении элемента в списке. Без `BRPOP` пришлось бы делать `RPOP` в цикле с `sleep` — это polling, который тратит CPU и добавляет задержку до величины `sleep`.
 
-Паттерн capped list (`LPUSH` + `LTRIM`) полезен для хранения последних N действий без неограниченного роста:
-
-```ruby
-def log_activity(user_id, action)
-  key = "user:#{user_id}:activity"
-
-  REDIS.with do |r|
-    r.lpush(key, { action: action, at: Time.now.iso8601 }.to_json)
-    r.ltrim(key, 0, 99)  # только последние 100
-  end
-end
-```
-
-Подробнее: [LIST](../../../databases/redis/data-structures/02-list.md).
+Если нужно ограничить длину списка (например, хранить только последние N записей), применяется паттерн `LPUSH` + `LTRIM` — см. [ограниченный лог активности](list-capped-activity-log.md).

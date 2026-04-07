@@ -72,6 +72,4 @@ def claim_stale_messages(group, consumer_name, stream, idle_ms: 60_000)
 end
 ```
 
-Stream хранит историю: `XRANGE` позволяет перечитать прошлые события для отладки или восстановления. `XTRIM` с `MAXLEN` ограничивает размер потока, чтобы не расходовать память бесконечно.
-
-Подробнее: [Stream](../../../databases/redis/data-structures/05-stream.md).
+[Stream](../../../databases/redis/data-structures/05-stream.md) хранит историю: `XRANGE` позволяет перечитать прошлые события для отладки или восстановления. `XTRIM` с `MAXLEN` ограничивает размер потока, чтобы не расходовать память бесконечно.
