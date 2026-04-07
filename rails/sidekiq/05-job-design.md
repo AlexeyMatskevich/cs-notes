@@ -46,24 +46,65 @@ end
 
 Одна операция, один retry-цикл, один набор ошибок. Если `ChargePaymentJob` упадёт — повторится только charge. Analytics работает независимо в своём job с отдельным retry.
 
-## Fan-out: один job порождает несколько
+## Сначала границы зависимости, потом fan-out
 
-Когда одно событие запускает несколько независимых действий — job-координатор ставит sub-jobs:
+Разбить большой job на маленькие недостаточно. Сначала нужно понять, какие шаги действительно независимы, а какие образуют причинную цепочку.
+
+Оплата, резервирование товара и отправка письма неравноправны:
+
+- email нельзя отправлять до успешной оплаты;
+- резерв нельзя подтверждать, если платёж не прошёл;
+- аналитику и вторичные уведомления часто можно отделить от критичного пути.
+
+Поэтому зависимые шаги лучше оформлять как явную последовательность маленьких идемпотентных jobs:
 
 ```ruby
-class ProcessOrderJob
+class ChargePaymentJob
   include Sidekiq::Job
 
   def perform(order_id)
-    ChargePaymentJob.perform_async(order_id)
-    ReserveWarehouseJob.perform_async(order_id)
+    order = Order.find(order_id)
+    return if order.charged?
+
+    PaymentService.charge(order)
+    ReserveStockJob.perform_async(order_id)
+  end
+end
+
+class ReserveStockJob
+  include Sidekiq::Job
+
+  def perform(order_id)
+    order = Order.find(order_id)
+    return if order.stock_reserved?
+
+    WarehouseService.reserve(order)
     SendConfirmationJob.perform_async(order_id)
-    TrackAnalyticsJob.perform_async(order_id)
   end
 end
 ```
 
-Каждый sub-job:
+Retry теперь повторяет только тот шаг, который реально не завершился. Если падает резервирование, повтор не трогает уже успешный платёж. Если падает письмо, заказ не оплачивается повторно.
+
+## Fan-out: один job ставит несколько независимых дочерних jobs
+
+Fan-out имеет смысл там, где одно событие запускает несколько независимых ветвей. Здесь `fan-out` означает: один job ставит несколько дочерних jobs, и сбой одной ветви не откатывает остальные.
+
+После того как заказ уже успешно оформлен, можно отдельно запустить некритичные побочные действия:
+
+```ruby
+class OrderCompletedJob
+  include Sidekiq::Job
+
+  def perform(order_id)
+    SendConfirmationJob.perform_async(order_id)
+    TrackAnalyticsJob.perform_async(order_id)
+    WriteAuditLogJob.perform_async(order_id)
+  end
+end
+```
+
+Каждый дочерний job:
 - со своим retry-циклом (analytics может упасть 10 раз — payment не пострадает)
 - со своей очередью (критичные в `critical`, аналитика в `low`)
 - со своим набором ошибок (RateLimitError у API, SMTP timeout у email)
@@ -81,9 +122,11 @@ class BatchImportJob
 end
 ```
 
+Fan-out хорошо изолирует независимые ветви. Но как только появляется вопрос «а когда закончились все дочерние jobs?», простой постановки в очередь уже недостаточно.
+
 ## Когда нужна координация: Batches
 
-Fan-out решает изоляцию, но создаёт новую задачу: как узнать, что все sub-jobs завершились? Нужно отправить итоговый email после завершения всего импорта, или оповестить пользователя, что заказ полностью обработан.
+Нужно отправить итоговый email после завершения всего импорта, или оповестить пользователя, что заказ полностью обработан.
 
 <details>
 <summary>Batches (Sidekiq Pro)</summary>

@@ -102,6 +102,8 @@ end
 
 При получении сигнала текущая итерация завершается, cursor сохраняется. При перезапуске задача продолжает с сохранённого места — не с начала.
 
+Ограничение важно проговорить явно: каждая отдельная итерация всё равно должна укладываться в shutdown timeout. Если одна итерация сама работает дольше `-t` секунд, supervisor может добить процесс `SIGKILL`, и прогресс откатится к последнему сохранённому cursor.
+
 </details>
 
 ---
@@ -116,4 +118,5 @@ end
 
 - [Sidekiq Wiki — Signals](https://github.com/sidekiq/sidekiq/wiki/Signals)
 - [Sidekiq Wiki — Deployment](https://github.com/sidekiq/sidekiq/wiki/Deployment)
+- [Sidekiq Wiki — Iteration](https://github.com/sidekiq/sidekiq/wiki/Iteration)
 - Mike Perham, [Iteration and Sidekiq 7.3.0](https://www.mikeperham.com/2024/07/03/iteration-and-sidekiq-7.3.0/)

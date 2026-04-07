@@ -1,6 +1,6 @@
 # Sidekiq: архитектура
 
-**Предпосылки:** [Redis Lists](../../databases/redis/data-structures/02-list.md), [очереди в Redis](../../databases/redis/patterns/03-queues.md), [message queues](../../system-design/09-message-queues.md), [фоновая очередь на LIST](../redis/practice/list-background-queue.md), базовое знание Rails (ActiveRecord, RSpec).
+**Предпосылки:** [Redis Lists](../../databases/redis/data-structures/02-list.md), [очереди в Redis](../../databases/redis/patterns/03-queues.md), [message queues](../../system-design/09-message-queues.md), [фоновая очередь на LIST](../redis/practice/list-background-queue.md), базовое знание Rails.
 
 [Следующая тема: жизненный цикл job](01-job-lifecycle.md) ->
 

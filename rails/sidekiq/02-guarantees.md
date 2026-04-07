@@ -10,7 +10,7 @@ Sidekiq-процесс обрабатывает десять задач одно
 
 ## Три точки потери
 
-### Fetch: Redis → Processor
+### BasicFetch: Redis → Processor
 
 Самая наглядная точка. `BRPOP` — это [простая очередь](../../databases/redis/patterns/03-queues.md): элемент удаляется из Redis в момент чтения. Между «забрал» и «обработал» нет страховки.
 
@@ -19,24 +19,26 @@ Sidekiq-процесс обрабатывает десять задач одно
 При graceful shutdown (`SIGTERM`) Sidekiq возвращает in-flight задачи обратно в Redis (`bulk_requeue`). Но это работает только если процесс получил сигнал, имеет время на shutdown (timeout по умолчанию 25 секунд), и Redis доступен.
 
 <details>
-<summary>Pro: SuperFetch — reliable queue</summary>
+<summary>Pro: SuperFetch — private queue + orphan recovery</summary>
 
-`SuperFetch` (включается через `config.super_fetch!` в инициализаторе) заменяет `BRPOP` на `LMOVE` — это [reliable queue](../../databases/redis/patterns/03-queues.md#очередь-с-гарантией-обработки-reliable-queue). Задача атомарно перемещается из рабочей очереди в приватную очередь процесса (`queue:<name>:<hostname>:<pid>`), но не удаляется из Redis. После успешного выполнения — явное удаление (`LREM`).
+`SuperFetch` (включается через `config.super_fetch!` в инициализаторе) заменяет basic fetch на схему «рабочая очередь → приватная очередь процесса → явное подтверждение». Sidekiq атомарно перемещает задачу из общей очереди в приватную очередь процесса (`queue:<name>:<hostname>:<pid>`), так что во время выполнения она остаётся в Redis. После успешного `perform` задача удаляется явным подтверждением (`LREM`).
 
-Если процесс убит — задача остаётся в приватной очереди. При старте любого Pro-процесса происходит orphan recovery: сканирование приватных очередей мёртвых процессов (определяются по отсутствию heartbeat) и возврат задач в основную очередь.
+Если процесс убит — задача остаётся в приватной очереди. При старте Pro-процесса и в периодических проверках Sidekiq ищет приватные очереди мёртвых процессов (определяются по отсутствию heartbeat) и возвращает задачи в основную очередь.
+
+Цена надёжности: `SuperFetch` не может ждать работу так же дёшево, как блокирующий `BRPOP`, поэтому при большом числе очередей и процессов растёт polling-нагрузка на Redis. Восстановление orphan jobs тоже не мгновенное: обычно это минуты, а не миллисекунды.
 
 </details>
 
 ### Push: client → Redis
 
-Client выполняет `LPUSH` для отправки задачи в Redis. Если Redis недоступен в этот момент — `perform_async` выбросит исключение, задача потеряна.
+Client выполняет `LPUSH` для отправки задачи в Redis. Если Redis недоступен в этот момент — `perform_async` выбросит исключение, и постановка не состоится. Задача «потеряна» только в том смысле, что она так и не попала в очередь.
 
 <details>
 <summary>Pro: reliable push</summary>
 
-`Sidekiq::Client.reliable_push!` — при сбое Redis задача сохраняется в in-memory буфер клиентского процесса и повторяется при восстановлении соединения.
+`Sidekiq::Client.reliable_push!` — при сбое Redis задача сохраняется во внутреннюю in-memory очередь клиентского процесса и будет отправлена позже, когда следующее enqueue обнаружит восстановленное соединение.
 
-Ограничения: буфер в памяти — при рестарте клиентского процесса (Rails-сервер) несохранённые задачи теряются. Не совместим с Batches.
+Ограничения: очередь локальна для процесса и живёт только в памяти, так что при рестарте клиента несохранённые задачи теряются. По умолчанию буфер хранит последние 1000 push и дренируется только при следующей успешной постановке задачи. Не совместим с Batches.
 
 </details>
 
@@ -49,7 +51,7 @@ Poller перемещает «созревшие» задачи из sorted sets
 
 `config.reliable_scheduler!` — атомарное продвижение через Lua-скрипт. Одна неделимая операция: выбрать задачу из sorted set, удалить её оттуда, добавить в рабочую очередь.
 
-Ограничение: Lua-скрипты в Redis выполняются на одном узле, что создаёт проблемы на Redis Cluster (ключи sorted set и рабочей очереди могут быть на разных узлах).
+Ограничения: отложенная задача продвигается целиком внутри Redis, поэтому client middleware на этом шаге не вызывается. Lua-скрипты в Redis также выполняются на одном узле, что создаёт проблемы на Redis Cluster (ключи sorted set и рабочей очереди могут быть на разных узлах).
 
 </details>
 
@@ -131,6 +133,8 @@ Sidekiq.transactional_push!
 
 Transactional Push интегрируется с ActiveRecord: если `perform_async` вызван внутри транзакции, задача буферизуется и отправляется в Redis только после успешного `COMMIT`. При rollback — задача отбрасывается. Вне транзакции `perform_async` работает как обычно — немедленный `LPUSH`.
 
+Две важные оговорки из текущей документации: для Rails < 7.2 нужен gem `after_commit_everywhere`, а `push_bulk`/`perform_bulk` не буферизуются этой функцией.
+
 ---
 
 Потери, дубликаты, идемпотентность — всё это про крайние случаи. В штатной работе задачи чаще падают по обычной причине: email-сервис вернул 500, база данных не ответила за timeout, API ограничил частоту. Для таких случаев в Sidekiq есть retry.
@@ -142,5 +146,5 @@ Transactional Push интегрируется с ActiveRecord: если `perform
 ## Sources
 
 - [Sidekiq Wiki — Reliability](https://github.com/sidekiq/sidekiq/wiki/Reliability)
-- [Sidekiq Wiki — Using Redis](https://github.com/sidekiq/sidekiq/wiki/Using-Redis)
-- Mike Perham, [Sidekiq Pro](https://sidekiq.org/products/pro.html)
+- [Sidekiq Wiki — Pro Reliability Client](https://github.com/sidekiq/sidekiq/wiki/Pro-Reliability-Client)
+- [Sidekiq Wiki — Advanced Options](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options)

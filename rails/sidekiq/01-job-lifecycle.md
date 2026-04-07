@@ -14,7 +14,7 @@
 SendEmailJob.perform_async(42)
 ```
 
-1. Sidekiq::Client создаёт JSON-хеш с описанием задачи:
+1. Sidekiq::Client создаёт JSON-хеш с описанием задачи. Это не фиксированный «формат на все времена», а базовый payload, который потом может обрасти полями для retry, schedule или ActiveJob:
 
 ```json
 {
@@ -22,12 +22,15 @@ SendEmailJob.perform_async(42)
   "args": [42],
   "queue": "default",
   "jid": "b4a577edbccf1d805744efa9",
-  "created_at": 1700000000.123,
+  "created_at": 1712560000123,
+  "enqueued_at": 1712560000123,
   "retry": true
 }
 ```
 
 `jid` (job ID) — уникальный идентификатор конкретного вызова, 12 случайных байт в hex (24 символа). `class` указывает, какой Ruby-класс выполнит работу. `args` — аргументы для метода `perform`.
+
+`created_at` фиксирует момент создания job. `enqueued_at` показывает момент попадания в рабочую очередь. Для scheduled job это поле появится позже, когда Poller переместит задачу из `schedule` в обычную queue. Формат `*_at` зависит от версии: в Sidekiq 7.x это epoch seconds с дробной частью, в 8.0+ — integer milliseconds.
 
 2. JSON-хеш проходит через **client middleware chain** — цепочку обработчиков, каждый из которых может модифицировать или отклонить задачу. Middleware-обработчик получает хеш, может добавить поля (request_id, tenant_id), вызывает `yield` для передачи дальше по цепочке.
 
@@ -74,7 +77,7 @@ end
 
 На стороне серверного процесса Processor выполняет зеркальную цепочку:
 
-1. `BRPOP queue:default 2` — Processor ждёт задачу из Redis. Timeout 2 секунды: если очередь пуста, Processor повторяет попытку. Если задача есть — `BRPOP` атомарно извлекает её из списка.
+1. `BRPOP queue:default <timeout>` — Processor ждёт задачу из Redis. Если очередь пуста, после короткого timeout он повторяет попытку. Если задача есть — `BRPOP` атомарно извлекает её из списка.
 
 2. `JSON.parse` — десериализация JSON обратно в хеш.
 
@@ -143,7 +146,7 @@ SendEmailJob.perform_in(5.minutes, user_id)
 
 ---
 
-Задача прошла полный путь и выполнена. Через два часа Sidekiq-процесс убит OOM-killer (механизм ядра Linux, который принудительно завершает процесс при нехватке памяти). Десять задач были в работе. `BRPOP` уже удалил их из Redis — все десять потеряны навсегда.
+Задача прошла полный путь и выполнена. Через два часа Sidekiq-процесс убит OOM-killer (механизм ядра Linux, который принудительно завершает процесс при нехватке памяти). Десять задач были в работе. В стандартном fetch-цикле `BRPOP` уже удалил их из Redis — все десять потеряны навсегда.
 
 ---
 
@@ -153,3 +156,4 @@ SendEmailJob.perform_in(5.minutes, user_id)
 
 - [Sidekiq Wiki — Getting Started](https://github.com/sidekiq/sidekiq/wiki/Getting-Started)
 - [Sidekiq Wiki — Best Practices](https://github.com/sidekiq/sidekiq/wiki/Best-Practices)
+- [Sidekiq Wiki — Job Format](https://github.com/sidekiq/sidekiq/wiki/Job-Format)

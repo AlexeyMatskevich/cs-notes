@@ -19,7 +19,7 @@ Sidekiq — фреймворк для обработки фоновых зада
 
 ## Как всё связано
 
-**OSS vs Pro.** OSS Sidekiq использует `BRPOP` (простая очередь) — при crash задача потеряна. Pro добавляет `SuperFetch` (`LMOVE` = reliable queue), `reliable_push`, `reliable_scheduler`. Каждый механизм — отдельный opt-in. Без явного включения Pro ведёт себя как OSS.
+**OSS vs Pro.** OSS Sidekiq использует `BRPOP` (простая очередь) — при crash задача потеряна. Pro добавляет `SuperFetch` (private queues + orphan recovery), `reliable_push`, `reliable_scheduler`. Каждый механизм — отдельный opt-in. Без явного включения Pro поведение остаётся OSS.
 
 **Threads vs Processes.** Потоки дают I/O overlap благодаря GVL, но не ускоряют CPU-bound работу. Процессы дают настоящий CPU-параллелизм, но потребляют больше памяти. Типичная конфигурация: несколько процессов с 5–25 потоками каждый.
 
