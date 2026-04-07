@@ -9,33 +9,35 @@
 
 ← [Обзор серии](index.md) | [Эволюция схемы](01-schema-evolution.md) →
 
-Добавить столбец на таблицу в dev — мгновенно. На `orders` с 50 миллионами строк та же операция может занять минуты и заблокировать все запросы. Разница — не в команде, а в том, что PostgreSQL делает под блокировкой: обновить запись в системном каталоге (внутренние таблицы PostgreSQL, где хранится информация о структуре всех таблиц, столбцов и ограничений) — микросекунды, или перезаписать каждую строку таблицы — минуты.
+Добавить столбец на таблицу в dev — мгновенно. На `orders` с 50 миллионами строк та же операция может занять минуты и заблокировать все запросы. Разница — не в команде, а в том, что PostgreSQL делает под блокировкой: меняет только запись о таблице в системных каталогах (внутренних таблицах PostgreSQL с описанием схемы) — микросекунды, или переписывает каждую строку таблицы — минуты.
+
+Дальше в тексте: DDL (Data Definition Language) — команды изменения схемы (`ALTER TABLE`, `CREATE INDEX`), DML (Data Manipulation Language) — команды изменения данных (`INSERT`, `UPDATE`, `DELETE`).
 
 ## Стоимость DDL-операций
 
-Безопасность операции определяют три характеристики: уровень блокировки, тип действия (metadata / scan / rewrite) и длительность. ACCESS EXCLUSIVE на микросекунды (metadata) — не проблема. ACCESS EXCLUSIVE на минуты (rewrite или full scan) — катастрофа: все запросы к таблице, включая SELECT, заблокированы. Длительность зависит не от уровня блокировки, а от типа действия.
+Безопасность операции определяют три характеристики: уровень блокировки, тип действия (изменить только описание схемы / просканировать таблицу / переписать таблицу) и длительность. ACCESS EXCLUSIVE на микросекунды — не проблема. ACCESS EXCLUSIVE на минуты (rewrite или full scan) — катастрофа: все запросы к таблице, включая SELECT, заблокированы. Длительность зависит не от уровня блокировки, а от типа действия.
 
 **Столбцы и переименование:**
 
 | Операция | Блокировка | Действие | Длительность |
 |----------|-----------|----------|-------------|
-| ADD COLUMN (без default или DEFAULT вычисляется один раз, PG 11+) | ACCESS EXCLUSIVE | metadata | мгновенно |
+| ADD COLUMN (без default или DEFAULT вычисляется один раз, PG 11+) | ACCESS EXCLUSIVE | описание схемы | мгновенно |
 | ADD COLUMN (DEFAULT вычисляется для каждой строки, или PG < 11) | ACCESS EXCLUSIVE | table rewrite | пропорционально размеру |
-| DROP COLUMN | ACCESS EXCLUSIVE | metadata | мгновенно |
+| DROP COLUMN | ACCESS EXCLUSIVE | описание схемы | мгновенно |
 | ALTER COLUMN TYPE (перезапись) | ACCESS EXCLUSIVE | rewrite + index rebuild | пропорционально размеру |
-| ALTER COLUMN TYPE (расширение varchar, varchar → text) | ACCESS EXCLUSIVE | metadata | мгновенно; index rebuild, если индексы зависят от типа |
+| ALTER COLUMN TYPE (расширение varchar, varchar → text) | ACCESS EXCLUSIVE | описание схемы | мгновенно; index rebuild, если индексы зависят от типа |
 | ALTER COLUMN SET NOT NULL | ACCESS EXCLUSIVE | full table scan | пропорционально размеру |
-| RENAME COLUMN | ACCESS EXCLUSIVE | metadata | мгновенно |
+| RENAME COLUMN | ACCESS EXCLUSIVE | описание схемы | мгновенно |
 
 **Ограничения:**
 
 | Операция | Блокировка | Действие | Длительность |
 |----------|-----------|----------|-------------|
-| ADD CHECK (validated) | ACCESS EXCLUSIVE | scan | пропорционально размеру |
-| ADD UNIQUE (validated) | ACCESS EXCLUSIVE | scan | пропорционально размеру |
-| ADD FOREIGN KEY (validated) | SHARE ROW EXCLUSIVE (обе таблицы) | scan | пропорционально размеру |
-| ADD CHECK ... NOT VALID | ACCESS EXCLUSIVE | metadata | мгновенно |
-| ADD FK ... NOT VALID | SHARE ROW EXCLUSIVE (обе таблицы) | metadata | мгновенно |
+| ADD CHECK (с проверкой существующих строк) | ACCESS EXCLUSIVE | scan | пропорционально размеру |
+| ADD UNIQUE (с проверкой существующих строк) | ACCESS EXCLUSIVE | scan | пропорционально размеру |
+| ADD FOREIGN KEY (с проверкой существующих строк) | SHARE ROW EXCLUSIVE (обе таблицы) | scan | пропорционально размеру |
+| ADD CHECK ... NOT VALID | ACCESS EXCLUSIVE | описание схемы | мгновенно |
+| ADD FK ... NOT VALID | SHARE ROW EXCLUSIVE (обе таблицы) | описание схемы | мгновенно |
 | VALIDATE CONSTRAINT (CHECK) | SHARE UPDATE EXCLUSIVE | scan | пропорционально размеру |
 | VALIDATE CONSTRAINT (FK) | SHARE UPDATE EXCLUSIVE (child) + ROW SHARE (parent) | scan обеих таблиц | пропорционально размеру |
 
@@ -48,13 +50,15 @@
 
 Даже мгновенный ACCESS EXCLUSIVE попадает в [очередь блокировок](../postgresql/concurrency/03-locks.md#table-level-locks--защита-структуры-таблицы): если долгий SELECT держит ACCESS SHARE, ALTER TABLE ждёт — а все последующие запросы выстраиваются за ним. Ожидание в секунды терпимо. В минуты — весь трафик к таблице встаёт.
 
-Таблицы предполагают одно действие на один ALTER TABLE. При объединении нескольких действий (`ALTER TABLE t ADD COLUMN ..., ALTER COLUMN ...`) PostgreSQL берёт самую строгую блокировку и удерживает до конца — metadata в паре с rewrite получает блокировку на всё время rewrite.
+В таблицах выше предполагается одна подкоманда на один `ALTER TABLE`. При объединении нескольких действий (`ALTER TABLE t ADD COLUMN ..., ALTER COLUMN ...`) PostgreSQL берёт самую строгую блокировку и удерживает до конца — быстрое изменение описания схемы в паре с rewrite получает блокировку на всё время rewrite.
 
 Операции с полным сканированием или перезаписью таблицы под ACCESS EXCLUSIVE опасны. Но у многих есть безопасные альтернативы.
 
 ## Ограничения без полного сканирования
 
-ADD CHECK и ADD FOREIGN KEY проверяют каждую существующую строку под ACCESS EXCLUSIVE — на 50M строк таблица заблокирована на минуты. Но проверку можно разделить на два шага: зарегистрировать ограничение мгновенно, а существующие данные проверить позже под лёгкой блокировкой.
+В этой части формулировка «с проверкой существующих строк» означает: команда сразу проходит по уже существующим данным. `NOT VALID` означает другое: ограничение регистрируется сейчас, новые записи проверяются сразу, а старые строки будут проверены отдельным `VALIDATE CONSTRAINT`.
+
+ADD CHECK проверяет существующие строки под `ACCESS EXCLUSIVE`, а ADD FOREIGN KEY — под `SHARE ROW EXCLUSIVE` на обеих таблицах. Оба варианта опасны на больших таблицах: CHECK блокирует вообще всё, FK держит долгую блокировку на дочерней и родительской таблицах. Но проверку можно разделить на два шага: зарегистрировать ограничение мгновенно, а существующие данные проверить позже под более лёгкой блокировкой.
 
 ### CHECK и FK — NOT VALID и VALIDATE
 
@@ -104,7 +108,7 @@ CHECK, FK и NOT NULL можно добавить в два шага. Уника
 
 `ADD UNIQUE(col)` и `ADD PRIMARY KEY(col)` берут ACCESS EXCLUSIVE и строят уникальный индекс — блокировка на всё время построения. На 50M строк — минуты.
 
-Безопасный путь: создать уникальный индекс [неблокирующим способом](../sql/postgresql/04-index-operations.md#create-index-concurrently), затем привязать constraint к готовому индексу через [USING INDEX](../sql/postgresql/04-index-operations.md#using-index--привязка-индекса-к-constraint):
+Безопасный путь: создать уникальный индекс [неблокирующим способом](../sql/postgresql/04-index-operations.md#create-index-concurrently), затем привязать constraint к уже готовому unique index через [USING INDEX](../sql/postgresql/04-index-operations.md#using-index--привязка-индекса-к-constraint):
 
 ```sql
 -- 1. SHARE UPDATE EXCLUSIVE — не блокирует DML
@@ -116,7 +120,7 @@ ALTER TABLE orders ADD CONSTRAINT orders_external_id_uq
   UNIQUE USING INDEX idx_orders_external_id;
 ```
 
-USING INDEX привязывает существующий индекс к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [частичные](../sql/schema/04-indexes.md#частичный-индекс) и [expression-индексы](../sql/schema/04-indexes.md#expression-индекс) привязать нельзя. Не поддерживается для партиционированных таблиц (таблиц, разбитых на части по ключу партиционирования).
+USING INDEX привязывает существующий unique index к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [частичные](../sql/schema/04-indexes.md#частичный-индекс) и [expression-индексы](../sql/schema/04-indexes.md#expression-индекс) привязать нельзя. Не поддерживается для партиционированных таблиц (таблиц, разбитых на части по ключу партиционирования).
 
 Для PRIMARY KEY — тот же рецепт, но столбец должен быть NOT NULL **до** USING INDEX. Если столбец nullable, PostgreSQL выполняет неявный SET NOT NULL с полным сканированием под ACCESS EXCLUSIVE — блокирующая операция. Безопасная последовательность: сначала safe NOT NULL через CHECK-паттерн (см. выше), затем USING INDEX.
 
@@ -134,15 +138,15 @@ GROUP BY external_id
 HAVING COUNT(*) > 1;
 ```
 
-[CONCURRENTLY build](../sql/postgresql/04-index-operations.md#create-index-concurrently) проходит в две фазы. В первой уникальность ещё не проверяется — дубликаты, вставленные в это время, приведут к сбою build во второй фазе. Порядок:
+[CONCURRENTLY build](../sql/postgresql/04-index-operations.md#create-index-concurrently) проходит в два прохода по таблице. До начала второго прохода конкурентные writes ещё могут создать дубликат; когда второй проход его увидит, build упадёт. Порядок:
 
 1. Проверить дубликаты (SQL выше), вычистить если есть
-2. Приостановить writes в столбец (переключатель в коде приложения), дождаться завершения in-flight транзакций
+2. Приостановить writes в столбец (переключатель в коде приложения), дождаться завершения незавершённых транзакций, которые ещё могут писать `external_id`
 3. Запустить build
 4. Если успех — возобновить writes
-5. Если сбой — удалить [INVALID-индекс](../sql/postgresql/04-index-operations.md#сбой-при-concurrently--invalid-индекс) (`DROP INDEX CONCURRENTLY`), разобраться с причиной, повторить с шага 3
+5. Если сбой — не снимать write-freeze: удалить [INVALID-индекс](../sql/postgresql/04-index-operations.md#сбой-при-concurrently--invalid-индекс) (`DROP INDEX CONCURRENTLY`), разобраться с причиной и повторить build
 
-Writes приостановлены на время build, не на время DROP — DROP просто убирает сломанный индекс.
+Writes приостановлены на время build и возможного cleanup после сбоя. DROP просто убирает сломанный индекс; безопасно открывать запись снова только после успешного build.
 
 Компромисс — build в период низкого трафика без приостановки writes. Окно для дубликатов короче, но не закрыто — если дубликат проскочит, build упадёт и нужно будет вычистить данные и повторить.
 
@@ -152,7 +156,7 @@ ADD COLUMN с DEFAULT до PostgreSQL 11 перезаписывал каждую
 
 PostgreSQL 11+ сохраняет default в системном каталоге: при чтении строки без этого столбца PostgreSQL подставляет сохранённое значение на лету. Строки не трогаются, операция мгновенная.
 
-Условие: значение DEFAULT можно вычислить один раз и сохранить для всех строк. Константы (`42`, `'unknown'`) и `CURRENT_TIMESTAMP` — вычисляются один раз, мгновенно. `random()`, `gen_random_uuid()` — результат разный для каждой строки, PostgreSQL вынужден перезаписать каждую.
+Условие: значение DEFAULT можно вычислить один раз и сохранить для всех строк. Константы (`42`, `'unknown'`) и `CURRENT_TIMESTAMP` — вычисляются один раз, мгновенно. Volatile-функции (`clock_timestamp()`, `random()`, `gen_random_uuid()`) дают новое значение на каждую строку, поэтому PostgreSQL вынужден перезаписать таблицу.
 
 ### Мгновенный — не значит корректный
 
@@ -212,7 +216,7 @@ CREATE INDEX CONCURRENTLY idx_orders_region ON orders (region);
 SET statement_timeout = '30s';  -- вернуть обратно
 ```
 
-CREATE INDEX CONCURRENTLY не работает в транзакции, поэтому SET — session-scoped. Если операция упадёт до сброса, сессия остаётся с 30-минутным timeout — следующие шаги миграции теряют защиту.
+CREATE INDEX CONCURRENTLY не работает в транзакции, поэтому SET живёт на уровне сессии. Если операция упадёт до сброса, сессия остаётся с 30-минутным timeout — следующие шаги миграции теряют защиту.
 
 Безопасные варианты:
 - ensure/finally в коде фреймворка (гарантирует сброс даже при ошибке)
@@ -273,11 +277,15 @@ WHERE state = 'idle in transaction'
 
 Версии PG, ограничения паттернов (plain B-tree для USING INDEX, партиционированные таблицы) — в таблице стоимости выше и в [обзоре серии](index.md).
 
+Этого файла достаточно, чтобы оценить риск отдельной DDL-команды. Но реальная миграция редко состоит из одной команды: между `ADD COLUMN`, backfill и `SET NOT NULL` продолжает работать старый код. Следующая заметка — про этот уже не DDL-, а workflow-уровень: как согласовать схему, данные и rollout приложения между шагами.
+
 ## Sources
 
 - PostgreSQL Documentation (v17): ALTER TABLE. <https://www.postgresql.org/docs/17/sql-altertable.html>
 - PostgreSQL Documentation (v17): CREATE INDEX. <https://www.postgresql.org/docs/17/sql-createindex.html>
 - PostgreSQL Documentation (v17): Explicit Locking. <https://www.postgresql.org/docs/17/explicit-locking.html>
+- PostgreSQL Documentation (v17): Client Connection Defaults. <https://www.postgresql.org/docs/17/runtime-config-client.html>
+- PostgreSQL Documentation (v17): Date/Time Functions and Operators. <https://www.postgresql.org/docs/17/functions-datetime.html>
 - Brandur Leach: Fast Column Creation with Defaults in PostgreSQL. <https://brandur.org/postgres-default>
 
 ---

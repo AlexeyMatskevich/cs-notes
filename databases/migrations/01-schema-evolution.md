@@ -4,45 +4,17 @@
 
 ← [Безопасные изменения схемы](00-safe-schema-changes.md)
 
-Добавить столбец, создать индекс, навесить ограничение — каждую из этих операций можно выполнить безопасно по отдельности. Но нужно: добавить столбец `region` в `orders`, заполнить его данными, поставить NOT NULL. Три шага. Между первым и третьим — старый код, который не знает про `region` и вставляет строки без него. К третьему шагу в столбце появляются новые NULL.
+В [предыдущей заметке](00-safe-schema-changes.md) каждая отдельная DDL-команда рассматривалась сама по себе. Но миграция почти никогда не состоит из одной команды. Нужно: добавить столбец `region` в `orders`, начать писать в него из приложения, заполнить старые строки, потом запретить `NULL`. Между этими шагами база продолжает жить, а код в production видит промежуточные состояния схемы.
 
-Проблема не в отдельных операциях, а во взаимодействии схемы, данных и работающего кода.
-
-## Schema и data — два типа миграций
-
-Schema migration меняет структуру: ADD COLUMN, CREATE INDEX, ADD CONSTRAINT. Data migration меняет значения: заполнить столбец, преобразовать формат, перенести данные между таблицами.
-
-Если объединить оба типа в одной [транзакции](../sql/modification/01-transactions.md), ALTER TABLE берёт ACCESS EXCLUSIVE, и эта блокировка удерживается до COMMIT — включая весь UPDATE на 50M строк:
-
-```sql
--- Антипаттерн: schema + data в одной транзакции
-BEGIN;
-ALTER TABLE orders ADD COLUMN region TEXT;           -- ACCESS EXCLUSIVE
-UPDATE orders SET region = 'unknown';                -- всё ещё ACCESS EXCLUSIVE
-COMMIT;                                              -- блокировка снята
-```
-
-Все запросы к `orders` — включая SELECT — заблокированы на время UPDATE. На 50M строк — минуты.
-
-Если разделить:
-
-```sql
--- Транзакция 1: schema (ACCESS EXCLUSIVE, мгновенно)
-ALTER TABLE orders ADD COLUMN region TEXT;
-
--- Транзакция 2: data (ROW EXCLUSIVE, не блокирует чтение)
-UPDATE orders SET region = 'unknown' WHERE region IS NULL;
-```
-
-Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт [ROW EXCLUSIVE](../postgresql/concurrency/03-locks.md#автоматические-блокировки-при-записи) — уровень блокировки, который PostgreSQL автоматически берёт при UPDATE. ROW EXCLUSIVE совместим с ACCESS SHARE (SELECT), поэтому чтение продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
+Главная проблема этой заметки — не синтаксис команд, а совместимость во время rollout: как пройти через промежуточные состояния так, чтобы старый и новый код не ломали друг друга.
 
 ## Совместимость кода и схемы
 
-Разделение на отдельные транзакции решает проблему блокировок — но создаёт новую. Между транзакциями проходит время, и в этом окне работает код, который ничего не знает о промежуточном состоянии схемы.
+Безопасные отдельные команды не спасают сами по себе. Между ними проходит время, и в этом окне работает код, который ничего не знает о промежуточном состоянии схемы.
 
 Добавили столбец `region`. Следующий шаг — deploy нового кода, который пишет в `region`. Между миграцией и завершением deploy — окно, в котором одна версия кода работает с двумя состояниями схемы.
 
-При rolling deploy (постепенная замена instances: новые поднимаются, старые останавливаются по одному) окно ещё шире: часть instances работает со старым кодом, часть с новым — одновременно. Каждая версия должна корректно работать с текущей схемой. Это **backward compatibility constraint** (англ. «ограничение обратной совместимости»).
+При rolling deploy (постепенная замена экземпляров приложения: новые поднимаются, старые останавливаются по одному) окно ещё шире: часть экземпляров работает со старым кодом, часть с новым — одновременно. Каждая версия должна корректно работать с текущей схемой. Это **backward compatibility constraint** (англ. «ограничение обратной совместимости»).
 
 Два порядка выполнения:
 
@@ -60,6 +32,37 @@ Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data ch
 
 DROP COLUMN и RENAME COLUMN — мгновенный DDL, но ломают работающий код. Из [классификации](00-safe-schema-changes.md#практические-правила): «DDL-fast, app-unsafe». Для таких операций нужен expand-contract.
 
+Один из базовых приёмов сохранить совместимость — не смешивать изменение схемы и массовую переработку данных в одну длинную транзакцию.
+
+## Schema и data — два типа миграций
+
+Schema migration меняет структуру: ADD COLUMN, CREATE INDEX, ADD CONSTRAINT. Data migration меняет значения: заполнить столбец, преобразовать формат, перенести данные между таблицами.
+
+Если объединить оба типа в одной [транзакции](../sql/modification/01-transactions.md), `ALTER TABLE` берёт `ACCESS EXCLUSIVE`, и транзакция удерживает эту блокировку до `COMMIT` — включая весь `UPDATE` на 50M строк:
+
+```sql
+-- Антипаттерн: schema + data в одной транзакции
+BEGIN;
+ALTER TABLE orders ADD COLUMN region TEXT;           -- ACCESS EXCLUSIVE уже взят
+UPDATE orders SET region = 'unknown';                -- UPDATE сам по себе берёт ROW EXCLUSIVE,
+                                                     -- но более строгая блокировка от ALTER TABLE всё ещё удерживается
+COMMIT;                                              -- ACCESS EXCLUSIVE снят
+```
+
+Важно: проблема не в том, что `UPDATE` внезапно стал `ACCESS EXCLUSIVE`. Проблема в том, что более строгая блокировка, взятая первым оператором, живёт до конца транзакции. Поэтому все запросы к `orders` — включая `SELECT` — заблокированы на время `UPDATE`. На 50M строк — минуты.
+
+Если разделить:
+
+```sql
+-- Транзакция 1: schema (ACCESS EXCLUSIVE, мгновенно)
+ALTER TABLE orders ADD COLUMN region TEXT;
+
+-- Транзакция 2: data (ROW EXCLUSIVE, не блокирует чтение)
+UPDATE orders SET region = 'unknown' WHERE region IS NULL;
+```
+
+Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт [ROW EXCLUSIVE](../postgresql/concurrency/03-locks.md#автоматические-блокировки-при-записи) — уровень блокировки, который PostgreSQL автоматически берёт при UPDATE. ROW EXCLUSIVE совместим с ACCESS SHARE (SELECT), поэтому чтение продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
+
 ## Expand-contract
 
 Expand-contract (англ. «расширить — сжать»; также parallel change) — универсальный паттерн для несовместимых изменений. Идея: новая структура существует рядом со старой, пока все данные и весь код не переключены.
@@ -74,25 +77,25 @@ ALTER TABLE orders ADD COLUMN region TEXT;  -- nullable, без DEFAULT
 
 Столбец nullable и без DEFAULT. Если добавить DEFAULT (например, `'unknown'`), все существующие строки сразу получат non-NULL значение — и backfill не сможет отличить уже обработанные строки от необработанных (`WHERE region IS NULL` ничего не найдёт).
 
-**2. Deploy dual-write** (англ. «двойная запись» — код пишет и в старую, и в новую структуру) — rolling deploy кода, который записывает `region` при каждом INSERT и UPDATE.
+**2. Deploy dual-write** (англ. «двойная запись» — код пишет и в старую, и в новую структуру) — rolling deploy кода, который при каждом INSERT и UPDATE начинает заполнять `region`, не ломая старый путь записи. В этом примере старой структурой остаются поля-источники, из которых вычисляется `region`.
 
-**Gate:** все instances обновлены. Ни один writer не вставляет строки без `region`. Без этого gate backfill бесполезен — новые строки без `region` появляются быстрее, чем backfill их заполняет.
+**Gate:** все экземпляры приложения обновлены. Ни один writer не вставляет строки без `region`. Без этого gate backfill бесполезен — новые строки без `region` появляются быстрее, чем backfill их заполняет. Но этого gate недостаточно для переключения чтения: в системе ещё может жить хвост транзакций, начатых до rollout.
 
 **3. Backfill** — заполнить старые строки. Батчами, с паузами (подробности — ниже).
 
 **Gate:** начинать **только после п.2** — иначе незафиксированные строки от old-code writers пропустят backfill.
 
-**4. Switch reads** — переключить чтение на `region`. Три gate перед переключением:
+**4. Switch reads** — переключить чтение на `region`. Перед этим нужно доказать три вещи: старый код больше не создаёт новые `NULL`, хвост старых транзакций уже дошёл, и читающие узлы видят заполненный столбец. Отсюда и три gate перед read cutover:
 
-**Gate A — transaction drain.** Транзакции, начатые до deploy dual-write, могут закоммитить строки без `region` после завершения backfill. Если начать backfill без этого gate — такие поздние коммиты создадут строки с `region IS NULL`, которые backfill уже пропустил, и convergence check на следующем шаге покажет ненулевой count. Нужен application-level deploy barrier: все instances подтверждают переход на dual-write (health check, deploy orchestrator). `pg_stat_activity` не заменяет барьер — запрос может начаться до rollout, но открыть транзакцию позже, и `xact_start` будет новее cutoff.
+**Gate A — transaction drain.** Транзакции, начатые до deploy dual-write, могут закоммитить строки без `region` уже после основного backfill. Поэтому перед переключением чтения нужно пережить хвост старых транзакций. Нужен явный барьер rollout: система deploy должна подтвердить, что все экземпляры приложения перешли на dual-write. `pg_stat_activity` не заменяет такой барьер — запрос может начаться до rollout, но открыть транзакцию позже, и `xact_start` будет новее cutoff.
 
 <details>
 <summary>Операционные детали transaction drain</summary>
 
-`$deploy_timestamp` фиксируется в момент подтверждения последнего instance:
+`$deploy_timestamp` фиксируется в момент подтверждения последнего экземпляра приложения:
 
 ```sql
--- В отдельном autocommit-соединении (не внутри транзакции!)
+-- В отдельном соединении без явного BEGIN/COMMIT
 SELECT clock_timestamp();  -- wall-clock время, не now()
 ```
 
@@ -110,14 +113,14 @@ WHERE xact_start < $deploy_timestamp
 
 </details>
 
-**Gate B — convergence.** Если переключить чтение до convergence, код увидит NULL в строках, которые backfill ещё не обработал. Критерий зависит от типа миграции:
+**Gate B — convergence.** После transaction drain сделать дополнительный проход по `WHERE region IS NULL` (tail-sweep) и проверить, что новый столбец стабильно заполнен. Если переключить чтение раньше, код увидит NULL в строках, которые основной backfill или поздние коммиты ещё не закрыли. Критерий зависит от типа миграции:
 
 ```sql
 -- Добавление столбца: все строки заполнены
 SELECT COUNT(*) FROM orders WHERE region IS NULL;  -- должен быть 0
 ```
 
-Проверять **дважды** с интервалом >= максимальное время жизни транзакции (для web-приложений: 30-60 секунд). Если повторная проверка показывает новые NULL — late commits, нужен ещё один tail-sweep + повторная проверка.
+Проверять **дважды** с интервалом >= максимальное время жизни транзакции (для web-приложений: 30-60 секунд). Если повторная проверка показывает новые NULL — хвост ещё не сошёлся: нужен ещё один дополнительный проход по `WHERE region IS NULL` + повторная проверка.
 
 **Gate C — replica catch-up** (если приложение читает с [реплик](../postgresql/distribution/00-replication.md)). Без этого gate приложение переключит чтение на `region`, но replica ещё не применила backfill — запросы увидят NULL вместо данных. Захватить LSN (Log Sequence Number — позиция в WAL) на primary непосредственно перед переключением чтения:
 
@@ -156,7 +159,12 @@ ALTER TABLE orders DROP CONSTRAINT orders_region_nn;
 6. DROP COLUMN region — только после того, как **все readers и writers** на `shipping_region`
 
 **Type change** `orders.amount INTEGER` → `orders.amount BIGINT`:
-Тот же expand-contract: добавить `amount_new BIGINT` → dual-write → backfill → switch reads и writers на `amount_new` → drop `amount` → rename `amount_new` → `amount` → deploy код на новое имя. Шагов больше, но принцип тот же — каждый промежуточный шаг совместим с работающим кодом. Rename требует дополнительного deploy после себя (иначе код обращается к имени, которого уже нет). Перед DROP — перенести на новый столбец зависимости старого: индексы, constraints, defaults, views.
+Безопасная часть паттерна та же: добавить `amount_new BIGINT` → dual-write → backfill → switch reads и writers на `amount_new`. На этом шаге смена типа уже завершена. Дальше есть выбор:
+
+- оставить новое имя `amount_new` и убрать старый столбец позже;
+- если старое имя `amount` принципиально важно, считать финальный rename отдельным несовместимым cutover со своим deploy plan или maintenance window.
+
+Иначе легко получить ложное ощущение «rename тоже прозрачен онлайн». Он не прозрачен: после `RENAME COLUMN amount_new TO amount` код, который ещё обращается к `amount_new`, сразу ломается. Перед DROP старого столбца нужно также перенести его зависимости: индексы, constraints, defaults, views.
 
 Ключевое: без строгих gates между шагами — stale reads, потеря записей, failed validation.
 
@@ -248,9 +256,10 @@ Tail-sweep обязателен для любого батчированного
 ## Sources
 
 - Martin Fowler: Parallel Change. <https://martinfowler.com/bliki/ParallelChange.html>
+- PostgreSQL Documentation (v17): Date/Time Functions and Operators. <https://www.postgresql.org/docs/17/functions-datetime.html>
 - PostgreSQL Documentation (v17): pg_stat_activity. <https://www.postgresql.org/docs/17/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW>
 - PostgreSQL Documentation (v17): System Administration Functions. <https://www.postgresql.org/docs/17/functions-admin.html>
-- GoCardless: Zero-downtime Postgres migrations — the hard parts.
+- GoCardless: Zero-downtime Postgres migrations — the hard parts. <https://gocardless.com/blog/zero-downtime-postgres-migrations-the-hard-parts/>
 
 ---
 

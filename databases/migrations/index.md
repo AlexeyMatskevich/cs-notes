@@ -20,17 +20,14 @@
 - [Безопасные изменения схемы](00-safe-schema-changes.md) — стоимость DDL-операций, безопасные паттерны, timeout discipline
 - [Эволюция схемы](01-schema-evolution.md) — schema vs data, совместимость кода, expand-contract, backfilling, обратимость
 
-## Среда выполнения
+## Когда паттерны из серии работают
 
-Безопасные паттерны из серии работают при определённых условиях. Если среда им не соответствует, паттерны не гарантируют безопасность.
+Большинство рецептов ниже предполагают обычную рабочую среду PostgreSQL, а не произвольный migration runner.
 
-1. **Прямое подключение к PostgreSQL**, не через PgBouncer в transaction mode. PgBouncer — connection pooler (промежуточный слой между приложением и PostgreSQL, переиспользующий соединения). В transaction mode он переназначает серверное соединение между транзакциями. Session-level `SET` (lock_timeout, statement_timeout) и [advisory locks](../postgresql/concurrency/03-locks.md#advisory-locks--когда-row-level-locks-недостаточно) привязаны к серверному соединению; после переназначения настройки и блокировки теряются.
-
-2. **DDL вне транзакции.** [CREATE INDEX CONCURRENTLY](../sql/postgresql/04-index-operations.md#create-index-concurrently) и REINDEX CONCURRENTLY не работают внутри BEGIN/COMMIT. Migration runner не должен оборачивать такие операции в транзакцию.
-
-3. **Ответственность за session state.** После `SET statement_timeout = '30min'` для долгой операции значение нужно вернуть обратно. Если операция упадёт до сброса, сессия останется с расширенным timeout. Безопасные варианты: ensure/finally в коде или отдельное соединение, которое закрывается после операции.
-
-4. **Batched backfill — серия коротких транзакций.** Один батч = одна транзакция с explicit COMMIT. Не одна большая транзакция (держит блокировки и мешает [VACUUM](../postgresql/maintenance/00-vacuum.md)) и не без транзакций.
+- **Сессия живёт достаточно долго, чтобы её настройки сохранялись.** В transaction mode у PgBouncer session-level `SET` и advisory locks не переживают переназначение серверного соединения между транзакциями.
+- **Операции, которым нужен отдельный запуск вне BEGIN/COMMIT, действительно идут без внешней транзакции.** Это обязательно для [CREATE INDEX CONCURRENTLY](../sql/postgresql/04-index-operations.md#create-index-concurrently) и REINDEX CONCURRENTLY.
+- **Долгие шаги сами убирают за собой session state.** Если поднять `statement_timeout` для долгой операции и не вернуть обратно, следующие шаги миграции останутся без обычной защиты.
+- **Backfill идёт серией коротких транзакций.** Один батч = одна транзакция с explicit COMMIT; не одна большая транзакция, которая держит блокировки и мешает [VACUUM](../postgresql/maintenance/00-vacuum.md).
 
 ## Версии PostgreSQL
 
@@ -61,4 +58,6 @@
 - PostgreSQL Documentation (v17): ALTER TABLE. <https://www.postgresql.org/docs/17/sql-altertable.html>
 - PostgreSQL Documentation (v17): CREATE INDEX. <https://www.postgresql.org/docs/17/sql-createindex.html>
 - PostgreSQL Documentation (v17): Explicit Locking. <https://www.postgresql.org/docs/17/explicit-locking.html>
+- PostgreSQL Documentation (v17): Client Connection Defaults. <https://www.postgresql.org/docs/17/runtime-config-client.html>
+- PgBouncer: Features. <https://www.pgbouncer.org/features.html>
 - Martin Fowler: Parallel Change. <https://martinfowler.com/bliki/ParallelChange.html>
