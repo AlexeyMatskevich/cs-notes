@@ -2,7 +2,7 @@
 
 **Предпосылки:** [Определение методов](methods/01-method-definition.md) — CREF, `definemethod`, `class << obj`, self vs CREF. [Блоки](blocks.md) (опирается на серию VM-заметок: [компиляция](vm/01-compilation.md), [исполнение](vm/02-execution.md), [управление потоком](vm/03-control-flow.md)) — замыкания, EP, stack-to-heap, Proc.
 
-← [Блоки](blocks.md) | [Array](collections/00-array.md) →
+← [Блоки](blocks.md) | [JIT](jit.md) →
 
 В [заметке об определении методов](methods/01-method-definition.md) мы видели, что `def` всегда работает через CREF — лексическую область. Но `def` не создаёт замыкания: тело метода не видит локальных переменных окружающего scope. В [заметке о блоках](blocks.md) — обратная ситуация: блок является замыканием, он видит окружение через EP. Метапрограммирование в Ruby — это способы совместить оба механизма: менять, куда попадает метод (CREF), и что видит его код (EP).
 
@@ -152,4 +152,4 @@ eval               CREF вызова         да            из окружен
 
 ---
 
-← [Блоки](blocks.md) | [Array](collections/00-array.md) →
+← [Блоки](blocks.md) | [JIT](jit.md) →
