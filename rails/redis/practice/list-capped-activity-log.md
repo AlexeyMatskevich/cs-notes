@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - capped list
+  - LTRIM
+order: 3
+---
+
 # Ограниченный лог активности на LIST
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [LIST](../../../databases/redis/data-structures/list.md).

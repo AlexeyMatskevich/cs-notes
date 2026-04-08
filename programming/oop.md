@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - OOP
+  - object-oriented programming
+order: 8
+---
+
 # Объектно-ориентированное программирование
 
 **Предпосылки:** [Функции](functions.md) (определение функции, параметры), [Коллекции](collections.md) (массивы, хеши), [Память](memory.md) (общие данные, изменение по ссылке).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - ADT
+  - Abstract Data Type
+order: 0
+---
+
 # Абстрактный тип данных (ADT)
 
 **Предпосылки:** [базовое программирование](../../programming/programming.md) (переменные, типы, условия, циклы, функции), оценка сложности в O(…).

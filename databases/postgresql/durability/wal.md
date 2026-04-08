@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/durability
+  - type/concept
+aliases:
+  - WAL
+  - Write-Ahead Log
+order: 4
+---
+
 # WAL — журнал упреждающей записи
 
 **Предпосылки:** [страницы и кортежи](../storage/pages-and-tuples.md).

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/memory
+  - theme/caching
+  - type/concept
+aliases:
+  - Eviction
+  - maxmemory
+  - LRU
+  - LFU
+order: 19
+---
+
 # Eviction
 
 **Предпосылки:** [Внутренние кодировки](encodings.md), [LRU](../../../algorithms-and-data-structures/linear/lru-cache.md) (least recently used), LFU (least frequently used).

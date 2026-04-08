@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/distribution
+  - theme/reliability
+  - type/overview
+aliases:
+  - Redis Distribution
+  - Replication
+  - Sentinel
+  - Cluster
+order: 21
+---
+
 # Redis: распределение, отказоустойчивость и масштабирование
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) и [шардинг](../../../system-design/sharding.md) (failover, кворум, shard key), [Event loop](../architecture/event-loop.md), сеть (клиент/сервер), базовое понимание ключей и команд.

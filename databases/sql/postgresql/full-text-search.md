@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/indexing
+  - theme/performance
+  - type/concept
+aliases:
+  - Full-Text Search
+  - FTS
+  - tsvector
+  - tsquery
+order: 23
+---
+
 # Полнотекстовый поиск
 
 **Предпосылки:** [SELECT и фильтрация](../querying/select-and-filtering.md) (LIKE), [индексы](../schema/indexes.md) (CREATE INDEX, GIN).

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - type/concept
+aliases:
+  - Conflict Resolution
+  - LWW
+  - Vector Clocks
+  - CRDT
+order: 4
+---
+
 # Разрешение конфликтов в AP-системах
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (AP-системы, eventual consistency, network partition), [модели консистентности](consistency-models.md).

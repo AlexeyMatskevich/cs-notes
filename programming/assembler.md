@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/internals
+  - type/concept
+aliases:
+  - assembler
+  - assembly
+order: 1
+---
+
 # Ассемблер
 
 **Предпосылки:** [Что такое программирование](what-is-programming.md) (программа, процессор, память, ввод/вывод).

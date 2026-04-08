@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/pattern
+aliases:
+  - Bitmap
+  - DAU
+  - retention
+order: 3
+---
+
 # Ежедневная активность и retention миллионов пользователей
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [Bitmap и Bitfield](../../../databases/redis/data-structures/bitmap-and-bitfield.md).

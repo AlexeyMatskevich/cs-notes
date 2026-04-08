@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/redis
+  - theme/durability
+  - type/concept
+aliases:
+  - RDB
+  - BGSAVE
+  - Redis Database Backup
+order: 16
+---
+
 # RDB — снимки данных
 
 **Предпосылки:** [Что такое Redis](../architecture/what-is-redis.md), [процессы и fork](../../../linux/foundations/processes.md), [файловые системы](../../../linux/foundations/filesystems.md).

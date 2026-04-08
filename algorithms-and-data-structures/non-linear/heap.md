@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Heap
+  - priority queue
+order: 4
+---
+
 # Куча (Heap)
 
 **Предпосылки:** оценка сложности в O(…), [бинарное дерево](binary-tree.md) (left/right, полнота), [массив](../linear/array.md) (индексация, формула адреса).

@@ -1,3 +1,19 @@
+---
+tags:
+  - domain/computer
+  - theme/data-representation
+  - theme/internals
+  - type/concept
+aliases:
+  - ISA
+  - Instruction Set Architecture
+  - CISC
+  - RISC
+  - x86
+  - ARM
+order: 7
+---
+
 # CISC и RISC: набор команд
 
 **Предпосылки:** [процессор](../cpu.md) (конвейер, fetch, decode, суперскалярность, внеочерёдное исполнение, спекулятивное исполнение).

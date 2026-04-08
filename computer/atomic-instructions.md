@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/computer
+  - theme/concurrency
+  - theme/data-representation
+  - type/concept
+aliases:
+  - Atomic Instructions
+  - CAS
+  - Compare-and-Swap
+  - LOCK prefix
+  - LL/SC
+order: 10
+---
+
 # Атомарные инструкции
 
 **Предпосылки:** [ISA](programmer-model/isa.md) (инструкции, x86 vs ARM), [когерентность кешей](data-path/cache-coherency.md) (MESI, Modified, кеш-линия).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/pattern
+aliases:
+  - HyperLogLog
+  - PFCOUNT
+  - PFMERGE
+order: 3
+---
+
 # Подсчёт уникальных посетителей при 100 000 страниц
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [HyperLogLog](../../../databases/redis/data-structures/hyperloglog.md).

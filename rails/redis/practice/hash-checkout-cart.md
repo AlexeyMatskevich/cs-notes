@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - HASH
+  - checkout cart
+order: 3
+---
+
 # Состояние корзины в e-commerce checkout
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [HASH](../../../databases/redis/data-structures/hash.md).

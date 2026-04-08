@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/security
+  - type/concept
+aliases:
+  - Firewall
+  - Firewalls
+  - Packet Filter
+  - Stateful Firewall
+  - DMZ
+order: 16
+---
+
 # Firewalls
 
 **Предпосылки:** [IP и маршрутизация](../foundations/ip-and-routing.md) (IP-адрес, пакет), [TCP](../transport/tcp.md) (соединение, SYN, ACK, порт), [UDP](../transport/udp.md) (порт, датаграмма).

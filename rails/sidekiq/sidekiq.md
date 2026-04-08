@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - theme/reliability
+  - type/overview
+aliases:
+  - Sidekiq
+order: 0
+---
+
 # Sidekiq: фоновые задачи в Rails
 
 **Предпосылки:** Ruby, Rails, базовое понимание Redis ([что такое Redis](../../databases/redis/redis.md)).

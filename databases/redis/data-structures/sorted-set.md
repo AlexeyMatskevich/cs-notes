@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Sorted Set
+  - ZSET
+  - Skip List
+  - ZADD
+  - ZRANGEBYSCORE
+order: 8
+---
+
 # Sorted Set
 
 **Предпосылки:** [Set](set.md), [связный список](../../../algorithms-and-data-structures/linear/linked-list.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md), [skip list](../../../algorithms-and-data-structures/non-linear/skip-list.md).

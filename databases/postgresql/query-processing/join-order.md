@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - Join Ordering
+  - GEQO
+order: 21
+---
+
 # Порядок соединения таблиц (Join Ordering)
 
 **Предпосылки:** [планировщик запросов](planner.md) (cost model, методы доступа, алгоритмы соединения — nested loop, hash join, merge join), [динамическое программирование](../../../algorithms-and-data-structures/techniques/dynamic-programming.md) (идея «лучшее решение через лучшие подзадачи»), [JOIN](../../sql/querying/joins.md) (виды соединений, семантика).

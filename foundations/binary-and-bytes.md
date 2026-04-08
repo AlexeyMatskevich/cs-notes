@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - binary system
+  - bit
+  - byte
+order: 0
+---
+
 # Двоичная система и байты
 
 **Предпосылки:** нет.

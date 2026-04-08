@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/concurrency
+  - theme/distribution
+  - type/pattern
+aliases:
+  - Distributed Locks
+  - Redlock
+  - SET NX EX
+  - Fencing Token
+order: 27
+---
+
 # Распределённые блокировки
 
 **Предпосылки:** [String](../data-structures/string.md), [Lua-скрипты](../atomicity/lua-scripting.md), [репликация](../distribution/replication.md), [AOF](../persistence/aof.md).

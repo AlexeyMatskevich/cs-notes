@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - theme/concurrency
+  - type/overview
+aliases:
+  - CRuby
+  - MRI
+  - YARV
+order: 0
+---
+
 # Ruby
 
 **Предпосылки:** умение программировать; базовое знание Ruby (синтаксис, классы, модули, блоки); материалы раздела [Programming](../programming/programming.md) считаются уже пройденной базой.

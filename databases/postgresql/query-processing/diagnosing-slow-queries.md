@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - type/pattern
+aliases:
+  - Diagnosing Slow Queries
+order: 26
+---
+
 # Диагностика медленных запросов
 
 **Предпосылки:** [EXPLAIN](explain.md), [планировщик запросов](planner.md) (оценки и выбор плана), [B-tree](../indexes/btree.md) (индексы и типы сканов), [память и spill](memory-and-spill.md), [prepared statements](prepared-statements.md) (parameter sensitivity).

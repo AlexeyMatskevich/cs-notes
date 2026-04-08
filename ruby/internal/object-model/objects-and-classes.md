@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - object model
+  - RObject
+  - RClass
+  - VALUE
+order: 4
+---
+
 # Объекты и классы
 
 **Предпосылки:** [Исполнение](../vm/execution.md) — VALUE, стек значений, фреймы.

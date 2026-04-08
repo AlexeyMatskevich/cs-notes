@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - loops
+  - iteration
+order: 4
+---
+
 # Циклы
 
 **Предпосылки:** [Условия и ввод/вывод](conditions-and-io.md) (if/else, логические выражения, puts/gets).

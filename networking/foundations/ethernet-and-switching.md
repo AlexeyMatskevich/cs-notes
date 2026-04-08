@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - Ethernet
+  - MAC Address
+  - Switching
+order: 1
+---
+
 # Ethernet и коммутация
 
 **Предпосылки:** общая компьютерная грамотность (файл, программа, оперативная память).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/memory
+  - type/concept
+aliases:
+  - Virtual Memory
+  - VM
+order: 6
+---
+
 # Виртуальная память
 
 > [!info]- Предпосылки

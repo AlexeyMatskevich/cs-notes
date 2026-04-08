@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/system-design
+  - theme/reliability
+  - type/concept
+aliases:
+  - Reliability Patterns
+  - Circuit Breaker
+  - Retry
+  - Bulkhead
+order: 8
+---
+
 # Паттерны надёжности
 
 **Предпосылки:** [HTTP](../networking/application/http.md) (запрос/ответ, статус-коды), [TCP](../networking/transport/tcp.md) (соединение, таймаут), клиент-серверная архитектура, понятие потока/треда и пула соединений.

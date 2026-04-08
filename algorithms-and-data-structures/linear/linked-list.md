@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Linked List
+order: 3
+---
+
 # Связный список
 
 **Предпосылки:** [массив](array.md) (непрерывность, кэш-локальность), [динамический массив](dynamic-array.md) (проблема O(n) вставки).

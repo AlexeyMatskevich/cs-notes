@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/distribution
+  - theme/durability
+  - type/concept
+aliases:
+  - Replication
+  - Master-Replica
+  - REPLICAOF
+  - WAIT
+order: 22
+---
+
 # Репликация: master → replicas и границы гарантий
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [RDB](../persistence/rdb.md), [AOF](../persistence/aof.md), сеть (клиент/сервер).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - theme/transactions
+  - type/concept
+aliases:
+  - MVCC
+  - Multi-Version Concurrency Control
+order: 6
+---
+
 # MVCC — версионирование вместо блокировок
 
 **Предпосылки:** [ACID](../storage/acid.md), [страницы и кортежи](../storage/pages-and-tuples.md), [WAL](../durability/wal.md).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/storage
+  - type/concept
+aliases:
+  - Filesystems
+  - FS
+order: 7
+---
+
 # Файловые системы
 
 > [!info]- Предпосылки

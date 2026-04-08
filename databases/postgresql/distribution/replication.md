@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/distribution
+  - theme/reliability
+  - type/concept
+aliases:
+  - Replication
+  - Streaming Replication
+  - Logical Replication
+order: 27
+---
+
 # Репликация в PostgreSQL
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, split brain, кворум), [WAL](../durability/wal.md), [TCP](../../../networking/transport/tcp.md) (RTT).

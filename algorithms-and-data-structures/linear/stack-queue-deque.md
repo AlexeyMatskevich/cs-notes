@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Stack
+  - Queue
+  - Deque
+  - LIFO
+  - FIFO
+order: 4
+---
+
 # Стек, очередь, дек
 
 **Предпосылки:** [массив](array.md), [динамический массив](dynamic-array.md), [связный список](linked-list.md) (односвязный, двусвязный).

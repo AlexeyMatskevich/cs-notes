@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - VM execution
+  - EP
+  - CFP
+order: 2
+---
+
 # Исполнение
 
 **Предпосылки:** [Компиляция](compilation.md) — ISeq, local table, стековая машина, два стека (значений и фреймов).

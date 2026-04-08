@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - errors
+  - exceptions
+  - Result type
+order: 11
+---
+
 # Ошибки и исключения
 
 **Предпосылки:** [Функции](functions.md) (вызовы функций), [Память](memory.md) (стек вызовов, кадры).

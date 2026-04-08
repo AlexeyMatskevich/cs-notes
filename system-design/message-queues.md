@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/system-design
+  - theme/queues
+  - theme/reliability
+  - type/concept
+aliases:
+  - Message Queues
+  - Message Queue
+  - DLQ
+order: 11
+---
+
 # Message Queues: асинхронная коммуникация между сервисами
 
 **Предпосылки:** [гарантии доставки](delivery-guarantees.md) (at-most-once, at-least-once, exactly-once = idempotency), [паттерны надёжности](reliability-patterns.md) (retry, cascading failure).

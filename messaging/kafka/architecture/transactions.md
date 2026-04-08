@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/messaging
+  - theme/transactions
+  - theme/reliability
+  - type/concept
+aliases:
+  - Kafka Transactions
+  - Exactly-Once Semantics
+order: 4
+---
+
 # Kafka Transactions: exactly-once для consume-transform-produce
 
 **Предпосылки:** [Consumer internals](consumer-internals.md) (poll loop, offset commit, at-least-once), [Producer reliability](producer-reliability.md) (idempotent producer, PID, sequence number, границы), [Гарантии доставки](../../../system-design/delivery-guarantees.md) (exactly-once = at-least-once + idempotency), [Reliability patterns](../../../system-design/reliability-patterns.md) (idempotency).

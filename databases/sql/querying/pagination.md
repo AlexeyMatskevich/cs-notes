@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/performance
+  - type/concept
+aliases:
+  - Pagination
+  - Keyset Pagination
+  - OFFSET
+order: 17
+---
+
 # Пагинация
 
 > [!info]- Предпосылки

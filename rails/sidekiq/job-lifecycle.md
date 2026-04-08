@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/concept
+aliases:
+  - job lifecycle
+  - perform_async
+  - middleware
+order: 1
+---
+
 # Жизненный цикл задачи
 
 **Предпосылки:** [архитектура Sidekiq](architecture.md).

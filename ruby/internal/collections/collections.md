@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/data-representation
+  - type/overview
+aliases:
+  - RArray
+  - RHash
+  - RString
+order: 8
+---
+
 # Коллекции: внутреннее устройство Array, Hash, String
 
 > [!info]- Предпосылки

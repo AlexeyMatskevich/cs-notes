@@ -1,3 +1,19 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - theme/data-representation
+  - type/concept
+aliases:
+  - Constraints
+  - NOT NULL
+  - PRIMARY KEY
+  - FOREIGN KEY
+  - CHECK
+  - UNIQUE
+order: 13
+---
+
 # Ограничения (constraints)
 
 **Предпосылки:** [реляционная модель](../foundations/relational-model.md) (первичный ключ, внешний ключ, ссылочная целостность), [таблицы и типы](tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT).

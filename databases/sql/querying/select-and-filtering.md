@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - SELECT
+  - WHERE
+  - LIKE
+  - BETWEEN
+  - IN
+order: 4
+---
+
 # SELECT и фильтрация
 
 > [!info]- Предпосылки

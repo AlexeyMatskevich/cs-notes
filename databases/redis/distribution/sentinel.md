@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/distribution
+  - theme/reliability
+  - type/concept
+aliases:
+  - Sentinel
+  - Failover
+  - Quorum
+order: 23
+---
+
 # Sentinel: автоматический failover для master-replica
 
 **Предпосылки:** [репликация](../../../system-design/replication.md) (failover, кворум, split brain), [распределённый консенсус](../../../system-design/consensus.md) (leader election, кворум, терм), [репликация Redis](./replication.md), [Pub/Sub](../data-structures/pub-sub.md).

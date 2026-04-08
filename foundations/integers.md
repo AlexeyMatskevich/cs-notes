@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - integers
+  - two's complement
+order: 1
+---
+
 # Целые числа
 
 **Предпосылки:** [Двоичная система и байты](binary-and-bytes.md).

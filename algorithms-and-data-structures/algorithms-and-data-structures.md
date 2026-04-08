@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - theme/performance
+  - type/overview
+aliases:
+  - algorithms
+  - data structures
+order: 0
+---
+
 # Алгоритмы и структуры данных
 
 **Предпосылки:** [базовое программирование](../programming/programming.md) (переменные, типы, условия, циклы, функции, [указатели/ссылки](../programming/memory.md)) и оценка сложности в O(…).

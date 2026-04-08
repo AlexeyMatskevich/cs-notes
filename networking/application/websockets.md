@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - WebSocket
+  - WebSockets
+order: 13
+---
+
 # WebSocket
 
 **Предпосылки:** [HTTP](http.md) (запрос-ответ, заголовки, stateless), [TCP](../transport/tcp.md) (соединение, full-duplex).

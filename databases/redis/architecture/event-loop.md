@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/concurrency
+  - theme/performance
+  - type/concept
+aliases:
+  - Event Loop
+  - epoll
+  - I/O Multiplexing
+order: 1
+---
+
 # Event loop
 
 **Предпосылки:** [Что такое Redis](what-is-redis.md), [процессы](../../../linux/foundations/processes.md) и [потоки](../../../linux/foundations/threads.md), [системные вызовы](../../../linux/foundations/cpu-modes-and-syscalls.md) (read, write), [файловые дескрипторы](../../../linux/foundations/file-descriptors.md).

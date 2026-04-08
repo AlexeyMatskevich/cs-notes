@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - NAT
+  - Network Address Translation
+  - PAT
+  - CGNAT
+order: 4
+---
+
 # NAT
 
 **Предпосылки:** [IP и маршрутизация](ip-and-routing.md) (IP-адрес, маска, роутер, шлюз по умолчанию).

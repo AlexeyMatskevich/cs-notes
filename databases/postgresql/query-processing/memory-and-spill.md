@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - type/concept
+aliases:
+  - work_mem
+  - Spill to Disk
+order: 24
+---
+
 # Память, `work_mem` и spill на диск
 
 **Предпосылки:** [EXPLAIN](explain.md) (как смотреть `actual` и `BUFFERS`), [планировщик запросов](planner.md) (hash join, sort, aggregate), [буферный кеш](../durability/buffer-cache.md) (страницы и I/O).

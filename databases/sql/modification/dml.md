@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - DML
+  - INSERT
+  - UPDATE
+  - DELETE
+  - TRUNCATE
+order: 18
+---
+
 # DML — изменение данных
 
 **Предпосылки:** [таблицы и типы](../schema/tables-and-types.md) (CREATE TABLE, DEFAULT), [ограничения](../schema/constraints.md) (NOT NULL, PK, FK, CHECK).

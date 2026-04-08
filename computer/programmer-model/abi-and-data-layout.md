@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/computer
+  - theme/data-representation
+  - theme/performance
+  - type/concept
+aliases:
+  - ABI
+  - Application Binary Interface
+  - Calling Convention
+  - Data Layout
+  - Alignment
+order: 8
+---
+
 # ABI и размещение данных
 
 **Предпосылки:** [порядок байтов](../../foundations/endianness.md), [процессор](../cpu.md) (регистры, конвейер), [CISC и RISC](isa.md) (ISA, micro-ops, CISC vs RISC).

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Locks
+  - Row-Level Locks
+  - Table-Level Locks
+  - Advisory Locks
+  - Deadlock
+order: 9
+---
+
 # Блокировки
 
 **Предпосылки:** [MVCC](mvcc.md), [уровни изоляции](isolation-levels.md).

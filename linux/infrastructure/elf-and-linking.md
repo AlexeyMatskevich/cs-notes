@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/data-representation
+  - theme/internals
+  - type/concept
+aliases:
+  - ELF
+  - Linking
+order: 25
+---
+
 # ELF и линковка
 
 **Предпосылки:** [бит, байт, hex](../../foundations/binary-and-bytes.md), [виртуальная память](../foundations/virtual-memory.md) (mmap, demand paging, ASLR), [процессы](../foundations/processes.md) (exec, fork+exec).

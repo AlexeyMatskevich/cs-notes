@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/storage
+  - type/concept
+aliases:
+  - Physical Layout
+  - PGDATA
+  - OID
+  - relfilenode
+order: 3
+---
+
 # Физическая структура хранения
 
 **Предпосылки:** [страницы и кортежи](pages-and-tuples.md), [TOAST](toast.md).

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/transactions
+  - theme/concurrency
+  - type/concept
+aliases:
+  - MULTI/EXEC
+  - WATCH
+  - DISCARD
+order: 14
+---
+
 # MULTI/EXEC
 
 **Предпосылки:** [Атомарность одной команды](single-command.md).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - Relational Model
+  - Codd
+order: 0
+---
+
 # Реляционная модель
 
 **Предпосылки:** базовое программирование (переменные, типы, функции).

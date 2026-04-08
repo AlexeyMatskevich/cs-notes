@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - ORDER BY
+  - LIMIT
+  - OFFSET
+  - DISTINCT
+order: 5
+---
+
 # Сортировка и ограничение
 
 **Предпосылки:** [SELECT и фильтрация](select-and-filtering.md) (SELECT, FROM, WHERE, логический порядок выполнения).

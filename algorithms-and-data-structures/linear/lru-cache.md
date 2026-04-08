@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/caching
+  - type/concept
+aliases:
+  - LRU
+  - LRU Cache
+  - Least Recently Used
+order: 6
+---
+
 # LRU-кэш
 
 **Предпосылки:** [хеш-таблица](hash-table.md) (O(1) доступ по ключу), [связный список](linked-list.md) (двусвязный, O(1) удаление/вставка).

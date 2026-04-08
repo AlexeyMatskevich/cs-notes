@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - theme/caching
+  - type/overview
+aliases:
+  - Ruby on Rails
+order: 0
+---
+
 # Rails
 
 **Предпосылки:** Ruby, базовое понимание Rails (MVC, ActiveRecord, маршрутизация).

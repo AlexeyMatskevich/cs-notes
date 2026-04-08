@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Synchronization
+  - Mutex
+  - Spinlock
+order: 10
+---
+
 # Синхронизация
 
 > [!info]- Предпосылки

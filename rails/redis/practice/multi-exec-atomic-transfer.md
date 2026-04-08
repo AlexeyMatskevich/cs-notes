@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - MULTI/EXEC
+  - atomic transfer
+order: 3
+---
+
 # Атомарный перевод средств
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [MULTI/EXEC](../../../databases/redis/atomicity/multi-exec.md).

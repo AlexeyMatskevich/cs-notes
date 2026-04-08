@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/indexing
+  - type/concept
+aliases:
+  - Inverted Index
+order: 8
+---
+
 # Инвертированный индекс (Inverted Index)
 
 **Предпосылки:** оценка сложности в O(…), [B-дерево](b-tree.md) или [хеш-таблица](../linear/hash-table.md) — для организации словаря элементов; [массив](../linear/array.md) — для хранения списков документов.

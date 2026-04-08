@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/transactions
+  - theme/storage
+  - type/concept
+aliases:
+  - ACID in PostgreSQL
+order: 0
+---
+
 # ACID в PostgreSQL
 
 **Предпосылки:** [ACID](../../acid.md).

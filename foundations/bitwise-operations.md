@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - bitwise operations
+  - AND
+  - OR
+  - XOR
+order: 2
+---
+
 # Побитовые операции
 
 **Предпосылки:** [Двоичная система и байты](binary-and-bytes.md), [Целые числа](integers.md).

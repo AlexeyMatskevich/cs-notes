@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/redis
+  - theme/durability
+  - type/concept
+aliases:
+  - AOF
+  - Append Only File
+  - fsync
+order: 17
+---
+
 # AOF — журнал команд
 
 **Предпосылки:** [RDB](rdb.md), [файловые системы и fsync](../../../linux/foundations/filesystems.md).

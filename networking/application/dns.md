@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - DNS
+  - Domain Name System
+order: 9
+---
+
 # DNS
 
 **Предпосылки:** [IP и маршрутизация](../foundations/ip-and-routing.md) (IP-адрес), [UDP](../transport/udp.md) (порт, датаграмма).

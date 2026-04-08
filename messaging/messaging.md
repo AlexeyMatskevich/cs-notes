@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/messaging
+  - theme/queues
+  - theme/distribution
+  - type/overview
+aliases:
+  - Messaging
+order: 0
+---
+
 # Messaging
 
 **Предпосылки:** [Гарантии доставки](../system-design/delivery-guarantees.md) (at-most-once, at-least-once, exactly-once), [Message Queues](../system-design/message-queues.md) (temporal decoupling, broker, log vs queue, партиции, consumer groups).

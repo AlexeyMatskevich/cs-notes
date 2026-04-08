@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/indexing
+  - theme/performance
+  - type/concept
+aliases:
+  - Indexes
+  - CREATE INDEX
+  - B-tree
+  - Covering Index
+order: 16
+---
+
 # Индексы
 
 **Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) (PRIMARY KEY, UNIQUE).

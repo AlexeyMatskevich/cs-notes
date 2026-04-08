@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/system-design
+  - theme/caching
+  - theme/performance
+  - type/concept
+aliases:
+  - Caching
+  - CDN
+  - Cache Invalidation
+order: 9
+---
+
 # Кэширование
 
 **Предпосылки:** [модели консистентности](consistency-models.md) (read-your-writes), базовое понимание PostgreSQL (shared buffers, соединения), Redis (GET/SET/DEL), pub/sub для инвалидации, [CDN](../networking/infrastructure/cdn.md) (RTT, origin/edge).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/storage
+  - type/concept
+aliases:
+  - File I/O
+  - File IO
+order: 15
+---
+
 # Файловый ввод-вывод
 
 **Предпосылки:** [отображение памяти](memory-mapping.md) (mmap, page cache), [файловые системы](../foundations/filesystems.md) (page cache, fsync, dirty pages).

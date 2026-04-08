@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - type/concept
+aliases:
+  - SP-GiST
+  - Space-Partitioned Generalized Search Tree
+order: 19
+---
+
 # SP-GiST — индекс для разбиения пространства
 
 **Предпосылки:** [B-tree](btree.md) (порядок и range scan), [GiST](gist.md) (bounding boxes, пересечения регионов, recheck), базовая идея [дерева](../../../algorithms-and-data-structures/non-linear/tree.md).

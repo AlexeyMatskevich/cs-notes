@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - type/pattern
+aliases:
+  - FOR UPDATE SKIP LOCKED
+  - Queue Pattern
+order: 12
+---
+
 # Очереди задач в PostgreSQL: `FOR UPDATE SKIP LOCKED`
 
 **Предпосылки:** [блокировки](locks.md) (row-level locks, очереди ожидания), [практические паттерны](patterns.md) (пессимистичный подход, hot spots).

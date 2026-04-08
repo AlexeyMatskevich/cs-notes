@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - theme/performance
+  - type/concept
+aliases:
+  - B-tree
+  - B+tree
+order: 14
+---
+
 # B-tree
 
 **Предпосылки:** [B+ дерево](../../../algorithms-and-data-structures/non-linear/b-plus-tree.md), [страницы и кортежи](../storage/pages-and-tuples.md) (ctid, структура страницы), [CREATE INDEX — основы](../../sql/schema/indexes.md).

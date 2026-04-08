@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - ISeq
+  - YARV bytecode
+order: 1
+---
+
 # Компиляция
 
 **Предпосылки:** [Токенизация и парсинг](tokenization-and-parsing.md); [стек](../../../algorithms-and-data-structures/linear/stack-queue-deque.md) (LIFO — кладём и забираем с вершины).

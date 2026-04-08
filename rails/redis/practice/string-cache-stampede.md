@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - theme/performance
+  - type/pattern
+aliases:
+  - cache stampede
+  - thundering herd
+order: 3
+---
+
 # Защита от cache stampede
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING](../../../databases/redis/data-structures/string.md), [Lua-скрипты](../../../databases/redis/atomicity/lua-scripting.md), [теория cache stampede](../../../system-design/caching.md#cache-stampede).

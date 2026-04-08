@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/storage
+  - type/concept
+aliases:
+  - JSONB
+  - JSON
+order: 21
+---
+
 # JSONB
 
 > [!info]- Предпосылки

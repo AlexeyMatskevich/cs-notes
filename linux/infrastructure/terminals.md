@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Terminals
+  - TTY
+  - PTY
+order: 26
+---
+
 # Терминалы
 
 **Предпосылки:** [сигналы](../programming/signals.md) (SIGINT, SIGTSTP, доставка сигнала группе процессов), [процессы](../foundations/processes.md) (fork, exec, PID, группы процессов).

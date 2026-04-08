@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/distribution
+  - theme/reliability
+  - type/concept
+aliases:
+  - Redis Cluster
+  - Hash Slots
+  - MOVED
+  - ASK
+order: 24
+---
+
 # Redis Cluster: распределение ключей по узлам и автоматическое переключение мастера
 
 **Предпосылки:** [репликация](../../../system-design/replication.md), [шардинг](../../../system-design/sharding.md), [репликация Redis](./replication.md), [хеш-функция](../../../algorithms-and-data-structures/linear/hash-table.md), [транзакции MULTI/EXEC](../atomicity/multi-exec.md), [Lua-скрипты](../atomicity/lua-scripting.md), [Pub/Sub](../data-structures/pub-sub.md), [TCP](../../../networking/transport/tcp.md) (cluster bus).

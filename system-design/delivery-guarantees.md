@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/system-design
+  - theme/reliability
+  - theme/transactions
+  - type/concept
+aliases:
+  - Delivery Guarantees
+  - At-Least-Once
+  - At-Most-Once
+  - Exactly-Once
+order: 10
+---
+
 # Гарантии доставки в распределённых системах
 
 **Предпосылки:** [Паттерны надёжности](reliability-patterns.md) (retry, idempotency), [HTTP](../networking/application/http.md).

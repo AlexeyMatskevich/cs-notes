@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - theme/reliability
+  - theme/performance
+  - type/overview
+aliases:
+  - System Design
+order: 0
+---
+
 # System Design
 
 **Предпосылки:** базовое понимание клиент-серверной архитектуры, сетевых протоколов ([networking](../networking/networking.md)), структур данных ([algorithms-and-data-structures/index.md](../algorithms-and-data-structures/algorithms-and-data-structures.md)), баз данных ([databases/](../databases/)).

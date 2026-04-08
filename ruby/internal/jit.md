@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/performance
+  - type/concept
+aliases:
+  - JIT
+  - YJIT
+  - MJIT
+order: 12
+---
+
 # JIT-компиляция
 
 > [!info]- Предпосылки

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - theme/queues
+  - type/pattern
+aliases:
+  - distributed lock
+  - SET NX
+order: 3
+---
+
 # Распределённая блокировка для Sidekiq-воркеров
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING и INCR](../../../databases/redis/data-structures/string.md), [Lua-скрипты](../../../databases/redis/atomicity/lua-scripting.md).

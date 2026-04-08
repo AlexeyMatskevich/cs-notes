@@ -1,3 +1,19 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - theme/transactions
+  - type/concept
+aliases:
+  - Transaction Anomalies
+  - Dirty Read
+  - Lost Update
+  - Non-Repeatable Read
+  - Phantom Read
+  - Write Skew
+order: 7
+---
+
 # Аномалии транзакций
 
 **Предпосылки:** [MVCC](mvcc.md). Примеры используют Ruby/ActiveRecord — синтаксис интуитивно понятен, но для полного понимания полезно знание [основ SQL](../../sql/sql.md).

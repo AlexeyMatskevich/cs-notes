@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/transactions
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Lua
+  - EVAL
+  - Redis Functions
+order: 15
+---
+
 # Lua-скрипты
 
 **Предпосылки:** [MULTI/EXEC](multi-exec.md), [event loop](../architecture/event-loop.md).

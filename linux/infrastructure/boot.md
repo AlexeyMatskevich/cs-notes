@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Boot
+  - Boot Process
+order: 28
+---
+
 # Загрузка системы
 
 **Предпосылки:** [устройства и драйверы](../kernel/devices-and-drivers.md) (модули, /proc, /sys), [файловые системы](../foundations/filesystems.md) (VFS, mount).

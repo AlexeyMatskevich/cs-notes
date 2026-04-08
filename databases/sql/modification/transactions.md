@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/sql
+  - theme/transactions
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Transactions
+  - BEGIN
+  - COMMIT
+  - ROLLBACK
+  - SAVEPOINT
+order: 19
+---
+
 # Транзакции
 
 **Предпосылки:** [DML](dml.md) (INSERT, UPDATE, DELETE), [ACID](../../acid.md).

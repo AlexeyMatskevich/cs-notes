@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - type/concept
+aliases:
+  - GIN
+  - Generalized Inverted Index
+order: 15
+---
+
 # GIN — обобщённый инвертированный индекс
 
 **Предпосылки:** [инвертированный индекс](../../../algorithms-and-data-structures/non-linear/inverted-index.md), [B-tree](btree.md), [JSONB](../../sql/postgresql/jsonb.md), [массивы и диапазоны](../../sql/postgresql/arrays-and-ranges.md).

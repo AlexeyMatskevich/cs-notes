@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/messaging
+  - theme/reliability
+  - theme/durability
+  - type/concept
+aliases:
+  - Kafka Producer
+  - Idempotent Producer
+order: 2
+---
+
 # Producer reliability: retries, ordering, idempotent producer
 
 **Предпосылки:** [Репликация](replication.md) (acks, ISR, high watermark), [Broker, topic, partition, offset](what-is-kafka.md) (партиции, offset, partition key), [Reliability patterns](../../../system-design/reliability-patterns.md) (idempotency, retry), [Гарантии доставки](../../../system-design/delivery-guarantees.md) (at-most-once, at-least-once, exactly-once), [Message Queues](../../../system-design/message-queues.md) (ACK, log-based брокер).

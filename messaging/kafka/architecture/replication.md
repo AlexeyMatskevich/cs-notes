@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/messaging
+  - theme/distribution
+  - theme/durability
+  - type/concept
+aliases:
+  - Kafka Replication
+  - ISR
+  - In-Sync Replicas
+order: 1
+---
+
 # Репликация
 
 **Предпосылки:** [Broker, topic, partition, offset](what-is-kafka.md) (модель данных Kafka, consumer groups, partition key), [Репликация](../../../system-design/replication.md) (sync/async, replication lag, failover, кворум), [Консенсус](../../../system-design/consensus.md) (Raft, leader election, term).

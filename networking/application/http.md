@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - HTTP
+  - HyperText Transfer Protocol
+order: 10
+---
+
 # HTTP
 
 **Предпосылки:** [TCP](../transport/tcp.md) (соединение, сегмент), [DNS](dns.md) (резолвинг имён).

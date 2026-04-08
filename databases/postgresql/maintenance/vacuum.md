@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/internals
+  - theme/performance
+  - type/concept
+aliases:
+  - VACUUM
+  - Autovacuum
+  - Dead Tuples
+order: 13
+---
+
 # VACUUM — очистка мусора и защита от катастрофы
 
 **Предпосылки:** [MVCC](../concurrency/mvcc.md), [буферный кеш](../durability/buffer-cache.md), [страницы и кортежи](../storage/pages-and-tuples.md).

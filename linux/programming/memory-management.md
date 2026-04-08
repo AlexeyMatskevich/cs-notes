@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/linux
+  - theme/memory
+  - type/concept
+aliases:
+  - Memory Management
+order: 18
+---
+
 # Управление памятью
 
 > [!info]- Предпосылки

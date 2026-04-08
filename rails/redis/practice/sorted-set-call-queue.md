@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/pattern
+aliases:
+  - ZSET
+  - priority queue
+order: 3
+---
+
 # Очередь звонков колл-центра с приоритетами
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [ZSET](../../../databases/redis/data-structures/sorted-set.md).

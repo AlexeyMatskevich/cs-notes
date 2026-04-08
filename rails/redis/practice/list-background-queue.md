@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/pattern
+aliases:
+  - BRPOP
+  - background queue
+order: 3
+---
+
 # Очередь фоновых задач с блокирующим ожиданием
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [LIST](../../../databases/redis/data-structures/list.md).

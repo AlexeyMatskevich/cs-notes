@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - FP
+  - functional programming
+  - map/select/reduce
+order: 10
+---
+
 # Функциональное программирование
 
 **Предпосылки:** [Циклы](loops.md) (while, изменение состояния в цикле), [Коллекции](collections.md) (массивы, проход по коллекции), [Память](memory.md) (общие объекты, изменение по ссылке), [Объектно-ориентированное программирование](oop.md) (объекты, методы).

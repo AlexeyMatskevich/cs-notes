@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - JOIN
+  - INNER JOIN
+  - LEFT JOIN
+  - CROSS JOIN
+  - Self-Join
+order: 7
+---
+
 # Соединения (JOIN)
 
 **Предпосылки:** [агрегация](aggregation.md) (GROUP BY, HAVING, pipeline до шага 8).

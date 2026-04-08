@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/computer
+  - theme/memory
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Cache Coherency
+  - MESI Protocol
+  - False Sharing
+order: 3
+---
+
 # Когерентность кешей
 
 **Предпосылки:** [иерархия памяти и кеш](memory-hierarchy.md) (cache line, L1/L2 per core, L3 shared).

@@ -1,3 +1,11 @@
+---
+tags:
+  - domain/redis
+  - type/overview
+aliases:
+  - Redis
+---
+
 # Redis: структуры данных в памяти
 
 **Предпосылки:** [ACID](../acid.md), базовые структуры данных ([массив](../../algorithms-and-data-structures/linear/array.md), [хеш-таблица](../../algorithms-and-data-structures/linear/hash-table.md), [связный список](../../algorithms-and-data-structures/linear/linked-list.md)), сеть (клиент/сервер, запрос/ответ).

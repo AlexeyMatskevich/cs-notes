@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/performance
+  - type/concept
+aliases:
+  - Scheduler
+  - CFS
+order: 8
+---
+
 # Планировщик
 
 > [!info]- Предпосылки

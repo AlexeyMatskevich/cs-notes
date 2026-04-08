@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/storage
+  - type/concept
+aliases:
+  - Pages and Tuples
+  - Heap Tuple
+order: 1
+---
+
 # Страницы и кортежи — физическое хранение данных
 
 **Предпосылки:** [ACID](acid.md), [таблицы и типы данных](../../sql/schema/tables-and-types.md).

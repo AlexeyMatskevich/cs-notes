@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/performance
+  - type/concept
+aliases:
+  - Functions
+  - Procedures
+  - PL/pgSQL
+  - CREATE FUNCTION
+order: 24
+---
+
 # Функции и процедуры
 
 > [!info]- Предпосылки

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/memory
+  - type/concept
+aliases:
+  - Bitmap
+  - Bitfield
+  - SETBIT
+  - BITCOUNT
+order: 11
+---
+
 # Bitmap и Bitfield
 
 **Предпосылки:** [String](string.md), [побитовые операции](../../../foundations/bitwise-operations.md).

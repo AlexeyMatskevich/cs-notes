@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - CREATE TABLE
+  - ALTER TABLE
+  - DDL
+  - IDENTITY
+order: 12
+---
+
 # Таблицы и типы
 
 **Предпосылки:** [реляционная модель](../foundations/relational-model.md) (таблица, строка, столбец), [типы данных](../foundations/types-and-null.md) (числа, текст, даты, boolean, NULL).

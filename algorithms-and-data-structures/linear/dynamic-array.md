@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Dynamic Array
+  - ArrayList
+order: 2
+---
+
 # Динамический массив
 
 **Предпосылки:** [массив](array.md) (формула адреса, непрерывность, O(1) доступ по индексу, фиксированный размер).

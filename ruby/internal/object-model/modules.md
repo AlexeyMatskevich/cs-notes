@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - modules
+  - include
+  - prepend
+  - iclass
+order: 5
+---
+
 # Модули
 
 **Предпосылки:** [Объекты и классы](objects-and-classes.md) — RClass, таблица методов, указатель super, метакласс.

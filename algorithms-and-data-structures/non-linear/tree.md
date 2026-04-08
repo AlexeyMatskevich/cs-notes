@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Tree
+order: 1
+---
+
 # Дерево
 
 **Предпосылки:** оценка сложности в O(…), [граф](graph.md) (вершины, рёбра, путь, цикл, связность).

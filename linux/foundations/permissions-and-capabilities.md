@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/security
+  - type/concept
+aliases:
+  - Permissions
+  - Capabilities
+order: 9
+---
+
 # Права доступа и capabilities
 
 > [!info]- Предпосылки

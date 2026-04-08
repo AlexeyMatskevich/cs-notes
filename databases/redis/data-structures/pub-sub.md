@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/redis
+  - theme/queues
+  - type/concept
+aliases:
+  - Pub/Sub
+  - SUBSCRIBE
+  - PUBLISH
+order: 12
+---
+
 # Pub/Sub
 
 **Предпосылки:** [Event loop](../architecture/event-loop.md), [List](list.md) (для сравнения), [TCP](../../../networking/transport/tcp.md) (соединение). Секция Sharded Pub/Sub использует понятия из [Redis Cluster](../distribution/cluster.md).

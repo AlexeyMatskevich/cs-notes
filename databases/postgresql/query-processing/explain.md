@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - type/reference
+aliases:
+  - EXPLAIN
+  - EXPLAIN ANALYZE
+order: 23
+---
+
 # EXPLAIN и чтение плана запроса
 
 **Предпосылки:** [планировщик запросов](planner.md) (оценки, статистика, cost model), [B-tree](../indexes/btree.md) (типы сканирования: Index Scan/Bitmap/Index Only), [буферный кеш](../durability/buffer-cache.md) (страницы, cache hit vs read).

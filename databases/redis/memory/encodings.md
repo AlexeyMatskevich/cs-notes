@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/memory
+  - theme/performance
+  - type/concept
+aliases:
+  - Encodings
+  - redisObject
+  - listpack
+  - intset
+order: 18
+---
+
 # Внутренние кодировки
 
 **Предпосылки:** [бит, байт](../../../foundations/binary-and-bytes.md), [String](../data-structures/string.md) (в том числе SDS), [Hash](../data-structures/hash.md), [List](../data-structures/list.md), [Set](../data-structures/set.md), [Sorted Set](../data-structures/sorted-set.md).

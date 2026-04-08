@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - theme/performance
+  - type/concept
+aliases:
+  - Sharding
+  - Horizontal Partitioning
+order: 1
+---
+
 # Шардинг: горизонтальное разделение данных между узлами
 
 **Предпосылки:** [репликация](replication.md) (копии данных, failover, кворум — почему копии не решают проблему ёмкости).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/messaging
+  - theme/queues
+  - theme/distribution
+  - type/overview
+aliases:
+  - Apache Kafka
+  - Kafka
+order: 0
+---
+
 # Apache Kafka
 
 **Предпосылки:** [Гарантии доставки](../../system-design/delivery-guarantees.md) (at-most-once, at-least-once, exactly-once), [Message Queues](../../system-design/message-queues.md) (log-based брокер, партиции, consumer groups), [Event-driven Architecture](../../system-design/event-driven-architecture.md) (CQRS, проекции, event sourcing), [Redis Stream](../../databases/redis/data-structures/stream.md) (append-only лог, consumer groups, PEL).

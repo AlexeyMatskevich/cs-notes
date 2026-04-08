@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Array
+order: 1
+---
+
 # Массив
 
 **Предпосылки:** [абстрактный тип данных](adt.md), указатели/ссылки.

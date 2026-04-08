@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/performance
+  - type/concept
+aliases:
+  - Writable CTE
+  - UPDATE...FROM
+  - DELETE...USING
+  - MERGE
+order: 30
+---
+
 # Составные DML в PostgreSQL
 
 > [!info]- Предпосылки

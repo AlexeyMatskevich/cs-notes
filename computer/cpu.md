@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/computer
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - CPU
+  - Central Processing Unit
+  - Processor
+  - Pipeline
+order: 1
+---
+
 # Процессор
 
 **Предпосылки:** [базовое программирование](../programming/programming.md) (переменные, циклы, функции).

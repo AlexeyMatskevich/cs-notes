@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - ActionCable
+  - Pub/Sub
+  - WebSocket
+order: 3
+---
+
 # ActionCable: координация WebSocket'ов между процессами
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [Pub/Sub](../../../databases/redis/data-structures/pub-sub.md).

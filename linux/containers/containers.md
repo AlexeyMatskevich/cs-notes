@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/security
+  - theme/internals
+  - type/concept
+aliases:
+  - Containers
+  - Docker
+order: 30
+---
+
 # Контейнеры
 
 **Предпосылки:** [пространства имён и контрольные группы](namespaces-and-cgroups.md) (namespaces, cgroups, clone/unshare).

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/messaging
+  - theme/reliability
+  - theme/queues
+  - type/concept
+aliases:
+  - Kafka Consumer
+  - Consumer Group
+  - Rebalancing
+order: 3
+---
+
 # Consumer internals: poll loop, offset commit, rebalancing
 
 **Предпосылки:** [Producer reliability](producer-reliability.md) (idempotent producer, exactly-once per partition), [Broker, topic, partition, offset](what-is-kafka.md) (партиции, offset, consumer groups), [Гарантии доставки](../../../system-design/delivery-guarantees.md) (at-most-once, at-least-once), [Reliability patterns](../../../system-design/reliability-patterns.md) (idempotency), [Message Queues](../../../system-design/message-queues.md) (push vs pull, backpressure), [Redis Stream](../../../databases/redis/data-structures/stream.md) (XACK, PEL).

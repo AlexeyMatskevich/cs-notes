@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/concept
+aliases:
+  - Sidekiq testing
+  - fake mode
+  - inline mode
+order: 7
+---
+
 # Тестирование и практики
 
 **Предпосылки:** [Sidekiq: concurrency и масштабирование](concurrency-and-scaling.md), базовое знание RSpec и ActiveJob.

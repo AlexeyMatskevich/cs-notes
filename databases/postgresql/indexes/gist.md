@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - type/concept
+aliases:
+  - GiST
+  - Generalized Search Tree
+order: 16
+---
+
 # GiST — обобщённое дерево поиска
 
 **Предпосылки:** [B-tree](btree.md).

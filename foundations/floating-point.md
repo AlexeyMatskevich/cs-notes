@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - floating point
+  - IEEE 754
+order: 3
+---
+
 # Числа с плавающей точкой
 
 **Предпосылки:** [Двоичная система и байты](binary-and-bytes.md), [Целые числа](integers.md).

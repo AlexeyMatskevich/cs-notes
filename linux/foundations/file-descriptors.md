@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/storage
+  - theme/networking
+  - type/concept
+aliases:
+  - File Descriptors
+  - FD
+order: 5
+---
+
 # Файловые дескрипторы
 
 **Предпосылки:** [потоки](threads.md) (общее адресное пространство, разделение ресурсов).

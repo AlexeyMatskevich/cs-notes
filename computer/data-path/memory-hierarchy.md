@@ -1,3 +1,20 @@
+---
+tags:
+  - domain/computer
+  - theme/performance
+  - theme/memory
+  - type/concept
+aliases:
+  - Memory Hierarchy
+  - Cache
+  - L1 Cache
+  - L2 Cache
+  - L3 Cache
+  - SRAM
+  - DRAM
+order: 2
+---
+
 # Иерархия памяти и кеш
 
 **Предпосылки:** [процессор](../cpu.md) (конвейер, суперскалярность, IPC, ядро).

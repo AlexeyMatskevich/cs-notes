@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/reliability
+  - type/concept
+aliases:
+  - SuperFetch
+  - BasicFetch
+  - idempotency
+order: 2
+---
+
 # Гарантии доставки и идемпотентность
 
 **Предпосылки:** [архитектура Sidekiq](architecture.md), [жизненный цикл задачи](job-lifecycle.md), [гарантии доставки](../../system-design/delivery-guarantees.md), [reliability patterns § idempotency](../../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов).

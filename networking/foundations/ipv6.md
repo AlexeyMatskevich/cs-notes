@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - IPv6
+  - Internet Protocol version 6
+  - SLAAC
+order: 5
+---
+
 # IPv6
 
 **Предпосылки:** [IP и маршрутизация](ip-and-routing.md) (IP-адрес, маска, маршрутизация), [NAT](nat.md) (частные адреса, CGNAT, исчерпание IPv4), [DHCP](dhcp.md) (автоматическая конфигурация).

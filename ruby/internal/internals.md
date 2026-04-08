@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/overview
+aliases:
+  - Ruby Internals
+  - YARV
+order: 0
+---
+
 # Ruby Internals: от исходного кода до исполнения
 
 **Предпосылки:** умение программировать; базовое знание Ruby (синтаксис, классы, модули, блоки); материалы раздела [Programming](../../programming/programming.md) считаются уже пройденной базой.

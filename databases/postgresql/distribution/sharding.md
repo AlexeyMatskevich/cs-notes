@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/distribution
+  - type/concept
+aliases:
+  - Sharding
+  - Shard Key
+order: 28
+---
+
 # Шардирование в PostgreSQL
 
 **Предпосылки:** [шардинг](../../../system-design/sharding.md) (shard key, resharding, consistent hashing), [репликация](./replication.md), [партиционирование](../../sql/schema/partitioning.md), базовая идея [хеширования](../../../algorithms-and-data-structures/linear/hash-table.md).

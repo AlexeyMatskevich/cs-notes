@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/pattern
+aliases:
+  - Stream
+  - consumer group
+  - audit log
+order: 3
+---
+
 # Аудит-лог платёжных операций
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [Stream](../../../databases/redis/data-structures/stream.md).

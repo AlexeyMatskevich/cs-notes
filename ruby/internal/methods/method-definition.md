@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - method definition
+  - CREF
+  - definemethod
+order: 8
+---
+
 # Определение методов
 
 > [!info]- Предпосылки

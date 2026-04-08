@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/memory
+  - type/concept
+aliases:
+  - GC
+  - garbage collection
+  - VWA
+order: 7
+---
+
 # Управление памятью в Ruby
 
 > [!info]- Предпосылки

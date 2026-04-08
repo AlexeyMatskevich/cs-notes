@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - cache invalidation
+  - Pub/Sub
+order: 3
+---
+
 # Инвалидация локального кеша между процессами
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [Pub/Sub](../../../databases/redis/data-structures/pub-sub.md), [когерентность кэша](../../../system-design/caching.md#когерентность-локальный-vs-внешний-кэш).

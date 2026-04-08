@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/overview
+aliases:
+  - data representation
+  - foundations
+order: 0
+---
+
 # Основы представления данных
 
 **Предпосылки:** нет.

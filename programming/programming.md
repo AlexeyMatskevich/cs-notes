@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - theme/internals
+  - type/overview
+aliases:
+  - programming
+order: 0
+---
+
 # Программирование
 
 **Предпосылки:** нет.

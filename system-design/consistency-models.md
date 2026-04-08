@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - type/concept
+aliases:
+  - Consistency Models
+  - Eventual Consistency
+  - Linearizability
+order: 3
+---
+
 # Модели консистентности
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (strong consistency vs eventual consistency, linearizability, partition tolerance), [репликация](replication.md) (leader/follower, sync/async, кворум).

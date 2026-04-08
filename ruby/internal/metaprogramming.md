@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - metaprogramming
+  - eval
+  - define_method
+  - refinements
+order: 10
+---
+
 # Метапрограммирование
 
 **Предпосылки:** [Определение методов](methods/method-definition.md) — CREF, `definemethod`, `class << obj`, self vs CREF. [Блоки](blocks.md) (опирается на серию VM-заметок: [компиляция](vm/compilation.md), [исполнение](vm/execution.md), [управление потоком](vm/control-flow.md)) — замыкания, EP, stack-to-heap, Proc.

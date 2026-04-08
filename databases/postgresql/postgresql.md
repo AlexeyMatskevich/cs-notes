@@ -1,3 +1,11 @@
+---
+tags:
+  - domain/postgresql
+  - type/overview
+aliases:
+  - PostgreSQL
+---
+
 # PostgreSQL: внутреннее устройство
 
 **Предпосылки:** [SQL](../sql/sql.md) (SELECT, INSERT, UPDATE, DELETE), [транзакции](../sql/modification/transactions.md) (BEGIN, COMMIT, ROLLBACK), [ACID](../acid.md).

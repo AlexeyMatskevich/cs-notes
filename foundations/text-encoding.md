@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - text encoding
+  - ASCII
+  - Unicode
+  - UTF-8
+order: 4
+---
+
 # Кодирование текста
 
 **Предпосылки:** [Двоичная система и байты](binary-and-bytes.md).

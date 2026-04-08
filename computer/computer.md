@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/computer
+  - theme/performance
+  - theme/memory
+  - type/overview
+aliases:
+  - Computer Architecture
+order: 0
+---
+
 # Как компьютер выполняет программу
 
 **Предпосылки:** [базовое программирование](../programming/programming.md) (переменные, циклы, функции).

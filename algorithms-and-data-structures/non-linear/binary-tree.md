@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Binary Tree
+order: 2
+---
+
 # Бинарное дерево
 
 **Предпосылки:** оценка сложности в O(…), [дерево](tree.md) (корень, родитель, ребёнок, лист, глубина, высота), [стек и очередь](../linear/stack-queue-deque.md) (LIFO/FIFO — используются для обходов).

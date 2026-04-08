@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/system-design
+  - theme/queues
+  - theme/performance
+  - type/concept
+aliases:
+  - Event-Driven Architecture
+  - EDA
+  - CQRS
+  - Event Sourcing
+order: 15
+---
+
 # Event-driven Architecture
 
 **Предпосылки:** [Профили нагрузки](read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](reliability-patterns.md) (idempotency), [Message Queues](message-queues.md) (temporal decoupling, pub/sub, log-based vs queue-based брокер), [Микросервисы](microservices.md) (текущая архитектура магазина: Orders, события, подписчики).

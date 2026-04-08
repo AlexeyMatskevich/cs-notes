@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - method dispatch
+  - method cache
+  - inline cache
+order: 7
+---
+
 # Диспетчеризация методов
 
 > [!info]- Предпосылки

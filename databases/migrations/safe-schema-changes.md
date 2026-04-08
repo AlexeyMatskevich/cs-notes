@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/migrations
+  - theme/schema-evolution
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Safe Schema Changes
+  - DDL Locks
+  - Timeout Discipline
+order: 0
+---
+
 # Безопасные изменения схемы
 
 > [!info]- Предпосылки

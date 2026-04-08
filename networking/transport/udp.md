@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - UDP
+  - User Datagram Protocol
+order: 6
+---
+
 # UDP
 
 **Предпосылки:** [IP и маршрутизация](../foundations/ip-and-routing.md) (IP-адрес, пакет, инкапсуляция).

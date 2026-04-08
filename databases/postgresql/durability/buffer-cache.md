@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/durability
+  - theme/performance
+  - type/concept
+aliases:
+  - Buffer Cache
+  - Shared Buffers
+order: 5
+---
+
 # Буферный кеш
 
 **Предпосылки:** [страницы и кортежи](../storage/pages-and-tuples.md), [WAL](wal.md), [LRU-кэш](../../../algorithms-and-data-structures/linear/lru-cache.md) (как «идеальная» модель вытеснения).

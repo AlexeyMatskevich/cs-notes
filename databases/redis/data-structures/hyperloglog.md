@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - HyperLogLog
+  - HLL
+  - PFADD
+  - PFCOUNT
+order: 10
+---
+
 # HyperLogLog
 
 **Предпосылки:** [String](string.md), [хеш-функция](../../../algorithms-and-data-structures/linear/hash-table.md) (детерминированность, равномерное распределение), [SET](set.md).

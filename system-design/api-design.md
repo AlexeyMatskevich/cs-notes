@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/system-design
+  - theme/networking
+  - type/concept
+aliases:
+  - API Design
+  - REST
+  - gRPC
+  - GraphQL
+order: 13
+---
+
 # API Design: проектирование границы между системами
 
 **Предпосылки:** [Паттерны надёжности](reliability-patterns.md) (idempotency, retry, timeout), [Message Queues](message-queues.md) (асинхронная коммуникация), [Выбор хранилища](storage-selection.md) (паттерн доступа как критерий), [HTTP](../networking/application/http.md) (методы, заголовки, статус-коды).

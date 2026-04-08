@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/networking
+  - theme/internals
+  - type/concept
+aliases:
+  - Network Stack
+order: 23
+---
+
 # Сетевой стек ядра
 
 > [!info]- Предпосылки

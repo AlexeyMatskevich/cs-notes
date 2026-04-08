@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - type/concept
+aliases:
+  - SELECT
+  - Logical Databases
+order: 3
+---
+
 # Логические базы Redis (SELECT)
 
 **Предпосылки:** [Что такое Redis](what-is-redis.md).

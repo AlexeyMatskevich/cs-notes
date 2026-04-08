@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/security
+  - type/concept
+aliases:
+  - TLS
+  - Transport Layer Security
+  - HTTPS
+  - SSL
+order: 11
+---
+
 # TLS
 
 **Предпосылки:** [TCP](../transport/tcp.md) (соединение, рукопожатие).

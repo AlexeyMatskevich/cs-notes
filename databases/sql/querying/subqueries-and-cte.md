@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - CTE
+  - Common Table Expression
+  - WITH RECURSIVE
+  - Subquery
+  - LATERAL
+order: 9
+---
+
 # Подзапросы и CTE
 
 **Предпосылки:** [соединения](joins.md) (JOIN), [агрегация](aggregation.md) (GROUP BY, агрегатные функции).

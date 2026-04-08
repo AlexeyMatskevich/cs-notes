@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - shapes
+  - shape_id
+  - object shapes
+order: 6
+---
+
 # Формы объектов
 
 **Предпосылки:** [Объекты и классы](objects-and-classes.md) — RObject, массив значений ivar, RBasic, shape_id (кратко).

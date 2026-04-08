@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/algorithms
+  - theme/indexing
+  - theme/storage
+  - type/concept
+aliases:
+  - B* tree
+order: 7
+---
+
 # B* дерево (B* tree)
 
 **Предпосылки:** оценка сложности в O(…), [B-дерево](b-tree.md) — split/merge, инвариант заполнения от 1/2 до полного узла.

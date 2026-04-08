@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - type/concept
+aliases:
+  - Hash Index
+order: 17
+---
+
 # Hash Index
 
 **Предпосылки:** [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md), [B-tree](btree.md).

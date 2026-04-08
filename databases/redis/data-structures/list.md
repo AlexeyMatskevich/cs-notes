@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/queues
+  - type/concept
+aliases:
+  - List
+  - LPUSH
+  - BRPOP
+  - quicklist
+order: 6
+---
+
 # List
 
 **Предпосылки:** [String](string.md), [связный список](../../../algorithms-and-data-structures/linear/linked-list.md).

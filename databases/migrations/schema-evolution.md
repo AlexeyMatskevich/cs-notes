@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/migrations
+  - theme/schema-evolution
+  - theme/reliability
+  - type/concept
+aliases:
+  - Schema Evolution
+  - Expand-Contract
+  - Backfilling
+order: 1
+---
+
 # Эволюция схемы
 
 **Предпосылки:** [безопасные изменения схемы](safe-schema-changes.md) (стоимость DDL, safe patterns, timeout discipline), [транзакции](../sql/modification/transactions.md) (уровни изоляции).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/indexing
+  - theme/performance
+  - type/concept
+aliases:
+  - BRIN
+  - Block Range Index
+order: 18
+---
+
 # BRIN — индекс диапазонов блоков
 
 **Предпосылки:** [страницы и кортежи](../storage/pages-and-tuples.md), [B-tree](btree.md).

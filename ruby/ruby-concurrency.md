@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/concurrency
+  - type/concept
+aliases:
+  - GVL
+  - Fiber
+  - Ractor
+order: 1
+---
+
 # Конкурентность и параллелизм в Ruby
 
 <details><summary>Предпосылки</summary>

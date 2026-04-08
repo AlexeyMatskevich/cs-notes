@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/foundations
+  - theme/data-representation
+  - type/concept
+aliases:
+  - endianness
+  - little-endian
+  - big-endian
+order: 5
+---
+
 # Порядок байтов
 
 **Предпосылки:** [Двоичная система и байты](binary-and-bytes.md), [Целые числа](integers.md).

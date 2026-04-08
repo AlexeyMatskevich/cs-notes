@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - conditions
+  - branching
+  - I/O
+order: 3
+---
+
 # Условия и ввод/вывод
 
 **Предпосылки:** [Переменные и типы](variables-and-types.md) (переменные, присваивание, примитивные типы).

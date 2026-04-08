@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/programming
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - memory
+  - stack
+  - heap
+  - references
+order: 7
+---
+
 # Память
 
 **Предпосылки:** [Функции](functions.md) (вызов функций, локальные переменные, область видимости), [Коллекции](collections.md) (массивы, хеши).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/memory
+  - type/concept
+aliases:
+  - Memory Mapping
+  - mmap
+order: 14
+---
+
 # Отображение памяти
 
 > [!info]- Предпосылки

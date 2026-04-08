@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/programming
+  - theme/internals
+  - type/concept
+aliases:
+  - what is programming
+order: 0
+---
+
 # Что такое программирование
 
 **Предпосылки:** нет.

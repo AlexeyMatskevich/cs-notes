@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Devices and Drivers
+  - Device Drivers
+order: 22
+---
+
 # Устройства и драйверы
 
 > [!info]- Предпосылки

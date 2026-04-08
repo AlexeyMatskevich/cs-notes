@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/computer
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Storage
+  - HDD
+  - SSD
+  - NVMe
+order: 5
+---
+
 # Хранилище
 
 **Предпосылки:** [оперативная память](ram.md) (DRAM, row buffer, bandwidth vs latency).

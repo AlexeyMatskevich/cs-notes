@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - OSI Model
+  - TCP/IP Model
+  - Reference Models
+order: 14
+---
+
 # Эталонные модели: OSI и TCP/IP
 
 **Предпосылки:** [Ethernet и коммутация](../foundations/ethernet-and-switching.md), [IP и маршрутизация](../foundations/ip-and-routing.md), [TCP](../transport/tcp.md), [HTTP](../application/http.md).

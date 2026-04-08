@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - theme/performance
+  - type/overview
+aliases:
+  - Redis in Rails
+order: 0
+---
+
 # Redis в Rails-приложении
 
 **Предпосылки:** [Redis как сервер структур данных](../../databases/redis/redis.md) (архитектура, структуры данных, персистентность, eviction), [конкурентность в Ruby](../../ruby/ruby-concurrency.md) ([GVL](../../ruby/ruby-concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код), потоки, I/O-конкурентность), [Puma](../../ruby/ruby-concurrency.md#puma-reactor--thread-pool) (воркеры + потоки).

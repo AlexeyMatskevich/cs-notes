@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/caching
+  - theme/performance
+  - type/pattern
+aliases:
+  - Cache-Aside
+  - Cache Stampede
+  - Caching
+order: 25
+---
+
 # Кеширование
 
 **Предпосылки:** [String](../data-structures/string.md), [Hash](../data-structures/hash.md), [eviction](../memory/eviction.md), [архитектура кэширования](../../../system-design/caching.md) (уровни кэша, когерентность, инвалидация).

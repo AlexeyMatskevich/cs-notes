@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/messaging
+  - theme/distribution
+  - theme/queues
+  - type/concept
+aliases:
+  - Kafka Broker
+  - Kafka Partition
+  - Kafka Topic
+order: 0
+---
+
 # Broker, topic, partition, offset
 
 **Предпосылки:** [Message Queues](../../../system-design/message-queues.md) (log-based брокер, партиции, consumer groups), [Event-driven Architecture](../../../system-design/event-driven-architecture.md) (CQRS, проекции), [Redis Stream](../../../databases/redis/data-structures/stream.md) (append-only лог, consumer groups, PEL).

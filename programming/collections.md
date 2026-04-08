@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - collections
+  - array
+  - hash
+order: 6
+---
+
 # Коллекции
 
 **Предпосылки:** [Циклы](loops.md) (while), [Функции](functions.md) (определение, вызов, параметры, возврат значения).

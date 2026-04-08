@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Redis
+  - What is Redis
+order: 0
+---
+
 # Что такое Redis
 
 **Предпосылки:** [ACID](../../acid.md), базовые структуры данных ([массив](../../../algorithms-and-data-structures/linear/array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md), [связный список](../../../algorithms-and-data-structures/linear/linked-list.md)), [TCP](../../../networking/transport/tcp.md) (клиент-серверное соединение).

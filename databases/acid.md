@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/transactions
+  - type/concept
+aliases:
+  - ACID
+  - Atomicity
+  - Consistency
+  - Isolation
+  - Durability
+---
+
 # ACID — контракт транзакции
 
 **Предпосылки:** SQL ([BEGIN, COMMIT, ROLLBACK](sql/modification/transactions.md)), понятие транзакции как группы операций.

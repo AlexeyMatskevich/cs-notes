@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/performance
+  - type/concept
+aliases:
+  - Compound DML
+  - INSERT...SELECT
+  - MERGE
+  - VALUES
+order: 20
+---
+
 # Составные DML-операции
 
 > [!info]- Предпосылки

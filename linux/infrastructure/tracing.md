@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/linux
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - Tracing
+  - Profiling
+  - strace
+  - BPF
+order: 27
+---
+
 # Трассировка и профилирование
 
 **Предпосылки:** [режимы CPU и системные вызовы](../foundations/cpu-modes-and-syscalls.md) (syscall, ptrace), [ELF и линковка](elf-and-linking.md) (PLT/GOT, символы).

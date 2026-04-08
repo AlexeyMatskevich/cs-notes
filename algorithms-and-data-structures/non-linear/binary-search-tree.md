@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/indexing
+  - theme/storage
+  - type/concept
+aliases:
+  - BST
+  - Binary Search Tree
+order: 3
+---
+
 # Двоичное дерево поиска (BST)
 
 **Предпосылки:** оценка сложности в O(…), [бинарное дерево](binary-tree.md) (left/right, обходы — особенно in-order).

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/distribution
+  - type/concept
+aliases:
+  - OSPF
+  - BGP
+  - Routing Protocols
+  - Autonomous System
+order: 15
+---
+
 # Протоколы маршрутизации
 
 **Предпосылки:** [IP и маршрутизация](../foundations/ip-and-routing.md) (роутер, таблица маршрутизации, TTL).

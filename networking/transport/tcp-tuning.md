@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/performance
+  - type/concept
+aliases:
+  - TCP Tuning
+  - TCP_NODELAY
+  - Nagle Algorithm
+  - SO_KEEPALIVE
+order: 8
+---
+
 # TCP Tuning
 
 **Предпосылки:** [TCP](tcp.md) (соединение, handshake, окно, congestion control, завершение).

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - theme/memory
+  - type/concept
+aliases:
+  - Hash
+  - HSET
+  - HGETALL
+  - listpack
+order: 5
+---
+
 # Hash
 
 **Предпосылки:** [String](string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md).

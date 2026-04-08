@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/ruby
+  - theme/data-representation
+  - type/concept
+aliases:
+  - RArray
+  - embedded array
+order: 9
+---
+
 # Array
 
 > [!info]- Предпосылки

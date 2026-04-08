@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - theme/performance
+  - type/concept
+aliases:
+  - Partitioning
+  - PARTITION BY
+order: 14
+---
+
 # Партиционирование
 
 **Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) (PRIMARY KEY, UNIQUE).

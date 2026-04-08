@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/programming
+  - theme/internals
+  - theme/performance
+  - type/concept
+aliases:
+  - compilation
+  - interpretation
+  - AOT
+  - JIT
+order: 12
+---
+
 # Компиляция и интерпретация
 
 **Предпосылки:** [Ассемблер](assembler.md) (машинный код, мнемоники), [Переменные и типы](variables-and-types.md) (статическая и динамическая типизация), [Функции](functions.md) (вызов функций).

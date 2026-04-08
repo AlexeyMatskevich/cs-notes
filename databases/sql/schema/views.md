@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - Views
+  - CREATE VIEW
+order: 15
+---
+
 # Представления (views)
 
 **Предпосылки:** [подзапросы и CTE](../querying/subqueries-and-cte.md) (подзапросы, CTE), [соединения](../querying/joins.md) (JOIN).

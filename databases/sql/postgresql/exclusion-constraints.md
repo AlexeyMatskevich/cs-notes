@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - EXCLUSION
+  - EXCLUDE USING
+  - GiST
+order: 27
+---
+
 # EXCLUSION — запрет пересечений
 
 **Предпосылки:** [ограничения](../schema/constraints.md) (CHECK, UNIQUE), [индексы](../schema/indexes.md) (CREATE INDEX).

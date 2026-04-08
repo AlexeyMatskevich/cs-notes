@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Threads
+  - Thread
+order: 4
+---
+
 # Потоки
 
 **Предпосылки:** [процессы](processes.md) (fork, exec, адресное пространство, task_struct).

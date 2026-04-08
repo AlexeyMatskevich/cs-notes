@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/redis
+  - theme/concurrency
+  - theme/transactions
+  - type/concept
+aliases:
+  - Atomicity
+  - Single Command Atomicity
+order: 13
+---
+
 # Атомарность одной команды
 
 **Предпосылки:** [Event loop](../architecture/event-loop.md).

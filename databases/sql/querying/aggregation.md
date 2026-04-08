@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - GROUP BY
+  - HAVING
+  - COUNT
+  - SUM
+  - AVG
+  - Aggregation
+order: 6
+---
+
 # Агрегация
 
 **Предпосылки:** [сортировка и ограничение](sorting-and-limiting.md) (ORDER BY, DISTINCT, pipeline FROM → WHERE → SELECT → ORDER BY → LIMIT).

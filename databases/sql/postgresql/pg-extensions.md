@@ -1,3 +1,12 @@
+---
+tags:
+  - domain/sql
+  - type/overview
+aliases:
+  - PostgreSQL Extensions
+  - PG
+---
+
 # PostgreSQL: расширения SQL
 
 **Предпосылки:** [SQL](../sql.md) (весь курс SQL).

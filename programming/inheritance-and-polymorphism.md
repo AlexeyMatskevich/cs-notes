@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - inheritance
+  - polymorphism
+order: 9
+---
+
 # Наследование и полиморфизм
 
 **Предпосылки:** [Объектно-ориентированное программирование](oop.md) (класс, объект, методы, инкапсуляция).

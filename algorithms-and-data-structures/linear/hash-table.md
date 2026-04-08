@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/indexing
+  - theme/storage
+  - type/concept
+aliases:
+  - Hash Table
+  - hash map
+order: 5
+---
+
 # Хеш-таблица
 
 **Предпосылки:** [массив](array.md) (индексация, формула адреса), [связный список](linked-list.md) (для стратегии цепочек).

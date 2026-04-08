@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/migrations
+  - theme/schema-evolution
+  - type/overview
+aliases:
+  - Migrations
+  - Schema Migrations
+---
+
 # Миграции
 
 > [!info]- Предпосылки

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - Prism parser
+  - AST
+  - tokenizer
+order: 0
+---
+
 # Токенизация и парсинг
 
 > [!info]- Предпосылки

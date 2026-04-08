@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Processes
+  - Process
+  - PID
+order: 3
+---
+
 # Процессы
 
 **Предпосылки:** [режимы CPU и системные вызовы](cpu-modes-and-syscalls.md) (ring 0/ring 3, syscall, стоимость переключения в ядро).

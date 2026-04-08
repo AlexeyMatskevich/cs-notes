@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - theme/reliability
+  - type/concept
+aliases:
+  - Replication
+  - Leader-Based Replication
+order: 0
+---
+
 # Репликация: копии данных для доступности и отказоустойчивости
 
 **Предпосылки:** сеть (клиент/сервер, запрос/ответ), понятие записи и её подтверждения.

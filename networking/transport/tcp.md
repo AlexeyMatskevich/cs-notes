@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - TCP
+  - Transmission Control Protocol
+order: 7
+---
+
 # TCP
 
 **Предпосылки:** [UDP](udp.md) (порт, сокет, датаграмма), [IP и маршрутизация](../foundations/ip-and-routing.md) (пакет, TTL).

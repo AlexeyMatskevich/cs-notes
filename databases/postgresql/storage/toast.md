@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/postgresql
+  - theme/storage
+  - type/concept
+aliases:
+  - TOAST
+  - The Oversized-Attribute Storage Technique
+order: 2
+---
+
 # TOAST — хранение больших значений
 
 **Предпосылки:** [страницы и кортежи](pages-and-tuples.md), [типы данных и NULL](../../sql/foundations/types-and-null.md).

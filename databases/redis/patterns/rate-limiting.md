@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/performance
+  - type/pattern
+aliases:
+  - Rate Limiting
+  - Fixed Window
+  - Sliding Window
+  - Token Bucket
+order: 26
+---
+
 # Rate limiting
 
 **Предпосылки:** [String](../data-structures/string.md), [Hash](../data-structures/hash.md), [Sorted Set](../data-structures/sorted-set.md), [Lua-скрипты](../atomicity/lua-scripting.md).

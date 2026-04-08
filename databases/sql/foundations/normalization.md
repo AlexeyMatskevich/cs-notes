@@ -1,3 +1,19 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - Normalization
+  - Normal Forms
+  - 1NF
+  - 2NF
+  - 3NF
+  - BCNF
+order: 3
+---
+
 # Нормализация
 
 **Предпосылки:** [реляционная модель](relational-model.md) — аномалии, первичный ключ, внешний ключ.

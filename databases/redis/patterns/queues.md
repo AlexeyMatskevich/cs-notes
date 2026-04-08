@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/queues
+  - theme/reliability
+  - type/pattern
+aliases:
+  - Queues
+  - Reliable Queue
+  - Delayed Queue
+order: 28
+---
+
 # Очереди
 
 **Предпосылки:** [List](../data-structures/list.md), [Sorted Set](../data-structures/sorted-set.md), [Stream](../data-structures/stream.md), [атомарность одной команды](../atomicity/single-command.md).

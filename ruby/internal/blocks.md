@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - blocks
+  - Proc
+  - lambda
+  - closure
+order: 9
+---
+
 # Блоки, Proc и Lambda
 
 > [!info]- Предпосылки

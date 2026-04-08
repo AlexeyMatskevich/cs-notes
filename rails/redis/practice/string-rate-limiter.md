@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/pattern
+aliases:
+  - rate limiter
+  - INCR
+order: 3
+---
+
 # Rate limiter на API-эндпоинте
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING](../../../databases/redis/data-structures/string.md).

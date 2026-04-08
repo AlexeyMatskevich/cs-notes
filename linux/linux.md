@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/overview
+aliases:
+  - Linux
+  - Operating System
+  - OS
+order: 0
+---
+
 # Linux
 
 **Предпосылки:** [аппаратное обеспечение](../computer/computer.md) (CPU, кеш, RAM, хранилище, DMA).

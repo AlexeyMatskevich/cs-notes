@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - UNION
+  - INTERSECT
+  - EXCEPT
+  - Set Operations
+order: 10
+---
+
 # Операции над множествами
 
 **Предпосылки:** [подзапросы и CTE](subqueries-and-cte.md) (подзапросы, CTE).

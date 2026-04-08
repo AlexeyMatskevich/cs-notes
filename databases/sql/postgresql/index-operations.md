@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/indexing
+  - theme/performance
+  - type/concept
+aliases:
+  - CONCURRENTLY
+  - REINDEX
+  - Index Operations
+order: 26
+---
+
 # Индексы в production
 
 **Предпосылки:** [индексы](../schema/indexes.md) (CREATE INDEX, типы индексов), [таблицы и типы](../schema/tables-and-types.md).

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - theme/queues
+  - type/concept
+aliases:
+  - job design
+  - fan-out
+  - Batches
+order: 5
+---
+
 # Дизайн задач
 
 **Предпосылки:** [Sidekiq: сигналы и deploy](signals-and-deploy.md), [reliability patterns § bulkhead](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов), [event-driven architecture](../../system-design/event-driven-architecture.md), [message queues](../../system-design/message-queues.md).

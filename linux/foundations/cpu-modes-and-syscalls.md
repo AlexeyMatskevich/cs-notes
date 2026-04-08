@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - theme/security
+  - type/concept
+aliases:
+  - CPU Modes
+  - System Calls
+  - Syscalls
+order: 2
+---
+
 # Режимы CPU и системные вызовы
 
 **Предпосылки:** [что такое операционная система](what-is-os.md) (абстракция, изоляция, разделение ресурсов, процесс как экземпляр программы).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/algorithms
+  - theme/performance
+  - type/concept
+aliases:
+  - DP
+  - Dynamic Programming
+  - memoization
+order: 0
+---
+
 # Динамическое программирование (DP)
 
 **Предпосылки:** рекурсия, оценка сложности в O(…), [массив](../linear/array.md) (индексация), [хеш-таблица](../linear/hash-table.md) (кэш по ключу).

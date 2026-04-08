@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - functions
+  - call stack
+  - scope
+order: 5
+---
+
 # Функции
 
 **Предпосылки:** [Условия и ввод/вывод](conditions-and-io.md) (`&&`, `!=`, `>=`), [Циклы](loops.md) (while, повторение действий).

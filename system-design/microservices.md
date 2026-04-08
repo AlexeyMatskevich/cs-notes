@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - Microservices
+  - Saga
+order: 14
+---
+
 # Микросервисы
 
 **Предпосылки:** [Паттерны надёжности](reliability-patterns.md) (idempotency, circuit breaker, bulkhead), [Message Queues](message-queues.md) (temporal decoupling, pub/sub, consumer groups), [API Design](api-design.md) (REST, gRPC, контракты), базовое понимание SQL-транзакций (ACID, COMMIT/ROLLBACK).

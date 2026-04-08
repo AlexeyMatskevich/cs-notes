@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - theme/performance
+  - type/concept
+aliases:
+  - redis-rb
+  - connection_pool
+  - hiredis
+order: 0
+---
+
 # Клиенты и соединения
 
 **Предпосылки:** [Redis: архитектура](../../databases/redis/redis.md), [TCP](../../networking/transport/tcp.md) (соединение), [Puma](../../ruby/ruby-concurrency.md#puma-reactor--thread-pool) (воркеры + потоки).

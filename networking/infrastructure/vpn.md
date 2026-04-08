@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/security
+  - type/concept
+aliases:
+  - VPN
+  - Virtual Private Network
+  - IPSec
+  - WireGuard
+order: 17
+---
+
 # VPN
 
 **Предпосылки:** [IP и маршрутизация](../foundations/ip-and-routing.md) (пакет, инкапсуляция), [TLS](../application/tls.md) (шифрование, аутентификация), [Firewalls](firewalls.md) (зоны, внутренняя сеть).

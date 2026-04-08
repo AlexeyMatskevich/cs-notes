@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/pattern
+aliases:
+  - SET
+  - SISMEMBER
+  - SUNION
+order: 3
+---
+
 # Система прав доступа с пересечениями
 
 **Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [SET](../../../databases/redis/data-structures/set.md).

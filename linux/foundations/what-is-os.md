@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Operating System
+  - OS
+order: 1
+---
+
 # Что такое операционная система
 
 **Предпосылки:** [аппаратное обеспечение](../../computer/computer.md) (CPU, кеш, RAM, хранилище, DMA).

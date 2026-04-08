@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/memory
+  - theme/performance
+  - type/concept
+aliases:
+  - Key Design
+  - SCAN
+  - KEYS
+  - UNLINK
+order: 20
+---
+
 # Проектирование ключей
 
 **Предпосылки:** [Внутренние кодировки](encodings.md), [event loop](../architecture/event-loop.md).

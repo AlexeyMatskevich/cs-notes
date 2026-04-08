@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/computer
+  - theme/performance
+  - theme/data-representation
+  - type/concept
+aliases:
+  - SIMD
+  - Single Instruction Multiple Data
+  - SSE
+  - AVX
+  - AVX-512
+order: 9
+---
+
 # SIMD и векторные расширения
 
 **Предпосылки:** [бит, байт](../../foundations/binary-and-bytes.md), [ABI и размещение данных](abi-and-data-layout.md) (xmm-регистры, выравнивание), [кеш-линия](../data-path/memory-hierarchy.md) (64 байта — единица передачи между кешем и памятью).

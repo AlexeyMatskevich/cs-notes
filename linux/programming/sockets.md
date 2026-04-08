@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/linux
+  - theme/networking
+  - type/concept
+aliases:
+  - Sockets
+order: 16
+---
+
 # Сокеты
 
 **Предпосылки:** [файловый ввод-вывод](file-io.md) (fd, read/write, O_NONBLOCK), [файловые дескрипторы](../foundations/file-descriptors.md) (три уровня таблиц).

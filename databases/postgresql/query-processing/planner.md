@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - Query Planner
+  - Selectivity
+  - Cost Model
+order: 20
+---
+
 # Планировщик запросов (Query Planner)
 
 **Предпосылки:** [страницы и кортежи](../storage/pages-and-tuples.md), [B-tree](../indexes/btree.md) (типы сканирования: Index Scan, Bitmap Index Scan, Index Only Scan), [BRIN](../indexes/brin.md) (корреляция физического и логического порядка), [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md) (для понимания Hash Join).

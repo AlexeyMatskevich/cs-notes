@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - DHCP
+  - Dynamic Host Configuration Protocol
+  - DORA
+order: 3
+---
+
 # DHCP
 
 **Предпосылки:** [IP и маршрутизация](ip-and-routing.md) (IP-адрес, маска подсети, шлюз по умолчанию), [Ethernet и коммутация](ethernet-and-switching.md) (MAC-адрес, широковещание).

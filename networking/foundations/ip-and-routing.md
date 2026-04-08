@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/concept
+aliases:
+  - IP
+  - Internet Protocol
+  - Routing
+  - Subnetting
+order: 2
+---
+
 # IP и маршрутизация
 
 **Предпосылки:** [Ethernet и коммутация](ethernet-and-switching.md) (MAC-адрес, кадр, коммутатор).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - "NULL"
+  - Data Types
+  - Three-Valued Logic
+order: 1
+---
+
 # Типы данных и NULL
 
 **Предпосылки:** [реляционная модель](relational-model.md) (таблица, строка, столбец, типизация столбцов).

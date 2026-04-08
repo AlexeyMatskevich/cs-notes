@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/concurrency
+  - theme/performance
+  - type/concept
+aliases:
+  - Capsules
+  - Sidekiq scaling
+order: 6
+---
+
 # Concurrency и масштабирование
 
 **Предпосылки:** [Sidekiq: дизайн задач](job-design.md), [Ruby concurrency](../../ruby/ruby-concurrency.md), [потоки](../../linux/foundations/threads.md).

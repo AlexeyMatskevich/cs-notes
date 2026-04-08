@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - CASE
+  - COALESCE
+  - NULLIF
+  - CAST
+  - Expressions
+order: 2
+---
+
 # Выражения
 
 **Предпосылки:** [типы данных и NULL](types-and-null.md) (типы, трёхзначная логика, IS NULL).

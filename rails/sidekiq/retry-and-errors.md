@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/reliability
+  - type/concept
+aliases:
+  - retry
+  - Dead Letter Queue
+  - DLQ
+order: 3
+---
+
 # Retry и обработка ошибок
 
 **Предпосылки:** [архитектура Sidekiq](architecture.md), [жизненный цикл задачи](job-lifecycle.md), [гарантии и идемпотентность](guarantees.md), [reliability patterns](../../system-design/reliability-patterns.md).

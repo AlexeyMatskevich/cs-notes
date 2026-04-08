@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - Subqueries
+  - CTE
+  - Common Table Expression
+order: 22
+---
+
 # Подзапросы и CTE
 
 **Предпосылки:** [планировщик запросов](planner.md) (cost model, алгоритмы соединения), [порядок соединения](join-order.md) (dynamic programming, flattening JOIN в плоский список), [подзапросы и CTE в SQL](../../sql/querying/subqueries-and-cte.md) (синтаксис, скалярные/коррелированные подзапросы, WITH RECURSIVE).

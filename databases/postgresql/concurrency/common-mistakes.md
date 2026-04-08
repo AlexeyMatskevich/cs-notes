@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - type/pattern
+aliases:
+  - Common Concurrency Mistakes
+order: 11
+---
+
 # Распространённые ошибки параллельного доступа
 
 **Предпосылки:** [уровни изоляции](isolation-levels.md), [блокировки](locks.md), [паттерны](patterns.md). Примеры используют Ruby/ActiveRecord — синтаксис интуитивно понятен, но для полного понимания полезно знание [основ SQL](../../sql/sql.md).

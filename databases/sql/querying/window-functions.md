@@ -1,3 +1,18 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/performance
+  - type/concept
+aliases:
+  - Window Functions
+  - OVER
+  - PARTITION BY
+  - ROW_NUMBER
+  - RANK
+order: 11
+---
+
 # Оконные функции
 
 > [!info]- Предпосылки

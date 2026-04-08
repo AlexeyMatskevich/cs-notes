@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Interrupts
+  - IRQ
+  - ISR
+order: 21
+---
+
 # Прерывания
 
 **Предпосылки:** [механизм системных вызовов](syscall-internals.md) (вход в ядро, pt_regs), [шины и DMA](../../computer/data-path/buses-and-dma.md) (прерывания, DMA-передачи).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/memory
+  - theme/internals
+  - type/concept
+aliases:
+  - Kernel Memory Management
+order: 24
+---
+
 # Управление физической памятью
 
 > [!info]- Предпосылки

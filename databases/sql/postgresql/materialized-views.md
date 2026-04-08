@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/performance
+  - theme/caching
+  - type/concept
+aliases:
+  - Materialized Views
+  - REFRESH MATERIALIZED VIEW
+order: 29
+---
+
 # Материализованные представления
 
 **Предпосылки:** [представления](../schema/views.md) (CREATE VIEW), [индексы](../schema/indexes.md) (UNIQUE INDEX).

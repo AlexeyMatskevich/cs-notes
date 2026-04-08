@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/algorithms
+  - theme/caching
+  - type/concept
+aliases:
+  - Clock-Sweep
+  - clock algorithm
+order: 7
+---
+
 # Clock-Sweep
 
 **Предпосылки:** [LRU-кэш](lru-cache.md) (проблема contention).

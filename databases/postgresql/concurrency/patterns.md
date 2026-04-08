@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - type/pattern
+aliases:
+  - Concurrency Patterns
+  - Optimistic Locking
+  - Pessimistic Locking
+order: 10
+---
+
 # Практические паттерны параллельного доступа
 
 **Предпосылки:** [уровни изоляции](isolation-levels.md), [блокировки](locks.md), [DML](../../sql/modification/dml.md) (UPDATE, DELETE).

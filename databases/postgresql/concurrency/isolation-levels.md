@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/postgresql
+  - theme/concurrency
+  - theme/transactions
+  - type/concept
+aliases:
+  - Isolation Levels
+  - READ COMMITTED
+  - REPEATABLE READ
+  - SERIALIZABLE
+order: 8
+---
+
 # Уровни изоляции в PostgreSQL
 
 **Предпосылки:** [ACID](../storage/acid.md) (isolation), [MVCC](mvcc.md), [аномалии транзакций](anomalies.md). Примеры используют Ruby/ActiveRecord — синтаксис интуитивно понятен, но для полного понимания полезно знание [основ SQL](../../sql/sql.md).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/reliability
+  - type/concept
+aliases:
+  - TSTP
+  - TERM
+  - graceful shutdown
+order: 4
+---
+
 # Сигналы и deploy
 
 **Предпосылки:** [Sidekiq: retry и обработка ошибок](retry-and-errors.md), [сигналы](../../linux/programming/signals.md).

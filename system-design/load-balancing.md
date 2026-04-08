@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/performance
+  - theme/reliability
+  - type/concept
+aliases:
+  - Load Balancing
+  - Load Balancer
+order: 7
+---
+
 # Load Balancing
 
 **Предпосылки:** клиент-серверная архитектура, DNS (домен → IP), [TCP](../networking/transport/tcp.md)/[HTTP](../networking/application/http.md), горизонтальное масштабирование (несколько одинаковых серверов), понятие отказа узла.

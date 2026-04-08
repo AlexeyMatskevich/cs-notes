@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - IPC
+  - Inter-Process Communication
+order: 19
+---
+
 # Межпроцессное взаимодействие
 
 > [!info]- Предпосылки

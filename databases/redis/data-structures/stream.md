@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/redis
+  - theme/queues
+  - theme/reliability
+  - type/concept
+aliases:
+  - Stream
+  - XADD
+  - XREADGROUP
+  - Consumer Group
+order: 9
+---
+
 # Stream
 
 **Предпосылки:** [List](list.md). Полезно знать Apache Kafka на уровне понятий topic, partition, consumer group.

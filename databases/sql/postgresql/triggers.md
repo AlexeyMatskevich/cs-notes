@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - type/concept
+aliases:
+  - Triggers
+  - CREATE TRIGGER
+order: 25
+---
+
 # Триггеры
 
 **Предпосылки:** [функции и процедуры](functions-and-procedures.md) (PL/pgSQL, RETURNS, BEGIN...END).

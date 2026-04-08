@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/postgresql
+  - theme/performance
+  - theme/internals
+  - type/concept
+aliases:
+  - Prepared Statements
+  - Generic Plan
+  - Custom Plan
+order: 25
+---
+
 # Prepared statements, generic plan и «плавающая» производительность
 
 **Предпосылки:** [планировщик запросов](planner.md) (оценки и выбор плана), [EXPLAIN](explain.md) (как сравнивать планы и фактическое время), [B-tree](../indexes/btree.md) (индексный vs последовательный доступ).

@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/programming
+  - theme/data-representation
+  - type/concept
+aliases:
+  - variables
+  - types
+order: 2
+---
+
 # Переменные и типы
 
 **Предпосылки:** [Ассемблер](assembler.md) (регистры, адреса памяти, боль ручного управления).

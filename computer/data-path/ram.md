@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/computer
+  - theme/memory
+  - theme/performance
+  - type/concept
+aliases:
+  - RAM
+  - Random Access Memory
+  - DRAM
+  - DDR
+order: 4
+---
+
 # Оперативная память
 
 **Предпосылки:** [бит, байт](../../foundations/binary-and-bytes.md), [когерентность кешей](cache-coherency.md) (cache line, MESI, false sharing).

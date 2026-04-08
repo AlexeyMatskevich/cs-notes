@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - type/concept
+aliases:
+  - Consensus
+  - Raft
+  - Distributed Consensus
+order: 5
+---
+
 # Распределённый консенсус
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (CP-системы, кворум, partition tolerance), [модели консистентности](consistency-models.md) (linearizability), [разрешение конфликтов](conflict-resolution.md) (LWW, vector clocks, CRDT).

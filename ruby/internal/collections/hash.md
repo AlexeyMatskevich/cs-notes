@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/data-representation
+  - type/concept
+aliases:
+  - RHash
+  - AR table
+  - ST table
+order: 10
+---
+
 # Hash
 
 > [!info]- Предпосылки

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - type/concept
+aliases:
+  - Set
+  - SADD
+  - SISMEMBER
+  - intset
+order: 7
+---
+
 # Set
 
 **Предпосылки:** [String](string.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md).

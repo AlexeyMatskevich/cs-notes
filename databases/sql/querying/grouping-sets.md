@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - type/concept
+aliases:
+  - GROUPING SETS
+  - ROLLUP
+  - CUBE
+order: 8
+---
+
 # Расширенная группировка
 
 **Предпосылки:** [агрегация](aggregation.md) (GROUP BY, HAVING, агрегатные функции).

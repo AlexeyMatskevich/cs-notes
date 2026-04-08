@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/concept
+aliases:
+  - blocking commands
+  - KEYS
+  - SMEMBERS
+order: 2
+---
+
 # Команды, блокирующие Redis
 
 **Предпосылки:** [Event loop](../../databases/redis/architecture/event-loop.md), [Клиенты и соединения](clients-and-connections.md), [Структуры данных на практике](data-structures-in-practice.md).

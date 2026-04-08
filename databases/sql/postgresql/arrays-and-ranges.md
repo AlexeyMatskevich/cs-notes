@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/sql
+  - theme/data-representation
+  - theme/storage
+  - type/concept
+aliases:
+  - ARRAY
+  - Range Types
+order: 22
+---
+
 # Массивы и диапазоны
 
 **Предпосылки:** [SELECT и фильтрация](../querying/select-and-filtering.md), [агрегация](../querying/aggregation.md) (array_agg), [индексы](../schema/indexes.md) (CREATE INDEX, GIN, GiST).

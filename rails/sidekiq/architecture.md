@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/concept
+aliases:
+  - Sidekiq architecture
+  - Fetcher
+  - Processor
+order: 0
+---
+
 # Sidekiq: архитектура
 
 **Предпосылки:** [Redis Lists](../../databases/redis/data-structures/list.md), [очереди в Redis](../../databases/redis/patterns/queues.md), [message queues](../../system-design/message-queues.md), [фоновая очередь на LIST](../redis/practice/list-background-queue.md), базовое знание Rails.

@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Signals
+order: 13
+---
+
 # Сигналы
 
 **Предпосылки:** [процессы](../foundations/processes.md) (PID, состояния, zombie), [файловые дескрипторы](../foundations/file-descriptors.md) (fd, epoll-совместимость).

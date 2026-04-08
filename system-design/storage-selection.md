@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/system-design
+  - theme/performance
+  - type/concept
+aliases:
+  - Storage Selection
+order: 12
+---
+
 # Выбор хранилища под паттерн доступа
 
 **Предпосылки:** [Профили нагрузки](read-write-profiles.md) (B-tree vs LSM-tree, read-heavy vs write-heavy), [Кэширование](caching.md) (Redis как внешний кэш, key→value lookup), [Инвертированный индекс](../algorithms-and-data-structures/non-linear/inverted-index.md).

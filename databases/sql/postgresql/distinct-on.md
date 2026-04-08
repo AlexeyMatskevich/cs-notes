@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/sql
+  - theme/performance
+  - type/concept
+aliases:
+  - DISTINCT ON
+order: 31
+---
+
 # DISTINCT ON — top-1 в группе
 
 **Предпосылки:** [оконные функции](../querying/window-functions.md) (ROW_NUMBER, PARTITION BY).

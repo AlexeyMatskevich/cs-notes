@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/sql
+  - theme/schema-evolution
+  - theme/performance
+  - type/concept
+aliases:
+  - Partitioning
+  - PARTITION BY
+  - Partition Pruning
+order: 28
+---
+
 # Партиционирование в PostgreSQL
 
 **Предпосылки:** [партиционирование](../schema/partitioning.md) (концепция, выбор ключа), [таблицы и типы](../schema/tables-and-types.md) (CREATE TABLE).

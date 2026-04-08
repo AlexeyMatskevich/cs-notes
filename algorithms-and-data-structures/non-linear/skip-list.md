@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/algorithms
+  - theme/indexing
+  - theme/storage
+  - type/concept
+aliases:
+  - Skip List
+order: 9
+---
+
 # Skip List
 
 **Предпосылки:** [связный список](../linear/linked-list.md) (узел, указатели next), [двоичное дерево поиска](binary-search-tree.md) (инвариант, O(h) поиск, вырождение).

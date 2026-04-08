@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/linux
+  - theme/internals
+  - type/concept
+aliases:
+  - Syscall Internals
+order: 20
+---
+
 # Механизм системных вызовов
 
 **Предпосылки:** [режимы CPU и системные вызовы](../foundations/cpu-modes-and-syscalls.md) (ring 0/3, syscall снаружи, LSTAR, vDSO), [процессы](../foundations/processes.md) (task_struct, kernel stack).

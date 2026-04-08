@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/linux
+  - theme/concurrency
+  - theme/memory
+  - type/concept
+aliases:
+  - Memory Ordering
+  - Memory Model
+order: 11
+---
+
 # Модель памяти
 
 > [!info]- Предпосылки

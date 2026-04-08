@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/computer
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - DMA
+  - Direct Memory Access
+  - PCIe
+  - Bus
+order: 6
+---
+
 # Шины и DMA
 
 **Предпосылки:** [хранилище](storage.md) (SSD IOPS, NVMe, PCIe), [когерентность кешей](cache-coherency.md) (MESI, snoop).

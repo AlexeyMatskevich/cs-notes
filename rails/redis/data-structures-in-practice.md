@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/rails
+  - theme/caching
+  - type/concept
+aliases:
+  - Redis data structures
+order: 1
+---
+
 # Структуры данных Redis на практике
 
 **Предпосылки:** [Клиенты и соединения](clients-and-connections.md), [STRING](../../databases/redis/data-structures/string.md), [HASH](../../databases/redis/data-structures/hash.md), [LIST](../../databases/redis/data-structures/list.md), [SET](../../databases/redis/data-structures/set.md), [ZSET](../../databases/redis/data-structures/sorted-set.md), [Stream](../../databases/redis/data-structures/stream.md), [HyperLogLog](../../databases/redis/data-structures/hyperloglog.md), [Bitmap](../../databases/redis/data-structures/bitmap-and-bitfield.md), [Pub/Sub](../../databases/redis/data-structures/pub-sub.md), [MULTI/EXEC](../../databases/redis/atomicity/multi-exec.md).

@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/ruby
+  - theme/internals
+  - type/concept
+aliases:
+  - control flow
+order: 3
+---
+
 # Управление потоком
 
 **Предпосылки:** [Исполнение](execution.md) — фреймы, PC/SP/CFP, стек вызовов, push/pop при вызове метода.

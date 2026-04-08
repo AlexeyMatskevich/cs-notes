@@ -1,3 +1,13 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - type/concept
+aliases:
+  - Graph
+order: 0
+---
+
 # Граф
 
 **Предпосылки:** базовые понятия программирования, оценка сложности в O(…), [массив](../linear/array.md), [хеш-таблица](../linear/hash-table.md).

@@ -1,3 +1,17 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/performance
+  - type/concept
+aliases:
+  - HTTP/2
+  - HTTP/3
+  - QUIC
+  - HTTP Evolution
+order: 12
+---
+
 # Эволюция HTTP
 
 **Предпосылки:** [HTTP](http.md) (запрос-ответ, заголовки), [TCP](../transport/tcp.md) (соединение, handshake, congestion control), [TLS](tls.md) (рукопожатие, латентность).

@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/system-design
+  - theme/performance
+  - type/concept
+aliases:
+  - Read-Write Profiles
+  - Read-Heavy
+  - Write-Heavy
+order: 6
+---
+
 # Профили нагрузки: read-heavy и write-heavy
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (CP/AP, partition tolerance), [модели консистентности](consistency-models.md) (eventual, read-your-writes), [разрешение конфликтов](conflict-resolution.md) (CRDT), [репликация](replication.md) (leader-based, replication lag), [шардинг](sharding.md) (shard key, resharding), базовое понимание [B-tree индексов](../databases/postgresql/indexes/) (ускоряют чтение, замедляют запись).

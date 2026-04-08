@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/system-design
+  - theme/distribution
+  - type/concept
+aliases:
+  - CAP Theorem
+  - CAP
+order: 2
+---
+
 # CAP-теорема
 
 **Предпосылки:** базовое понимание [репликации](replication.md) (leader/follower, синхронная и асинхронная), понятие network partition, [ACID](../databases/acid.md) (достаточно знать, что Consistency в ACID — это про constraints).

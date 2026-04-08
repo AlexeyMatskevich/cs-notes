@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/system-design
+  - theme/reliability
+  - theme/transactions
+  - type/case-study
+aliases:
+  - Hotel Booking System
+order: 16
+---
+
 # Система бронирования отелей
 
 **Предпосылки:** [HTTP](../../networking/application/http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/websockets.md)/polling, [паттерны надёжности](../reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([`FOR UPDATE`](../../databases/postgresql/concurrency/patterns.md#пессимистичный-подход-for-update)).

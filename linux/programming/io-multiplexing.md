@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/linux
+  - theme/networking
+  - theme/performance
+  - type/concept
+aliases:
+  - I/O Multiplexing
+  - epoll
+  - io_uring
+order: 17
+---
+
 # Мультиплексирование ввода-вывода
 
 > [!info]- Предпосылки

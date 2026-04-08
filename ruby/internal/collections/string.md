@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/ruby
+  - theme/data-representation
+  - type/concept
+aliases:
+  - RString
+  - frozen string
+  - fstring
+order: 11
+---
+
 # String
 
 > [!info]- Предпосылки

@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/redis
+  - theme/storage
+  - type/concept
+aliases:
+  - String
+  - SDS
+  - INCR
+  - TTL
+order: 4
+---
+
 # String
 
 **Предпосылки:** [Что такое Redis](../architecture/what-is-redis.md), [event loop](../architecture/event-loop.md).

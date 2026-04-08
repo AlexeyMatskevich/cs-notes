@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/redis
+  - theme/performance
+  - type/concept
+aliases:
+  - Pipelining
+  - Pipeline
+order: 2
+---
+
 # Pipelining
 
 **Предпосылки:** [Event loop](event-loop.md), [RTT](../../../networking/transport/tcp.md) (round-trip time — время от отправки запроса до получения ответа).

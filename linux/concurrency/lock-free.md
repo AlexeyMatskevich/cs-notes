@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/linux
+  - theme/concurrency
+  - type/concept
+aliases:
+  - Lock-free
+  - Lock-free Data Structures
+order: 12
+---
+
 # Lock-free структуры данных
 
 > [!info]- Предпосылки

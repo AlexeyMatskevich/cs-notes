@@ -1,3 +1,16 @@
+---
+tags:
+  - domain/linux
+  - theme/security
+  - theme/internals
+  - type/concept
+aliases:
+  - Namespaces
+  - Cgroups
+  - Control Groups
+order: 29
+---
+
 # Пространства имён и контрольные группы
 
 > [!info]- Предпосылки

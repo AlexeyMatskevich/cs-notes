@@ -1,3 +1,15 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - theme/performance
+  - type/concept
+aliases:
+  - CDN
+  - Content Delivery Network
+order: 18
+---
+
 # CDN
 
 **Предпосылки:** [DNS](../application/dns.md) (резолвинг, CNAME, TTL), [HTTP](../application/http.md) (заголовки, Cache-Control, коды статуса), [TLS](../application/tls.md) (рукопожатие, латентность, TLS-терминация), [TCP](../transport/tcp.md) (RTT).

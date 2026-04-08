@@ -1,3 +1,14 @@
+---
+tags:
+  - domain/networking
+  - theme/networking
+  - type/overview
+aliases:
+  - Computer Networks
+  - Networking
+order: 0
+---
+
 # Компьютерные сети
 
 **Предпосылки:** общая компьютерная грамотность (файл, программа, оперативная память).
