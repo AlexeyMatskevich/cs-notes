@@ -1,6 +1,6 @@
 # Атомарный перевод средств
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [MULTI/EXEC](../../../databases/redis/atomicity/01-multi-exec.md).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [MULTI/EXEC](../../../databases/redis/atomicity/multi-exec.md).
 
 ## Гонка без транзакции
 
@@ -63,8 +63,8 @@ MAX_RETRIES.times do
 end
 ```
 
-При низкой конкуренции конфликты редки. При высокой конкуренции за одни и те же ключи количество retry растёт — для условной логики без retry лучше подходит [Lua-скрипт](../../../databases/redis/atomicity/02-lua-scripting.md).
+При низкой конкуренции конфликты редки. При высокой конкуренции за одни и те же ключи количество retry растёт — для условной логики без retry лучше подходит [Lua-скрипт](../../../databases/redis/atomicity/lua-scripting.md).
 
 ## Pipelining внутри MULTI
 
-Библиотека `redis-rb` при использовании блочной формы `r.multi { |tx| ... }` автоматически буферизует все команды и отправляет [MULTI](../../../databases/redis/atomicity/01-multi-exec.md) + команды + EXEC одним пакетом. Транзакция из N команд обходится в один round-trip — [pipelining](../../../databases/redis/architecture/02-pipelining.md) получается бесплатно.
+Библиотека `redis-rb` при использовании блочной формы `r.multi { |tx| ... }` автоматически буферизует все команды и отправляет [MULTI](../../../databases/redis/atomicity/multi-exec.md) + команды + EXEC одним пакетом. Транзакция из N команд обходится в один round-trip — [pipelining](../../../databases/redis/architecture/pipelining.md) получается бесплатно.

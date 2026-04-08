@@ -359,8 +359,8 @@ foundations/
 
 | Файл | Что добавить |
 |------|-------------|
-| `programming/01-assembler.md` | Cross-link в тексте: «почему 0–255 и почему адреса через +4 — [двоичная система и байты](../foundations/00-binary-and-bytes.md), [целые числа](../foundations/01-integers.md)» |
-| `programming/02-variables-and-types.md` | Cross-link: «что стоит за int и float — [целые](../foundations/01-integers.md), [дробные](../foundations/03-floating-point.md)» |
+| `programming/01-assembler.md` | Cross-link в тексте: «почему 0–255 и почему адреса через +4 — [двоичная система и байты](../foundations/binary-and-bytes.md), [целые числа](../foundations/integers.md)» |
+| `programming/02-variables-and-types.md` | Cross-link: «что стоит за int и float — [целые](../foundations/integers.md), [дробные](../foundations/floating-point.md)» |
 
 ### Инфраструктура
 

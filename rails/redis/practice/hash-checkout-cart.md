@@ -1,6 +1,6 @@
 # Состояние корзины в e-commerce checkout
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [HASH](../../../databases/redis/data-structures/01-hash.md).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [HASH](../../../databases/redis/data-structures/hash.md).
 
 В процессе оформления заказа корзина содержит несколько связанных полей: список товаров, адрес доставки, выбранный способ оплаты, промокод, этап checkout. Фронтенд обновляет поля по одному — пользователь выбрал доставку, затем ввёл промокод, затем подтвердил оплату.
 
@@ -47,4 +47,4 @@ class CheckoutCart
 end
 ```
 
-Два Puma-процесса могут одновременно вызвать `set_shipping` и `apply_promo` — каждый пишет в своё поле, конфликта нет. С JSON в STRING второй процесс перезаписал бы изменения первого. [`HINCRBY`](../../../databases/redis/data-structures/01-hash.md) работает для числовых полей (количество товаров) без read-modify-write.
+Два Puma-процесса могут одновременно вызвать `set_shipping` и `apply_promo` — каждый пишет в своё поле, конфликта нет. С JSON в STRING второй процесс перезаписал бы изменения первого. [`HINCRBY`](../../../databases/redis/data-structures/hash.md) работает для числовых полей (количество товаров) без read-modify-write.

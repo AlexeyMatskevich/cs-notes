@@ -1,6 +1,6 @@
 # Rate limiter на API-эндпоинте
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [STRING](../../../databases/redis/data-structures/00-string.md).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING](../../../databases/redis/data-structures/string.md).
 
 Биллинг-система выставляет партнёрам лимит — 100 запросов в минуту. При превышении API возвращает `429 Too Many Requests`. Требования: атомарный инкремент счётчика, автоматический сброс по окончании окна, минимальная задержка на каждый запрос.
 

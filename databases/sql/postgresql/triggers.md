@@ -1,8 +1,8 @@
 # Триггеры
 
-**Предпосылки:** [функции и процедуры](03-functions-and-procedures.md) (PL/pgSQL, RETURNS, BEGIN...END).
+**Предпосылки:** [функции и процедуры](functions-and-procedures.md) (PL/pgSQL, RETURNS, BEGIN...END).
 
-← [Функции и процедуры](03-functions-and-procedures.md)
+← [Функции и процедуры](functions-and-procedures.md)
 
 Функции и процедуры вызываются явно — приложение решает, когда выполнить `SELECT func()` или `CALL proc()`. Но некоторые инварианты нужно поддерживать при каждом изменении данных, независимо от того, кто его сделал: приложение, миграция, ручной SQL в psql. Триггер (trigger, англ. «спусковой крючок») — функция, которую PostgreSQL вызывает автоматически при INSERT, UPDATE или DELETE.
 
@@ -55,4 +55,4 @@ DROP TRIGGER IF EXISTS set_modified_at ON orders;
 
 ---
 
-← [Функции и процедуры](03-functions-and-procedures.md)
+← [Функции и процедуры](functions-and-procedures.md)

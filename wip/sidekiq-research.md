@@ -73,11 +73,11 @@ rails/
 | Файл серии (предварительно) | Предпосылки |
 |----------------------------|-------------|
 | Мотивация + архитектура | Нет (вводная) |
-| Как работает (lifecycle, Redis) | [Redis Lists](../databases/redis/data-structures/02-list.md), [Очереди в Redis](../databases/redis/patterns/03-queues.md) |
-| Гарантии + идемпотентность | [Гарантии доставки](../system-design/08-delivery-guarantees.md), [Reliability patterns](../system-design/06-reliability-patterns.md) |
+| Как работает (lifecycle, Redis) | [Redis Lists](../databases/redis/data-structures/list.md), [Очереди в Redis](../databases/redis/patterns/queues.md) |
+| Гарантии + идемпотентность | [Гарантии доставки](../system-design/delivery-guarantees.md), [Reliability patterns](../system-design/reliability-patterns.md) |
 | Retry + error handling | Предыдущие файлы серии |
-| Signals + deploy | [Сигналы](../linux/programming/00-signals.md) |
-| Concurrency + масштабирование | [Ruby concurrency](../ruby/ruby-concurrency.md), [Потоки](../linux/foundations/03-threads.md) |
+| Signals + deploy | [Сигналы](../linux/programming/signals.md) |
+| Concurrency + масштабирование | [Ruby concurrency](../ruby/ruby-concurrency.md), [Потоки](../linux/foundations/threads.md) |
 
 ### Каскадные обновления
 
