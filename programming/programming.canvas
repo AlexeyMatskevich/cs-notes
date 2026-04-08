@@ -1,0 +1,271 @@
+{
+  "nodes": [
+    {
+      "id": "node-programming",
+      "type": "file",
+      "file": "programming/programming.md",
+      "x": 0,
+      "y": 300,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "group-basic-tools",
+      "type": "group",
+      "label": "Базовые инструменты",
+      "x": 560,
+      "y": -20,
+      "width": 2620,
+      "height": 280
+    },
+    {
+      "id": "node-what-is-programming",
+      "type": "file",
+      "file": "programming/what-is-programming.md",
+      "x": 580,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-assembler",
+      "type": "file",
+      "file": "programming/assembler.md",
+      "x": 580,
+      "y": 180,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-variables-and-types",
+      "type": "file",
+      "file": "programming/variables-and-types.md",
+      "x": 1080,
+      "y": 90,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-conditions-and-io",
+      "type": "file",
+      "file": "programming/conditions-and-io.md",
+      "x": 1580,
+      "y": 90,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-loops",
+      "type": "file",
+      "file": "programming/loops.md",
+      "x": 2080,
+      "y": 90,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-functions",
+      "type": "file",
+      "file": "programming/functions.md",
+      "x": 2580,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-collections",
+      "type": "file",
+      "file": "programming/collections.md",
+      "x": 2580,
+      "y": 180,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "group-growth",
+      "type": "group",
+      "label": "Когда код растёт",
+      "x": 560,
+      "y": 380,
+      "width": 2120,
+      "height": 280
+    },
+    {
+      "id": "node-memory",
+      "type": "file",
+      "file": "programming/memory.md",
+      "x": 580,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-oop",
+      "type": "file",
+      "file": "programming/oop.md",
+      "x": 1080,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-inheritance",
+      "type": "file",
+      "file": "programming/inheritance-and-polymorphism.md",
+      "x": 1580,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-fp",
+      "type": "file",
+      "file": "programming/fp.md",
+      "x": 580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "group-failures",
+      "type": "group",
+      "label": "Сбои и запуск",
+      "x": 560,
+      "y": 780,
+      "width": 1120,
+      "height": 160
+    },
+    {
+      "id": "node-errors",
+      "type": "file",
+      "file": "programming/errors-and-exceptions.md",
+      "x": 580,
+      "y": 800,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-compilation",
+      "type": "file",
+      "file": "programming/compilation-and-interpretation.md",
+      "x": 1080,
+      "y": 800,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-programming-to-what",
+      "fromNode": "node-programming",
+      "toNode": "node-what-is-programming",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-programming-to-assembler",
+      "fromNode": "node-programming",
+      "toNode": "node-assembler",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-what-to-variables",
+      "fromNode": "node-what-is-programming",
+      "toNode": "node-variables-and-types",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-assembler-to-variables",
+      "fromNode": "node-assembler",
+      "toNode": "node-variables-and-types",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-variables-to-conditions",
+      "fromNode": "node-variables-and-types",
+      "toNode": "node-conditions-and-io",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-conditions-to-loops",
+      "fromNode": "node-conditions-and-io",
+      "toNode": "node-loops",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-loops-to-functions",
+      "fromNode": "node-loops",
+      "toNode": "node-functions",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-loops-to-collections",
+      "fromNode": "node-loops",
+      "toNode": "node-collections",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-collections-to-memory",
+      "fromNode": "node-collections",
+      "toNode": "node-memory",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-memory-to-oop",
+      "fromNode": "node-memory",
+      "toNode": "node-oop",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-oop-to-inheritance",
+      "fromNode": "node-oop",
+      "toNode": "node-inheritance",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-memory-to-fp",
+      "fromNode": "node-memory",
+      "toNode": "node-fp",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-functions-to-errors",
+      "fromNode": "node-functions",
+      "toNode": "node-errors",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-errors-to-compilation",
+      "fromNode": "node-errors",
+      "toNode": "node-compilation",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ]
+}

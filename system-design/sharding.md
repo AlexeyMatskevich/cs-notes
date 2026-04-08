@@ -89,6 +89,8 @@ Consistent hashing минимизирует объём миграции: при 
 
 Платформа с 3 шардами, каждый реплицирован на 2 реплики: 9 узлов суммарно. Primary шарда принимает записи, реплики обслуживают чтения и готовы к failover. Потеря одного узла не влияет на систему — реплика берёт на себя роль primary для своего шарда.
 
+Конкретные реализации этой схемы: [шардирование в PostgreSQL](../databases/postgresql/distribution/sharding.md) (application-level routing, Citus, FDW) и [Redis Cluster](../databases/redis/distribution/cluster.md) (16 384 слота, CRC16, MOVED/ASK).
+
 ## Sources
 
 - Kleppmann, M. *Designing Data-Intensive Applications*: Partitioning. <https://dataintensive.net/>

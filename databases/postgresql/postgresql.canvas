@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {"id": "node-overview", "type": "file", "file": "databases/postgresql/postgresql.md", "x": -200, "y": 440, "width": 400, "height": 60, "color": "1"},
+
+    {"id": "group-storage", "type": "group", "label": "Physical Storage", "x": 350, "y": -20, "width": 450, "height": 560},
+    {"id": "node-acid", "type": "file", "file": "databases/postgresql/storage/acid.md", "x": 370, "y": 20, "width": 400, "height": 60, "color": "1"},
+    {"id": "node-pages", "type": "file", "file": "databases/postgresql/storage/pages-and-tuples.md", "x": 370, "y": 140, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-toast", "type": "file", "file": "databases/postgresql/storage/toast.md", "x": 370, "y": 260, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-physical-layout", "type": "file", "file": "databases/postgresql/storage/physical-layout.md", "x": 370, "y": 380, "width": 400, "height": 60, "color": "4"},
+
+    {"id": "group-durability", "type": "group", "label": "Durability & Caching", "x": 950, "y": 100, "width": 450, "height": 320},
+    {"id": "node-wal", "type": "file", "file": "databases/postgresql/durability/wal.md", "x": 970, "y": 140, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-buffer-cache", "type": "file", "file": "databases/postgresql/durability/buffer-cache.md", "x": 970, "y": 260, "width": 400, "height": 60, "color": "4"},
+
+    {"id": "group-concurrency", "type": "group", "label": "Concurrency", "x": 1550, "y": -80, "width": 450, "height": 920},
+    {"id": "node-mvcc", "type": "file", "file": "databases/postgresql/concurrency/mvcc.md", "x": 1570, "y": -40, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-anomalies", "type": "file", "file": "databases/postgresql/concurrency/anomalies.md", "x": 1570, "y": 80, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-isolation", "type": "file", "file": "databases/postgresql/concurrency/isolation-levels.md", "x": 1570, "y": 200, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-locks", "type": "file", "file": "databases/postgresql/concurrency/locks.md", "x": 1570, "y": 320, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-patterns", "type": "file", "file": "databases/postgresql/concurrency/patterns.md", "x": 1570, "y": 440, "width": 400, "height": 60, "color": "6"},
+    {"id": "node-common-mistakes", "type": "file", "file": "databases/postgresql/concurrency/common-mistakes.md", "x": 1570, "y": 560, "width": 400, "height": 60, "color": "6"},
+    {"id": "node-queues", "type": "file", "file": "databases/postgresql/concurrency/queues-and-skip-locked.md", "x": 1570, "y": 680, "width": 400, "height": 60, "color": "6"},
+
+    {"id": "group-maintenance", "type": "group", "label": "Maintenance", "x": 2150, "y": 100, "width": 450, "height": 200},
+    {"id": "node-vacuum", "type": "file", "file": "databases/postgresql/maintenance/vacuum.md", "x": 2170, "y": 140, "width": 400, "height": 60, "color": "4"},
+
+    {"id": "group-indexes", "type": "group", "label": "Indexes", "x": 2750, "y": -140, "width": 450, "height": 860},
+    {"id": "node-btree", "type": "file", "file": "databases/postgresql/indexes/btree.md", "x": 2770, "y": -100, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-gin", "type": "file", "file": "databases/postgresql/indexes/gin.md", "x": 2770, "y": 20, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-gist", "type": "file", "file": "databases/postgresql/indexes/gist.md", "x": 2770, "y": 140, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-hash", "type": "file", "file": "databases/postgresql/indexes/hash.md", "x": 2770, "y": 260, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-brin", "type": "file", "file": "databases/postgresql/indexes/brin.md", "x": 2770, "y": 380, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-spgist", "type": "file", "file": "databases/postgresql/indexes/spgist.md", "x": 2770, "y": 500, "width": 400, "height": 60, "color": "5"},
+
+    {"id": "group-query-processing", "type": "group", "label": "Query Processing", "x": 3350, "y": -140, "width": 450, "height": 920},
+    {"id": "node-planner", "type": "file", "file": "databases/postgresql/query-processing/planner.md", "x": 3370, "y": -100, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-join-order", "type": "file", "file": "databases/postgresql/query-processing/join-order.md", "x": 3370, "y": 20, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-qp-subqueries", "type": "file", "file": "databases/postgresql/query-processing/subqueries-and-cte.md", "x": 3370, "y": 140, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-explain", "type": "file", "file": "databases/postgresql/query-processing/explain.md", "x": 3370, "y": 260, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-memory-spill", "type": "file", "file": "databases/postgresql/query-processing/memory-and-spill.md", "x": 3370, "y": 380, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-prepared", "type": "file", "file": "databases/postgresql/query-processing/prepared-statements.md", "x": 3370, "y": 500, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-diagnosing", "type": "file", "file": "databases/postgresql/query-processing/diagnosing-slow-queries.md", "x": 3370, "y": 620, "width": 400, "height": 60, "color": "6"},
+
+    {"id": "group-distribution", "type": "group", "label": "Distribution", "x": 3950, "y": 40, "width": 450, "height": 320},
+    {"id": "node-replication", "type": "file", "file": "databases/postgresql/distribution/replication.md", "x": 3970, "y": 80, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-sharding", "type": "file", "file": "databases/postgresql/distribution/sharding.md", "x": 3970, "y": 200, "width": 400, "height": 60, "color": "5"}
+  ],
+  "edges": [
+    {"id": "edge-overview-acid", "fromNode": "node-overview", "toNode": "node-acid", "fromSide": "right", "toSide": "left"},
+
+    {"id": "edge-acid-pages", "fromNode": "node-acid", "toNode": "node-pages", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-pages-toast", "fromNode": "node-pages", "toNode": "node-toast", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-toast-physical", "fromNode": "node-toast", "toNode": "node-physical-layout", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-physical-wal", "fromNode": "node-physical-layout", "toNode": "node-wal", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-wal-buffer", "fromNode": "node-wal", "toNode": "node-buffer-cache", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-buffer-mvcc", "fromNode": "node-buffer-cache", "toNode": "node-mvcc", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-mvcc-anomalies", "fromNode": "node-mvcc", "toNode": "node-anomalies", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-anomalies-isolation", "fromNode": "node-anomalies", "toNode": "node-isolation", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-isolation-locks", "fromNode": "node-isolation", "toNode": "node-locks", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-locks-patterns", "fromNode": "node-locks", "toNode": "node-patterns", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-patterns-mistakes", "fromNode": "node-patterns", "toNode": "node-common-mistakes", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-locks-queues", "fromNode": "node-locks", "toNode": "node-queues", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-mvcc-vacuum", "fromNode": "node-mvcc", "toNode": "node-vacuum", "fromSide": "right", "toSide": "left"},
+
+    {"id": "edge-vacuum-btree", "fromNode": "node-vacuum", "toNode": "node-btree", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-btree-gin", "fromNode": "node-btree", "toNode": "node-gin", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-gin-gist", "fromNode": "node-gin", "toNode": "node-gist", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-gist-hash", "fromNode": "node-gist", "toNode": "node-hash", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-hash-brin", "fromNode": "node-hash", "toNode": "node-brin", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-brin-spgist", "fromNode": "node-brin", "toNode": "node-spgist", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-btree-planner", "fromNode": "node-btree", "toNode": "node-planner", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-planner-join-order", "fromNode": "node-planner", "toNode": "node-join-order", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-join-order-subqueries", "fromNode": "node-join-order", "toNode": "node-qp-subqueries", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-subqueries-explain", "fromNode": "node-qp-subqueries", "toNode": "node-explain", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-explain-memory", "fromNode": "node-explain", "toNode": "node-memory-spill", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-memory-prepared", "fromNode": "node-memory-spill", "toNode": "node-prepared", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-prepared-diagnosing", "fromNode": "node-prepared", "toNode": "node-diagnosing", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-wal-replication", "fromNode": "node-wal", "toNode": "node-replication", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-replication-sharding", "fromNode": "node-replication", "toNode": "node-sharding", "fromSide": "bottom", "toSide": "top"}
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "nodes": [
+    {
+      "id": "redis-overview",
+      "type": "file",
+      "file": "databases/redis/redis.md",
+      "x": 0,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+
+    {"id": "grp-architecture", "type": "group", "label": "Архитектура", "x": 480, "y": -20, "width": 920, "height": 280},
+    {
+      "id": "arch-what-is-redis",
+      "type": "file",
+      "file": "databases/redis/architecture/what-is-redis.md",
+      "x": 500,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "arch-event-loop",
+      "type": "file",
+      "file": "databases/redis/architecture/event-loop.md",
+      "x": 500,
+      "y": 80,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "arch-pipelining",
+      "type": "file",
+      "file": "databases/redis/architecture/pipelining.md",
+      "x": 500,
+      "y": 160,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "arch-logical-databases",
+      "type": "file",
+      "file": "databases/redis/architecture/logical-databases.md",
+      "x": 960,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+
+    {"id": "grp-data-structures", "type": "group", "label": "Структуры данных", "x": 480, "y": 300, "width": 920, "height": 560},
+    {
+      "id": "ds-string",
+      "type": "file",
+      "file": "databases/redis/data-structures/string.md",
+      "x": 500,
+      "y": 320,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "ds-hash",
+      "type": "file",
+      "file": "databases/redis/data-structures/hash.md",
+      "x": 500,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "ds-list",
+      "type": "file",
+      "file": "databases/redis/data-structures/list.md",
+      "x": 500,
+      "y": 480,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "ds-set",
+      "type": "file",
+      "file": "databases/redis/data-structures/set.md",
+      "x": 500,
+      "y": 560,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "ds-sorted-set",
+      "type": "file",
+      "file": "databases/redis/data-structures/sorted-set.md",
+      "x": 500,
+      "y": 640,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "ds-stream",
+      "type": "file",
+      "file": "databases/redis/data-structures/stream.md",
+      "x": 960,
+      "y": 320,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "ds-hyperloglog",
+      "type": "file",
+      "file": "databases/redis/data-structures/hyperloglog.md",
+      "x": 960,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "ds-bitmap",
+      "type": "file",
+      "file": "databases/redis/data-structures/bitmap-and-bitfield.md",
+      "x": 960,
+      "y": 480,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "ds-pubsub",
+      "type": "file",
+      "file": "databases/redis/data-structures/pub-sub.md",
+      "x": 960,
+      "y": 560,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+
+    {"id": "grp-atomicity", "type": "group", "label": "Атомарность", "x": 1480, "y": 300, "width": 440, "height": 280},
+    {
+      "id": "atom-single",
+      "type": "file",
+      "file": "databases/redis/atomicity/single-command.md",
+      "x": 1500,
+      "y": 320,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "atom-multi",
+      "type": "file",
+      "file": "databases/redis/atomicity/multi-exec.md",
+      "x": 1500,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "atom-lua",
+      "type": "file",
+      "file": "databases/redis/atomicity/lua-scripting.md",
+      "x": 1500,
+      "y": 480,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+
+    {"id": "grp-persistence", "type": "group", "label": "Персистентность", "x": 1480, "y": -20, "width": 440, "height": 200},
+    {
+      "id": "pers-rdb",
+      "type": "file",
+      "file": "databases/redis/persistence/rdb.md",
+      "x": 1500,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "pers-aof",
+      "type": "file",
+      "file": "databases/redis/persistence/aof.md",
+      "x": 1500,
+      "y": 80,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+
+    {"id": "grp-memory", "type": "group", "label": "Управление памятью", "x": 2000, "y": -20, "width": 440, "height": 280},
+    {
+      "id": "mem-encodings",
+      "type": "file",
+      "file": "databases/redis/memory/encodings.md",
+      "x": 2020,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "mem-eviction",
+      "type": "file",
+      "file": "databases/redis/memory/eviction.md",
+      "x": 2020,
+      "y": 80,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "mem-key-design",
+      "type": "file",
+      "file": "databases/redis/memory/key-design.md",
+      "x": 2020,
+      "y": 160,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+
+    {"id": "grp-distribution", "type": "group", "label": "Распределение", "x": 2000, "y": 300, "width": 440, "height": 360},
+    {
+      "id": "dist-overview",
+      "type": "file",
+      "file": "databases/redis/distribution/overview.md",
+      "x": 2020,
+      "y": 320,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "dist-replication",
+      "type": "file",
+      "file": "databases/redis/distribution/replication.md",
+      "x": 2020,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "dist-sentinel",
+      "type": "file",
+      "file": "databases/redis/distribution/sentinel.md",
+      "x": 2020,
+      "y": 480,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "dist-cluster",
+      "type": "file",
+      "file": "databases/redis/distribution/cluster.md",
+      "x": 2020,
+      "y": 560,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+
+    {"id": "grp-patterns", "type": "group", "label": "Практические паттерны", "x": 2520, "y": 140, "width": 440, "height": 360},
+    {
+      "id": "pat-caching",
+      "type": "file",
+      "file": "databases/redis/patterns/caching.md",
+      "x": 2540,
+      "y": 160,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "pat-rate-limiting",
+      "type": "file",
+      "file": "databases/redis/patterns/rate-limiting.md",
+      "x": 2540,
+      "y": 240,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "pat-distributed-locks",
+      "type": "file",
+      "file": "databases/redis/patterns/distributed-locks.md",
+      "x": 2540,
+      "y": 320,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "pat-queues",
+      "type": "file",
+      "file": "databases/redis/patterns/queues.md",
+      "x": 2540,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    }
+  ],
+  "edges": [
+    {"id": "e-overview-arch", "fromNode": "redis-overview", "toNode": "arch-what-is-redis", "fromSide": "right", "toSide": "left"},
+    {"id": "e-what-event", "fromNode": "arch-what-is-redis", "toNode": "arch-event-loop", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-event-pipe", "fromNode": "arch-event-loop", "toNode": "arch-pipelining", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-what-logdb", "fromNode": "arch-what-is-redis", "toNode": "arch-logical-databases", "fromSide": "right", "toSide": "left"},
+
+    {"id": "e-overview-ds", "fromNode": "redis-overview", "toNode": "ds-string", "fromSide": "right", "toSide": "left"},
+    {"id": "e-ds-string-hash", "fromNode": "ds-string", "toNode": "ds-hash", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-hash-list", "fromNode": "ds-hash", "toNode": "ds-list", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-list-set", "fromNode": "ds-list", "toNode": "ds-set", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-set-zset", "fromNode": "ds-set", "toNode": "ds-sorted-set", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-string-stream", "fromNode": "ds-sorted-set", "toNode": "ds-stream", "fromSide": "right", "toSide": "left"},
+    {"id": "e-ds-stream-hll", "fromNode": "ds-stream", "toNode": "ds-hyperloglog", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-hll-bitmap", "fromNode": "ds-hyperloglog", "toNode": "ds-bitmap", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-ds-bitmap-pubsub", "fromNode": "ds-bitmap", "toNode": "ds-pubsub", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "e-ds-atom", "fromNode": "ds-sorted-set", "toNode": "atom-single", "fromSide": "right", "toSide": "left"},
+    {"id": "e-atom-single-multi", "fromNode": "atom-single", "toNode": "atom-multi", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-atom-multi-lua", "fromNode": "atom-multi", "toNode": "atom-lua", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "e-arch-pers", "fromNode": "arch-pipelining", "toNode": "pers-rdb", "fromSide": "right", "toSide": "left"},
+    {"id": "e-pers-rdb-aof", "fromNode": "pers-rdb", "toNode": "pers-aof", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "e-pers-mem", "fromNode": "pers-aof", "toNode": "mem-encodings", "fromSide": "right", "toSide": "left"},
+    {"id": "e-atom-mem", "fromNode": "atom-lua", "toNode": "mem-encodings", "fromSide": "right", "toSide": "left"},
+    {"id": "e-mem-enc-evict", "fromNode": "mem-encodings", "toNode": "mem-eviction", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-mem-evict-key", "fromNode": "mem-eviction", "toNode": "mem-key-design", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "e-pers-dist", "fromNode": "pers-aof", "toNode": "dist-overview", "fromSide": "right", "toSide": "left"},
+    {"id": "e-atom-dist", "fromNode": "atom-lua", "toNode": "dist-overview", "fromSide": "right", "toSide": "left"},
+    {"id": "e-dist-overview-repl", "fromNode": "dist-overview", "toNode": "dist-replication", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-dist-repl-sent", "fromNode": "dist-replication", "toNode": "dist-sentinel", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-dist-sent-cluster", "fromNode": "dist-sentinel", "toNode": "dist-cluster", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "e-mem-pat", "fromNode": "mem-key-design", "toNode": "pat-caching", "fromSide": "right", "toSide": "left"},
+    {"id": "e-dist-pat", "fromNode": "dist-cluster", "toNode": "pat-queues", "fromSide": "right", "toSide": "left"},
+    {"id": "e-pat-cache-rate", "fromNode": "pat-caching", "toNode": "pat-rate-limiting", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-pat-rate-locks", "fromNode": "pat-rate-limiting", "toNode": "pat-distributed-locks", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e-pat-locks-queues", "fromNode": "pat-distributed-locks", "toNode": "pat-queues", "fromSide": "bottom", "toSide": "top"}
+  ]
+}

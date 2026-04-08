@@ -350,7 +350,7 @@ SellerStats.increment(:revenue, event.data[:total])
 # Дубль: revenue += 8500 ещё раз — выручка завышена
 ```
 
-Решение — проекция хранит `last_processed_event_id`. Перед обработкой проверяет: событие уже обработано? Если да — пропускает. Тот же принцип [idempotency](reliability-patterns.md), но на стороне consumer-а.
+Решение — проекция хранит `last_processed_event_id`. Перед обработкой проверяет: событие уже обработано? Если да — пропускает. Тот же принцип [idempotency](reliability-patterns.md), но на стороне consumer-а. В Kafka цепочку consume-transform-produce можно обернуть в [транзакцию](../messaging/kafka/architecture/transactions.md), атомарно записав результат и коммит offset'а — это exactly-once на уровне брокера без ручной дедупликации.
 
 ```ruby
 def handle(event)

@@ -1,0 +1,218 @@
+{
+  "nodes": [
+    {
+      "id": "node-computer-overview",
+      "type": "file",
+      "file": "computer/computer.md",
+      "x": -200,
+      "y": 200,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "node-cpu",
+      "type": "file",
+      "file": "computer/cpu.md",
+      "x": 400,
+      "y": 200,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "group-data-path",
+      "type": "group",
+      "label": "Путь данных",
+      "x": 880,
+      "y": -120,
+      "width": 2600,
+      "height": 300
+    },
+    {
+      "id": "node-memory-hierarchy",
+      "type": "file",
+      "file": "computer/data-path/memory-hierarchy.md",
+      "x": 900,
+      "y": -100,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-cache-coherency",
+      "type": "file",
+      "file": "computer/data-path/cache-coherency.md",
+      "x": 1400,
+      "y": -100,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-ram",
+      "type": "file",
+      "file": "computer/data-path/ram.md",
+      "x": 1900,
+      "y": -100,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-storage",
+      "type": "file",
+      "file": "computer/data-path/storage.md",
+      "x": 2400,
+      "y": -100,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-buses-and-dma",
+      "type": "file",
+      "file": "computer/data-path/buses-and-dma.md",
+      "x": 2900,
+      "y": -100,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "group-programmer-model",
+      "type": "group",
+      "label": "Программная модель процессора",
+      "x": 880,
+      "y": 320,
+      "width": 1600,
+      "height": 300
+    },
+    {
+      "id": "node-isa",
+      "type": "file",
+      "file": "computer/programmer-model/isa.md",
+      "x": 900,
+      "y": 340,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-abi-and-data-layout",
+      "type": "file",
+      "file": "computer/programmer-model/abi-and-data-layout.md",
+      "x": 1400,
+      "y": 340,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-simd",
+      "type": "file",
+      "file": "computer/programmer-model/simd.md",
+      "x": 1900,
+      "y": 340,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-atomic-instructions",
+      "type": "file",
+      "file": "computer/atomic-instructions.md",
+      "x": 2600,
+      "y": 340,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-overview-to-cpu",
+      "fromNode": "node-computer-overview",
+      "toNode": "node-cpu",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cpu-to-memory-hierarchy",
+      "fromNode": "node-cpu",
+      "toNode": "node-memory-hierarchy",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cpu-to-isa",
+      "fromNode": "node-cpu",
+      "toNode": "node-isa",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-memory-hierarchy-to-cache-coherency",
+      "fromNode": "node-memory-hierarchy",
+      "toNode": "node-cache-coherency",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cache-coherency-to-ram",
+      "fromNode": "node-cache-coherency",
+      "toNode": "node-ram",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-ram-to-storage",
+      "fromNode": "node-ram",
+      "toNode": "node-storage",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-storage-to-buses-and-dma",
+      "fromNode": "node-storage",
+      "toNode": "node-buses-and-dma",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-isa-to-abi",
+      "fromNode": "node-isa",
+      "toNode": "node-abi-and-data-layout",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-abi-to-simd",
+      "fromNode": "node-abi-and-data-layout",
+      "toNode": "node-simd",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-data-path-to-atomic",
+      "fromNode": "node-buses-and-dma",
+      "toNode": "node-atomic-instructions",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-programmer-model-to-atomic",
+      "fromNode": "node-simd",
+      "toNode": "node-atomic-instructions",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cache-coherency-to-atomic",
+      "fromNode": "node-cache-coherency",
+      "toNode": "node-atomic-instructions",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ]
+}

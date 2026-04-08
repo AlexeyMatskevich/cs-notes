@@ -1,0 +1,366 @@
+{
+  "nodes": [
+    {
+      "id": "node-overview",
+      "type": "file",
+      "file": "algorithms-and-data-structures/algorithms-and-data-structures.md",
+      "x": 0,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "group-techniques",
+      "type": "group",
+      "label": "Техники",
+      "x": 560,
+      "y": -20,
+      "width": 440,
+      "height": 160
+    },
+    {
+      "id": "node-dynamic-programming",
+      "type": "file",
+      "file": "algorithms-and-data-structures/techniques/dynamic-programming.md",
+      "x": 580,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "group-linear",
+      "type": "group",
+      "label": "Линейные структуры",
+      "x": 560,
+      "y": 200,
+      "width": 3640,
+      "height": 280
+    },
+    {
+      "id": "node-adt",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/adt.md",
+      "x": 580,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-array",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/array.md",
+      "x": 1080,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-dynamic-array",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/dynamic-array.md",
+      "x": 1580,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-linked-list",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/linked-list.md",
+      "x": 2080,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-stack-queue-deque",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/stack-queue-deque.md",
+      "x": 2580,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-hash-table",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/hash-table.md",
+      "x": 3080,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-lru-cache",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/lru-cache.md",
+      "x": 3580,
+      "y": 220,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-clock-sweep",
+      "type": "file",
+      "file": "algorithms-and-data-structures/linear/clock-sweep.md",
+      "x": 3580,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "group-nonlinear",
+      "type": "group",
+      "label": "Нелинейные структуры",
+      "x": 560,
+      "y": 560,
+      "width": 4640,
+      "height": 480
+    },
+    {
+      "id": "node-graph",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/graph.md",
+      "x": 580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-tree",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/tree.md",
+      "x": 1080,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-binary-tree",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/binary-tree.md",
+      "x": 1580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-bst",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/binary-search-tree.md",
+      "x": 2080,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-heap",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/heap.md",
+      "x": 2080,
+      "y": 760,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-b-tree",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/b-tree.md",
+      "x": 2580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-b-plus-tree",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/b-plus-tree.md",
+      "x": 3080,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-b-star-tree",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/b-star-tree.md",
+      "x": 3580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-inverted-index",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/inverted-index.md",
+      "x": 4080,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-skip-list",
+      "type": "file",
+      "file": "algorithms-and-data-structures/non-linear/skip-list.md",
+      "x": 4580,
+      "y": 580,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-overview-to-dp",
+      "fromNode": "node-overview",
+      "toNode": "node-dynamic-programming",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-overview-to-adt",
+      "fromNode": "node-overview",
+      "toNode": "node-adt",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-overview-to-graph",
+      "fromNode": "node-overview",
+      "toNode": "node-graph",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-adt-to-array",
+      "fromNode": "node-adt",
+      "toNode": "node-array",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-array-to-dynamic-array",
+      "fromNode": "node-array",
+      "toNode": "node-dynamic-array",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-dynamic-array-to-linked-list",
+      "fromNode": "node-dynamic-array",
+      "toNode": "node-linked-list",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-linked-list-to-stack-queue",
+      "fromNode": "node-linked-list",
+      "toNode": "node-stack-queue-deque",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-stack-queue-to-hash-table",
+      "fromNode": "node-stack-queue-deque",
+      "toNode": "node-hash-table",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-hash-table-to-lru",
+      "fromNode": "node-hash-table",
+      "toNode": "node-lru-cache",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-lru-to-clock-sweep",
+      "fromNode": "node-lru-cache",
+      "toNode": "node-clock-sweep",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-graph-to-tree",
+      "fromNode": "node-graph",
+      "toNode": "node-tree",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-tree-to-binary-tree",
+      "fromNode": "node-tree",
+      "toNode": "node-binary-tree",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-binary-tree-to-bst",
+      "fromNode": "node-binary-tree",
+      "toNode": "node-bst",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-binary-tree-to-heap",
+      "fromNode": "node-binary-tree",
+      "toNode": "node-heap",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-bst-to-b-tree",
+      "fromNode": "node-bst",
+      "toNode": "node-b-tree",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-b-tree-to-b-plus",
+      "fromNode": "node-b-tree",
+      "toNode": "node-b-plus-tree",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-b-plus-to-b-star",
+      "fromNode": "node-b-plus-tree",
+      "toNode": "node-b-star-tree",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-b-star-to-inverted-index",
+      "fromNode": "node-b-star-tree",
+      "toNode": "node-inverted-index",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-inverted-index-to-skip-list",
+      "fromNode": "node-inverted-index",
+      "toNode": "node-skip-list",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ]
+}

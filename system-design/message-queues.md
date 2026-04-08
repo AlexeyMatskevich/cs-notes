@@ -248,6 +248,8 @@ Queue depth, consumer lag, error rate — каждая метрика требу
 - [Sidekiq: retry и обработка ошибок](../rails/sidekiq/retry-and-errors.md) — формула retry, sorted sets, Dead Letter Queue
 - [Очереди на Redis](../databases/redis/patterns/queues.md) — реализация через LIST, LMOVE, Streams
 - [Redis Streams](../databases/redis/data-structures/stream.md) — log-based структура с consumer groups
+- [Очереди в PostgreSQL](../databases/postgresql/concurrency/queues-and-skip-locked.md) — `FOR UPDATE SKIP LOCKED` как альтернатива внешнему брокеру
+- [Kafka: consumer internals](../messaging/kafka/architecture/consumer-internals.md) — poll loop, offset commit, rebalancing
 - [Бронирование отелей](cases/hotel-booking.md) — async-обработка и state machine заказа
 
 ## Sources

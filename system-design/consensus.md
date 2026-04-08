@@ -168,6 +168,7 @@ Committed запись есть на большинстве узлов. Новы
 | CockroachDB | Распределённая SQL БД (консенсус на каждый range данных) |
 | TiKV | Distributed KV под TiDB |
 | Patroni | Выбор лидера для PostgreSQL HA-кластера |
+| Kafka (KRaft) | [Выбор controller'а и partition leader](../messaging/kafka/architecture/replication.md) без внешнего ZooKeeper |
 
 ### Patroni: консенсус для PostgreSQL
 

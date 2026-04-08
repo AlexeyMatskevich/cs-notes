@@ -1,0 +1,355 @@
+{
+  "nodes": [
+    {
+      "id": "group-theory",
+      "type": "group",
+      "label": "Распределённые системы: теория",
+      "x": 0,
+      "y": -40,
+      "width": 2700,
+      "height": 280
+    },
+    {
+      "id": "node-overview",
+      "type": "file",
+      "file": "system-design/system-design.md",
+      "x": -600,
+      "y": 80,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-replication",
+      "type": "file",
+      "file": "system-design/replication.md",
+      "x": 20,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-sharding",
+      "type": "file",
+      "file": "system-design/sharding.md",
+      "x": 20,
+      "y": 140,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-cap",
+      "type": "file",
+      "file": "system-design/cap-theorem.md",
+      "x": 500,
+      "y": 70,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-consistency",
+      "type": "file",
+      "file": "system-design/consistency-models.md",
+      "x": 1020,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-conflict",
+      "type": "file",
+      "file": "system-design/conflict-resolution.md",
+      "x": 1540,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-consensus",
+      "type": "file",
+      "file": "system-design/consensus.md",
+      "x": 1540,
+      "y": 140,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "group-blocks",
+      "type": "group",
+      "label": "Строительные блоки",
+      "x": 0,
+      "y": 340,
+      "width": 2700,
+      "height": 420
+    },
+    {
+      "id": "node-profiles",
+      "type": "file",
+      "file": "system-design/read-write-profiles.md",
+      "x": 20,
+      "y": 380,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-lb",
+      "type": "file",
+      "file": "system-design/load-balancing.md",
+      "x": 20,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-reliability",
+      "type": "file",
+      "file": "system-design/reliability-patterns.md",
+      "x": 500,
+      "y": 380,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-caching",
+      "type": "file",
+      "file": "system-design/caching.md",
+      "x": 500,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-delivery",
+      "type": "file",
+      "file": "system-design/delivery-guarantees.md",
+      "x": 1020,
+      "y": 380,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-queues",
+      "type": "file",
+      "file": "system-design/message-queues.md",
+      "x": 1020,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-storage",
+      "type": "file",
+      "file": "system-design/storage-selection.md",
+      "x": 1540,
+      "y": 380,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-api",
+      "type": "file",
+      "file": "system-design/api-design.md",
+      "x": 1540,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "group-patterns",
+      "type": "group",
+      "label": "Паттерны проектирования",
+      "x": 0,
+      "y": 860,
+      "width": 1400,
+      "height": 280
+    },
+    {
+      "id": "node-microservices",
+      "type": "file",
+      "file": "system-design/microservices.md",
+      "x": 20,
+      "y": 900,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-eda",
+      "type": "file",
+      "file": "system-design/event-driven-architecture.md",
+      "x": 500,
+      "y": 900,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "group-cases",
+      "type": "group",
+      "label": "Case Studies",
+      "x": 0,
+      "y": 1040,
+      "width": 900,
+      "height": 80
+    },
+    {
+      "id": "node-hotel",
+      "type": "file",
+      "file": "system-design/cases/hotel-booking.md",
+      "x": 20,
+      "y": 1050,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-overview-to-replication",
+      "fromNode": "node-overview",
+      "toNode": "node-replication",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-overview-to-sharding",
+      "fromNode": "node-overview",
+      "toNode": "node-sharding",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-replication-to-cap",
+      "fromNode": "node-replication",
+      "toNode": "node-cap",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-sharding-to-cap",
+      "fromNode": "node-sharding",
+      "toNode": "node-cap",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cap-to-consistency",
+      "fromNode": "node-cap",
+      "toNode": "node-consistency",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-consistency-to-conflict",
+      "fromNode": "node-consistency",
+      "toNode": "node-conflict",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-consistency-to-consensus",
+      "fromNode": "node-consistency",
+      "toNode": "node-consensus",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-overview-to-profiles",
+      "fromNode": "node-overview",
+      "toNode": "node-profiles",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-profiles-to-lb",
+      "fromNode": "node-profiles",
+      "toNode": "node-lb",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-lb-to-reliability",
+      "fromNode": "node-lb",
+      "toNode": "node-reliability",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-profiles-to-caching",
+      "fromNode": "node-profiles",
+      "toNode": "node-caching",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-reliability-to-delivery",
+      "fromNode": "node-reliability",
+      "toNode": "node-delivery",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-delivery-to-queues",
+      "fromNode": "node-delivery",
+      "toNode": "node-queues",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-caching-to-storage",
+      "fromNode": "node-caching",
+      "toNode": "node-storage",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-queues-to-api",
+      "fromNode": "node-queues",
+      "toNode": "node-api",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-queues-to-microservices",
+      "fromNode": "node-queues",
+      "toNode": "node-microservices",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-api-to-microservices",
+      "fromNode": "node-api",
+      "toNode": "node-microservices",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-microservices-to-eda",
+      "fromNode": "node-microservices",
+      "toNode": "node-eda",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-microservices-to-hotel",
+      "fromNode": "node-microservices",
+      "toNode": "node-hotel",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ]
+}

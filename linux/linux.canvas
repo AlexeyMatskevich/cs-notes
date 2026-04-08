@@ -1,0 +1,587 @@
+{
+  "nodes": [
+    {
+      "id": "node-linux-overview",
+      "type": "file",
+      "file": "linux/linux.md",
+      "x": -200,
+      "y": 400,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "group-foundations",
+      "type": "group",
+      "label": "Ядро курса",
+      "x": 280,
+      "y": -20,
+      "width": 4700,
+      "height": 300
+    },
+    {
+      "id": "node-what-is-os",
+      "type": "file",
+      "file": "linux/foundations/what-is-os.md",
+      "x": 300,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "1"
+    },
+    {
+      "id": "node-cpu-modes-and-syscalls",
+      "type": "file",
+      "file": "linux/foundations/cpu-modes-and-syscalls.md",
+      "x": 800,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-processes",
+      "type": "file",
+      "file": "linux/foundations/processes.md",
+      "x": 1300,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-threads",
+      "type": "file",
+      "file": "linux/foundations/threads.md",
+      "x": 1800,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-file-descriptors",
+      "type": "file",
+      "file": "linux/foundations/file-descriptors.md",
+      "x": 2300,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-virtual-memory",
+      "type": "file",
+      "file": "linux/foundations/virtual-memory.md",
+      "x": 2800,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-filesystems",
+      "type": "file",
+      "file": "linux/foundations/filesystems.md",
+      "x": 3300,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-scheduler",
+      "type": "file",
+      "file": "linux/foundations/scheduler.md",
+      "x": 3800,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "node-permissions",
+      "type": "file",
+      "file": "linux/foundations/permissions-and-capabilities.md",
+      "x": 4300,
+      "y": 0,
+      "width": 440,
+      "height": 60,
+      "color": "4"
+    },
+    {
+      "id": "group-concurrency",
+      "type": "group",
+      "label": "Конкурентность",
+      "x": 280,
+      "y": 500,
+      "width": 1700,
+      "height": 300
+    },
+    {
+      "id": "node-synchronization",
+      "type": "file",
+      "file": "linux/concurrency/synchronization.md",
+      "x": 300,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-memory-ordering",
+      "type": "file",
+      "file": "linux/concurrency/memory-ordering.md",
+      "x": 800,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-lock-free",
+      "type": "file",
+      "file": "linux/concurrency/lock-free.md",
+      "x": 1300,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "group-programming",
+      "type": "group",
+      "label": "Системное программирование",
+      "x": 2100,
+      "y": 500,
+      "width": 3700,
+      "height": 300
+    },
+    {
+      "id": "node-signals",
+      "type": "file",
+      "file": "linux/programming/signals.md",
+      "x": 2120,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-memory-mapping",
+      "type": "file",
+      "file": "linux/programming/memory-mapping.md",
+      "x": 2620,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-file-io",
+      "type": "file",
+      "file": "linux/programming/file-io.md",
+      "x": 3120,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-sockets",
+      "type": "file",
+      "file": "linux/programming/sockets.md",
+      "x": 3620,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-io-multiplexing",
+      "type": "file",
+      "file": "linux/programming/io-multiplexing.md",
+      "x": 4120,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-prog-memory-management",
+      "type": "file",
+      "file": "linux/programming/memory-management.md",
+      "x": 4620,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-ipc",
+      "type": "file",
+      "file": "linux/programming/ipc.md",
+      "x": 5120,
+      "y": 520,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "group-kernel",
+      "type": "group",
+      "label": "Ядро",
+      "x": 280,
+      "y": 1000,
+      "width": 2700,
+      "height": 300
+    },
+    {
+      "id": "node-syscall-internals",
+      "type": "file",
+      "file": "linux/kernel/syscall-internals.md",
+      "x": 300,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-interrupts",
+      "type": "file",
+      "file": "linux/kernel/interrupts.md",
+      "x": 800,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-devices-and-drivers",
+      "type": "file",
+      "file": "linux/kernel/devices-and-drivers.md",
+      "x": 1300,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-network-stack",
+      "type": "file",
+      "file": "linux/kernel/network-stack.md",
+      "x": 1800,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-kernel-memory-management",
+      "type": "file",
+      "file": "linux/kernel/memory-management.md",
+      "x": 2300,
+      "y": 1020,
+      "width": 440,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "group-infrastructure",
+      "type": "group",
+      "label": "Инфраструктура",
+      "x": 3200,
+      "y": 1000,
+      "width": 2200,
+      "height": 300
+    },
+    {
+      "id": "node-elf-and-linking",
+      "type": "file",
+      "file": "linux/infrastructure/elf-and-linking.md",
+      "x": 3220,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-terminals",
+      "type": "file",
+      "file": "linux/infrastructure/terminals.md",
+      "x": 3720,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-tracing",
+      "type": "file",
+      "file": "linux/infrastructure/tracing.md",
+      "x": 4220,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-boot",
+      "type": "file",
+      "file": "linux/infrastructure/boot.md",
+      "x": 4720,
+      "y": 1020,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "group-containers",
+      "type": "group",
+      "label": "Контейнеры",
+      "x": 280,
+      "y": 1500,
+      "width": 1200,
+      "height": 300
+    },
+    {
+      "id": "node-namespaces-and-cgroups",
+      "type": "file",
+      "file": "linux/containers/namespaces-and-cgroups.md",
+      "x": 300,
+      "y": 1520,
+      "width": 440,
+      "height": 60,
+      "color": "5"
+    },
+    {
+      "id": "node-containers",
+      "type": "file",
+      "file": "linux/containers/containers.md",
+      "x": 840,
+      "y": 1520,
+      "width": 400,
+      "height": 60,
+      "color": "5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-overview-to-what-is-os",
+      "fromNode": "node-linux-overview",
+      "toNode": "node-what-is-os",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-what-is-os-to-cpu-modes",
+      "fromNode": "node-what-is-os",
+      "toNode": "node-cpu-modes-and-syscalls",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-cpu-modes-to-processes",
+      "fromNode": "node-cpu-modes-and-syscalls",
+      "toNode": "node-processes",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-processes-to-threads",
+      "fromNode": "node-processes",
+      "toNode": "node-threads",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-threads-to-file-descriptors",
+      "fromNode": "node-threads",
+      "toNode": "node-file-descriptors",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-file-descriptors-to-virtual-memory",
+      "fromNode": "node-file-descriptors",
+      "toNode": "node-virtual-memory",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-virtual-memory-to-filesystems",
+      "fromNode": "node-virtual-memory",
+      "toNode": "node-filesystems",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-filesystems-to-scheduler",
+      "fromNode": "node-filesystems",
+      "toNode": "node-scheduler",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-scheduler-to-permissions",
+      "fromNode": "node-scheduler",
+      "toNode": "node-permissions",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-threads-to-synchronization",
+      "fromNode": "node-threads",
+      "toNode": "node-synchronization",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-virtual-memory-to-synchronization",
+      "fromNode": "node-virtual-memory",
+      "toNode": "node-synchronization",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-synchronization-to-memory-ordering",
+      "fromNode": "node-synchronization",
+      "toNode": "node-memory-ordering",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-memory-ordering-to-lock-free",
+      "fromNode": "node-memory-ordering",
+      "toNode": "node-lock-free",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-permissions-to-signals",
+      "fromNode": "node-permissions",
+      "toNode": "node-signals",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-signals-to-memory-mapping",
+      "fromNode": "node-signals",
+      "toNode": "node-memory-mapping",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-memory-mapping-to-file-io",
+      "fromNode": "node-memory-mapping",
+      "toNode": "node-file-io",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-file-io-to-sockets",
+      "fromNode": "node-file-io",
+      "toNode": "node-sockets",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-sockets-to-io-multiplexing",
+      "fromNode": "node-sockets",
+      "toNode": "node-io-multiplexing",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-io-multiplexing-to-prog-memory",
+      "fromNode": "node-io-multiplexing",
+      "toNode": "node-prog-memory-management",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-prog-memory-to-ipc",
+      "fromNode": "node-prog-memory-management",
+      "toNode": "node-ipc",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-programming-to-syscall-internals",
+      "fromNode": "node-signals",
+      "toNode": "node-syscall-internals",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-syscall-internals-to-interrupts",
+      "fromNode": "node-syscall-internals",
+      "toNode": "node-interrupts",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-interrupts-to-devices",
+      "fromNode": "node-interrupts",
+      "toNode": "node-devices-and-drivers",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-devices-to-network-stack",
+      "fromNode": "node-devices-and-drivers",
+      "toNode": "node-network-stack",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-network-stack-to-kernel-memory",
+      "fromNode": "node-network-stack",
+      "toNode": "node-kernel-memory-management",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-foundations-to-elf",
+      "fromNode": "node-permissions",
+      "toNode": "node-elf-and-linking",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-elf-to-terminals",
+      "fromNode": "node-elf-and-linking",
+      "toNode": "node-terminals",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-terminals-to-tracing",
+      "fromNode": "node-terminals",
+      "toNode": "node-tracing",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-tracing-to-boot",
+      "fromNode": "node-tracing",
+      "toNode": "node-boot",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-kernel-to-namespaces",
+      "fromNode": "node-syscall-internals",
+      "toNode": "node-namespaces-and-cgroups",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "edge-namespaces-to-containers",
+      "fromNode": "node-namespaces-and-cgroups",
+      "toNode": "node-containers",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ]
+}
