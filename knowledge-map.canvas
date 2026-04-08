@@ -1,349 +1,44 @@
 {
-  "nodes": [
-    {
-      "id": "group-foundations",
-      "type": "group",
-      "label": "Основы представления данных",
-      "x": 0,
-      "y": 0,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-foundations",
-      "type": "file",
-      "file": "foundations/foundations.md",
-      "x": 20,
-      "y": 20,
-      "width": 400,
-      "height": 60,
-      "color": "1"
-    },
-    {
-      "id": "group-programming",
-      "type": "group",
-      "label": "Программирование",
-      "x": 0,
-      "y": 200,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-programming",
-      "type": "file",
-      "file": "programming/programming.md",
-      "x": 20,
-      "y": 220,
-      "width": 400,
-      "height": 60,
-      "color": "1"
-    },
-    {
-      "id": "group-algorithms",
-      "type": "group",
-      "label": "Алгоритмы и структуры данных",
-      "x": 640,
-      "y": 0,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-algorithms",
-      "type": "file",
-      "file": "algorithms-and-data-structures/algorithms-and-data-structures.md",
-      "x": 660,
-      "y": 20,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "group-computer",
-      "type": "group",
-      "label": "Архитектура компьютера",
-      "x": 640,
-      "y": 200,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-computer",
-      "type": "file",
-      "file": "computer/computer.md",
-      "x": 660,
-      "y": 220,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "group-networking",
-      "type": "group",
-      "label": "Компьютерные сети",
-      "x": 640,
-      "y": 400,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-networking",
-      "type": "file",
-      "file": "networking/networking.md",
-      "x": 660,
-      "y": 420,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "group-linux",
-      "type": "group",
-      "label": "Linux",
-      "x": 1280,
-      "y": 200,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-linux",
-      "type": "file",
-      "file": "linux/linux.md",
-      "x": 1300,
-      "y": 220,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "group-sql",
-      "type": "group",
-      "label": "SQL",
-      "x": 1280,
-      "y": 0,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-sql",
-      "type": "file",
-      "file": "databases/sql/sql.md",
-      "x": 1300,
-      "y": 20,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "group-postgresql",
-      "type": "group",
-      "label": "PostgreSQL",
-      "x": 1920,
-      "y": 0,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-postgresql",
-      "type": "file",
-      "file": "databases/postgresql/postgresql.md",
-      "x": 1940,
-      "y": 20,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "group-redis",
-      "type": "group",
-      "label": "Redis",
-      "x": 1920,
-      "y": 200,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-redis",
-      "type": "file",
-      "file": "databases/redis/redis.md",
-      "x": 1940,
-      "y": 220,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "group-system-design",
-      "type": "group",
-      "label": "System Design",
-      "x": 1280,
-      "y": 400,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-system-design",
-      "type": "file",
-      "file": "system-design/system-design.md",
-      "x": 1300,
-      "y": 420,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "group-messaging",
-      "type": "group",
-      "label": "Messaging",
-      "x": 1920,
-      "y": 400,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-messaging",
-      "type": "file",
-      "file": "messaging/messaging.md",
-      "x": 1940,
-      "y": 420,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "group-ruby",
-      "type": "group",
-      "label": "Ruby",
-      "x": 640,
-      "y": 600,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-ruby",
-      "type": "file",
-      "file": "ruby/ruby.md",
-      "x": 660,
-      "y": 620,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "group-rails",
-      "type": "group",
-      "label": "Rails",
-      "x": 1280,
-      "y": 600,
-      "width": 440,
-      "height": 100
-    },
-    {
-      "id": "node-rails",
-      "type": "file",
-      "file": "rails/rails.md",
-      "x": 1300,
-      "y": 620,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    }
-  ],
-  "edges": [
-    {
-      "id": "edge-programming-to-algorithms",
-      "fromNode": "node-programming",
-      "toNode": "node-algorithms",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "переменные, циклы, функции, указатели"
-    },
-    {
-      "id": "edge-programming-to-computer",
-      "fromNode": "node-programming",
-      "toNode": "node-computer",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "переменные, циклы, функции"
-    },
-    {
-      "id": "edge-programming-to-sql",
-      "fromNode": "node-programming",
-      "toNode": "node-sql",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "типы, функции, условия"
-    },
-    {
-      "id": "edge-computer-to-linux",
-      "fromNode": "node-computer",
-      "toNode": "node-linux",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "CPU, кеш, RAM, DMA"
-    },
-    {
-      "id": "edge-sql-to-postgresql",
-      "fromNode": "node-sql",
-      "toNode": "node-postgresql",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "SELECT, DML, транзакции, ACID"
-    },
-    {
-      "id": "edge-algorithms-to-redis",
-      "fromNode": "node-algorithms",
-      "toNode": "node-redis",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "массив, хеш-таблица, список"
-    },
-    {
-      "id": "edge-networking-to-system-design",
-      "fromNode": "node-networking",
-      "toNode": "node-system-design",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "клиент-сервер, протоколы"
-    },
-    {
-      "id": "edge-algorithms-to-system-design",
-      "fromNode": "node-algorithms",
-      "toNode": "node-system-design",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "label": "структуры данных"
-    },
-    {
-      "id": "edge-system-design-to-messaging",
-      "fromNode": "node-system-design",
-      "toNode": "node-messaging",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "delivery guarantees, message queues"
-    },
-    {
-      "id": "edge-programming-to-ruby",
-      "fromNode": "node-programming",
-      "toNode": "node-ruby",
-      "fromSide": "bottom",
-      "toSide": "left",
-      "label": "базовое программирование"
-    },
-    {
-      "id": "edge-ruby-to-rails",
-      "fromNode": "node-ruby",
-      "toNode": "node-rails",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "Ruby"
-    },
-    {
-      "id": "edge-linux-to-redis",
-      "fromNode": "node-linux",
-      "toNode": "node-redis",
-      "fromSide": "right",
-      "toSide": "left",
-      "label": "fork, COW, fsync"
-    }
-  ]
+	"nodes":[
+		{"id":"group-foundations","type":"group","x":-260,"y":-130,"width":440,"height":100,"label":"Основы представления данных"},
+		{"id":"group-programming","type":"group","x":-260,"y":200,"width":440,"height":100,"label":"Программирование"},
+		{"id":"group-algorithms","type":"group","x":640,"y":-180,"width":440,"height":100,"label":"Алгоритмы и структуры данных"},
+		{"id":"group-computer","type":"group","x":640,"y":200,"width":440,"height":100,"label":"Архитектура компьютера"},
+		{"id":"group-networking","type":"group","x":640,"y":560,"width":440,"height":100,"label":"Компьютерные сети"},
+		{"id":"group-linux","type":"group","x":1660,"y":200,"width":440,"height":100,"label":"Linux"},
+		{"id":"group-sql","type":"group","x":1660,"y":-230,"width":440,"height":100,"label":"SQL"},
+		{"id":"group-postgresql","type":"group","x":2420,"y":-230,"width":440,"height":100,"label":"PostgreSQL"},
+		{"id":"group-redis","type":"group","x":2420,"y":200,"width":440,"height":100,"label":"Redis"},
+		{"id":"group-system-design","type":"group","x":1360,"y":360,"width":440,"height":100,"label":"System Design"},
+		{"id":"group-messaging","type":"group","x":2500,"y":560,"width":440,"height":100,"label":"Messaging"},
+		{"id":"group-ruby","type":"group","x":640,"y":840,"width":440,"height":100,"label":"Ruby"},
+		{"id":"group-rails","type":"group","x":1480,"y":840,"width":440,"height":100,"label":"Rails"},
+		{"id":"node-programming","type":"file","file":"programming/programming.md","x":-240,"y":220,"width":400,"height":60,"color":"1"},
+		{"id":"node-computer","type":"file","file":"computer/computer.md","x":660,"y":220,"width":400,"height":60,"color":"4"},
+		{"id":"node-redis","type":"file","file":"databases/redis/redis.md","x":2440,"y":220,"width":400,"height":60,"color":"5"},
+		{"id":"node-rails","type":"file","file":"rails/rails.md","x":1500,"y":860,"width":400,"height":60,"color":"6"},
+		{"id":"node-ruby","type":"file","file":"ruby/ruby.md","x":660,"y":860,"width":400,"height":60,"color":"6"},
+		{"id":"node-networking","type":"file","file":"networking/networking.md","x":660,"y":580,"width":400,"height":60,"color":"4"},
+		{"id":"node-messaging","type":"file","file":"messaging/messaging.md","x":2520,"y":580,"width":400,"height":60,"color":"6"},
+		{"id":"node-linux","type":"file","file":"linux/linux.md","x":1680,"y":220,"width":400,"height":60,"color":"4"},
+		{"id":"node-algorithms","type":"file","file":"algorithms-and-data-structures/algorithms-and-data-structures.md","x":660,"y":-160,"width":400,"height":60,"color":"4"},
+		{"id":"node-postgresql","type":"file","file":"databases/postgresql/postgresql.md","x":2440,"y":-210,"width":400,"height":60,"color":"5"},
+		{"id":"node-sql","type":"file","file":"databases/sql/sql.md","x":1680,"y":-210,"width":400,"height":60,"color":"5"},
+		{"id":"node-system-design","type":"file","file":"system-design/system-design.md","x":1380,"y":380,"width":400,"height":60,"color":"5"},
+		{"id":"node-foundations","type":"file","file":"foundations/foundations.md","x":-240,"y":-110,"width":400,"height":60,"color":"1"}
+	],
+	"edges":[
+		{"id":"edge-programming-to-algorithms","fromNode":"node-programming","fromSide":"right","toNode":"node-algorithms","toSide":"left","label":"переменные, циклы, функции, указатели"},
+		{"id":"edge-programming-to-computer","fromNode":"node-programming","fromSide":"right","toNode":"node-computer","toSide":"left","label":"переменные, циклы, функции"},
+		{"id":"edge-programming-to-sql","fromNode":"node-programming","fromSide":"right","toNode":"node-sql","toSide":"left","label":"типы, функции, условия"},
+		{"id":"edge-computer-to-linux","fromNode":"node-computer","fromSide":"right","toNode":"node-linux","toSide":"left","label":"CPU, кеш, RAM, DMA"},
+		{"id":"edge-sql-to-postgresql","fromNode":"node-sql","fromSide":"right","toNode":"node-postgresql","toSide":"left","label":"SELECT, DML, транзакции, ACID"},
+		{"id":"edge-algorithms-to-redis","fromNode":"node-algorithms","fromSide":"right","toNode":"node-redis","toSide":"left","label":"массив, хеш-таблица, список"},
+		{"id":"edge-networking-to-system-design","fromNode":"node-networking","fromSide":"right","toNode":"node-system-design","toSide":"left","label":"клиент-сервер, протоколы"},
+		{"id":"edge-algorithms-to-system-design","fromNode":"node-algorithms","fromSide":"bottom","toNode":"node-system-design","toSide":"top","label":"структуры данных"},
+		{"id":"edge-system-design-to-messaging","fromNode":"node-system-design","fromSide":"right","toNode":"node-messaging","toSide":"left","label":"delivery guarantees, message queues"},
+		{"id":"edge-programming-to-ruby","fromNode":"node-programming","fromSide":"bottom","toNode":"node-ruby","toSide":"left","label":"базовое программирование"},
+		{"id":"edge-ruby-to-rails","fromNode":"node-ruby","fromSide":"right","toNode":"node-rails","toSide":"left","label":"Ruby"},
+		{"id":"edge-linux-to-redis","fromNode":"node-linux","fromSide":"right","toNode":"node-redis","toSide":"left","label":"fork, COW, fsync"}
+	]
 }
