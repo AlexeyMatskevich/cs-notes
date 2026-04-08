@@ -1,11 +1,7 @@
 # Миграции
 
-<details>
-<summary>Предпосылки</summary>
-
-Полный список предпосылок — в каждой заметке серии. Для входа в серию достаточно: [таблицы и типы](../sql/schema/00-tables-and-types.md) (ALTER TABLE, DEFAULT), [ограничения](../sql/schema/01-constraints.md) (NOT NULL, FK, CHECK), [индексы](../sql/schema/04-indexes.md) (CREATE INDEX), [транзакции](../sql/modification/01-transactions.md) (BEGIN/COMMIT/ROLLBACK), [блокировки](../postgresql/concurrency/03-locks.md) (уровни блокировок, очередь, lock_timeout).
-
-</details>
+> [!info]- Предпосылки
+> Полный список предпосылок — в каждой заметке серии. Для входа в серию достаточно: [таблицы и типы](../sql/schema/00-tables-and-types.md) (ALTER TABLE, DEFAULT), [ограничения](../sql/schema/01-constraints.md) (NOT NULL, FK, CHECK), [индексы](../sql/schema/04-indexes.md) (CREATE INDEX), [транзакции](../sql/modification/01-transactions.md) (BEGIN/COMMIT/ROLLBACK), [блокировки](../postgresql/concurrency/03-locks.md) (уровни блокировок, очередь, lock_timeout).
 
 Добавить столбец, создать индекс, навесить ограничение — на пустой таблице в dev-среде всё мгновенно. Но таблица `orders` — 50 миллионов строк, 400 записей в секунду. Приложение обслуживает пользователей, остановить его нельзя. Тот же ALTER TABLE, который в dev занял миллисекунды, в production может заблокировать все запросы.
 

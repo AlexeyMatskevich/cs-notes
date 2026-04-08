@@ -1,11 +1,7 @@
 # Hash
 
-<details>
-<summary>Предпосылки</summary>
-
-[хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](00-array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты).
-
-</details>
+> [!info]- Предпосылки
+> [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](00-array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты).
 
 ← [Array](00-array.md) | [String](02-string.md) →
 

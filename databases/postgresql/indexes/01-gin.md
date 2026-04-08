@@ -113,7 +113,7 @@ INSERT: (postgresql, TID1) (gin, TID1) (index, TID1) ...
                          |
                          v
   +----------------------------------------------+
-  | Pending List (несортированный, append-only)   |
+  | Pending List (несортированный, append-only)  |
   | (postgresql,TID1) (gin,TID1) (index,TID1)... |
   +----------------------------------------------+
                          |
@@ -121,7 +121,7 @@ INSERT: (postgresql, TID1) (gin, TID1) (index, TID1) ...
                          |
                          v
   +----------------------------------------------+
-  | Entry Tree + Posting Lists (основная часть)   |
+  | Entry Tree + Posting Lists (основная часть)  |
   +----------------------------------------------+
 ```
 

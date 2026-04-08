@@ -195,27 +195,23 @@ HAVING вставляется между GROUP BY и SELECT — фильтрац
 
 Видимость псевдонимов расширяется: псевдоним столбца из SELECT нельзя использовать ни в GROUP BY (стандарт SQL), ни в HAVING — оба выполняются до SELECT. PostgreSQL в отличие от стандарта **разрешает** псевдоним в GROUP BY — это расширение, в стандартном SQL не гарантировано.
 
-<details>
-<summary>Задача: отделы, в которых больше одного сотрудника с зарплатой выше 60000</summary>
-
-**Частая ошибка:**
-```sql
-SELECT department_id FROM employees
-WHERE salary > 60000 AND COUNT(*) > 1
-GROUP BY department_id;
-```
-WHERE работает до GROUP BY — агрегат `COUNT(*)` здесь невозможен.
-
-**Правильный вариант:**
-```sql
-SELECT department_id FROM employees
-WHERE salary > 60000
-GROUP BY department_id
-HAVING COUNT(*) > 1;
-```
-WHERE фильтрует строки до группировки (оставляет зарплаты > 60000). HAVING фильтрует уже сформированные группы (оставляет группы с > 1 сотрудника).
-
-</details>
+> [!info]- Задача: отделы, в которых больше одного сотрудника с зарплатой выше 60000
+> **Частая ошибка:**
+> ```sql
+> SELECT department_id FROM employees
+> WHERE salary > 60000 AND COUNT(*) > 1
+> GROUP BY department_id;
+> ```
+> WHERE работает до GROUP BY — агрегат `COUNT(*)` здесь невозможен.
+>
+> **Правильный вариант:**
+> ```sql
+> SELECT department_id FROM employees
+> WHERE salary > 60000
+> GROUP BY department_id
+> HAVING COUNT(*) > 1;
+> ```
+> WHERE фильтрует строки до группировки (оставляет зарплаты > 60000). HAVING фильтрует уже сформированные группы (оставляет группы с > 1 сотрудника).
 
 ## Сколько высокооплачиваемых в каждом отделе — FILTER
 

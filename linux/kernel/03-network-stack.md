@@ -1,11 +1,7 @@
 # Сетевой стек ядра
 
-<details>
-<summary>Предпосылки</summary>
-
-[прерывания](01-interrupts.md) (NAPI, softirq, top/bottom half), [устройства и драйверы](02-devices-and-drivers.md) (file_operations, bus model, DMA), [сокеты](../programming/03-sockets.md) (TCP server, receive buffer, send buffer).
-
-</details>
+> [!info]- Предпосылки
+> [прерывания](01-interrupts.md) (NAPI, softirq, top/bottom half), [устройства и драйверы](02-devices-and-drivers.md) (file_operations, bus model, DMA), [сокеты](../programming/03-sockets.md) (TCP server, receive buffer, send buffer).
 
 ← [Устройства и драйверы](02-devices-and-drivers.md) | [Управление памятью ядра](04-memory-management.md) →
 
@@ -238,21 +234,17 @@ Send buffer ограничен аналогично receive buffer: `net.ipv4.tc
 
 Типичная последовательность при диагностике: `ethtool -S eth0` показывает аппаратные счётчики NIC (rx_missed, rx_crc_errors), `/proc/net/softnet_stat` — статистику softirq по каждому CPU (второй столбец — число отбросов из-за исчерпания бюджета NAPI), `ss -tnp` — TCP-соединения с привязкой к процессам, а `conntrack -L` — текущие записи connection tracking.
 
-<details>
-<summary>Задача: куда смотреть, когда пакеты теряются?</summary>
-
-**Частая ошибка:** искать проблему только на уровне приложения (таймауты HTTP-запросов), не проверив нижние уровни стека.
-
-**Последовательность диагностики:**
-1. `ethtool -S eth0 | grep -i drop` — отбросы на уровне NIC (ring buffer переполнен)
-2. `cat /proc/net/softnet_stat` — второй столбец > 0 означает, что NAPI не успевает за потоком пакетов
-3. `dmesg | grep conntrack` — переполнение таблицы connection tracking
-4. `ss -tnp | grep -c ESTAB` — число активных TCP-соединений vs лимиты
-5. `cat /proc/net/snmp | grep Tcp` — `RetransSegs` растёт — потери на уровне сети
-
-Каждый уровень стека имеет свои счётчики, и отброс на уровне ring buffer выглядит для приложения так же, как отброс на уровне netfilter — как потерянный пакет.
-
-</details>
+> [!info]- Задача: куда смотреть, когда пакеты теряются?
+> **Частая ошибка:** искать проблему только на уровне приложения (таймауты HTTP-запросов), не проверив нижние уровни стека.
+>
+> **Последовательность диагностики:**
+> 1. `ethtool -S eth0 | grep -i drop` — отбросы на уровне NIC (ring buffer переполнен)
+> 2. `cat /proc/net/softnet_stat` — второй столбец > 0 означает, что NAPI не успевает за потоком пакетов
+> 3. `dmesg | grep conntrack` — переполнение таблицы connection tracking
+> 4. `ss -tnp | grep -c ESTAB` — число активных TCP-соединений vs лимиты
+> 5. `cat /proc/net/snmp | grep Tcp` — `RetransSegs` растёт — потери на уровне сети
+>
+> Каждый уровень стека имеет свои счётчики, и отброс на уровне ring buffer выглядит для приложения так же, как отброс на уровне netfilter — как потерянный пакет.
 
 ## Sources
 

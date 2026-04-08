@@ -61,14 +61,14 @@ sequenceDiagram
     participant PO as process_order
     participant CT as calculate_total
 
-    CALLER->>STACK: скопировать struct Order<br/>в argument area на стеке
-    CALLER->>STACK: call process_order<br/>push return address
+    CALLER->>STACK: скопировать struct Order\nв argument area на стеке
+    CALLER->>STACK: call process_order\npush return address
     CALLER->>PO: jump
-    Note over PO: извлечь order.price и order.quantity<br/>из копии на стеке
-    PO->>STACK: call calculate_total<br/>push return address
-    PO->>CT: xmm0 = price<br/>rdi = quantity
-    CT-->>PO: xmm0 = total<br/>ret
-    PO-->>CALLER: xmm0 = total<br/>ret
+    Note over PO: извлечь order.price и order.quantity<br>из копии на стеке
+    PO->>STACK: call calculate_total\npush return address
+    PO->>CT: xmm0 = price\nrdi = quantity
+    CT-->>PO: xmm0 = total\nret
+    PO-->>CALLER: xmm0 = total\nret
 ```
 
 Стек хранит копию структуры-аргумента, адреса возврата и локальные данные. Скалярные аргументы (`price`, `quantity`) и результат `calculate_total` передаются через регистры — без обращения к памяти. Сочетание стека для крупных данных и регистров для «горячих» значений делает вызов функции одновременно вложенным и относительно дешёвым.
@@ -99,16 +99,12 @@ ABI делит регистры на две группы. **Caller-saved** (со
 
 Логика деления: регистры-аргументы (`rdi`, `rsi`, ...) и регистр результата (`rax`) — caller-saved, потому что их значения и так будут перезаписаны вызовом. Остальные — callee-saved, чтобы вызывающий код мог хранить в них долгоживущие значения через серию вызовов.
 
-<details>
-<summary>Задача: куда делось значение rdi после вызова?</summary>
-
-Функция сохранила указатель в `rdi` и затем вызвала другую функцию. После возврата `rdi` содержит мусор.
-
-**Частая ошибка:** ожидать, что `rdi` сохранит значение через `call`.
-
-`rdi` — caller-saved регистр. Вызываемая функция использует его для своего первого аргумента и не обязана восстанавливать. Для хранения значения через вызов нужен callee-saved регистр (`rbx`, `r12`–`r15`) или локальная переменная на стеке.
-
-</details>
+> [!info]- Задача: куда делось значение rdi после вызова?
+> Функция сохранила указатель в `rdi` и затем вызвала другую функцию. После возврата `rdi` содержит мусор.
+>
+> **Частая ошибка:** ожидать, что `rdi` сохранит значение через `call`.
+>
+> `rdi` — caller-saved регистр. Вызываемая функция использует его для своего первого аргумента и не обязана восстанавливать. Для хранения значения через вызов нужен callee-saved регистр (`rbx`, `r12`–`r15`) или локальная переменная на стеке.
 
 ## Выравнивание
 
@@ -164,26 +160,22 @@ struct OrderCompact {
 
 Атрибут `__attribute__((packed))` в GCC/Clang полностью убирает padding. `sizeof` уменьшается, но каждое обращение к невыровненному полю потенциально становится split load. Для структуры, к которой обращаются миллионы раз в секунду, потеря на невыровненных обращениях перевесит экономию памяти. `packed` оправдан в двух случаях: сетевые протоколы и форматы файлов, где размещение определено спецификацией, и структуры, которые сериализуются и хранятся на диске.
 
-<details>
-<summary>Задача: определить sizeof структуры с тремя полями</summary>
-
-```c
-struct Packet {
-    char   type;      // 1 байт
-    int    length;    // 4 байта
-    char   flags;     // 1 байт
-};
-```
-
-Сколько байт займёт `sizeof(struct Packet)`?
-
-**Частая ошибка:** 1 + 4 + 1 = 6 байт.
-
-`type` — адрес 0 (1 байт). `length` требует выравнивания 4, ближайший адрес — 4. Padding: 3 байта. `length` — адреса 4–7. `flags` — адрес 8 (1 байт). Trailing padding: 3 байта (структура выравнивается по 4, ближайшее кратное — 12). **`sizeof = 12`**, вдвое больше «наивных» 6.
-
-Перестановка: `int length; char type; char flags;` — sizeof = 8 (4 + 1 + 1 + 2 padding). Ещё лучше: `int length; char type; char flags; char reserved[2];` — явный padding делает намерение видимым.
-
-</details>
+> [!info]- Задача: определить sizeof структуры с тремя полями
+> ```c
+> struct Packet {
+>     char   type;      // 1 байт
+>     int    length;    // 4 байта
+>     char   flags;     // 1 байт
+> };
+> ```
+>
+> Сколько байт займёт `sizeof(struct Packet)`?
+>
+> **Частая ошибка:** 1 + 4 + 1 = 6 байт.
+>
+> `type` — адрес 0 (1 байт). `length` требует выравнивания 4, ближайший адрес — 4. Padding: 3 байта. `length` — адреса 4–7. `flags` — адрес 8 (1 байт). Trailing padding: 3 байта (структура выравнивается по 4, ближайшее кратное — 12). **`sizeof = 12`**, вдвое больше «наивных» 6.
+>
+> Перестановка: `int length; char type; char flags;` — sizeof = 8 (4 + 1 + 1 + 2 padding). Ещё лучше: `int length; char type; char flags; char reserved[2];` — явный padding делает намерение видимым.
 
 ## Порядок байтов (endianness)
 

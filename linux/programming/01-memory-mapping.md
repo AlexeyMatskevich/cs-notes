@@ -1,11 +1,7 @@
 # Отображение памяти
 
-<details>
-<summary>Предпосылки</summary>
-
-[виртуальная память](../foundations/05-virtual-memory.md) (страницы, page table, page fault, demand paging), [файловые системы](../foundations/06-filesystems.md) (page cache, inode).
-
-</details>
+> [!info]- Предпосылки
+> [виртуальная память](../foundations/05-virtual-memory.md) (страницы, page table, page fault, demand paging), [файловые системы](../foundations/06-filesystems.md) (page cache, inode).
 
 ← [Сигналы](00-signals.md) | [Файловый ввод-вывод](02-file-io.md) →
 

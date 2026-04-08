@@ -8,26 +8,12 @@
 
 Интернет-магазин. 50 000 активных пользователей в день (DAU), около 500 запросов в секунду на чтение, 50 на запись. Три инстанса Rails-приложения за load balancer'ом, Redis для кэша и фоновых задач (Sidekiq), PostgreSQL с read replica.
 
-```
-┌──────────┐            ┌─────────┐
-│  Client  │───────────>│   LB    │
-└──────────┘            └────┬────┘
-                             │
-                  ┌──────────┼──────────┐
-                  v          v          v
-             ┌────────┐┌────────┐┌────────┐
-             │ Rails  ││ Rails  ││ Rails  │
-             │ App 1  ││ App 2  ││ App 3  │  ← один и тот же код
-             └───┬────┘└───┬────┘└───┬────┘
-                 │         │         │
-             ┌───┴─────────┴─────────┴───┐
-             │       Redis + Sidekiq     │
-             └───────────┬───────────────┘
-                         │
-             ┌───────────┴───────────┐
-             │      PostgreSQL       │
-             │   leader + replica    │
-             └───────────────────────┘
+```mermaid
+flowchart TB
+    Client --> LB
+    LB --> R1["Rails App 1"] & R2["Rails App 2"] & R3["Rails App 3"]
+    R1 & R2 & R3 --> Redis["Redis + Sidekiq"]
+    Redis --> PG["PostgreSQL<br>leader + replica"]
 ```
 
 Весь код — один репозиторий, один процесс: Orders, Payments, Inventory, Shipping, Catalog, Analytics, Notification. Оформление заказа выглядит так:

@@ -220,12 +220,8 @@ GVL ограничивает CPU-параллелизм. Потоки полез
 
 Fiber — корутина с собственным стеком, но значительно дешевле потока. В 64-bit CRuby дефолтные stack budgets для `Thread` составляют 256 KiB VM stack и 1024 KiB machine stack, а для `Fiber` — 128 KiB и 512 KiB. Переключение между fiber происходит внутри runtime в [пользовательском режиме](../linux/foundations/01-cpu-modes-and-syscalls.md), без отдельного системного вызова на сам факт переключения.
 
-<details>
-<summary>Подробности: настройка размеров стека</summary>
-
-Размеры thread/fiber stack в CRuby можно менять через переменные окружения `RUBY_THREAD_VM_STACK_SIZE`, `RUBY_THREAD_MACHINE_STACK_SIZE`, `RUBY_FIBER_VM_STACK_SIZE` и `RUBY_FIBER_MACHINE_STACK_SIZE`.
-
-</details>
+> [!info]- Подробности: настройка размеров стека
+> Размеры thread/fiber stack в CRuby можно менять через переменные окружения `RUBY_THREAD_VM_STACK_SIZE`, `RUBY_THREAD_MACHINE_STACK_SIZE`, `RUBY_FIBER_VM_STACK_SIZE` и `RUBY_FIBER_MACHINE_STACK_SIZE`.
 
 ### Fiber: resume, yield, обмен значениями
 

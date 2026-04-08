@@ -6,15 +6,16 @@
 
 Но рядом с `seller_read_db` появился enrichment-сервис. Его задача — прочитать событие из `order_events`, обогатить данными продавца (имя, рейтинг, комиссия) и записать результат в topic `enriched_orders`. Downstream consumer'ы — billing (начисление комиссии) и analytics (ClickHouse) — читают уже из `enriched_orders`. Enrichment-сервис — **consume-transform-produce**: внутри одного процесса живут и consumer (для `order_events`), и producer (для `enriched_orders`).
 
-```
-order_events          enrichment-сервис           enriched_orders
-───────────┐                                     ┌───────────
-  #42 paid │──> read ──> обогатить ──> write ───>│ #42 paid+seller
-  #77 paid │    (consumer)             (producer)│ #77 paid+seller
-───────────┘                                     └───────────
-                                                  │       │
-                                                  v       v
-                                               billing  analytics
+```mermaid
+flowchart LR
+    OE["order_events<br>#42 paid<br>#77 paid"]
+    EN["enrichment-сервис<br>read → обогатить → write"]
+    EO["enriched_orders<br>#42 paid+seller<br>#77 paid+seller"]
+    B["billing"]
+    A["analytics"]
+
+    OE --> EN --> EO
+    EO --> B & A
 ```
 
 ## Consume-transform-produce: разрыв атомарности

@@ -1,11 +1,7 @@
 # Токенизация и парсинг
 
-<details>
-<summary>Предпосылки</summary>
-
-базовое понимание, что Ruby — интерпретируемый язык; [дерево](../../../algorithms-and-data-structures/non-linear/01-tree.md) (узлы с дочерними элементами); [стек](../../../algorithms-and-data-structures/linear/04-stack-queue-deque.md) (LIFO — последний вошёл, первый вышел).
-
-</details>
+> [!info]- Предпосылки
+> базовое понимание, что Ruby — интерпретируемый язык; [дерево](../../../algorithms-and-data-structures/non-linear/01-tree.md) (узлы с дочерними элементами); [стек](../../../algorithms-and-data-structures/linear/04-stack-queue-deque.md) (LIFO — последний вошёл, первый вышел).
 
 [Компиляция](01-compilation.md) →
 

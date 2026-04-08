@@ -43,10 +43,11 @@ Stateful firewall работает и для UDP: хотя UDP — connectionles
 
 **DMZ** (Demilitarized Zone — демилитаризованная зона) — промежуточная зона для серверов, доступных из интернета: веб-серверы, почтовые серверы, DNS. Доступ из интернета в DMZ разрешён на конкретные порты. Доступ из DMZ во внутреннюю сеть — запрещён или ограничен конкретными соединениями (например, DMZ-сервер → база данных во внутренней сети на порту 5432).
 
-```
-Internet --- [Firewall] --- DMZ (web, mail, DNS)
-                 |
-                 +--- Internal (workstations, databases)
+```mermaid
+flowchart LR
+    Internet --> FW["Firewall"]
+    FW --> DMZ["DMZ<br>(web, mail, DNS)"]
+    FW --> Int["Internal<br>(workstations, databases)"]
 ```
 
 Если злоумышленник компрометирует сервер в DMZ, он не получает прямого доступа к внутренней сети — файрвол между DMZ и Internal продолжает действовать.

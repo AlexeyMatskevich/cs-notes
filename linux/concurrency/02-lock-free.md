@@ -1,11 +1,7 @@
 # Lock-free структуры данных
 
-<details>
-<summary>Предпосылки</summary>
-
-[синхронизация](00-synchronization.md) (CAS, мьютекс, spinlock), [модель памяти](01-memory-ordering.md) (Acquire/Release, happens-before).
-
-</details>
+> [!info]- Предпосылки
+> [синхронизация](00-synchronization.md) (CAS, мьютекс, spinlock), [модель памяти](01-memory-ordering.md) (Acquire/Release, happens-before).
 
 ← [Модель памяти](01-memory-ordering.md) | [Сигналы](../programming/00-signals.md) →
 
@@ -273,25 +269,21 @@ Lock-free оправдан в двух случаях: структура дан
 
 На практике использовать готовые реализации, а не писать свои: `java.util.concurrent` (ConcurrentLinkedQueue, ConcurrentSkipListMap), `crossbeam` в Rust (очередь, deque, skiplist, epoch-based reclamation), `boost::lockfree` в C++ (spsc_queue, queue, stack), `liblfds` — чистый C.
 
-<details>
-<summary>Задача: stack pop и use-after-free</summary>
-
-**Частая ошибка:**
-```c
-node_t *pop(void) {
-    node_t *old_top = atomic_load(&top);
-    if (!old_top) return NULL;
-    node_t *next = old_top->next;           // <-- проблема
-    if (atomic_compare_exchange(&top, &old_top, next))
-        return old_top;
-    // ... retry
-}
-```
-Между `atomic_load` и чтением `old_top->next` другой поток может снять `old_top` и освободить его. Чтение `old_top->next` — use-after-free.
-
-**Решение:** использовать hazard pointers или epoch-based reclamation. Поток публикует `old_top` как hazard pointer *до* чтения `old_top->next` — это гарантирует, что узел не будет освобождён, пока поток с ним работает.
-
-</details>
+> [!info]- Задача: stack pop и use-after-free
+> **Частая ошибка:**
+> ```c
+> node_t *pop(void) {
+>     node_t *old_top = atomic_load(&top);
+>     if (!old_top) return NULL;
+>     node_t *next = old_top->next;           // <-- проблема
+>     if (atomic_compare_exchange(&top, &old_top, next))
+>         return old_top;
+>     // ... retry
+> }
+> ```
+> Между `atomic_load` и чтением `old_top->next` другой поток может снять `old_top` и освободить его. Чтение `old_top->next` — use-after-free.
+>
+> **Решение:** использовать hazard pointers или epoch-based reclamation. Поток публикует `old_top` как hazard pointer *до* чтения `old_top->next` — это гарантирует, что узел не будет освобождён, пока поток с ним работает.
 
 ## Sources
 

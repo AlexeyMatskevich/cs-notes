@@ -1,11 +1,7 @@
 # Безопасные изменения схемы
 
-<details>
-<summary>Предпосылки</summary>
-
-[Таблицы и типы](../sql/schema/00-tables-and-types.md) (ALTER TABLE, DEFAULT), [ограничения](../sql/schema/01-constraints.md) (NOT NULL, FK, CHECK), [индексы](../sql/schema/04-indexes.md) (CREATE INDEX), [транзакции](../sql/modification/01-transactions.md) (BEGIN/COMMIT/ROLLBACK), [индексы в production](../sql/postgresql/04-index-operations.md) (CONCURRENTLY, INVALID), [блокировки](../postgresql/concurrency/03-locks.md) (уровни блокировок, очередь, lock_timeout).
-
-</details>
+> [!info]- Предпосылки
+> [Таблицы и типы](../sql/schema/00-tables-and-types.md) (ALTER TABLE, DEFAULT), [ограничения](../sql/schema/01-constraints.md) (NOT NULL, FK, CHECK), [индексы](../sql/schema/04-indexes.md) (CREATE INDEX), [транзакции](../sql/modification/01-transactions.md) (BEGIN/COMMIT/ROLLBACK), [индексы в production](../sql/postgresql/04-index-operations.md) (CONCURRENTLY, INVALID), [блокировки](../postgresql/concurrency/03-locks.md) (уровни блокировок, очередь, lock_timeout).
 
 ← [Обзор серии](index.md) | [Эволюция схемы](01-schema-evolution.md) →
 

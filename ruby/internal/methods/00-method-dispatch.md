@@ -1,11 +1,7 @@
 # Диспетчеризация методов
 
-<details>
-<summary>Предпосылки</summary>
-
-[Исполнение](../vm/02-execution.md) — фреймы (METHOD, CFUNC, BLOCK), push/pop, PC/SP/EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — m_tbl, klass, super, метакласс. [Модули](../object-model/01-modules.md) — iclass, include/prepend в цепочке super, поиск методов по цепочке. [Формы](../object-model/02-shapes.md) — shape_id, инлайн-кеш для переменных.
-
-</details>
+> [!info]- Предпосылки
+> [Исполнение](../vm/02-execution.md) — фреймы (METHOD, CFUNC, BLOCK), push/pop, PC/SP/EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — m_tbl, klass, super, метакласс. [Модули](../object-model/01-modules.md) — iclass, include/prepend в цепочке super, поиск методов по цепочке. [Формы](../object-model/02-shapes.md) — shape_id, инлайн-кеш для переменных.
 
 ← [Формы объектов](../object-model/02-shapes.md) | [Определение методов](01-method-definition.md) →
 

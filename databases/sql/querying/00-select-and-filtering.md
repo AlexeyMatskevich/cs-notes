@@ -1,11 +1,7 @@
 # SELECT и фильтрация
 
-<details>
-<summary>Предпосылки</summary>
-
-[реляционная модель](../foundations/00-relational-model.md), [типы данных и NULL](../foundations/01-types-and-null.md), [выражения](../foundations/02-expressions.md).
-
-</details>
+> [!info]- Предпосылки
+> [реляционная модель](../foundations/00-relational-model.md), [типы данных и NULL](../foundations/01-types-and-null.md), [выражения](../foundations/02-expressions.md).
 
 ← [Выражения](../foundations/02-expressions.md) | [Сортировка и ограничение](01-sorting-and-limiting.md) →
 
@@ -251,22 +247,18 @@ SELECT name FROM employees WHERE name ~ '(ер|ор)';
 
 Для производительности: LIKE с шаблоном `'prefix%'` может использовать индекс на столбце. Регулярные выражения и LIKE с `'%substring%'` требуют специальных индексов или [полнотекстового поиска](../postgresql/02-full-text-search.md) — подробнее в [индексах](../schema/04-indexes.md).
 
-<details>
-<summary>Задача: сотрудники без отдела с зарплатой ниже средней</summary>
-
-**Частая ошибка:**
-```sql
-SELECT name FROM employees WHERE department_id = NULL AND salary < 72000;
-```
-`department_id = NULL` возвращает NULL для каждой строки — результат пуст.
-
-**Правильный вариант:**
-```sql
-SELECT name FROM employees WHERE department_id IS NULL AND salary < 72000;
-```
-Для проверки на NULL — только `IS NULL`, никогда `= NULL`.
-
-</details>
+> [!info]- Задача: сотрудники без отдела с зарплатой ниже средней
+> **Частая ошибка:**
+> ```sql
+> SELECT name FROM employees WHERE department_id = NULL AND salary < 72000;
+> ```
+> `department_id = NULL` возвращает NULL для каждой строки — результат пуст.
+>
+> **Правильный вариант:**
+> ```sql
+> SELECT name FROM employees WHERE department_id IS NULL AND salary < 72000;
+> ```
+> Для проверки на NULL — только `IS NULL`, никогда `= NULL`.
 
 ## Sources
 

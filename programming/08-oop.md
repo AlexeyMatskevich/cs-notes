@@ -19,12 +19,8 @@
 
 Вот [пример](examples/08-loose-functions.rb). Его не нужно разбирать построчно — достаточно посмотреть, как быстро один файл превращается в кашу из восьми хешей, тридцати с лишним функций и прямых записей в структуры.
 
-<details>
-<summary>Какие функции знают о каких полях</summary>
-
-Поля `seller` знают `seller_display_name`, `seller_blocked?`, `seller_can_withdraw?`, `seller_risk_badge`, `payout_ready?`, `listing_publishable?` и прямая запись `seller["blocked"] = true`. Поля `listing` текут в `listing_badge`, `listing_final_price_cents`, `listing_publishable?` и прямую запись `listing["price_cents"] = -1000`. То же происходит с `payout_request`, `shipment`, `refund`, `invoice` и `support_case`: форма данных уже расползлась по файлу и больше не выглядит локальной деталью.
-
-</details>
+> [!info]- Какие функции знают о каких полях
+> Поля `seller` знают `seller_display_name`, `seller_blocked?`, `seller_can_withdraw?`, `seller_risk_badge`, `payout_ready?`, `listing_publishable?` и прямая запись `seller["blocked"] = true`. Поля `listing` текут в `listing_badge`, `listing_final_price_cents`, `listing_publishable?` и прямую запись `listing["price_cents"] = -1000`. То же происходит с `payout_request`, `shipment`, `refund`, `invoice` и `support_case`: форма данных уже расползлась по файлу и больше не выглядит локальной деталью.
 
 ## Класс и объект
 

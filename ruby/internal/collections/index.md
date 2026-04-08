@@ -1,11 +1,7 @@
 # Коллекции: внутреннее устройство Array, Hash, String
 
-<details>
-<summary>Предпосылки</summary>
-
-[Объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, klass), [GC](../gc.md) (VWA, слоты, страницы, write barrier), [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
-
-</details>
+> [!info]- Предпосылки
+> [Объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, klass), [GC](../gc.md) (VWA, слоты, страницы, write barrier), [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md), [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md).
 
 Для пользовательских объектов Ruby хранит инстанс-переменные в обобщённой структуре `RObject`. Но встроенные типы — Array, Hash, String — работают с данными настолько часто, что обобщённое представление было бы расточительным. Каждый из них получил собственную C-структуру (`RArray`, `RHash`, `RString`), оптимизированную под конкретный паттерн доступа: последовательный, ассоциативный, текстовый.
 

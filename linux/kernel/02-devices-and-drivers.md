@@ -1,11 +1,7 @@
 # Устройства и драйверы
 
-<details>
-<summary>Предпосылки</summary>
-
-[прерывания](01-interrupts.md) (top/bottom half, обработчики устройств), [файловые дескрипторы](../foundations/04-file-descriptors.md) (fd -> inode -> file_operations), [шины и DMA](../../computer/data-path/04-buses-and-dma.md) (PCIe, DMA, MMIO).
-
-</details>
+> [!info]- Предпосылки
+> [прерывания](01-interrupts.md) (top/bottom half, обработчики устройств), [файловые дескрипторы](../foundations/04-file-descriptors.md) (fd -> inode -> file_operations), [шины и DMA](../../computer/data-path/04-buses-and-dma.md) (PCIe, DMA, MMIO).
 
 ← [Прерывания](01-interrupts.md) | [Сетевой стек](03-network-stack.md) →
 
@@ -25,27 +21,23 @@
 
 Когда процесс вызывает `open("/dev/sda", O_RDONLY)`, ядро находит inode файла `/dev/sda`. В inode специального файла устройства хранится не указатель на блоки данных, а пара major/minor. По major-номеру ядро находит зарегистрированный драйвер, а у драйвера --- структуру `file_operations` (fops): таблицу указателей на функции, реализующие каждый системный вызов.
 
-<details>
-<summary>Структура file_operations (упрощённо)</summary>
-
-```c
-struct file_operations {
-    struct module *owner;
-    loff_t  (*llseek)  (struct file *, loff_t, int);
-    ssize_t (*read)    (struct file *, char __user *, size_t, loff_t *);
-    ssize_t (*write)   (struct file *, const char __user *, size_t, loff_t *);
-    int     (*open)    (struct inode *, struct file *);
-    int     (*release) (struct inode *, struct file *);
-    long    (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
-    int     (*mmap)    (struct file *, struct vm_area_struct *);
-    __poll_t (*poll)   (struct file *, struct poll_table_struct *);
-    // ... ещё ~25 полей
-};
-```
-
-Драйвер заполняет только те поля, которые поддерживает. Остальные остаются `NULL` --- ядро вернёт `-EINVAL` или использует реализацию по умолчанию. Символьный драйвер обычно реализует `open`, `read`, `write`, `release` и `unlocked_ioctl`. Блочный драйвер регистрирует не `file_operations` напрямую, а `struct block_device_operations` --- аналогичную таблицу для блочного уровня.
-
-</details>
+> [!info]- Структура file_operations (упрощённо)
+> ```c
+> struct file_operations {
+>     struct module *owner;
+>     loff_t  (*llseek)  (struct file *, loff_t, int);
+>     ssize_t (*read)    (struct file *, char __user *, size_t, loff_t *);
+>     ssize_t (*write)   (struct file *, const char __user *, size_t, loff_t *);
+>     int     (*open)    (struct inode *, struct file *);
+>     int     (*release) (struct inode *, struct file *);
+>     long    (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
+>     int     (*mmap)    (struct file *, struct vm_area_struct *);
+>     __poll_t (*poll)   (struct file *, struct poll_table_struct *);
+>     // ... ещё ~25 полей
+> };
+> ```
+>
+> Драйвер заполняет только те поля, которые поддерживает. Остальные остаются `NULL` --- ядро вернёт `-EINVAL` или использует реализацию по умолчанию. Символьный драйвер обычно реализует `open`, `read`, `write`, `release` и `unlocked_ioctl`. Блочный драйвер регистрирует не `file_operations` напрямую, а `struct block_device_operations` --- аналогичную таблицу для блочного уровня.
 
 Механизм диспетчеризации работает как vtable. Вызов `read(fd, buf, 4096)` из пространства пользователя превращается в системный вызов `sys_read()`. Ядро по fd находит `struct file`, в ней --- указатель на `file_operations`. Вызов `f->f_op->read(f, buf, 4096, &pos)` передаёт управление конкретному драйверу. Если fd указывает на `/dev/sda`, вызовется `read()` SCSI-драйвера; если на `/dev/tty` --- `read()` драйвера терминала. Пользовательский код не знает и не должен знать, какой драйвер стоит за дескриптором.
 
@@ -118,20 +110,16 @@ SUBSYSTEM=="block", ATTRS{serial}=="AA00000012345", SYMLINK+="backup-disk"
 
 `/dev/` смонтирован как `devtmpfs` --- временная файловая система устройств в RAM. При загрузке системы ядро само создаёт минимальный набор устройств в devtmpfs (`/dev/null`, `/dev/zero`, `/dev/console`), а `udevd` подхватывает управление после старта и обрабатывает все остальные устройства.
 
-<details>
-<summary>NixOS: systemd-udevd и /dev</summary>
-
-В NixOS `udevd` реализован через `systemd-udevd` --- часть systemd. Правила udev описываются декларативно в конфигурации NixOS:
-
-```nix
-services.udev.extraRules = ''
-  SUBSYSTEM=="block", ATTRS{serial}=="AA00000012345", SYMLINK+="backup-disk"
-'';
-```
-
-Nix генерирует файлы правил в `/etc/udev/rules.d/` из конфигурации при `nixos-rebuild switch`. Модули NixOS для различных подсистем (bluetooth, sound, input) автоматически добавляют нужные udev-правила.
-
-</details>
+> [!info]- NixOS: systemd-udevd и /dev
+> В NixOS `udevd` реализован через `systemd-udevd` --- часть systemd. Правила udev описываются декларативно в конфигурации NixOS:
+>
+> ```nix
+> services.udev.extraRules = ''
+>   SUBSYSTEM=="block", ATTRS{serial}=="AA00000012345", SYMLINK+="backup-disk"
+> '';
+> ```
+>
+> Nix генерирует файлы правил в `/etc/udev/rules.d/` из конфигурации при `nixos-rebuild switch`. Модули NixOS для различных подсистем (bluetooth, sound, input) автоматически добавляют нужные udev-правила.
 
 ## Шина -> устройство -> драйвер
 
@@ -185,21 +173,17 @@ $ cat /sys/bus/pci/devices/0000:03:00.0/device
 
 Команда `lsmod` показывает загруженные модули, их размер и количество зависимых. Типичная система имеет 100-200 загруженных модулей. Модуль `nvme` зависит от `nvme_core`; `ext4` зависит от `jbd2` (подсистема журналирования) и `mbcache`. Зависимости хранятся в файле `modules.dep`, который `depmod` генерирует при установке ядра.
 
-<details>
-<summary>NixOS: модули ядра</summary>
-
-В NixOS модули ядра хранятся в `/run/current-system/kernel-modules/lib/modules/<версия>/`. Путь определяется текущим поколением системы --- при `nixos-rebuild switch` модули пересобираются вместе с ядром и помещаются в новый путь. `modprobe` в NixOS настроен на поиск модулей в этом пути.
-
-Загрузка модулей при старте:
-
-```nix
-boot.kernelModules = [ "nvme" "ext4" ];             # загружаются всегда
-boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];  # сторонние модули
-```
-
-Автозагрузка по событию udev работает через `modalias` --- строку, описывающую устройство. Ядро отправляет uevent с modalias, `systemd-udevd` вызывает `modprobe` с этой строкой, и `modprobe` находит подходящий модуль по таблице алиасов.
-
-</details>
+> [!info]- NixOS: модули ядра
+> В NixOS модули ядра хранятся в `/run/current-system/kernel-modules/lib/modules/<версия>/`. Путь определяется текущим поколением системы --- при `nixos-rebuild switch` модули пересобираются вместе с ядром и помещаются в новый путь. `modprobe` в NixOS настроен на поиск модулей в этом пути.
+>
+> Загрузка модулей при старте:
+>
+> ```nix
+> boot.kernelModules = [ "nvme" "ext4" ];             # загружаются всегда
+> boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];  # сторонние модули
+> ```
+>
+> Автозагрузка по событию udev работает через `modalias` --- строку, описывающую устройство. Ядро отправляет uevent с modalias, `systemd-udevd` вызывает `modprobe` с этой строкой, и `modprobe` находит подходящий модуль по таблице алиасов.
 
 ## I/O scheduler: переупорядочивание запросов
 

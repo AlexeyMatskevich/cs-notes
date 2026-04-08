@@ -1,11 +1,7 @@
 # Мультиплексирование ввода-вывода
 
-<details>
-<summary>Предпосылки</summary>
-
-[сокеты](03-sockets.md) (TCP-сервер, accept, `O_NONBLOCK`), [отображение памяти](01-memory-mapping.md) (mmap для shared memory между ядром и процессом), [синхронизация](../concurrency/00-synchronization.md) (futex как прецедент userspace fast path).
-
-</details>
+> [!info]- Предпосылки
+> [сокеты](03-sockets.md) (TCP-сервер, accept, `O_NONBLOCK`), [отображение памяти](01-memory-mapping.md) (mmap для shared memory между ядром и процессом), [синхронизация](../concurrency/00-synchronization.md) (futex как прецедент userspace fast path).
 
 ← [Сокеты](03-sockets.md) | [Управление памятью](05-memory-management.md) →
 

@@ -88,28 +88,24 @@ bundle exec sidekiq -q external_api         # процесс 2: медленны
 
 Медленный API забивает все потоки процесса 2 — процесс 1 продолжает обрабатывать critical и default без задержек.
 
-<details>
-<summary>Capsules: bulkhead внутри одного процесса (Sidekiq 7.0+)</summary>
-
-Capsule (капсула) — изолированная группа настроек внутри одного процесса. У каждой капсулы свой concurrency и свой набор очередей:
-
-```ruby
-Sidekiq.configure_server do |config|
-  # Основная капсула (default) — 5 потоков для обычных задач
-  config.concurrency = 5
-  config.queues = %w[critical default]
-
-  # Отдельная капсула — 3 потока для медленных API
-  config.capsule("slow_api") do |cap|
-    cap.concurrency = 3
-    cap.queues = %w[external_api]
-  end
-end
-```
-
-Внутри каждой капсулы — свой Manager с отдельным набором Processor-ов. Медленные API-задачи не могут занять потоки основной капсулы. Bulkhead без отдельного процесса — меньше overhead на память и управление.
-
-</details>
+> [!info]- Capsules: bulkhead внутри одного процесса (Sidekiq 7.0+)
+> Capsule (капсула) — изолированная группа настроек внутри одного процесса. У каждой капсулы свой concurrency и свой набор очередей:
+>
+> ```ruby
+> Sidekiq.configure_server do |config|
+>   # Основная капсула (default) — 5 потоков для обычных задач
+>   config.concurrency = 5
+>   config.queues = %w[critical default]
+>
+>   # Отдельная капсула — 3 потока для медленных API
+>   config.capsule("slow_api") do |cap|
+>     cap.concurrency = 3
+>     cap.queues = %w[external_api]
+>   end
+> end
+> ```
+>
+> Внутри каждой капсулы — свой Manager с отдельным набором Processor-ов. Медленные API-задачи не могут занять потоки основной капсулы. Bulkhead без отдельного процесса — меньше overhead на память и управление.
 
 ## Backpressure: когда Redis переполнен
 

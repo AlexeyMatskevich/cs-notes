@@ -1,11 +1,7 @@
 # Блоки, Proc и Lambda
 
-<details>
-<summary>Предпосылки</summary>
-
-[Компиляция](vm/01-compilation.md) — каждый scope (метод, блок) = отдельный ISeq. [Исполнение](vm/02-execution.md) — фреймы, EP, динамический доступ через `getlocal idx, level`. [Управление потоком](vm/03-control-flow.md) — `throw` + catch tables для break/return.
-
-</details>
+> [!info]- Предпосылки
+> [Компиляция](vm/01-compilation.md) — каждый scope (метод, блок) = отдельный ISeq. [Исполнение](vm/02-execution.md) — фреймы, EP, динамический доступ через `getlocal idx, level`. [Управление потоком](vm/03-control-flow.md) — `throw` + catch tables для break/return.
 
 ← [Определение методов](methods/01-method-definition.md) | [Метапрограммирование](metaprogramming.md) →
 

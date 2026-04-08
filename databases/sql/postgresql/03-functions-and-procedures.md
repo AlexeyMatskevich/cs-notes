@@ -1,11 +1,7 @@
 # Функции и процедуры
 
-<details>
-<summary>Предпосылки</summary>
-
-[DML](../modification/00-dml.md) (INSERT, UPDATE), [выражения](../foundations/02-expressions.md) (CASE), [агрегация](../querying/02-aggregation.md).
-
-</details>
+> [!info]- Предпосылки
+> [DML](../modification/00-dml.md) (INSERT, UPDATE), [выражения](../foundations/02-expressions.md) (CASE), [агрегация](../querying/02-aggregation.md).
 
 ← [Полнотекстовый поиск](02-full-text-search.md) | [Триггеры](triggers.md) · [Индексы в production](04-index-operations.md) →
 

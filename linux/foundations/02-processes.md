@@ -158,27 +158,21 @@ www-data  1501  Z     [convert] <defunct>
 
 Жизненный цикл процесса:
 
-```
-fork()
-  |
-  v
-RUNNING (R) <------+
-  |                 |
-  |  ожидание I/O   |  I/O завершён / сигнал
-  v                 |
-SLEEPING (S/D) -----+
-  |
-  | Ctrl+Z / SIGSTOP        SIGCONT
-  v                           |
-STOPPED (T) -----------------+
-  |
-  | exit() / сигнал
-  v
-ZOMBIE (Z)
-  |
-  | родитель вызвал wait()
-  v
-[удалён из таблицы процессов]
+```mermaid
+stateDiagram-v2
+    [*] --> RUNNING: fork()
+    RUNNING --> SLEEPING: ожидание I/O
+    SLEEPING --> RUNNING: I/O завершён / сигнал
+    RUNNING --> STOPPED: Ctrl+Z / SIGSTOP
+    SLEEPING --> STOPPED: SIGSTOP
+    STOPPED --> RUNNING: SIGCONT
+    RUNNING --> ZOMBIE: exit() / сигнал
+    ZOMBIE --> [*]: родитель вызвал wait()
+
+    RUNNING: RUNNING (R)
+    SLEEPING: SLEEPING (S/D)
+    STOPPED: STOPPED (T)
+    ZOMBIE: ZOMBIE (Z)
 ```
 
 ## Зомби: почему wait() необходим

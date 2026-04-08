@@ -1,11 +1,7 @@
 # Определение методов
 
-<details>
-<summary>Предпосылки</summary>
-
-[Компиляция](../vm/01-compilation.md) — ISeq. [Исполнение](../vm/02-execution.md) — фреймы, `self`, EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — метакласс, singleton-класс, m_tbl. [Модули](../object-model/01-modules.md) — поиск методов по цепочке super, лексическая область (CREF).
-
-</details>
+> [!info]- Предпосылки
+> [Компиляция](../vm/01-compilation.md) — ISeq. [Исполнение](../vm/02-execution.md) — фреймы, `self`, EP. [Объекты и классы](../object-model/00-objects-and-classes.md) — метакласс, singleton-класс, m_tbl. [Модули](../object-model/01-modules.md) — поиск методов по цепочке super, лексическая область (CREF).
 
 ← [Диспетчеризация методов](00-method-dispatch.md) | [Блоки](../blocks.md) →
 

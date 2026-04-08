@@ -1,11 +1,7 @@
 # String
 
-<details>
-<summary>Предпосылки</summary>
-
-[объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](00-array.md) (embedded/heap-паттерн, Copy-on-Write).
-
-</details>
+> [!info]- Предпосылки
+> [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](00-array.md) (embedded/heap-паттерн, Copy-on-Write).
 
 ← [Hash](01-hash.md) | [JIT](../jit.md) →
 

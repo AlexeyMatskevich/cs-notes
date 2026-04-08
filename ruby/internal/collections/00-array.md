@@ -1,11 +1,7 @@
 # Array
 
-<details>
-<summary>Предпосылки</summary>
-
-[динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction).
-
-</details>
+> [!info]- Предпосылки
+> [динамический массив](../../../algorithms-and-data-structures/linear/02-dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/00-objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction).
 
 ← [GC](../gc.md) | [Hash](01-hash.md) →
 

@@ -1,11 +1,7 @@
 # Оконные функции
 
-<details>
-<summary>Предпосылки</summary>
-
-[агрегация](02-aggregation.md) (агрегатные функции, GROUP BY), [соединения](03-joins.md) (JOIN), [подзапросы и CTE](05-subqueries-and-cte.md) (коррелированные подзапросы, CTE).
-
-</details>
+> [!info]- Предпосылки
+> [агрегация](02-aggregation.md) (агрегатные функции, GROUP BY), [соединения](03-joins.md) (JOIN), [подзапросы и CTE](05-subqueries-and-cte.md) (коррелированные подзапросы, CTE).
 
 ← [Операции над множествами](06-set-operations.md) | [Таблицы и типы](../schema/00-tables-and-types.md) →
 
@@ -403,30 +399,26 @@ CTE `ranked` нумерует строки внутри каждого отде�
 - Для фильтрации по результату оконной функции — подзапрос или CTE.
 - Оконные функции видят данные **после GROUP BY**: если был GROUP BY, строки уже сгруппированы.
 
-<details>
-<summary>Задача: наименьшая зарплата отдела рядом с каждым сотрудником</summary>
-
-**Частая ошибка:**
-```sql
-SELECT name, department_id, salary,
-       LAST_VALUE(salary) OVER (
-           PARTITION BY department_id ORDER BY salary DESC
-       ) AS min_salary
-FROM employees WHERE salary IS NOT NULL;
-```
-LAST_VALUE с дефолтным фреймом возвращает текущую строку, а не последнюю в секции.
-
-**Правильный вариант:**
-```sql
-SELECT name, department_id, salary,
-       FIRST_VALUE(salary) OVER (
-           PARTITION BY department_id ORDER BY salary ASC
-       ) AS min_salary
-FROM employees WHERE salary IS NOT NULL;
-```
-FIRST_VALUE с сортировкой по возрастанию — первая строка всегда в фрейме.
-
-</details>
+> [!info]- Задача: наименьшая зарплата отдела рядом с каждым сотрудником
+> **Частая ошибка:**
+> ```sql
+> SELECT name, department_id, salary,
+>        LAST_VALUE(salary) OVER (
+>            PARTITION BY department_id ORDER BY salary DESC
+>        ) AS min_salary
+> FROM employees WHERE salary IS NOT NULL;
+> ```
+> LAST_VALUE с дефолтным фреймом возвращает текущую строку, а не последнюю в секции.
+>
+> **Правильный вариант:**
+> ```sql
+> SELECT name, department_id, salary,
+>        FIRST_VALUE(salary) OVER (
+>            PARTITION BY department_id ORDER BY salary ASC
+>        ) AS min_salary
+> FROM employees WHERE salary IS NOT NULL;
+> ```
+> FIRST_VALUE с сортировкой по возрастанию — первая строка всегда в фрейме.
 
 ## NULL в оконных функциях
 

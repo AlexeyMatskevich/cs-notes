@@ -27,28 +27,20 @@ Hash index не хранит ключей и не поддерживает по�
 
 Внутри hash index — [хеш-таблица](../../../algorithms-and-data-structures/linear/05-hash-table.md), разложенная по дисковым страницам. Ключ хешируется, хеш определяет номер bucket, bucket — одна или несколько страниц с записями.
 
-```text
-              Meta Page (page 0)
-              ┌──────────────────────┐
-              │ num_buckets          │
-              │ split pointer        │
-              └──────────────────────┘
-                        |
-         ┌──────────────┼──────────────┐
-         v              v              v
-    Bucket 0       Bucket 1       Bucket 2
-  ┌──────────┐   ┌──────────┐   ┌──────────┐
-  │ hash|TID │   │ hash|TID │   │ hash|TID │
-  │ hash|TID │   │ hash|TID │   │          │
-  │ ...      │   └──────────┘   └──────────┘
-  └────┬─────┘
-       v
-  Overflow Page
-  ┌──────────┐
-  │ hash|TID │
-  └──────────┘
+```mermaid
+flowchart TB
+    Meta["<b>Meta Page</b> (page 0)<br>num_buckets<br>split pointer"]
+    B0["<b>Bucket 0</b><br>hash|TID<br>hash|TID<br>..."]
+    B1["<b>Bucket 1</b><br>hash|TID<br>hash|TID"]
+    B2["<b>Bucket 2</b><br>hash|TID"]
+    OF["<b>Overflow Page</b><br>hash|TID"]
+    BM["<b>Bitmap Pages</b><br>учёт свободных overflow страниц"]
 
-  Bitmap Pages: учёт свободных overflow страниц
+    Meta --> B0
+    Meta --> B1
+    Meta --> B2
+    B0 --> OF
+    BM -.->|"отслеживает"| OF
 ```
 
 **Meta page** (страница 0) хранит параметры индекса: текущее число bucket'ов, split pointer для linear hashing, маску для вычисления номера bucket.

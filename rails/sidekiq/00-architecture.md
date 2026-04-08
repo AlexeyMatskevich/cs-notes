@@ -59,15 +59,18 @@ Redis для Sidekiq настраивается с политикой `noevictio
 
 Внутри серверного процесса — несколько компонентов, каждый со своей задачей:
 
-```
-Sidekiq Process
-├── Launcher           -- управляет жизненным циклом процесса
-│   ├── Manager        -- управляет набором Processor-потоков
-│   │   ├── Processor  -- поток: BRPOP → deserialize → perform
-│   │   ├── Processor
-│   │   └── ...        -- количество = настройка concurrency (default 5)
-│   ├── Poller         -- поток: проверяет schedule и retry sorted sets
-│   └── Heartbeat      -- поток: обновляет метаданные процесса в Redis (~10 сек)
+```mermaid
+flowchart TB
+    L["<b>Launcher</b><br>управляет жизненным циклом"]
+    M["<b>Manager</b><br>управляет набором Processor-потоков"]
+    P1["Processor<br>BRPOP → deserialize → perform"]
+    P2["Processor"]
+    Pn["...<br>(concurrency, default 5)"]
+    Po["<b>Poller</b><br>проверяет schedule и retry sorted sets"]
+    H["<b>Heartbeat</b><br>обновляет метаданные в Redis (~10 сек)"]
+
+    L --> M & Po & H
+    M --> P1 & P2 & Pn
 ```
 
 **Processor** — рабочий поток. Выполняет цикл: забрать задачу из Redis (`BRPOP`), десериализовать JSON, выполнить `perform`. Количество Processor-ов определяется настройкой `concurrency` (по умолчанию 5 начиная с Sidekiq 7).

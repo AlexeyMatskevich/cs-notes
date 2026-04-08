@@ -1,11 +1,7 @@
 # Пространства имён и контрольные группы
 
-<details>
-<summary>Предпосылки</summary>
-
-[процессы](../foundations/02-processes.md) (fork, clone, PID), [планировщик](../foundations/07-scheduler.md) (CFS, vruntime), [файловые системы](../foundations/06-filesystems.md) (mount, VFS), [управление памятью](../programming/05-memory-management.md) (overcommit, OOM killer).
-
-</details>
+> [!info]- Предпосылки
+> [процессы](../foundations/02-processes.md) (fork, clone, PID), [планировщик](../foundations/07-scheduler.md) (CFS, vruntime), [файловые системы](../foundations/06-filesystems.md) (mount, VFS), [управление памятью](../programming/05-memory-management.md) (overcommit, OOM killer).
 
 ← [Загрузка системы](../infrastructure/03-boot.md) | [Контейнеры](01-containers.md) →
 
@@ -58,15 +54,21 @@ Network namespace создаёт изолированный сетевой ст�
 
 Для связи с внешним миром ядро создаёт **veth pair** (virtual Ethernet pair — пара виртуальных Ethernet-интерфейсов). Один конец пары помещается в network namespace контейнера, другой — в хостовой namespace, обычно подключённый к bridge-интерфейсу (программный коммутатор, соединяющий несколько виртуальных интерфейсов в одну L2-сеть). Пакет, отправленный в один конец veth, мгновенно появляется на другом — как виртуальный кабель между двумя пространствами.
 
-```text
-  Namespace A             Хост              Namespace B
-  +---------+        +----------+        +---------+
-  | eth0    |---veth--| docker0  |--veth--| eth0    |
-  | 10.0.1.2|        | (bridge) |        | 10.0.1.3|
-  +---------+        +----------+        +---------+
-                          |
-                        eth0 (физический)
-                      203.0.113.10
+```mermaid
+flowchart LR
+    subgraph A["Namespace A"]
+        EA["eth0<br>10.0.1.2"]
+    end
+    subgraph Host["Хост"]
+        BR["docker0<br>(bridge)"]
+        PHY["eth0 (физический)<br>203.0.113.10"]
+        BR --- PHY
+    end
+    subgraph B["Namespace B"]
+        EB["eth0<br>10.0.1.3"]
+    end
+    EA ---|"veth"| BR
+    BR ---|"veth"| EB
 ```
 
 Оба клиента слушают порт 80 внутри своего namespace. На хосте iptables/DNAT (Destination NAT) перенаправляет входящие соединения: `203.0.113.10:8080` -> `10.0.1.2:80` (клиент A), `203.0.113.10:8081` -> `10.0.1.3:80` (клиент B).

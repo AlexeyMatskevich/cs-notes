@@ -91,7 +91,7 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 - Each themed directory has an `index.md` (study order, cross-links, "Как всё связано" trade-offs section)
 - Shared theory used by multiple technologies → extract to parent level (e.g. `system-design/replication.md`, `system-design/sharding.md`)
 - Cross-link related notes with relative links at the point of first mention
-- `structure-guide.md` owns navigation, `<details>`, tables, and other markup patterns
+- `structure-guide.md` owns navigation, callouts, tables, and other markup patterns
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections
 - When adding a new note, check for cascading changes: update `index.md`, cross-references in neighboring files, and the file map above

@@ -163,24 +163,16 @@ Retry с backoff работает для единичных transient failures. 
 
 ### Три состояния
 
-```
-              ┌──────────┐
-         ┌───>│  CLOSED  │ (нормальная работа)
-         │    └────┬─────┘
-         │         │ N ошибок подряд
-         │         v
-         │    ┌──────────┐
-         │    │   OPEN   │ (запросы не пропускаем)
-         │    └────┬─────┘
-         │         │ прошло M секунд
-         │         v
-         │    ┌──────────────┐
-         │    │  HALF-OPEN   │ (пробуем один запрос)
-         │    └──────┬───────┘
-         │    успех  │   ошибка
-         └───────────┘      │
-              ^             │
-              └─────────────┘
+```mermaid
+stateDiagram-v2
+    CLOSED --> OPEN: N ошибок подряд
+    OPEN --> HALF_OPEN: прошло M секунд
+    HALF_OPEN --> CLOSED: пробный запрос успешен
+    HALF_OPEN --> OPEN: пробный запрос — ошибка
+
+    CLOSED: CLOSED (нормальная работа)
+    OPEN: OPEN (запросы не пропускаем)
+    HALF_OPEN: HALF-OPEN (пробуем один запрос)
 ```
 
 **CLOSED** — нормальная работа. Запросы проходят. Circuit breaker считает ошибки.
@@ -311,20 +303,14 @@ Analytics API завис (отвечает по 30 секунд).
 
 ### Решение: изолированные пулы
 
-```
-                 ┌─────────────────────────────────┐
-                 │           Puma (16 тредов)      │
-                 └─────────────────────────────────┘
-                                 │
-       ┌─────────────────────────┼─────────────────────────┐
-       v                         v                         v
-┌─────────────┐          ┌─────────────┐          ┌──────────────┐
-│ Payment Pool│          │ Email Pool  │          │Analytics Pool│
-│  (8 conn)   │          │  (4 conn)   │          │  (2 conn)    │
-└─────────────┘          └─────────────┘          └──────────────┘
-       │                         │                         │
-       v                         v                         v
-  Payment API               Email API               Analytics API
+```mermaid
+graph TD
+    Puma["Puma (16 тредов)"] --> Payment["Payment Pool (8 conn)"]
+    Puma --> Email["Email Pool (4 conn)"]
+    Puma --> Analytics["Analytics Pool (2 conn)"]
+    Payment --> PayAPI["Payment API"]
+    Email --> EmailAPI["Email API"]
+    Analytics --> AnalyticsAPI["Analytics API"]
 ```
 
 Каждый внешний сервис получает свой изолированный пул соединений. Analytics завис — занял свои 2 соединения. Payment и Email продолжают работать в своих пулах.

@@ -87,18 +87,16 @@ end
 
 Полная цепочка:
 
-```
-Client (Rails)                Redis              Server (Sidekiq process)
-                                                 
-perform_async(42)                                 
-  → Sidekiq::Client                               
-  → JSON: {class, args, jid...}                    
-  → client middleware chain                        
-  → LPUSH queue:default  ------>  queue:default    
-                                  queue:default  ------> BRPOP
-                                                   → JSON.parse
-                                                   → server middleware chain
-                                                   → SendEmailJob.new.perform(42)
+```mermaid
+sequenceDiagram
+    participant C as Client (Rails)
+    participant R as Redis
+    participant S as Server (Sidekiq)
+
+    C->>C: perform_async(42)<br/>→ Sidekiq::Client<br/>→ JSON: {class, args, jid...}<br/>→ client middleware chain
+    C->>R: LPUSH queue:default
+    R->>S: BRPOP
+    S->>S: JSON.parse<br/>→ server middleware chain<br/>→ SendEmailJob.new.perform(42)
 ```
 
 ## Middleware

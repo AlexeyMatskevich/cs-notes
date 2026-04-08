@@ -1,11 +1,7 @@
 # JSONB
 
-<details>
-<summary>Предпосылки</summary>
-
-[SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [индексы](../schema/04-indexes.md) (CREATE INDEX, типы индексов).
-
-</details>
+> [!info]- Предпосылки
+> [SELECT и фильтрация](../querying/00-select-and-filtering.md), [соединения](../querying/03-joins.md), [индексы](../schema/04-indexes.md) (CREATE INDEX, типы индексов).
 
 ← [PostgreSQL: расширения](index.md) | [Массивы и диапазоны](01-arrays-and-ranges.md) →
 

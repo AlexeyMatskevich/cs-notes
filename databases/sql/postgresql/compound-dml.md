@@ -1,11 +1,7 @@
 # Составные DML в PostgreSQL
 
-<details>
-<summary>Предпосылки</summary>
-
-[Составные DML-операции](../modification/02-compound-dml.md) (INSERT...SELECT, VALUES, MERGE), [DML](../modification/00-dml.md) (RETURNING, INSERT ON CONFLICT), [подзапросы и CTE](../querying/05-subqueries-and-cte.md) (WITH).
-
-</details>
+> [!info]- Предпосылки
+> [Составные DML-операции](../modification/02-compound-dml.md) (INSERT...SELECT, VALUES, MERGE), [DML](../modification/00-dml.md) (RETURNING, INSERT ON CONFLICT), [подзапросы и CTE](../querying/05-subqueries-and-cte.md) (WITH).
 
 Стандартный SQL решает вставку новых товаров и условное обновление через MERGE. Полная синхронизация включает ещё: массовое обновление цен через JOIN, удаление снятых товаров, архивирование с логированием. PostgreSQL добавляет инструменты для каждого шага.
 

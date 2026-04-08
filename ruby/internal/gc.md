@@ -1,11 +1,7 @@
 # Управление памятью в Ruby
 
-<details>
-<summary>Предпосылки</summary>
-
-[Исполнение](vm/02-execution.md) — VALUE, VM-стек, фреймы. [Объекты и классы](object-model/00-objects-and-classes.md) — RBasic, RObject, flags. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/03-linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/00-graph.md) (для графа объектов).
-
-</details>
+> [!info]- Предпосылки
+> [Исполнение](vm/02-execution.md) — VALUE, VM-стек, фреймы. [Объекты и классы](object-model/00-objects-and-classes.md) — RBasic, RObject, flags. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/03-linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/00-graph.md) (для графа объектов).
 
 ← [Формы объектов](object-model/02-shapes.md) | [Array](collections/00-array.md) →
 

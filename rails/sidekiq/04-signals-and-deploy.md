@@ -72,39 +72,35 @@ end
 
 OOM-killer ядра Linux отправляет `SIGKILL` — то есть ведёт себя как `kill -9`. Для Sidekiq это означает: если процесс потребляет слишком много памяти, задачи пропадут без предупреждения.
 
-<details>
-<summary>IterableJob: безопасная остановка длинных задач (Sidekiq 7.3+)</summary>
-
-Обычная задача при получении `TSTP`/`TERM` продолжает выполняться до завершения или до timeout. Если задача обрабатывает 100 000 записей и дошла до 50 000-й — при shutdown прогресс теряется, задача начнёт сначала.
-
-`IterableJob` решает это через cursor-based итерацию:
-
-```ruby
-class ReindexJob
-  include Sidekiq::IterableJob
-
-  def build_enumerator(user_id, cursor:)
-    active_record_records_enumerator(
-      User.find(user_id).posts,
-      cursor: cursor  # начать с сохранённой позиции
-    )
-  end
-
-  def each_iteration(post)
-    post.reindex!
-  end
-
-  def on_complete
-    Rails.logger.info "Reindexing finished"
-  end
-end
-```
-
-При получении сигнала текущая итерация завершается, cursor сохраняется. При перезапуске задача продолжает с сохранённого места — не с начала.
-
-Ограничение важно проговорить явно: каждая отдельная итерация всё равно должна укладываться в shutdown timeout. Если одна итерация сама работает дольше `-t` секунд, supervisor может добить процесс `SIGKILL`, и прогресс откатится к последнему сохранённому cursor.
-
-</details>
+> [!info]- IterableJob: безопасная остановка длинных задач (Sidekiq 7.3+)
+> Обычная задача при получении `TSTP`/`TERM` продолжает выполняться до завершения или до timeout. Если задача обрабатывает 100 000 записей и дошла до 50 000-й — при shutdown прогресс теряется, задача начнёт сначала.
+>
+> `IterableJob` решает это через cursor-based итерацию:
+>
+> ```ruby
+> class ReindexJob
+>   include Sidekiq::IterableJob
+>
+>   def build_enumerator(user_id, cursor:)
+>     active_record_records_enumerator(
+>       User.find(user_id).posts,
+>       cursor: cursor  # начать с сохранённой позиции
+>     )
+>   end
+>
+>   def each_iteration(post)
+>     post.reindex!
+>   end
+>
+>   def on_complete
+>     Rails.logger.info "Reindexing finished"
+>   end
+> end
+> ```
+>
+> При получении сигнала текущая итерация завершается, cursor сохраняется. При перезапуске задача продолжает с сохранённого места — не с начала.
+>
+> Ограничение важно проговорить явно: каждая отдельная итерация всё равно должна укладываться в shutdown timeout. Если одна итерация сама работает дольше `-t` секунд, supervisor может добить процесс `SIGKILL`, и прогресс откатится к последнему сохранённому cursor.
 
 ---
 

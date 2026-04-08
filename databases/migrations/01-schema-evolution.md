@@ -89,29 +89,25 @@ ALTER TABLE orders ADD COLUMN region TEXT;  -- nullable, без DEFAULT
 
 **Gate A — transaction drain.** Транзакции, начатые до deploy dual-write, могут закоммитить строки без `region` уже после основного backfill. Поэтому перед переключением чтения нужно пережить хвост старых транзакций. Нужен явный барьер rollout: система deploy должна подтвердить, что все экземпляры приложения перешли на dual-write. `pg_stat_activity` не заменяет такой барьер — запрос может начаться до rollout, но открыть транзакцию позже, и `xact_start` будет новее cutoff.
 
-<details>
-<summary>Операционные детали transaction drain</summary>
-
-`$deploy_timestamp` фиксируется в момент подтверждения последнего экземпляра приложения:
-
-```sql
--- В отдельном соединении без явного BEGIN/COMMIT
-SELECT clock_timestamp();  -- wall-clock время, не now()
-```
-
-`now()` возвращает время начала текущей транзакции. `clock_timestamp()` — реальное время вызова.
-
-`pg_stat_activity` — вспомогательная телеметрия для обнаружения забытых транзакций:
-
-```sql
-SELECT count(*) FROM pg_stat_activity
-WHERE xact_start < $deploy_timestamp
-  AND xact_start IS NOT NULL
-  AND datname = current_database()
-  AND pid <> pg_backend_pid();
-```
-
-</details>
+> [!info]- Операционные детали transaction drain
+> `$deploy_timestamp` фиксируется в момент подтверждения последнего экземпляра приложения:
+>
+> ```sql
+> -- В отдельном соединении без явного BEGIN/COMMIT
+> SELECT clock_timestamp();  -- wall-clock время, не now()
+> ```
+>
+> `now()` возвращает время начала текущей транзакции. `clock_timestamp()` — реальное время вызова.
+>
+> `pg_stat_activity` — вспомогательная телеметрия для обнаружения забытых транзакций:
+>
+> ```sql
+> SELECT count(*) FROM pg_stat_activity
+> WHERE xact_start < $deploy_timestamp
+>   AND xact_start IS NOT NULL
+>   AND datname = current_database()
+>   AND pid <> pg_backend_pid();
+> ```
 
 **Gate B — convergence.** После transaction drain сделать дополнительный проход по `WHERE region IS NULL` (tail-sweep) и проверить, что новый столбец стабильно заполнен. Если переключить чтение раньше, код увидит NULL в строках, которые основной backfill или поздние коммиты ещё не закрыли. Критерий зависит от типа миграции:
 

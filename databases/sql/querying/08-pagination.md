@@ -1,11 +1,7 @@
 # Пагинация
 
-<details>
-<summary>Предпосылки</summary>
-
-[сортировка и ограничение](01-sorting-and-limiting.md) (ORDER BY, LIMIT/OFFSET), [SELECT и фильтрация](00-select-and-filtering.md) (WHERE), [подзапросы и CTE](05-subqueries-and-cte.md) (подзапрос в FROM), [индексы](../schema/04-indexes.md) (CREATE INDEX, INCLUDE), [типы данных и NULL](../foundations/01-types-and-null.md) (NULL и сортировка).
-
-</details>
+> [!info]- Предпосылки
+> [сортировка и ограничение](01-sorting-and-limiting.md) (ORDER BY, LIMIT/OFFSET), [SELECT и фильтрация](00-select-and-filtering.md) (WHERE), [подзапросы и CTE](05-subqueries-and-cte.md) (подзапрос в FROM), [индексы](../schema/04-indexes.md) (CREATE INDEX, INCLUDE), [типы данных и NULL](../foundations/01-types-and-null.md) (NULL и сортировка).
 
 ← [Индексы](../schema/04-indexes.md) | [DML — изменение данных](../modification/00-dml.md) →
 

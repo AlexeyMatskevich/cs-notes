@@ -37,7 +37,7 @@ Leaf page:
 │  Special Space                                       │
 │    btpo_prev / btpo_next: связь с соседними листьями │
 │    btpo_level: 0 для листьев                         │
-│    btpo_flags: leaf? root? deleted?                   │
+│    btpo_flags: leaf? root? deleted?                  │
 └──────────────────────────────────────────────────────┘
 ```
 

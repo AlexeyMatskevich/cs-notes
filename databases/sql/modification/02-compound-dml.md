@@ -1,11 +1,7 @@
 # Составные DML-операции
 
-<details>
-<summary>Предпосылки</summary>
-
-[DML](00-dml.md) (INSERT, UPDATE, DELETE), [подзапросы](../querying/05-subqueries-and-cte.md) (EXISTS, подзапрос в FROM), [соединения](../querying/03-joins.md).
-
-</details>
+> [!info]- Предпосылки
+> [DML](00-dml.md) (INSERT, UPDATE, DELETE), [подзапросы](../querying/05-subqueries-and-cte.md) (EXISTS, подзапрос в FROM), [соединения](../querying/03-joins.md).
 
 ← [Транзакции](01-transactions.md) | [PostgreSQL: расширения SQL](../postgresql/index.md) →
 

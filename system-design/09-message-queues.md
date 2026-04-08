@@ -33,12 +33,10 @@ POST /orders
 
 **Message broker** (брокер сообщений) — сервис-посредник, который делает эту развязку возможной. Он принимает сообщения от producers, хранит их и доставляет consumers.
 
-```
-Producer (обработчик заказа)
-    ↓ publish ("заказ #42 оформлен")
-[Message Broker]
-    ↓ consume (когда consumer готов)
-Consumer (warehouse / billing / email / analytics)
+```mermaid
+flowchart TB
+    P["Producer<br>(обработчик заказа)"] -->|"publish<br>(заказ #42 оформлен)"| B["Message Broker"]
+    B -->|"consume<br>(когда consumer готов)"| C["Consumer<br>(warehouse / billing / email / analytics)"]
 ```
 
 С брокером обработчик заказа меняется:
@@ -85,10 +83,12 @@ Consumer упал до ACK — брокер отдаёт сообщение др
 
 **Point-to-point** (очередь задач) решает это: несколько consumers конкурируют за сообщения из одной очереди, но каждое конкретное сообщение достаётся только одному.
 
-```
-Producer → [Queue] → Consumer₁  (получил заказ #42)
-                  → Consumer₂  (получил заказ #43)
-                  → Consumer₃  (получил заказ #44)
+```mermaid
+flowchart LR
+    P["Producer"] --> Q["Queue"]
+    Q --> C1["Consumer₁<br>(заказ #42)"]
+    Q --> C2["Consumer₂<br>(заказ #43)"]
+    Q --> C3["Consumer₃<br>(заказ #44)"]
 ```
 
 Пять consumers обрабатывают заказы параллельно, каждый заказ — ровно одним consumer. Так работает [Sidekiq](../rails/sidekiq/index.md): воркеры конкурируют за задачи из очереди.
@@ -97,11 +97,13 @@ Producer → [Queue] → Consumer₁  (получил заказ #42)
 
 **Pub/Sub** (publish/subscribe): одно сообщение доставляется всем подписчикам.
 
-```
-Publisher → [Topic: order_created] → Subscriber (warehouse)
-                                   → Subscriber (email)
-                                   → Subscriber (analytics)
-                                   → Subscriber (loyalty)
+```mermaid
+flowchart LR
+    P["Publisher"] --> T["Topic:<br>order_created"]
+    T --> S1["Subscriber (warehouse)"]
+    T --> S2["Subscriber (email)"]
+    T --> S3["Subscriber (analytics)"]
+    T --> S4["Subscriber (loyalty)"]
 ```
 
 На практике оба паттерна комбинируются через **consumer group**. Consumers внутри одной группы конкурируют за сообщения (point-to-point: каждый заказ резервирует один worker). Разные группы на одном топике получают все сообщения независимо (pub/sub: и склад, и email видят каждый заказ). Группа «warehouse» из 5 workers плюс группа «email» из 2 workers — обе получают каждое событие заказа. Между группами — широковещание (каждая группа видит все события), внутри группы — конкуренция (каждое событие обрабатывает один consumer). Consumer groups реализованы в Kafka и [Redis Streams](../databases/redis/data-structures/05-stream.md).

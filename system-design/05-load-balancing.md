@@ -152,27 +152,20 @@ LB1 упал:
 
 ## Полный путь запроса
 
-```
-┌────────┐    DNS     ┌─────┐
-│ Client │ ────────>  │ DNS │  "api.example.com = ?"
-└────────┘            └─────┘
-    │                     │
-    │    <────────────────┘  "203.0.113.100"
-    │
-    │  HTTPS request to 203.0.113.100
-    v
-┌─────────────────────────────────────────┐
-│           Load Balancer (L7)            │
-│  - SSL termination (расшифровка HTTPS)  │
-│  - выбор сервера (round robin / ...)    │
-│  - health check (фоновый процесс)       │
-└─────────────────────────────────────────┘
-    │
-    │  HTTP request (уже без SSL)
-    v
-┌─────────┐  ┌─────────┐  ┌─────────┐
-│ Rails A │  │ Rails B │  │ Rails C │
-└─────────┘  └─────────┘  └─────────┘
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant D as DNS
+    participant LB as Load Balancer (L7)
+    participant S as Rails A / B / C
+
+    C->>D: api.example.com = ?
+    D->>C: 203.0.113.100
+    C->>LB: HTTPS request
+    Note over LB: SSL termination<br/>выбор сервера (round robin / ...)<br/>health check (фоновый процесс)
+    LB->>S: HTTP request (без SSL)
+    S->>LB: HTTP response
+    LB->>C: HTTPS response
 ```
 
 Клиент знает один адрес. DNS резолвит его в IP load balancer'а. LB расшифровывает HTTPS, выбирает живой сервер по алгоритму распределения, пересылает запрос. Сервер обрабатывает, отвечает LB, LB возвращает ответ клиенту. Health checks работают в фоне — к моменту прихода запроса LB уже знает, кто жив.

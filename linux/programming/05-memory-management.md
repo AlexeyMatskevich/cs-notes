@@ -1,11 +1,7 @@
 # Управление памятью
 
-<details>
-<summary>Предпосылки</summary>
-
-[виртуальная память](../foundations/05-virtual-memory.md) (страницы, TLB, page fault, overcommit, OOM killer), [отображение памяти](01-memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/data-path/02-ram.md) (NUMA).
-
-</details>
+> [!info]- Предпосылки
+> [виртуальная память](../foundations/05-virtual-memory.md) (страницы, TLB, page fault, overcommit, OOM killer), [отображение памяти](01-memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/data-path/02-ram.md) (NUMA).
 
 ← [Мультиплексирование ввода-вывода](04-io-multiplexing.md) | [Межпроцессное взаимодействие](06-ipc.md) →
 
@@ -213,19 +209,19 @@ resources:
 
 На серверах с несколькими процессорами (сокетами) каждый процессор имеет собственный контроллер памяти и собственные модули RAM. Эта архитектура называется [NUMA](../../computer/data-path/02-ram.md) (Non-Uniform Memory Access, неоднородный доступ к памяти). Доступ к «своей» памяти (local access) занимает ~80 нс, а к памяти другого процессора (remote access) — ~140 нс, потому что запрос проходит через межпроцессорную шину (QPI (QuickPath Interconnect) у Intel, Infinity Fabric у AMD).
 
-```text
-       Сокет 0                          Сокет 1
-  ┌──────────────┐                 ┌──────────────┐
-  |    CPU 0     |--- QPI/IF -----|    CPU 1     |
-  |  контроллер  |                 |  контроллер  |
-  |   памяти     |                 |   памяти     |
-  └──────┬───────┘                 └──────┬───────┘
-         |                                |
-    [ RAM 128 ГБ ]                   [ RAM 128 ГБ ]
-      NUMA node 0                     NUMA node 1
-
-   local: ~80 нс                    local: ~80 нс
-   remote: ~140 нс                  remote: ~140 нс
+```mermaid
+flowchart LR
+    subgraph N0["NUMA node 0<br>local: ~80 нс / remote: ~140 нс"]
+        CPU0["CPU 0<br>контроллер памяти"]
+        RAM0["RAM 128 ГБ"]
+        CPU0 --- RAM0
+    end
+    subgraph N1["NUMA node 1<br>local: ~80 нс / remote: ~140 нс"]
+        CPU1["CPU 1<br>контроллер памяти"]
+        RAM1["RAM 128 ГБ"]
+        CPU1 --- RAM1
+    end
+    CPU0 ---|"QPI / Infinity Fabric"| CPU1
 ```
 
 По умолчанию Linux применяет **first-touch policy** (политика первого касания): физический фрейм выделяется на том NUMA-узле, где работает поток, впервые обратившийся к странице. Если главный поток PostgreSQL инициализирует shared_buffers, все 128 ГБ окажутся на NUMA-узле, где работает главный поток — на одном из двух сокетов. Рабочие потоки на втором сокете будут обращаться к remote-памяти с полуторакратным штрафом по задержке.

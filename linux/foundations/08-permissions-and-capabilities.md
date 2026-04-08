@@ -1,11 +1,7 @@
 # Права доступа и capabilities
 
-<details>
-<summary>Предпосылки</summary>
-
-[процессы](02-processes.md) (UID/GID, fork/exec), [файловые дескрипторы](04-file-descriptors.md) (open(), проверка прав), [файловые системы](06-filesystems.md) (inode, rwx-биты).
-
-</details>
+> [!info]- Предпосылки
+> [процессы](02-processes.md) (UID/GID, fork/exec), [файловые дескрипторы](04-file-descriptors.md) (open(), проверка прав), [файловые системы](06-filesystems.md) (inode, rwx-биты).
 
 ← [Планировщик](07-scheduler.md) | [Синхронизация](../concurrency/00-synchronization.md) →
 
@@ -117,21 +113,17 @@ drwxrwxrwt 15 root root 4096 Mar 23 10:00 /tmp
 
 Буква `t` в конце означает sticky bit. Все пользователи могут создавать файлы в `/tmp` (права `777`), но удалить чужой файл не могут. Без sticky bit пользователь Alice могла бы удалить временные файлы пользователя Bob, потому что у неё есть write-доступ к директории `/tmp`.
 
-<details>
-<summary>Задача: после настройки общей директории для проекта разработчики жалуются, что не могут редактировать файлы друг друга, хотя все в группе www-data</summary>
-
-**Частая ошибка:** установить `chmod 775` на директорию, но забыть setgid. Новые файлы создаются с primary group каждого пользователя (`deploy`, `alice`, `bob`), а не с `www-data`.
-
-**Правильный вариант:**
-
-```
-chmod 2775 /var/www/project/    # setgid + rwxrwxr-x
-chown :www-data /var/www/project/
-```
-
-С setgid все новые файлы наследуют GID `www-data`. Дополнительно стоит проверить umask разработчиков: если umask 022, файлы создаются с правами 755 (нет записи для группы). Нужен umask 002, чтобы файлы получали права 775.
-
-</details>
+> [!info]- Задача: после настройки общей директории для проекта разработчики жалуются, что не могут редактировать файлы друг друга, хотя все в группе www-data
+> **Частая ошибка:** установить `chmod 775` на директорию, но забыть setgid. Новые файлы создаются с primary group каждого пользователя (`deploy`, `alice`, `bob`), а не с `www-data`.
+>
+> **Правильный вариант:**
+>
+> ```
+> chmod 2775 /var/www/project/    # setgid + rwxrwxr-x
+> chown :www-data /var/www/project/
+> ```
+>
+> С setgid все новые файлы наследуют GID `www-data`. Дополнительно стоит проверить umask разработчиков: если umask 022, файлы создаются с правами 755 (нет записи для группы). Нужен umask 002, чтобы файлы получали права 775.
 
 ## umask: маска создания файлов
 
@@ -277,14 +269,10 @@ user www-data;
 worker_processes 4;
 ```
 
-<details>
-<summary>Задача: Nginx worker упал с ошибкой "bind() to 0.0.0.0:80 failed (13: Permission denied)" после перезапуска. Master process работает. В чём причина?</summary>
-
-**Частая ошибка:** предполагать, что worker может самостоятельно вызвать `bind()`. Worker наследует уже открытый listen socket через fork() от master. Если master не смог выполнить bind (например, порт занят другим процессом), worker не может сделать это сам -- у него нет привилегий (EUID = www-data, нет `CAP_NET_BIND_SERVICE`).
-
-**Правильный подход:** проверить, запущен ли master process как root (`ps aux | grep nginx`). Если master запущен не от root и на бинарник не назначена capability `cap_net_bind_service`, bind(:80) невозможен. Далее -- проверить, не занят ли порт другим процессом (`ss -tlnp | grep :80`). Перезапуск workers через `nginx -s reload` отправляет SIGHUP master'у, который заново открывает listen socket и порождает новых workers.
-
-</details>
+> [!info]- Задача: Nginx worker упал с ошибкой "bind() to 0.0.0.0:80 failed (13: Permission denied)" после перезапуска. Master process работает. В чём причина?
+> **Частая ошибка:** предполагать, что worker может самостоятельно вызвать `bind()`. Worker наследует уже открытый listen socket через fork() от master. Если master не смог выполнить bind (например, порт занят другим процессом), worker не может сделать это сам -- у него нет привилегий (EUID = www-data, нет `CAP_NET_BIND_SERVICE`).
+>
+> **Правильный подход:** проверить, запущен ли master process как root (`ps aux | grep nginx`). Если master запущен не от root и на бинарник не назначена capability `cap_net_bind_service`, bind(:80) невозможен. Далее -- проверить, не занят ли порт другим процессом (`ss -tlnp | grep :80`). Перезапуск workers через `nginx -s reload` отправляет SIGHUP master'у, который заново открывает listen socket и порождает новых workers.
 
 ## Полная картина: Nginx и границы доступа
 

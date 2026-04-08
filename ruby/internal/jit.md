@@ -1,11 +1,7 @@
 # JIT-компиляция
 
-<details>
-<summary>Предпосылки</summary>
-
-[Компиляция](vm/01-compilation.md) — ISeq, YARV-байткод, `iseq_encoded`. [Исполнение](vm/02-execution.md) — фреймы (`rb_control_frame_t`), PC, SP, CFP, цикл VM. [Диспетчеризация методов](methods/00-method-dispatch.md) — инлайн-кеш, callable method entry (`rb_callable_method_entry_t`), инвалидация кеша. [Формы](object-model/02-shapes.md) — `shape_id`, инлайн-кеш переменных.
-
- </details>
+> [!info]- Предпосылки
+> [Компиляция](vm/01-compilation.md) — ISeq, YARV-байткод, `iseq_encoded`. [Исполнение](vm/02-execution.md) — фреймы (`rb_control_frame_t`), PC, SP, CFP, цикл VM. [Диспетчеризация методов](methods/00-method-dispatch.md) — инлайн-кеш, callable method entry (`rb_callable_method_entry_t`), инвалидация кеша. [Формы](object-model/02-shapes.md) — `shape_id`, инлайн-кеш переменных.
 
 ← [Метапрограммирование](metaprogramming.md) | [String](collections/02-string.md)
 

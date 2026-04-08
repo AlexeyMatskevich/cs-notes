@@ -128,64 +128,56 @@ Fan-out хорошо изолирует независимые ветви. Но 
 
 Нужно отправить итоговый email после завершения всего импорта, или оповестить пользователя, что заказ полностью обработан.
 
-<details>
-<summary>Batches (Sidekiq Pro)</summary>
+> [!info]- Batches (Sidekiq Pro)
+> Batch — группа jobs, за завершением которой можно наблюдать через callbacks:
+>
+> ```ruby
+> batch = Sidekiq::Batch.new
+> batch.description = "Import CSV #42"
+> batch.on(:success, ImportCallbacks, file_id: 42)
+> batch.on(:complete, ImportCallbacks, file_id: 42)
+>
+> batch.jobs do
+>   csv_rows.each { |row| ImportRowJob.perform_async(row.id) }
+> end
+> ```
+>
+> ```ruby
+> class ImportCallbacks
+>   def on_success(status, options)
+>     # Все jobs завершились успешно
+>     Mailer.import_done(options['file_id']).deliver_now
+>   end
+>
+>   def on_complete(status, options)
+>     # Все jobs завершились (успешно или нет)
+>     if status.failures > 0
+>       Mailer.import_partial(options['file_id'], status.failures).deliver_now
+>     end
+>   end
+> end
+> ```
+>
+> `on_success` вызывается, когда все jobs batch завершились успешно. `on_complete` — когда все jobs выполнились хотя бы по одному разу, независимо от результата (даже если часть ушла в retry). Это значит, что `on_complete` может сработать, пока часть jobs ещё повторяется. Если нужно реагировать на окончательную смерть job — есть callback `:death`.
+>
+> Ограничение: Batches не совместимы с ActiveJob — ActiveJob перехватывает retry, и Sidekiq видит job как «успешный», даже если он ещё повторяется.
 
-Batch — группа jobs, за завершением которой можно наблюдать через callbacks:
-
-```ruby
-batch = Sidekiq::Batch.new
-batch.description = "Import CSV #42"
-batch.on(:success, ImportCallbacks, file_id: 42)
-batch.on(:complete, ImportCallbacks, file_id: 42)
-
-batch.jobs do
-  csv_rows.each { |row| ImportRowJob.perform_async(row.id) }
-end
-```
-
-```ruby
-class ImportCallbacks
-  def on_success(status, options)
-    # Все jobs завершились успешно
-    Mailer.import_done(options['file_id']).deliver_now
-  end
-
-  def on_complete(status, options)
-    # Все jobs завершились (успешно или нет)
-    if status.failures > 0
-      Mailer.import_partial(options['file_id'], status.failures).deliver_now
-    end
-  end
-end
-```
-
-`on_success` вызывается, когда все jobs batch завершились успешно. `on_complete` — когда все jobs выполнились хотя бы по одному разу, независимо от результата (даже если часть ушла в retry). Это значит, что `on_complete` может сработать, пока часть jobs ещё повторяется. Если нужно реагировать на окончательную смерть job — есть callback `:death`.
-
-Ограничение: Batches не совместимы с ActiveJob — ActiveJob перехватывает retry, и Sidekiq видит job как «успешный», даже если он ещё повторяется.
-
-</details>
-
-<details>
-<summary>OSS-альтернативы для координации</summary>
-
-Для OSS Sidekiq есть community gems: [sidekiq-batch](https://github.com/breamware/sidekiq-batch) (API, близкий к Pro Batches) и [sidekiq-grouping](https://github.com/gzigzigzeo/sidekiq-grouping) (группировка мелких задач в пачки для оптимизации).
-
-Простейший подход без gems — хранить прогресс в Redis или базе данных:
-
-```ruby
-class ImportRowJob
-  include Sidekiq::Job
-
-  def perform(row_id, batch_key)
-    import(row_id)
-    remaining = Redis.current.decr(batch_key)
-    NotifyCompletionJob.perform_async(batch_key) if remaining == 0
-  end
-end
-```
-
-</details>
+> [!info]- OSS-альтернативы для координации
+> Для OSS Sidekiq есть community gems: [sidekiq-batch](https://github.com/breamware/sidekiq-batch) (API, близкий к Pro Batches) и [sidekiq-grouping](https://github.com/gzigzigzeo/sidekiq-grouping) (группировка мелких задач в пачки для оптимизации).
+>
+> Простейший подход без gems — хранить прогресс в Redis или базе данных:
+>
+> ```ruby
+> class ImportRowJob
+>   include Sidekiq::Job
+>
+>   def perform(row_id, batch_key)
+>     import(row_id)
+>     remaining = Redis.current.decr(batch_key)
+>     NotifyCompletionJob.perform_async(batch_key) if remaining == 0
+>   end
+> end
+> ```
 
 ## Command vs Event: модель интеграции
 

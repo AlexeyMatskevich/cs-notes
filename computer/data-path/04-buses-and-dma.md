@@ -256,7 +256,7 @@ DMA даёт устройству доступ к физической памя�
 
 ```mermaid
 flowchart LR
-    DEV["Устройство делает DMA<br/>на адрес DVA"] --> IOTLB{"IOTLB hit?"}
+    DEV["Устройство делает DMA<br>на адрес DVA"] --> IOTLB{"IOTLB hit?"}
     IOTLB -->|yes| PHYS["Физический адрес + права"]
     IOTLB -->|no| PT["Прочитать таблицы IOMMU"]
     PT --> PERM{"Доступ разрешён?"}
