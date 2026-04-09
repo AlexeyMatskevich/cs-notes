@@ -1,134 +1,21 @@
 {
-  "nodes": [
-    {
-      "id": "node-overview",
-      "type": "file",
-      "file": "messaging/messaging.md",
-      "x": 0,
-      "y": 100,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "group-kafka",
-      "type": "group",
-      "label": "Kafka",
-      "x": 560,
-      "y": -40,
-      "width": 3100,
-      "height": 340
-    },
-    {
-      "id": "node-kafka-overview",
-      "type": "file",
-      "file": "messaging/kafka/kafka.md",
-      "x": 580,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "node-what-is-kafka",
-      "type": "file",
-      "file": "messaging/kafka/architecture/what-is-kafka.md",
-      "x": 1100,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "node-replication",
-      "type": "file",
-      "file": "messaging/kafka/architecture/replication.md",
-      "x": 1620,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "node-producer",
-      "type": "file",
-      "file": "messaging/kafka/architecture/producer-reliability.md",
-      "x": 2140,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "node-consumer",
-      "type": "file",
-      "file": "messaging/kafka/architecture/consumer-internals.md",
-      "x": 2660,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "node-transactions",
-      "type": "file",
-      "file": "messaging/kafka/architecture/transactions.md",
-      "x": 2140,
-      "y": 200,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    }
-  ],
-  "edges": [
-    {
-      "id": "edge-overview-to-kafka",
-      "fromNode": "node-overview",
-      "toNode": "node-kafka-overview",
-      "fromSide": "right",
-      "toSide": "left"
-    },
-    {
-      "id": "edge-kafka-to-what",
-      "fromNode": "node-kafka-overview",
-      "toNode": "node-what-is-kafka",
-      "fromSide": "right",
-      "toSide": "left"
-    },
-    {
-      "id": "edge-what-to-replication",
-      "fromNode": "node-what-is-kafka",
-      "toNode": "node-replication",
-      "fromSide": "right",
-      "toSide": "left"
-    },
-    {
-      "id": "edge-replication-to-producer",
-      "fromNode": "node-replication",
-      "toNode": "node-producer",
-      "fromSide": "right",
-      "toSide": "left"
-    },
-    {
-      "id": "edge-replication-to-consumer",
-      "fromNode": "node-replication",
-      "toNode": "node-consumer",
-      "fromSide": "right",
-      "toSide": "left"
-    },
-    {
-      "id": "edge-producer-to-transactions",
-      "fromNode": "node-producer",
-      "toNode": "node-transactions",
-      "fromSide": "bottom",
-      "toSide": "top"
-    },
-    {
-      "id": "edge-consumer-to-transactions",
-      "fromNode": "node-consumer",
-      "toNode": "node-transactions",
-      "fromSide": "bottom",
-      "toSide": "top"
-    }
-  ]
+	"nodes":[
+		{"id":"node-overview","type":"file","file":"messaging/messaging.md","x":0,"y":100,"width":400,"height":60,"color":"6"},
+		{"id":"group-kafka","type":"group","label":"Kafka","x":560,"y":-40,"width":3100,"height":340},
+		{"id":"node-kafka-overview","type":"file","file":"messaging/kafka/kafka.md","x":580,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"node-what-is-kafka","type":"file","file":"messaging/kafka/architecture/what-is-kafka.md","x":1100,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"node-replication","type":"file","file":"messaging/kafka/architecture/replication.md","x":1620,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"node-producer","type":"file","file":"messaging/kafka/architecture/producer-reliability.md","x":2140,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"node-consumer","type":"file","file":"messaging/kafka/architecture/consumer-internals.md","x":2660,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"node-transactions","type":"file","file":"messaging/kafka/architecture/transactions.md","x":2140,"y":200,"width":400,"height":60,"color":"6"}
+	],
+	"edges":[
+		{"id":"edge-overview-to-kafka","fromNode":"node-overview","toNode":"node-kafka-overview","fromSide":"right","toSide":"left"},
+		{"id":"edge-kafka-to-what","fromNode":"node-kafka-overview","toNode":"node-what-is-kafka","fromSide":"right","toSide":"left"},
+		{"id":"edge-what-to-replication","fromNode":"node-what-is-kafka","toNode":"node-replication","fromSide":"right","toSide":"left"},
+		{"id":"edge-replication-to-producer","fromNode":"node-replication","toNode":"node-producer","fromSide":"right","toSide":"left"},
+		{"id":"edge-replication-to-consumer","fromNode":"node-replication","toNode":"node-consumer","fromSide":"right","toSide":"left"},
+		{"id":"edge-producer-to-transactions","fromNode":"node-producer","toNode":"node-transactions","fromSide":"bottom","toSide":"top"},
+		{"id":"edge-consumer-to-transactions","fromNode":"node-consumer","toNode":"node-transactions","fromSide":"bottom","toSide":"top"}
+	]
 }
