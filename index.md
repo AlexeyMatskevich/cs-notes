@@ -27,7 +27,7 @@ order: 0
 
 ## Карта доменов
 
-​```mermaid
+```mermaid
 flowchart LR
     F["Основы представления<br/>данных"]
     P["Программирование"]
@@ -62,7 +62,7 @@ flowchart LR
     SD --> MSG
     RB --> RL
     RD --> RL
-​```
+```
 
 Стрелки — направление «что читать до чего». Некоторые ветки независимы и могут идти параллельно: [сети](networking/networking.md) не требуют [архитектуры компьютера](computer/computer.md) или [Linux](linux/linux.md); [Ruby](ruby/ruby.md) и [Rails](rails/rails.md) — отдельная ветка, которой достаточно [базового программирования](programming/programming.md); [ACID](databases/acid.md) — общий фундамент для [PostgreSQL](databases/postgresql/postgresql.md) и [Redis](databases/redis/redis.md), читается до обеих.
 
