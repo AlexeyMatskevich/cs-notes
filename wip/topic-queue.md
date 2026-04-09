@@ -24,7 +24,7 @@
 - [x] Межпроцессное взаимодействие → [linux/programming/06-ipc.md](../linux/programming/ipc.md)
 - [x] Права доступа и capabilities → [linux/foundations/08-permissions-and-capabilities.md](../linux/foundations/permissions-and-capabilities.md)
 - [x] Управление памятью ядра → [linux/kernel/04-memory-management.md](../linux/kernel/memory-management.md)
-- [ ] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё. (Базовые заметки теперь существуют — осталось обновить AOF.)
+- [x] Redis AOF: переписать `databases/redis/persistence/01-aof.md`, вынести объяснение `fsync`/`write()` в отдельную базовую заметку и оставить ссылку на неё. (Базовые заметки теперь существуют — осталось обновить AOF.)
 
 ## Programming
 
