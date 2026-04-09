@@ -296,6 +296,10 @@ Lock-free оправдан в двух случаях: структура дан
 >
 > **Решение:** использовать hazard pointers или epoch-based reclamation. Поток публикует `old_top` как hazard pointer *до* чтения `old_top->next` — это гарантирует, что узел не будет освобождён, пока поток с ним работает.
 
+## См. также
+
+- [Ruby Ractor](../../ruby/internal/concurrency.md) — изоляция через запрет shared state вместо lock-free структур: сообщения копируются или помечаются shareable, MRI избегает сложности lock-free
+
 ## Sources
 
 - R. Kent Treiber, 1986, *Systems Programming: Coping with Parallelism* — IBM Research Report RJ 5118 — https://dominoweb.draco.res.ibm.com/58319a2ed2b1078985257003004617ef.html

@@ -13,7 +13,7 @@ order: 11
 # String
 
 > [!info]- Предпосылки
-> [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](array.md) (embedded/heap-паттерн, Copy-on-Write).
+> [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [Array](array.md) (embedded/heap-паттерн, Copy-on-Write), [режимы CPU и системные вызовы](../../../linux/foundations/cpu-modes-and-syscalls.md) (стоимость user→kernel перехода, null-terminator ABI), [иерархия памяти](../../../computer/data-path/memory-hierarchy.md) (cache lines, локальность).
 
 ← [Hash](hash.md) | [JIT](../jit.md) →
 

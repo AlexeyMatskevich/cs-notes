@@ -111,6 +111,7 @@ order: 0
 - [Аппаратное обеспечение](../computer/computer.md) — CPU, кеш, RAM, хранилище, шины
 - [PostgreSQL](../databases/postgresql/postgresql.md) — shared_buffers и page cache, WAL и sequential I/O, MVCC и процессы
 - [Redis](../databases/redis/redis.md) — event loop на epoll, fork+CoW для BGSAVE
+- [Ruby VM внутреннее устройство](../ruby/internal/internals.md) — GVL как `pthread_mutex_t` + condition variable, GC с bitmap marking (подготовка к `fork() + CoW`), Fiber как user-space кооперативные потоки, Ractor как почти-процессы с разделяемой памятью
 - [System Design: кеширование](../system-design/caching.md) — иерархия латентностей
 
 ## Sources

@@ -429,6 +429,10 @@ io_uring даёт выигрыш, когда узким местом стано�
 
 Цепочка развития: блокирующий ввод-вывод (один fd — один поток) → `select`/`poll` (один поток, но O(n) сканирование) → `epoll` (уведомление только о готовых fd, O(ready)) → `io_uring` (операции через разделяемую память, 0 syscalls на горячем пути).
 
+## См. также
+
+- [Ruby Fiber scheduler](../../ruby/internal/concurrency.md) — Async gem и falcon реализуют `Fiber::SchedulerInterface` поверх `io_uring`/`epoll`: миллионы fiber'ов на одном потоке кооперативно ждут I/O
+
 ## Sources
 
 - Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 63: Alternative I/O Models: https://man7.org/tlpi/

@@ -12,7 +12,7 @@ order: 6
 
 # Concurrency и масштабирование
 
-**Предпосылки:** [Sidekiq: дизайн задач](job-design.md), [Ruby concurrency](../../ruby/ruby-concurrency.md), [потоки](../../linux/foundations/threads.md).
+**Предпосылки:** [Sidekiq: дизайн задач](job-design.md), [Ruby concurrency](../../ruby/internal/concurrency.md), [потоки](../../linux/foundations/threads.md).
 
 <- [Дизайн задач](job-design.md) | [Тестирование и практики](testing.md) ->
 
@@ -27,7 +27,7 @@ order: 6
 :concurrency: 5
 ```
 
-Ruby-потоки работают под [GVL](../../ruby/ruby-concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код), но для I/O-bound задач это не проблема: GVL освобождается при блокирующем I/O, и потоки эффективно чередуют CPU и [I/O overlap](../../ruby/ruby-concurrency.md#io-overlap-потоки-полезны-даже-с-gvl). Для CPU-bound задач потоки не дают ускорения — здесь помогут дополнительные процессы.
+Ruby-потоки работают под [GVL](../../ruby/internal/concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код), но для I/O-bound задач это не проблема: GVL освобождается при блокирующем I/O, и потоки эффективно чередуют CPU и [I/O overlap](../../ruby/internal/concurrency.md#io-overlap-потоки-полезны-даже-с-gvl). Для CPU-bound задач потоки не дают ускорения — здесь помогут дополнительные процессы.
 
 ## Concurrency: сколько потоков?
 

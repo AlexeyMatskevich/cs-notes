@@ -13,7 +13,7 @@ order: 12
 # JIT-компиляция
 
 > [!info]- Предпосылки
-> [Компиляция](vm/compilation.md) — ISeq, YARV-байткод, `iseq_encoded`. [Исполнение](vm/execution.md) — фреймы (`rb_control_frame_t`), PC, SP, CFP, цикл VM. [Диспетчеризация методов](methods/method-dispatch.md) — инлайн-кеш, callable method entry (`rb_callable_method_entry_t`), инвалидация кеша. [Формы](object-model/shapes.md) — `shape_id`, инлайн-кеш переменных.
+> [Компиляция](vm/compilation.md) — ISeq, YARV-байткод, `iseq_encoded`. [Исполнение](vm/execution.md) — фреймы (`rb_control_frame_t`), PC, SP, CFP, цикл VM. [Диспетчеризация методов](methods/method-dispatch.md) — инлайн-кеш, callable method entry (`rb_callable_method_entry_t`), инвалидация кеша. [Формы](object-model/shapes.md) — `shape_id`, инлайн-кеш переменных. [Процессор](../../computer/cpu.md) — fetch-decode-execute, pipeline, branch prediction, IPC.
 
 ← [Метапрограммирование](metaprogramming.md) | [String](collections/string.md)
 

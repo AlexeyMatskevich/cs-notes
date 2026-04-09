@@ -13,7 +13,7 @@ order: 0
 
 # Клиенты и соединения
 
-**Предпосылки:** [Redis: архитектура](../../databases/redis/redis.md), [TCP](../../networking/transport/tcp.md) (соединение), [Puma](../../ruby/ruby-concurrency.md#puma-reactor--thread-pool) (воркеры + потоки).
+**Предпосылки:** [Redis: архитектура](../../databases/redis/redis.md), [TCP](../../networking/transport/tcp.md) (соединение), [Puma](../../ruby/internal/concurrency.md#puma-reactor--thread-pool) (воркеры + потоки).
 
 [Структуры данных на практике](data-structures-in-practice.md) ->
 

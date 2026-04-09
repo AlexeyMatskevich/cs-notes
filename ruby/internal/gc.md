@@ -13,7 +13,7 @@ order: 7
 # Управление памятью в Ruby
 
 > [!info]- Предпосылки
-> [Исполнение](vm/execution.md) — VALUE, VM-стек, фреймы. [Объекты и классы](object-model/objects-and-classes.md) — RBasic, RObject, flags. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/graph.md) (для графа объектов).
+> [Исполнение](vm/execution.md) — VALUE, VM-стек, фреймы. [Объекты и классы](object-model/objects-and-classes.md) — RBasic, RObject, flags. [Виртуальная память](../../linux/foundations/virtual-memory.md) — страницы, TLB, CoW после `fork()`. [Управление памятью ОС](../../linux/programming/memory-management.md) — `malloc`/`free` как базовая модель ручного управления. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/graph.md) (для графа объектов).
 
 ← [Формы объектов](object-model/shapes.md) | [Array](collections/array.md) →
 

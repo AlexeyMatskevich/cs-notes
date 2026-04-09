@@ -13,7 +13,7 @@ order: 10
 # Hash
 
 > [!info]- Предпосылки
-> [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты).
+> [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [иерархия памяти](../../../computer/data-path/memory-hierarchy.md) (cache lines, стоимость cache miss).
 
 ← [Array](array.md) | [String](string.md) →
 

@@ -27,7 +27,7 @@ Each domain has a domain-named overview file (e.g. `postgresql.md`, `linux.md`) 
 | `messaging/` | Kafka architecture: brokers, partitions, replication, consumers, transactions |
 | `computer/` | CPU pipeline, memory hierarchy, cache coherency, RAM, storage, buses, ISA, ABI, SIMD (12 notes in 2 axes) |
 | `linux/` | Processes, threads, VM, FS, concurrency, syscalls, drivers, ELF, containers (30 notes in 6 subdirs) |
-| `ruby/` | VM internals (tokenizer → compiler → execution), object model, methods, collections, GC, JIT, concurrency |
+| `ruby/` | Ruby-язык (WIP): системного описания языка пока нет. Внутри `ruby/internal/` — внутреннее устройство CRuby (парсер, YARV, объектная модель, GC, JIT) + конкурентность (GVL, Fiber, Ractor); строится на `computer/` (иерархия памяти, ABI, атомарные инструкции) и `linux/` (потоки, виртуальная память, системные вызовы) |
 | `wip/` | Unfinished drafts and note-flow process artifacts (*-research/design/review.md) |
 
 ## Commands
@@ -113,6 +113,11 @@ Common agent mistakes when writing notes (hookify rules catch some mechanically,
 - **Structure before pedagogy:** file structure (how many files, what order) should be derived from the narrative arc, not decided independently.
 - **"Don't think about elephants" effect:** negative instructions in prompts activate the patterns they prohibit. Commands should describe what to produce with constraints that require specific content — concrete artifacts grounded in prerequisite files make generic output structurally impossible.
 - **Atomicity has multiple meanings across the repo:** CPU-level atomicity (`computer/atomic-instructions.md`) = indivisible instruction via hardware (LOCK prefix, LL/SC). ACID atomicity (`databases/acid.md`) = all-or-nothing for a transaction group. Redis atomicity (`databases/redis/atomicity/`) = no interleaving because of single-threaded event loop. When writing about atomicity, link to the right definition for the context and clarify which sense is meant.
+- **Ruby-язык = WIP, Ruby-VM = `ruby/internal/`.** `ruby/ruby.md` помечен WIP: системного описания языка (синтаксис, объектная модель глазами пользователя, идиомы, stdlib) пока нет. Весь готовый контент — про внутреннее устройство CRuby и живёт в `ruby/internal/` (включая `concurrency.md` — туда переехал прежний `ruby-concurrency.md`). Это разделение отражено в `index.md` mermaid-графе и `knowledge-map.canvas`: Ruby-язык зависит только от programming, Ruby VM internals дополнительно — от computer и linux. При добавлении новых материалов соблюдать тот же split: пользовательское → в `ruby/`, реализационное → в `ruby/internal/`.
+
+## Deferred refactors
+
+- **Теория GC в `ruby/internal/gc.md` Часть I (строки 22–275):** mark-sweep, трассировка, generational, write barrier сейчас объясняются на уровне Ruby-мотивации — это временно, пока Ruby единственный потребитель VM-GC в репо. §9 structure-guide (общие теоретические файлы) запускается, когда концепция используется несколькими технологиями. Когда появится вторая заметка про VM-GC (JVM, Go, Python, V8), извлечь Часть I в `algorithms-and-data-structures/techniques/garbage-collection.md` (или новый shared-файл) и обновить `ruby/internal/gc.md` до опоры на извлечённую теорию.
 
 ## Commits
 

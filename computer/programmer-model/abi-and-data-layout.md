@@ -212,6 +212,10 @@ Windows x64 использует другой ABI: первые четыре ц�
 
 Путь от `process_order` через `calculate_total` и обратно опирается на все эти соглашения: структура `Order` скопирована на стек по правилам передачи MEMORY-класса, скалярные аргументы `calculate_total` переданы в регистрах по calling convention, стековый кадр выровнен по 16 байтам, поля структуры размещены с padding, результат вернулся в `xmm0`. Если любое из этих соглашений нарушено — вызывающий код прочитает мусор вместо результата, стек рассинхронизируется, и программа упадёт. ABI — невидимый контракт, который делает возможным раздельную компиляцию, динамическую линковку и взаимодействие кода на разных языках.
 
+## См. также
+
+- [Ruby VALUE tagged pointers](../../ruby/internal/object-model/objects-and-classes.md) — 64-bit word: нижний бит отличает immediate integer от heap pointer (возможно благодаря выравниванию pointer'ов по 8 байтам), ещё биты — symbol, true/false/nil
+
 ## Sources
 
 - Michael Matz, Jan Hubicka, Andreas Jaeger, Mark Mitchell, 2023, *System V Application Binary Interface, AMD64 Architecture Processor Supplement* — вызовы, регистры, layout: https://gitlab.com/x86-psABIs/x86-64-ABI

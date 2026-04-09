@@ -238,6 +238,10 @@ read(fd, &c, 1) -- syscall         fread() -- копия из буфера (x819
 
 Системный вызов даёт доступ к ядру. Но ядро должно управлять множеством одновременно работающих программ — выделять каждой память, процессорное время, [файловые дескрипторы](file-descriptors.md). Единица такого управления — [процесс](processes.md): экземпляр запущенной программы со своим адресным пространством и состоянием.
 
+## См. также
+
+- [Ruby I/O и GVL](../../ruby/internal/concurrency.md) — блокирующий syscall (`File.read`, `Socket.read`) освобождает GVL: пока поток в kernel mode, другие Ruby-потоки выполняют bytecode
+
 ## Sources
 
 - Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapter 3: System Call Interface: https://man7.org/tlpi/

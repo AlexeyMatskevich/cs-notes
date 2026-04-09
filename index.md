@@ -41,7 +41,8 @@ flowchart LR
     RD["Redis"]
     SD["System Design"]
     MSG["Messaging"]
-    RB["Ruby"]
+    RB["Ruby (WIP)"]
+    RBI["Ruby VM<br/>внутреннее устройство"]
     RL["Rails"]
 
     F --> P
@@ -50,6 +51,9 @@ flowchart LR
     P --> SQL
     P --> RB
     C --> L
+    C --> RBI
+    L --> RBI
+    RB --> RBI
     SQL --> PG
     SQL --> MIG
     A --> RD
@@ -64,7 +68,7 @@ flowchart LR
     RD --> RL
 ```
 
-Стрелки — направление «что читать до чего». Некоторые ветки независимы и могут идти параллельно: [сети](networking/networking.md) не требуют [архитектуры компьютера](computer/computer.md) или [Linux](linux/linux.md); [Ruby](ruby/ruby.md) и [Rails](rails/rails.md) — отдельная ветка, которой достаточно [базового программирования](programming/programming.md); [ACID](databases/acid.md) — общий фундамент для [PostgreSQL](databases/postgresql/postgresql.md) и [Redis](databases/redis/redis.md), читается до обеих.
+Стрелки — направление «что читать до чего». Некоторые ветки независимы и могут идти параллельно: [сети](networking/networking.md) не требуют [архитектуры компьютера](computer/computer.md) или [Linux](linux/linux.md); Ruby-язык ([Ruby (WIP)](ruby/ruby.md)) и [Rails](rails/rails.md) стоят поверх [базового программирования](programming/programming.md), а [Ruby VM внутреннее устройство](ruby/internal/internals.md) дополнительно опирается на [архитектуру компьютера](computer/computer.md) и [Linux](linux/linux.md); [ACID](databases/acid.md) — общий фундамент для [PostgreSQL](databases/postgresql/postgresql.md) и [Redis](databases/redis/redis.md), читается до обеих.
 
 ## Порядок изучения
 
@@ -125,7 +129,8 @@ SQL как язык доступа к реляционной модели, об�
 
 Конкретный язык, на котором написаны примеры в разделе «Программирование», и фреймворк, сводящий вместе Redis, фоновые задачи и практические сценарии.
 
-- [Ruby](ruby/ruby.md) — внутреннее устройство CRuby (парсер, YARV, объектная модель, GC, JIT), конкурентность (GVL, Fiber, Ractor)
+- [Ruby (WIP)](ruby/ruby.md) — системного описания языка ещё нет; два готовых раздела ниже — про реализацию VM
+- [Ruby VM внутреннее устройство](ruby/internal/internals.md) — парсер, YARV, объектная модель, методы, коллекции, GC, JIT, конкурентность (GVL, Fiber, Ractor); опирается на [computer/](computer/computer.md) и [linux/](linux/linux.md)
 - [Rails](rails/rails.md) — Redis в Rails-приложении, Sidekiq (архитектура, жизненный цикл задачи, гарантии, retry)
 
 ## Как всё связано

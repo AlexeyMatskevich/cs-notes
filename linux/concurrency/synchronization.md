@@ -410,6 +410,10 @@ pthread_join(thread_id, NULL);
 
 Для флага «данные готовы» кажется достаточным простой записи в переменную из одного потока и чтения из другого — два обращения к памяти, никаких блокировок. На x86 это работает. На ARM — нет: процессор может переупорядочить инструкции, и читающий поток увидит флаг «готово» раньше, чем данные, которые этот флаг сигнализирует. Почему так происходит и как это контролировать — тема [модели памяти](memory-ordering.md).
 
+## См. также
+
+- [Ruby Mutex и GVL](../../ruby/internal/concurrency.md) — `Mutex#synchronize` обёрнут над `pthread_mutex`; GVL — внутренний мьютекс VM, сериализующий исполнение Ruby bytecode даже при явных lock'ах пользователя
+
 ## Sources
 
 - Michael Kerrisk, 2010, *The Linux Programming Interface* — Chapters 30-31: Threads: Synchronization — https://man7.org/tlpi/

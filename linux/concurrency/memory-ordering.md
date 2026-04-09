@@ -283,6 +283,10 @@ let total = COUNTER.load(Ordering::Relaxed);
 
 Модель памяти даёт инструменты для корректной публикации данных между потоками без мьютекса. Но паттерн flag + data — простейший случай. Реальные задачи сложнее: очередь, где несколько producer и consumer одновременно добавляют и извлекают элементы, стек, где `push` и `pop` конкурируют за вершину. Мьютекс сериализует доступ и становится узким местом: при 64 потоках и 1M операций в секунду contention на мьютексе убивает пропускную способность. Lock-free структуры данных решают эту задачу: корректность без блокировок, используя только CAS и правильные ordering.
 
+## См. также
+
+- [Ruby memory model](../../ruby/internal/concurrency.md) — GVL даёт sequential consistency между Ruby-инструкциями, но не между отдельными bytecode: `@counter += 1` разбивается на read/compute/write и допускает потерю обновлений
+
 ## Sources
 
 - Herb Sutter, 2012, *atomic<> Weapons: The C++ Memory Model and Modern Hardware* — https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/

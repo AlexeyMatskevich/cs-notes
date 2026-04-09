@@ -11,8 +11,9 @@
 		{"id":"group-redis","type":"group","x":2560,"y":200,"width":440,"height":100,"label":"Redis"},
 		{"id":"group-system-design","type":"group","x":1360,"y":360,"width":440,"height":100,"label":"System Design"},
 		{"id":"group-messaging","type":"group","x":2560,"y":560,"width":440,"height":100,"label":"Messaging"},
-		{"id":"group-ruby","type":"group","x":640,"y":840,"width":440,"height":100,"label":"Ruby"},
+		{"id":"group-ruby","type":"group","x":640,"y":840,"width":440,"height":100,"label":"Ruby (WIP)"},
 		{"id":"group-rails","type":"group","x":1480,"y":840,"width":440,"height":100,"label":"Rails"},
+		{"id":"group-ruby-internal","type":"group","x":1080,"y":990,"width":440,"height":100,"label":"Ruby VM внутреннее устройство"},
 		{"id":"node-programming","type":"file","file":"programming/programming.md","x":-240,"y":220,"width":400,"height":60,"color":"1"},
 		{"id":"node-rails","type":"file","file":"rails/rails.md","x":1500,"y":860,"width":400,"height":60,"color":"6"},
 		{"id":"node-algorithms","type":"file","file":"algorithms-and-data-structures/algorithms-and-data-structures.md","x":660,"y":-160,"width":400,"height":60,"color":"4"},
@@ -25,7 +26,8 @@
 		{"id":"node-system-design","type":"file","file":"system-design/system-design.md","x":1380,"y":380,"width":400,"height":60,"color":"5"},
 		{"id":"node-postgresql","type":"file","file":"databases/postgresql/postgresql.md","x":2580,"y":-210,"width":400,"height":60,"color":"5"},
 		{"id":"node-redis","type":"file","file":"databases/redis/redis.md","x":2580,"y":220,"width":400,"height":60,"color":"5"},
-		{"id":"node-messaging","type":"file","file":"messaging/messaging.md","x":2580,"y":580,"width":400,"height":60,"color":"6"}
+		{"id":"node-messaging","type":"file","file":"messaging/messaging.md","x":2580,"y":580,"width":400,"height":60,"color":"6"},
+		{"id":"node-ruby-internal","type":"file","file":"ruby/internal/internals.md","x":1100,"y":1010,"width":400,"height":60,"color":"6"}
 	],
 	"edges":[
 		{"id":"edge-programming-to-algorithms","fromNode":"node-programming","fromSide":"right","toNode":"node-algorithms","toSide":"left","label":"переменные, циклы, функции, указатели"},
@@ -39,6 +41,9 @@
 		{"id":"edge-system-design-to-messaging","fromNode":"node-system-design","fromSide":"right","toNode":"node-messaging","toSide":"left","label":"delivery guarantees, message queues"},
 		{"id":"edge-programming-to-ruby","fromNode":"node-programming","fromSide":"bottom","toNode":"node-ruby","toSide":"left","label":"базовое программирование"},
 		{"id":"edge-ruby-to-rails","fromNode":"node-ruby","fromSide":"right","toNode":"node-rails","toSide":"left","label":"Ruby"},
-		{"id":"edge-linux-to-redis","fromNode":"node-linux","fromSide":"right","toNode":"node-redis","toSide":"left","label":"fork, COW, fsync"}
+		{"id":"edge-linux-to-redis","fromNode":"node-linux","fromSide":"right","toNode":"node-redis","toSide":"left","label":"fork, COW, fsync"},
+		{"id":"edge-ruby-to-ruby-internal","fromNode":"node-ruby","fromSide":"bottom","toNode":"node-ruby-internal","toSide":"top","label":"язык как основа"},
+		{"id":"edge-computer-to-ruby-internal","fromNode":"node-computer","fromSide":"bottom","toNode":"node-ruby-internal","toSide":"top","label":"иерархия памяти, ABI, atomic"},
+		{"id":"edge-linux-to-ruby-internal","fromNode":"node-linux","fromSide":"bottom","toNode":"node-ruby-internal","toSide":"top","label":"pthread, virtual memory, syscalls"}
 	]
 }

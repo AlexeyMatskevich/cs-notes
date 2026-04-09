@@ -12,7 +12,7 @@ order: 9
 # Array
 
 > [!info]- Предпосылки
-> [динамический массив](../../../algorithms-and-data-structures/linear/dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction).
+> [динамический массив](../../../algorithms-and-data-structures/linear/dynamic-array.md) (capacity vs length, амортизированный рост, переаллокация), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic, слоты), [GC](../gc.md) (VWA, размеры слотов, compaction), [иерархия памяти](../../../computer/data-path/memory-hierarchy.md) (cache lines, пространственная локальность).
 
 ← [GC](../gc.md) | [Hash](hash.md) →
 

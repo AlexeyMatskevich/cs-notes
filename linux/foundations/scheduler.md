@@ -284,6 +284,10 @@ store counter (= 6)
 
 Эта ситуация — гонка данных (data race) — прямое следствие двух фактов: потоки разделяют память (общее адресное пространство) и планировщик может прервать поток в произвольный момент. Защита от гонок — мьютексы, атомарные операции, барьеры памяти — тема [синхронизации](../concurrency/synchronization.md), вытекающая непосредственно из устройства планировщика.
 
+## См. также
+
+- [Ruby GVL timer thread](../../ruby/internal/concurrency.md) — внутренний timer thread устанавливает флаг каждые ~100мс, заставляя текущий Ruby-поток освободить GVL и позволить другому получить CPU
+
 ## Sources
 
 - Robert Love, 2010, *Linux Kernel Development* — Chapter 4: Process Scheduling — https://www.oreilly.com/library/view/linux-kernel-development/9780768696974/

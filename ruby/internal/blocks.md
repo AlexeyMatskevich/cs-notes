@@ -14,7 +14,7 @@ order: 9
 # Блоки, Proc и Lambda
 
 > [!info]- Предпосылки
-> [Компиляция](vm/compilation.md) — каждый scope (метод, блок) = отдельный ISeq. [Исполнение](vm/execution.md) — фреймы, EP, динамический доступ через `getlocal idx, level`. [Управление потоком](vm/control-flow.md) — `throw` + catch tables для break/return.
+> [Компиляция](vm/compilation.md) — каждый scope (метод, блок) = отдельный ISeq. [Исполнение](vm/execution.md) — фреймы, EP, динамический доступ через `getlocal idx, level`. [Управление потоком](vm/control-flow.md) — `throw` + catch tables для break/return. [Управление памятью ОС](../../linux/programming/memory-management.md) — стек vs куча, стоимость `malloc` при stack-to-heap promotion.
 
 ← [Определение методов](methods/method-definition.md) | [Метапрограммирование](metaprogramming.md) →
 

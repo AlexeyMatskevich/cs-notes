@@ -65,6 +65,7 @@ order: 0
 - [Linux](../linux/linux.md) — операционная система, которая управляет этим оборудованием
 - [PostgreSQL: буферный кеш](../databases/postgresql/durability/buffer-cache.md) — shared_buffers и page cache как прикладной пример иерархии памяти
 - [PostgreSQL: WAL](../databases/postgresql/durability/wal.md) — sequential I/O как сознательный выбор ради производительности
+- [Ruby VM внутреннее устройство](../ruby/internal/internals.md) — tagged pointers в VALUE (применение ABI), shape cache и inline cache (использование иерархии памяти), embedded/heap коллекции (cache-line-driven дизайн), YJIT (генерация нативного кода)
 - [System Design: кеширование](../system-design/caching.md) — иерархия латентностей на уровне распределённых систем
 
 ## Sources

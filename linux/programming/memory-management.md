@@ -323,6 +323,10 @@ PSS (Proportional Set Size) — доля физической памяти с у
 awk '/^Pss:/ {total += $2} END {print total, "kB"}' /proc/$(pidof postgres)/smaps
 ```
 
+## См. также
+
+- [Ruby malloc и GC](../../ruby/internal/gc.md) — MRI использует системный `malloc` (или jemalloc через `LD_PRELOAD`); `malloc_limit` триггерит GC, когда суммарные `malloc` между сборками превысили бюджет
+
 ## Sources
 
 - Mel Gorman, 2004, *Understanding the Linux Virtual Memory Manager*: https://www.kernel.org/doc/gorman/
