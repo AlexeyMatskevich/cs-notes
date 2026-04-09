@@ -17,10 +17,13 @@ Ruby-программа проходит путь от текста до рез�
 
 ## Порядок изучения
 
-```
-VM (00-03) --> Object Model (00-02) --+--> Methods --> Blocks --> Metaprogramming --+
-                                      |                                             |
-                                      +--> GC --> Collections ----------------------+--> JIT
+```mermaid
+graph LR
+    VM["VM (00-03)"] --> OM["Object Model (00-02)"]
+    OM --> Methods --> Blocks --> Meta["Metaprogramming"]
+    OM --> GC --> Collections
+    Meta --> JIT
+    Collections --> JIT
 ```
 
 ### VM: от текста до исполнения
