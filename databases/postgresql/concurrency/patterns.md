@@ -184,7 +184,7 @@ DELETE FROM inventory WHERE id = 102;                -- "останется 3"
 | REPEATABLE READ | Snapshot на транзакцию | Выше | При конфликте записи | Long-running мешают |
 | SERIALIZABLE | Snapshot + SIREAD locks | Отслеживание зависимостей | При любом опасном цикле | То же + память на locks |
 
-Ключевой эффект REPEATABLE READ и SERIALIZABLE на инфраструктуру — влияние на [VACUUM](../maintenance/vacuum.md). Эти уровни держат snapshot на всю транзакцию. Если транзакция длится 30 минут — все версии строк, существовавшие на момент старта, должны оставаться: VACUUM не может удалить dead tuples, видимые этому snapshot. Результат — таблицы разбухают (bloat), производительность падает.
+Ключевой эффект REPEATABLE READ и SERIALIZABLE на инфраструктуру — влияние на [VACUUM](../maintenance/vacuum.md). Эти уровни держат snapshot на всю транзакцию. Если транзакция длится 30 минут — все версии строк, существовавшие на момент старта, должны оставаться: [VACUUM](../maintenance/vacuum.md) не может удалить dead tuples, видимые этому snapshot. Результат — таблицы разбухают (bloat), производительность падает.
 
 ## Как выбрать
 

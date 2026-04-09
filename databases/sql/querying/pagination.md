@@ -13,7 +13,7 @@ order: 17
 # Пагинация
 
 > [!info]- Предпосылки
-> [сортировка и ограничение](sorting-and-limiting.md) (ORDER BY, LIMIT/OFFSET), [SELECT и фильтрация](select-and-filtering.md) (WHERE), [подзапросы и CTE](subqueries-and-cte.md) (подзапрос в FROM), [индексы](../schema/indexes.md) (CREATE INDEX, INCLUDE), [типы данных и NULL](../foundations/types-and-null.md) (NULL и сортировка).
+> [сортировка и ограничение](sorting-and-limiting.md) (ORDER BY, LIMIT/OFFSET), [SELECT и фильтрация](select-and-filtering.md) (WHERE), [подзапросы и CTE](subqueries-and-cte.md) (подзапрос в FROM), [индексы](../schema/indexes.md) (CREATE INDEX, INCLUDE), [типы данных и NULL](../foundations/types-and-null.md) ([NULL](../foundations/types-and-null.md) и сортировка).
 
 ← [Индексы](../schema/indexes.md) | [DML — изменение данных](../modification/dml.md) →
 

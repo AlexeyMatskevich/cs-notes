@@ -111,7 +111,7 @@ node_t *pop(void) {
 ```
 Поток A: pop()
   1. Читает old_top = X, new_top = X->next = Y
-  2. Приостановлен планировщиком
+  2. Приостановлен [планировщиком](../foundations/scheduler.md)
                                                   (поток A спит)
 Поток B:
   3. pop() — снимает X.  Стек: top -> Y -> Z

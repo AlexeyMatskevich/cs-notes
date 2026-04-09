@@ -139,7 +139,7 @@ VACUUM очистил dead tuples:
 
 **Что видит пользователь при bloat:**
 - Sequential scan читает все страницы, включая пустые. Запрос, который должен занять 1 секунду, занимает 10.
-- Буферный кеш заполняется пустыми страницами — полезные данные вытесняются.
+- [Буферный кеш](../durability/buffer-cache.md) заполняется пустыми страницами — полезные данные вытесняются.
 - Cache hit ratio падает, latency растёт.
 - Бэкапы становятся больше и дольше.
 
@@ -336,7 +336,7 @@ SET idle_in_transaction_session_timeout = '5min';
 ## Жизненный цикл VACUUM — итог
 
 ```text
-1. MVCC создаёт dead tuples при UPDATE/DELETE
+1. [MVCC](../concurrency/mvcc.md) создаёт dead tuples при UPDATE/DELETE
 2. Dead tuples накапливаются на страницах
 3. Autovacuum отслеживает количество dead tuples
 4. Когда превышен threshold → запускается VACUUM

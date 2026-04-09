@@ -20,17 +20,17 @@ aliases:
 
 Фундамент: как данные лежат на диске.
 
-- [ACID в PostgreSQL](storage/acid.md) — реализация [ACID](../acid.md) через MVCC, WAL, constraints
+- [ACID в PostgreSQL](storage/acid.md) — реализация [ACID](../acid.md) через [MVCC](concurrency/mvcc.md), [WAL](durability/wal.md), constraints
 - [Страницы и кортежи](storage/pages-and-tuples.md) — физическая единица хранения и формат строки
 - [TOAST](storage/toast.md) — вынос больших значений за пределы страницы
-- [Физическая структура хранения](storage/physical-layout.md) — файлы, форки, сегменты на диске и связь с WAL
+- [Физическая структура хранения](storage/physical-layout.md) — файлы, форки, сегменты на диске и связь с [WAL](durability/wal.md)
 
 ### Устойчивость к сбоям и кеширование
 
 Как PostgreSQL переживает сбои и почему дисковый I/O не убивает latency.
 
 - [WAL](durability/wal.md) — журнал предзаписи для восстановления после сбоя
-- [Буферный кеш](durability/buffer-cache.md) — shared buffers, dirty pages, [LRU](../../algorithms-and-data-structures/linear/lru-cache.md) vs [clock-sweep](../../algorithms-and-data-structures/linear/clock-sweep.md), WAL before data
+- [Буферный кеш](durability/buffer-cache.md) — shared buffers, dirty pages, [LRU](../../algorithms-and-data-structures/linear/lru-cache.md) vs [clock-sweep](../../algorithms-and-data-structures/linear/clock-sweep.md), [WAL](durability/wal.md) before data
 
 ### Параллельный доступ
 
@@ -105,19 +105,19 @@ aliases:
 
 PostgreSQL — система компромиссов. Каждая гарантия имеет цену:
 
-**Durability vs Performance:** Писать на диск при каждом COMMIT дорого (random I/O). Решение — WAL (sequential I/O). Цена — сложность recovery и необходимость checkpoint'ов.
+**Durability vs Performance:** Писать на диск при каждом COMMIT дорого (random I/O). Решение — [WAL](durability/wal.md) (sequential I/O). Цена — сложность recovery и необходимость checkpoint'ов.
 
-**Isolation vs Performance:** Блокировки при чтении убивают параллелизм. Решение — MVCC (версионирование). Цена — dead tuples и необходимость VACUUM.
+**Isolation vs Performance:** Блокировки при чтении убивают параллелизм. Решение — [MVCC](concurrency/mvcc.md) (версионирование). Цена — dead tuples и необходимость [VACUUM](maintenance/vacuum.md).
 
-**Memory vs I/O:** Диск медленный. Решение — буферный кеш (shared buffers). Цена — память ограничена, нужен алгоритм вытеснения, dirty pages требуют координации с WAL.
+**Memory vs I/O:** Диск медленный. Решение — [буферный кеш](durability/buffer-cache.md) (shared buffers). Цена — память ограничена, нужен алгоритм вытеснения, dirty pages требуют координации с [WAL](durability/wal.md).
 
-**Space vs Flexibility:** Tuple должен помещаться в страницу. Решение — TOAST (вынос больших значений). Цена — дополнительный I/O при чтении больших колонок.
+**Space vs Flexibility:** Tuple должен помещаться в страницу. Решение — [TOAST](storage/toast.md) (вынос больших значений). Цена — дополнительный I/O при чтении больших колонок.
 
-**Correctness vs Performance:** Полная сериализуемость требует блокировок или откатов. Решение — уровни изоляции как компромисс. Цена — программист должен понимать, какие аномалии возможны.
+**Correctness vs Performance:** Полная сериализуемость требует блокировок или откатов. Решение — [уровни изоляции](concurrency/isolation-levels.md) как компромисс. Цена — программист должен понимать, какие [аномалии](concurrency/anomalies.md) возможны.
 
 **Simplicity vs Flexibility:** Один механизм защиты не подходит всем. Решение — два подхода (оптимистичный/пессимистичный) + атомарные операции SQL. Цена — программист должен выбирать.
 
-**XID Space vs Complexity:** 32-битный XID ограничен, оборачивается. Решение — freezing старых tuples. Цена — VACUUM должен успевать замораживать, долгие транзакции опасны.
+**XID Space vs Complexity:** 32-битный XID ограничен, оборачивается. Решение — freezing старых tuples. Цена — [VACUUM](maintenance/vacuum.md) должен успевать замораживать, долгие транзакции опасны.
 
 ## Sources
 

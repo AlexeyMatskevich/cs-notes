@@ -21,15 +21,15 @@ Rails-приложение на Puma — это несколько процес�
 
 ## Содержание
 
-[Клиенты и соединения](clients-and-connections.md) — redis-rb, hiredis-client, connection_pool, конфигурация нескольких инстансов Redis под разные задачи.
+[Клиенты и соединения](clients-and-connections.md) — redis-rb, hiredis-client, connection_pool, конфигурация нескольких инстансов [Redis](../../databases/redis/redis.md) под разные задачи.
 
 [Структуры данных на практике](data-structures-in-practice.md) — карта выбора: STRING, HASH, LIST, SET, ZSET, Stream, Bitmap, HyperLogLog и Pub/Sub на конкретных Rails-сценариях из `practice/`.
 
-[Команды, блокирующие Redis](blocking-pitfalls.md) — какие команды блокируют event loop и как этого избежать в Rails-коде.
+[Команды, блокирующие Redis](blocking-pitfalls.md) — какие команды блокируют [event loop](../../databases/redis/architecture/event-loop.md) и как этого избежать в Rails-коде.
 
 ## Связанные заметки
 
-- [Sidekiq](../sidekiq/sidekiq.md) — фоновые задачи через Redis LIST + BRPOP
+- [Sidekiq](../sidekiq/sidekiq.md) — [фоновые задачи](../sidekiq/architecture.md) через Redis LIST + BRPOP
 - [Кэширование](../../system-design/caching.md) — когерентность, инвалидация, stampede
 - [Очереди сообщений](../../system-design/message-queues.md) — acknowledgment, point-to-point vs pub/sub, лог vs очередь
 - [Гарантии доставки](../../system-design/delivery-guarantees.md) — at-most-once, at-least-once, exactly-once

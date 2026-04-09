@@ -14,7 +14,7 @@ order: 18
 
 # DML — изменение данных
 
-**Предпосылки:** [таблицы и типы](../schema/tables-and-types.md) (CREATE TABLE, DEFAULT), [ограничения](../schema/constraints.md) (NOT NULL, PK, FK, CHECK).
+**Предпосылки:** [таблицы и типы](../schema/tables-and-types.md) (CREATE TABLE, DEFAULT), [ограничения](../schema/constraints.md) ([NOT NULL](../schema/constraints.md), [PK](../schema/constraints.md), [FK](../schema/constraints.md), [CHECK](../schema/constraints.md)).
 
 ← [Пагинация](../querying/pagination.md) | [Транзакции](transactions.md) →
 

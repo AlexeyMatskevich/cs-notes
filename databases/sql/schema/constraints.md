@@ -16,7 +16,7 @@ order: 13
 
 # Ограничения (constraints)
 
-**Предпосылки:** [реляционная модель](../foundations/relational-model.md) (первичный ключ, внешний ключ, ссылочная целостность), [таблицы и типы](tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT).
+**Предпосылки:** [реляционная модель](../foundations/relational-model.md) (первичный ключ, внешний ключ, ссылочная целостность), [таблицы и типы](tables-and-types.md) (CREATE TABLE, типы данных, DEFAULT), [типы данных и NULL](../foundations/types-and-null.md).
 
 ← [Таблицы и типы](tables-and-types.md) | [Партиционирование](partitioning.md) →
 
@@ -47,7 +47,7 @@ CREATE TABLE users (
 );
 ```
 
-PostgreSQL автоматически создаёт уникальный [индекс](indexes.md) для PRIMARY KEY. Почти каждая таблица должна иметь PRIMARY KEY.
+PostgreSQL автоматически создаёт уникальный [индекс](indexes.md) для PRIMARY KEY. Почти каждая таблица должна иметь PRIMARY KEY. Подробнее о [индексах](indexes.md) и их роли в производительности см. в соответствующей заметке.
 
 ## UNIQUE — уникальность значений
 
@@ -58,11 +58,11 @@ CREATE TABLE users (
 );
 ```
 
-UNIQUE запрещает дубликаты в столбце (или комбинации столбцов). PostgreSQL реализует UNIQUE через уникальный [индекс](indexes.md).
+UNIQUE запрещает дубликаты в столбце (или комбинации столбцов). PostgreSQL реализует UNIQUE через уникальный [индекс](indexes.md). Подробнее о [индексах](indexes.md).
 
 ### UNIQUE и NULL
 
-`UNIQUE` не запрещает несколько NULL — потому что `NULL = NULL` в SQL возвращает NULL, не TRUE ([трёхзначная логика](../foundations/types-and-null.md#трёхзначная-логика)), и два NULL не считаются дубликатами:
+`UNIQUE` не запрещает несколько NULL — потому что [NULL](../foundations/types-and-null.md) = NULL в SQL возвращает NULL, не TRUE ([трёхзначная логика](../foundations/types-and-null.md#трёхзначная-логика)), и два NULL не считаются дубликатами:
 
 ```sql
 CREATE TABLE emails (email TEXT UNIQUE);

@@ -16,7 +16,7 @@ order: 11
 # Оконные функции
 
 > [!info]- Предпосылки
-> [агрегация](aggregation.md) (агрегатные функции, GROUP BY), [соединения](joins.md) (JOIN), [подзапросы и CTE](subqueries-and-cte.md) (коррелированные подзапросы, CTE).
+> [агрегация](aggregation.md) (агрегатные функции, [GROUP BY](aggregation.md)), [соединения](joins.md) ([JOIN](joins.md)), [подзапросы и CTE](subqueries-and-cte.md) (коррелированные подзапросы, CTE).
 
 ← [Операции над множествами](set-operations.md) | [Таблицы и типы](../schema/tables-and-types.md) →
 

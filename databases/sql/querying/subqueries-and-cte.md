@@ -14,7 +14,7 @@ order: 9
 
 # Подзапросы и CTE
 
-**Предпосылки:** [соединения](joins.md) (JOIN), [агрегация](aggregation.md) (GROUP BY, агрегатные функции).
+**Предпосылки:** [соединения](joins.md) ([JOIN](joins.md)), [агрегация](aggregation.md) ([GROUP BY](aggregation.md), агрегатные функции).
 
 ← [Расширенная группировка](grouping-sets.md) | [Операции над множествами](set-operations.md) →
 

@@ -12,7 +12,7 @@ order: 8
 
 # Расширенная группировка
 
-**Предпосылки:** [агрегация](aggregation.md) (GROUP BY, HAVING, агрегатные функции).
+**Предпосылки:** [агрегация](aggregation.md) ([GROUP BY](aggregation.md), [HAVING](aggregation.md), агрегатные функции).
 
 ← [Соединения](joins.md) | [Подзапросы и CTE](subqueries-and-cte.md) →
 

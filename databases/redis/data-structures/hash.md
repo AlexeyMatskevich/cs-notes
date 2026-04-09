@@ -70,7 +70,7 @@ HEXPIRE user:123 1800 FIELDS 1 session_token   -- session_token истечёт �
 HTTL user:123 FIELDS 1 session_token            -- → 1800
 ```
 
-На версиях до 7.4 выбор ограничен: `EXPIRE` на весь ключ, отдельные STRING-ключи с индивидуальным TTL или Lua-скрипт, удаляющий поля по метке времени.
+На версиях до 7.4 выбор ограничен: `EXPIRE` на весь ключ, отдельные STRING-ключи с индивидуальным TTL или [Lua-скрипт](../atomicity/lua-scripting.md), удаляющий поля по метке времени.
 
 ## Две кодировки: listpack и hashtable
 

@@ -17,7 +17,7 @@ order: 8
 
 ← [Диспетчеризация методов](method-dispatch.md) | [Блоки](../blocks.md) →
 
-В [заметке о компиляции](../vm/compilation.md) мы видели, что `def` создаёт отдельный [ISeq](../vm/compilation.md) для тела метода. В [заметках о модулях](../object-model/modules.md) и [диспетчеризации](method-dispatch.md) — как Ruby находит метод по цепочке `super` и вызывает его. Но один шаг пропущен: как скомпилированный ISeq попадает в таблицу методов класса?
+В [заметке о компиляции](../vm/compilation.md) мы видели, что `def` создаёт отдельный [ISeq](../vm/compilation.md) для тела [метода](method-definition.md). В [заметках о модулях](../object-model/modules.md) и [диспетчеризации](method-dispatch.md) — как Ruby находит [метод](method-definition.md) по цепочке `super` и вызывает его. Но один шаг пропущен: как скомпилированный [ISeq](../vm/compilation.md) попадает в таблицу методов класса?
 
 ## Куда попадает метод
 

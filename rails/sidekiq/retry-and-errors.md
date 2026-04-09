@@ -20,7 +20,7 @@ order: 3
 
 ## Как Sidekiq перехватывает ошибку
 
-Исключение из `perform` не уходит в никуда. Processor оборачивает server middleware chain в `JobRetry` — это не middleware, а обёртка уровнем выше. Если `perform` (или любой server middleware) выбросит исключение, оно поднимается до `JobRetry#process_retry`:
+Исключение из `perform` не уходит в никуда. [Processor](architecture.md#устройство-серверного-процесса) оборачивает server middleware chain в `JobRetry` — это не middleware, а обёртка уровнем выше. Если `perform` (или любой server middleware) выбросит исключение, оно поднимается до `JobRetry#process_retry`:
 
 ```
 Processor
@@ -29,13 +29,13 @@ Processor
               └── perform(args)
 ```
 
-`JobRetry` увеличивает счётчик попыток в хеше задачи и кладёт задачу в sorted set `retry` через `ZADD`:
+`JobRetry` увеличивает счётчик попыток в хеше [задачи](job-lifecycle.md) и кладёт [задачу](job-lifecycle.md) в sorted set `retry` через `ZADD`:
 
 ```
 ZADD retry <время_следующей_попытки> '<обновлённый_json>'
 ```
 
-Score — Unix timestamp следующей попытки. Задача лежит в `retry`, пока Poller не обнаружит, что её время наступило, и не переместит в рабочую очередь.
+Score — Unix timestamp следующей попытки. Задача лежит в `retry`, пока [Poller](architecture.md#устройство-серверного-процесса) не обнаружит, что её время наступило, и не переместит в рабочую очередь.
 
 ## Формула задержки
 
@@ -67,15 +67,15 @@ delay = (count ** 4) + 15 + (rand(10) * (count + 1))
 
 ## Retry sorted set и Poller
 
-Sorted set `retry` работает как [delayed queue](../../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue): score = timestamp следующей попытки. Poller периодически выполняет `ZRANGEBYSCORE retry -inf <now>` и перемещает «созревшие» задачи в рабочие очереди.
+Sorted set `retry` работает как [delayed queue](../../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue): score = timestamp следующей попытки. [Poller](architecture.md#устройство-серверного-процесса) периодически выполняет `ZRANGEBYSCORE retry -inf <now>` и перемещает «созревшие» задачи в рабочие очереди.
 
 По умолчанию `ZRANGEBYSCORE` + `LPUSH` — не атомарная операция. Crash между ними может привести к дубликату или потере. Reliable scheduler (Pro) решает это через Lua-скрипт.
 
-Интервал проверки Poller адаптируется: чем больше Sidekiq-процессов в кластере, тем реже каждый процесс проверяет sorted sets. Это предотвращает thundering herd на уровне инфраструктуры — по той же логике, что jitter в формуле retry предотвращает его на уровне задач.
+Интервал проверки [Poller](architecture.md#устройство-серверного-процесса) адаптируется: чем больше [Sidekiq](sidekiq.md)-процессов в кластере, тем реже каждый процесс проверяет sorted sets. Это предотвращает thundering herd на уровне инфраструктуры — по той же логике, что jitter в формуле retry предотвращает его на уровне задач.
 
 ## Dead set: когда retry бессмысленен
 
-После 25 попыток (по умолчанию) задача переносится в sorted set `dead` — это [Dead Letter Queue](../../system-design/message-queues.md#dead-letter-queue). Dead set ограничен: максимум 10 000 задач, хранение 6 месяцев. Задачи из dead set можно вручную запустить заново через Web UI.
+После 25 попыток (по умолчанию) задача переносится в sorted set `dead` — это [Dead Letter Queue](../../system-design/message-queues.md#dead-letter-queue). Dead set ограничен: максимум 10 000 задач, хранение 6 месяцев. Задачи из dead set можно вручную запустить заново через Web UI Sidekiq.
 
 Не каждая ошибка заслуживает 25 попыток. [Transient failure](../../system-design/reliability-patterns.md#transient-vs-permanent-failure) (API down на час) — retry поможет. Permanent failure (невалидный email, несуществующий order_id) — 25 попыток бессмысленны, задача займёт место в retry set, потратит ресурсы и всё равно окажется в dead.
 
@@ -123,7 +123,7 @@ end
 
 ---
 
-Retry обрабатывает ошибки кода — email-сервис вернул 500, retry подождёт и попробует снова. Но что если причина не в коде, а в инфраструктуре: нужен deploy новой версии, перезапуск сервера, обновление зависимостей? Как остановить Sidekiq, не теряя in-flight задачи?
+Retry обрабатывает ошибки кода — email-сервис вернул 500, retry подождёт и попробует снова. Но что если причина не в коде, а в инфраструктуре: нужен deploy новой версии, перезапуск сервера, обновление зависимостей? Как остановить Sidekiq, не теряя in-flight задачи? Это описано в [сигналах и deploy](signals-and-deploy.md).
 
 ---
 

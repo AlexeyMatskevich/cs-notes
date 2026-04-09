@@ -254,7 +254,7 @@ FROM employees;
  Евгений  | 2024-02-01 | 2024-01-01
 ```
 
-DATE_TRUNC часто используется вместе с GROUP BY для подсчёта по периодам — это рассмотрено в [агрегации](../querying/aggregation.md).
+DATE_TRUNC часто используется вместе с [GROUP BY](../querying/aggregation.md) для подсчёта по периодам — это рассмотрено в [агрегации](../querying/aggregation.md).
 
 Доступные точности: microseconds, milliseconds, second, minute, hour, day, week, month, quarter, year.
 

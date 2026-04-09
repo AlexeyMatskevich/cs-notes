@@ -14,7 +14,7 @@ order: 16
 
 # Индексы
 
-**Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) (PRIMARY KEY, UNIQUE).
+**Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) ([PRIMARY KEY](constraints.md), [UNIQUE](constraints.md)).
 
 ← [Представления](views.md) | [Пагинация](../querying/pagination.md) →
 
@@ -52,7 +52,7 @@ Index Scan using idx_orders_customer on orders  (cost=0.56..8.58 rows=50 width=1
 CREATE UNIQUE INDEX idx_users_email ON users (email);
 ```
 
-UNIQUE INDEX запрещает дубликаты — функционально эквивалентен UNIQUE constraint из [ограничений](constraints.md). PostgreSQL реализует UNIQUE constraint через уникальный индекс.
+UNIQUE INDEX запрещает дубликаты — функционально эквивалентен UNIQUE [constraint](constraints.md) из [ограничений](constraints.md). PostgreSQL реализует UNIQUE [constraint](constraints.md) через уникальный индекс.
 
 ## Составной индекс
 

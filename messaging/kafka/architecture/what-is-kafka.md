@@ -45,7 +45,7 @@ Sequential I/O быстрее на любом носителе. Kafka испол
 
 ## Broker: сервер в кластере
 
-Kafka хранит данные на обычных серверах с локальными дисками. Каждый такой сервер называется **broker** (брокер) — процесс Kafka, запущенный на машине. В [терминологии message brokers](../../../system-design/message-queues.md) — посредник между producer и consumer: принимает сообщения, хранит, отдаёт. Отличие от Redis — данные на диске, не в оперативной памяти.
+Kafka хранит данные на обычных серверах с локальными дисками. Каждый такой сервер называется **broker** (брокер) — процесс Kafka, запущенный на машине. В [терминологии message brokers](../../../system-design/message-queues.md) — посредник между [producer](producer-reliability.md) и [consumer](consumer-internals.md): принимает сообщения, хранит, отдаёт. Отличие от Redis — данные на диске, не в оперативной памяти.
 
 Кластер — несколько broker'ов. Для нашего сценария — три: Broker 0, Broker 1, Broker 2, каждый на отдельном сервере с локальным диском.
 
@@ -75,7 +75,7 @@ Broker 0                 Broker 1                 Broker 2
 
 `order_events-0` ... `order_events-5` — физические директории на дисках broker'ов. 750 GB распределяются по трём серверам, по ~250 GB на каждом. Обычные диски, не терабайт RAM.
 
-Partition в Kafka играет тройную роль. Это единица **распределения** ([шардирования](../../../system-design/message-queues.md)): разные партиции живут на разных broker'ах, данные и нагрузка распределяются по кластеру. Это единица **порядка**: внутри одной партиции записи строго упорядочены по времени добавления. И это единица **параллелизма**: каждую партицию в consumer group читает один consumer.
+Partition в Kafka играет тройную роль. Это единица **распределения** ([шардирования](../../../system-design/message-queues.md)): разные [партиции](../../../system-design/message-queues.md) живут на разных broker'ах, данные и нагрузка распределяются по кластеру. Это единица **порядка**: внутри одной [партиции](../../../system-design/message-queues.md) записи строго упорядочены по времени добавления. И это единица **параллелизма**: каждую [партицию](../../../system-design/message-queues.md) в [consumer group](../../../system-design/message-queues.md) читает один [consumer](consumer-internals.md).
 
 ## Partition key и порядок событий
 
@@ -113,9 +113,9 @@ Offset не глобален для topic'а — у каждой партици�
 
 ## Consumer groups: независимые указатели
 
-Пять consumer groups хотят получить каждое событие: seller read DB, Elasticsearch, ClickHouse, рекомендации, fraud detection. Все читают одни и те же данные — Kafka не копирует сообщения для каждой группы и не удаляет их при чтении.
+Пять [consumer group](../../../system-design/message-queues.md) хотят получить каждое событие: seller read DB, Elasticsearch, ClickHouse, рекомендации, fraud detection. Все читают одни и те же данные — Kafka не копирует сообщения для каждой группы и не удаляет их при чтении.
 
-Каждая consumer group хранит **свой набор offset'ов** — по одному на каждую партицию. Seller read DB может быть на offset 4 в партиции 3, а ClickHouse — на offset 2 в той же партиции (обрабатывает медленнее, отстаёт). Данные в партиции одни, указатели разные:
+Каждая [consumer group](../../../system-design/message-queues.md) хранит **свой набор offset'ов** — по одному на каждую [партицию](../../../system-design/message-queues.md). Seller read DB может быть на offset 4 в [партиции](../../../system-design/message-queues.md) 3, а ClickHouse — на offset 2 в той же [партиции](../../../system-design/message-queues.md) (обрабатывает медленнее, отстаёт). Данные в [партиции](../../../system-design/message-queues.md) одни, указатели разные:
 
 ```
 partition 3:  [0] [1] [2] [3] [4]
@@ -127,11 +127,11 @@ recommendations  ─────────────>      offset = 3
 fraud_detection  ──────────────────> offset = 4
 ```
 
-Принцип тот же, что в [Redis Streams consumer groups](../../../databases/redis/data-structures/stream.md): каждая группа видит весь поток, внутри группы сообщения распределяются между обработчиками. Разница — в Redis Streams распределение идёт на уровне отдельных сообщений (каждое следующее уходит свободному consumer'у), в Kafka — на уровне партиций.
+Принцип тот же, что в [Redis Streams consumer groups](../../../databases/redis/data-structures/stream.md): каждая группа видит весь поток, внутри группы сообщения распределяются между обработчиками. Разница — в Redis Streams распределение идёт на уровне отдельных сообщений (каждое следующее уходит свободному [consumer'у](consumer-internals.md)), в Kafka — на уровне [партиций](../../../system-design/message-queues.md).
 
-Внутри одной группы consumer'ы конкурируют за партиции: если в группе `seller_read_db` три consumer'а, каждый получает свою часть из 6 партиций (например, consumer A читает партиции 0 и 1, consumer B — 2 и 3, consumer C — 4 и 5). Одна партиция читается одним consumer'ом — это гарантирует порядок обработки внутри партиции без координации между consumer'ами.
+Внутри одной группы [consumer'ы](consumer-internals.md) конкурируют за [партиции](../../../system-design/message-queues.md): если в группе `seller_read_db` три [consumer'а](consumer-internals.md), каждый получает свою часть из 6 [партиций](../../../system-design/message-queues.md) (например, [consumer](consumer-internals.md) A читает [партиции](../../../system-design/message-queues.md) 0 и 1, [consumer](consumer-internals.md) B — 2 и 3, [consumer](consumer-internals.md) C — 4 и 5). Одна [партиция](../../../system-design/message-queues.md) читается одним [consumer'ом](consumer-internals.md) — это гарантирует порядок обработки внутри [партиции](../../../system-design/message-queues.md) без координации между [consumer'ами](consumer-internals.md).
 
-Следствие: число consumer'ов в группе ограничено числом партиций. Если партиций 6 и consumer'ов 6 — каждый читает одну партицию, максимальный параллелизм. Если consumer'ов 8 — два из них простаивают, им не достанется ни одной партиции. Число партиций определяет потолок параллелизма для каждой consumer group.
+Следствие: число [consumer'ов](consumer-internals.md) в группе ограничено числом [партиций](../../../system-design/message-queues.md). Если [партиций](../../../system-design/message-queues.md) 6 и [consumer'ов](consumer-internals.md) 6 — каждый читает одну [партицию](../../../system-design/message-queues.md), максимальный параллелизм. Если [consumer'ов](consumer-internals.md) 8 — два из них простаивают, им не достанется ни одной [партиции](../../../system-design/message-queues.md). Число [партиций](../../../system-design/message-queues.md) определяет потолок параллелизма для каждой [consumer group](../../../system-design/message-queues.md).
 
 ## Путь события: от producer'ов до consumer groups
 
@@ -165,9 +165,9 @@ Producer A    Producer B    Producer C
   set A)    set B)    set C)    set D)    set E)
 ```
 
-Topic `order_events` с 6 партициями на 3 broker'ах решает две из трёх проблем Redis Streams: данные на диске (750 GB за доступную цену), нагрузка распределена по кластеру (каждый broker хранит ~250 GB и обрабатывает ~50 events/sec записи).
+Topic `order_events` с 6 [партициями](../../../system-design/message-queues.md) на 3 broker'ах решает две из трёх проблем Redis Streams: данные на диске (750 GB за доступную цену), нагрузка распределена по кластеру (каждый broker хранит ~250 GB и обрабатывает ~50 events/sec записи).
 
-Третья проблема — durability — пока открыта. Broker 0 вышел из строя: партиции 0 и 3 недоступны, события заказов, попавших в эти партиции, потеряны. Для решения нужна репликация — копирование каждой партиции на несколько broker'ов. Там появятся leader, follower, ISR (in-sync replicas) — механизмы, которые превращают кластер из трёх независимых дисков в надёжное хранилище.
+Третья проблема — durability — пока открыта. Broker 0 вышел из строя: [партиции](../../../system-design/message-queues.md) 0 и 3 недоступны, события заказов, попавших в эти [партиции](../../../system-design/message-queues.md), потеряны. Для решения нужна [репликация](replication.md) — копирование каждой [партиции](../../../system-design/message-queues.md) на несколько broker'ов. Там появятся leader, follower, ISR (in-sync replicas) — механизмы, которые превращают кластер из трёх независимых дисков в надёжное хранилище.
 
 ## Sources
 

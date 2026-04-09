@@ -13,7 +13,7 @@ order: 10
 
 # Операции над множествами
 
-**Предпосылки:** [подзапросы и CTE](subqueries-and-cte.md) (подзапросы, CTE).
+**Предпосылки:** [подзапросы и CTE](subqueries-and-cte.md) ([подзапросы](subqueries-and-cte.md), [CTE](subqueries-and-cte.md)).
 
 ← [Подзапросы и CTE](subqueries-and-cte.md) | [Оконные функции](window-functions.md) →
 
@@ -32,7 +32,7 @@ employees:                    customers:
 
 ## Единый список рассылки — UNION
 
-UNION (англ. «объединение») — SQL-реализация операции объединения из [реляционной алгебры](../foundations/relational-model.md#реляционная-алгебра). Объединяет результаты двух запросов, **удаляя дубликаты**:
+UNION (англ. «объединение») — SQL-реализация операции объединения из реляционной алгебры (см. [реляционная модель](../foundations/relational-model.md#реляционная-алгебра)). Объединяет результаты двух запросов, **удаляя дубликаты**:
 
 ```sql
 SELECT name, email FROM employees

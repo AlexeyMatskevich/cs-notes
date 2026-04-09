@@ -11,7 +11,7 @@ order: 15
 
 # Представления (views)
 
-**Предпосылки:** [подзапросы и CTE](../querying/subqueries-and-cte.md) (подзапросы, CTE), [соединения](../querying/joins.md) (JOIN).
+**Предпосылки:** [подзапросы и CTE](../querying/subqueries-and-cte.md) (подзапросы, CTE), [соединения](../querying/joins.md) ([JOIN](../querying/joins.md)).
 
 ← [Партиционирование](partitioning.md) | [Индексы](indexes.md) →
 

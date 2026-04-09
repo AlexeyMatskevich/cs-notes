@@ -90,7 +90,7 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 - 3+ files on one theme → extract into a subdirectory
 - Each themed directory has a domain-named overview file (`postgresql.md`, `linux.md`, `sidekiq.md`) with study order, cross-links, and "Как всё связано" trade-offs section
 - Shared theory used by multiple technologies → extract to parent level (e.g. `system-design/replication.md`, `system-design/sharding.md`)
-- Cross-link related notes with relative links at the point of first mention
+- Cross-link related notes with relative links at every mention, not just the first
 - `structure-guide.md` owns navigation, callouts, tables, and other markup patterns
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections

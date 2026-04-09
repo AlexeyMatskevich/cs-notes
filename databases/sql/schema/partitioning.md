@@ -12,7 +12,7 @@ order: 14
 
 # Партиционирование
 
-**Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) (PRIMARY KEY, UNIQUE).
+**Предпосылки:** [таблицы и типы](tables-and-types.md) (CREATE TABLE), [ограничения](constraints.md) ([PRIMARY KEY](constraints.md), [UNIQUE](constraints.md)).
 
 ← [Ограничения](constraints.md) | [Представления](views.md) →
 

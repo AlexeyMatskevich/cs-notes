@@ -236,7 +236,7 @@ end
 | Idempotency | Stripe (payment + refund), Hotel Booking API |
 | State machine | Order со статусами для отслеживания прогресса и обработки частичных сбоев |
 
-Circuit breaker явно не применён в этом примере, но был бы уместен для Loyalty API (95% надёжность) — чтобы не замедлять обработку при массовых сбоях.
+[Circuit breaker](../reliability-patterns.md) явно не применён в этом примере, но был бы уместен для Loyalty API (95% надёжность) — чтобы не замедлять обработку при массовых сбоях.
 
 ---
 

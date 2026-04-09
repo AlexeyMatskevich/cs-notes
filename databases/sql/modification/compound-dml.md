@@ -15,7 +15,7 @@ order: 20
 # Составные DML-операции
 
 > [!info]- Предпосылки
-> [DML](dml.md) (INSERT, UPDATE, DELETE), [подзапросы](../querying/subqueries-and-cte.md) (EXISTS, подзапрос в FROM), [соединения](../querying/joins.md).
+> [DML](dml.md) (INSERT, UPDATE, DELETE), [подзапросы](../querying/subqueries-and-cte.md) (EXISTS, подзапрос в FROM), [соединения](../querying/joins.md) ([JOIN](../querying/joins.md)).
 
 ← [Транзакции](transactions.md) | [PostgreSQL: расширения SQL](../postgresql/pg-extensions.md) →
 
