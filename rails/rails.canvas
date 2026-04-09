@@ -1,325 +1,65 @@
 {
-  "nodes": [
-    {
-      "id": "rails-overview",
-      "type": "file",
-      "file": "rails/rails.md",
-      "x": 0,
-      "y": 500,
-      "width": 400,
-      "height": 60,
-      "color": "1"
-    },
-
-    {"id": "grp-redis-concepts", "type": "group", "label": "Redis в Rails: концепции", "x": 480, "y": -20, "width": 440, "height": 360},
-    {
-      "id": "redis-in-rails",
-      "type": "file",
-      "file": "rails/redis/redis-in-rails.md",
-      "x": 500,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "1"
-    },
-    {
-      "id": "redis-clients",
-      "type": "file",
-      "file": "rails/redis/clients-and-connections.md",
-      "x": 500,
-      "y": 80,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "redis-ds-practice",
-      "type": "file",
-      "file": "rails/redis/data-structures-in-practice.md",
-      "x": 500,
-      "y": 160,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "redis-blocking",
-      "type": "file",
-      "file": "rails/redis/blocking-pitfalls.md",
-      "x": 500,
-      "y": 240,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-
-    {"id": "grp-practice-left", "type": "group", "label": "Практика: String / Hash / List", "x": 1000, "y": -20, "width": 440, "height": 520},
-    {
-      "id": "pr-string-cache",
-      "type": "file",
-      "file": "rails/redis/practice/string-cache-stampede.md",
-      "x": 1020,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-string-lock",
-      "type": "file",
-      "file": "rails/redis/practice/string-distributed-lock.md",
-      "x": 1020,
-      "y": 80,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-string-rate",
-      "type": "file",
-      "file": "rails/redis/practice/string-rate-limiter.md",
-      "x": 1020,
-      "y": 160,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-hash-cart",
-      "type": "file",
-      "file": "rails/redis/practice/hash-checkout-cart.md",
-      "x": 1020,
-      "y": 240,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-list-queue",
-      "type": "file",
-      "file": "rails/redis/practice/list-background-queue.md",
-      "x": 1020,
-      "y": 320,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-list-activity",
-      "type": "file",
-      "file": "rails/redis/practice/list-capped-activity-log.md",
-      "x": 1020,
-      "y": 400,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-
-    {"id": "grp-practice-right", "type": "group", "label": "Практика: Set / ZSet / Stream / Bitmap / HLL / PubSub / MULTI", "x": 1520, "y": -20, "width": 440, "height": 680},
-    {
-      "id": "pr-set-perms",
-      "type": "file",
-      "file": "rails/redis/practice/set-permissions.md",
-      "x": 1540,
-      "y": 0,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-zset-queue",
-      "type": "file",
-      "file": "rails/redis/practice/sorted-set-call-queue.md",
-      "x": 1540,
-      "y": 80,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-stream-audit",
-      "type": "file",
-      "file": "rails/redis/practice/stream-payment-audit.md",
-      "x": 1540,
-      "y": 160,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-bitmap-dau",
-      "type": "file",
-      "file": "rails/redis/practice/bitmap-dau-retention.md",
-      "x": 1540,
-      "y": 240,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-hll-visitors",
-      "type": "file",
-      "file": "rails/redis/practice/hyperloglog-unique-visitors.md",
-      "x": 1540,
-      "y": 320,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-pubsub-actioncable",
-      "type": "file",
-      "file": "rails/redis/practice/pub-sub-actioncable.md",
-      "x": 1540,
-      "y": 400,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-pubsub-cache-inv",
-      "type": "file",
-      "file": "rails/redis/practice/pub-sub-cache-invalidation.md",
-      "x": 1540,
-      "y": 480,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-    {
-      "id": "pr-multi-transfer",
-      "type": "file",
-      "file": "rails/redis/practice/multi-exec-atomic-transfer.md",
-      "x": 1540,
-      "y": 560,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    },
-
-    {"id": "grp-sidekiq", "type": "group", "label": "Sidekiq", "x": 480, "y": 700, "width": 920, "height": 440},
-    {
-      "id": "sk-overview",
-      "type": "file",
-      "file": "rails/sidekiq/sidekiq.md",
-      "x": 500,
-      "y": 720,
-      "width": 400,
-      "height": 60,
-      "color": "1"
-    },
-    {
-      "id": "sk-architecture",
-      "type": "file",
-      "file": "rails/sidekiq/architecture.md",
-      "x": 500,
-      "y": 800,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "sk-lifecycle",
-      "type": "file",
-      "file": "rails/sidekiq/job-lifecycle.md",
-      "x": 500,
-      "y": 880,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "sk-guarantees",
-      "type": "file",
-      "file": "rails/sidekiq/guarantees.md",
-      "x": 500,
-      "y": 960,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "sk-retry",
-      "type": "file",
-      "file": "rails/sidekiq/retry-and-errors.md",
-      "x": 500,
-      "y": 1040,
-      "width": 400,
-      "height": 60,
-      "color": "4"
-    },
-    {
-      "id": "sk-signals",
-      "type": "file",
-      "file": "rails/sidekiq/signals-and-deploy.md",
-      "x": 960,
-      "y": 720,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "sk-job-design",
-      "type": "file",
-      "file": "rails/sidekiq/job-design.md",
-      "x": 960,
-      "y": 800,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "sk-concurrency",
-      "type": "file",
-      "file": "rails/sidekiq/concurrency-and-scaling.md",
-      "x": 960,
-      "y": 880,
-      "width": 400,
-      "height": 60,
-      "color": "5"
-    },
-    {
-      "id": "sk-testing",
-      "type": "file",
-      "file": "rails/sidekiq/testing.md",
-      "x": 960,
-      "y": 960,
-      "width": 400,
-      "height": 60,
-      "color": "6"
-    }
-  ],
-  "edges": [
-    {"id": "e-rails-redis", "fromNode": "rails-overview", "toNode": "redis-in-rails", "fromSide": "right", "toSide": "left"},
-    {"id": "e-rails-sidekiq", "fromNode": "rails-overview", "toNode": "sk-overview", "fromSide": "right", "toSide": "left"},
-
-    {"id": "e-redis-overview-clients", "fromNode": "redis-in-rails", "toNode": "redis-clients", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-redis-clients-ds", "fromNode": "redis-clients", "toNode": "redis-ds-practice", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-redis-ds-blocking", "fromNode": "redis-ds-practice", "toNode": "redis-blocking", "fromSide": "bottom", "toSide": "top"},
-
-    {"id": "e-ds-pr-string-cache", "fromNode": "redis-ds-practice", "toNode": "pr-string-cache", "fromSide": "right", "toSide": "left"},
-    {"id": "e-pr-string-cache-lock", "fromNode": "pr-string-cache", "toNode": "pr-string-lock", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-string-lock-rate", "fromNode": "pr-string-lock", "toNode": "pr-string-rate", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-string-rate-hash", "fromNode": "pr-string-rate", "toNode": "pr-hash-cart", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-hash-list-queue", "fromNode": "pr-hash-cart", "toNode": "pr-list-queue", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-list-queue-activity", "fromNode": "pr-list-queue", "toNode": "pr-list-activity", "fromSide": "bottom", "toSide": "top"},
-
-    {"id": "e-pr-activity-set", "fromNode": "pr-list-activity", "toNode": "pr-set-perms", "fromSide": "right", "toSide": "left"},
-    {"id": "e-pr-set-zset", "fromNode": "pr-set-perms", "toNode": "pr-zset-queue", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-zset-stream", "fromNode": "pr-zset-queue", "toNode": "pr-stream-audit", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-stream-bitmap", "fromNode": "pr-stream-audit", "toNode": "pr-bitmap-dau", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-bitmap-hll", "fromNode": "pr-bitmap-dau", "toNode": "pr-hll-visitors", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-hll-pubsub-ac", "fromNode": "pr-hll-visitors", "toNode": "pr-pubsub-actioncable", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-pubsub-ac-inv", "fromNode": "pr-pubsub-actioncable", "toNode": "pr-pubsub-cache-inv", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-pr-pubsub-inv-multi", "fromNode": "pr-pubsub-cache-inv", "toNode": "pr-multi-transfer", "fromSide": "bottom", "toSide": "top"},
-
-    {"id": "e-sk-overview-arch", "fromNode": "sk-overview", "toNode": "sk-architecture", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-arch-life", "fromNode": "sk-architecture", "toNode": "sk-lifecycle", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-life-guarantees", "fromNode": "sk-lifecycle", "toNode": "sk-guarantees", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-guarantees-retry", "fromNode": "sk-guarantees", "toNode": "sk-retry", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-retry-signals", "fromNode": "sk-retry", "toNode": "sk-signals", "fromSide": "right", "toSide": "left"},
-    {"id": "e-sk-signals-design", "fromNode": "sk-signals", "toNode": "sk-job-design", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-design-concurrency", "fromNode": "sk-job-design", "toNode": "sk-concurrency", "fromSide": "bottom", "toSide": "top"},
-    {"id": "e-sk-concurrency-testing", "fromNode": "sk-concurrency", "toNode": "sk-testing", "fromSide": "bottom", "toSide": "top"}
-  ]
+	"nodes":[
+		{"id":"rails-overview","type":"file","file":"rails/rails.md","x":0,"y":500,"width":400,"height":60,"color":"1"},
+		{"id":"grp-redis-concepts","type":"group","label":"Redis в Rails: концепции","x":480,"y":-20,"width":440,"height":360},
+		{"id":"redis-in-rails","type":"file","file":"rails/redis/redis-in-rails.md","x":500,"y":0,"width":400,"height":60,"color":"1"},
+		{"id":"redis-clients","type":"file","file":"rails/redis/clients-and-connections.md","x":500,"y":80,"width":400,"height":60,"color":"4"},
+		{"id":"redis-ds-practice","type":"file","file":"rails/redis/data-structures-in-practice.md","x":500,"y":160,"width":400,"height":60,"color":"4"},
+		{"id":"redis-blocking","type":"file","file":"rails/redis/blocking-pitfalls.md","x":500,"y":240,"width":400,"height":60,"color":"4"},
+		{"id":"grp-practice-left","type":"group","label":"Практика: String / Hash / List","x":1000,"y":-20,"width":440,"height":520},
+		{"id":"pr-string-cache","type":"file","file":"rails/redis/practice/string-cache-stampede.md","x":1020,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"pr-string-lock","type":"file","file":"rails/redis/practice/string-distributed-lock.md","x":1020,"y":80,"width":400,"height":60,"color":"6"},
+		{"id":"pr-string-rate","type":"file","file":"rails/redis/practice/string-rate-limiter.md","x":1020,"y":160,"width":400,"height":60,"color":"6"},
+		{"id":"pr-hash-cart","type":"file","file":"rails/redis/practice/hash-checkout-cart.md","x":1020,"y":240,"width":400,"height":60,"color":"6"},
+		{"id":"pr-list-queue","type":"file","file":"rails/redis/practice/list-background-queue.md","x":1020,"y":320,"width":400,"height":60,"color":"6"},
+		{"id":"pr-list-activity","type":"file","file":"rails/redis/practice/list-capped-activity-log.md","x":1020,"y":400,"width":400,"height":60,"color":"6"},
+		{"id":"grp-practice-right","type":"group","label":"Практика: Set / ZSet / Stream / Bitmap / HLL / PubSub / MULTI","x":1520,"y":-20,"width":440,"height":680},
+		{"id":"pr-set-perms","type":"file","file":"rails/redis/practice/set-permissions.md","x":1540,"y":0,"width":400,"height":60,"color":"6"},
+		{"id":"pr-zset-queue","type":"file","file":"rails/redis/practice/sorted-set-call-queue.md","x":1540,"y":80,"width":400,"height":60,"color":"6"},
+		{"id":"pr-stream-audit","type":"file","file":"rails/redis/practice/stream-payment-audit.md","x":1540,"y":160,"width":400,"height":60,"color":"6"},
+		{"id":"pr-bitmap-dau","type":"file","file":"rails/redis/practice/bitmap-dau-retention.md","x":1540,"y":240,"width":400,"height":60,"color":"6"},
+		{"id":"pr-hll-visitors","type":"file","file":"rails/redis/practice/hyperloglog-unique-visitors.md","x":1540,"y":320,"width":400,"height":60,"color":"6"},
+		{"id":"pr-pubsub-actioncable","type":"file","file":"rails/redis/practice/pub-sub-actioncable.md","x":1540,"y":400,"width":400,"height":60,"color":"6"},
+		{"id":"pr-pubsub-cache-inv","type":"file","file":"rails/redis/practice/pub-sub-cache-invalidation.md","x":1540,"y":480,"width":400,"height":60,"color":"6"},
+		{"id":"pr-multi-transfer","type":"file","file":"rails/redis/practice/multi-exec-atomic-transfer.md","x":1540,"y":560,"width":400,"height":60,"color":"6"},
+		{"id":"grp-sidekiq","type":"group","label":"Sidekiq","x":480,"y":700,"width":920,"height":440},
+		{"id":"sk-overview","type":"file","file":"rails/sidekiq/sidekiq.md","x":500,"y":720,"width":400,"height":60,"color":"1"},
+		{"id":"sk-architecture","type":"file","file":"rails/sidekiq/architecture.md","x":500,"y":800,"width":400,"height":60,"color":"4"},
+		{"id":"sk-lifecycle","type":"file","file":"rails/sidekiq/job-lifecycle.md","x":500,"y":880,"width":400,"height":60,"color":"4"},
+		{"id":"sk-guarantees","type":"file","file":"rails/sidekiq/guarantees.md","x":500,"y":960,"width":400,"height":60,"color":"4"},
+		{"id":"sk-retry","type":"file","file":"rails/sidekiq/retry-and-errors.md","x":500,"y":1040,"width":400,"height":60,"color":"4"},
+		{"id":"sk-signals","type":"file","file":"rails/sidekiq/signals-and-deploy.md","x":960,"y":720,"width":400,"height":60,"color":"5"},
+		{"id":"sk-job-design","type":"file","file":"rails/sidekiq/job-design.md","x":960,"y":800,"width":400,"height":60,"color":"5"},
+		{"id":"sk-concurrency","type":"file","file":"rails/sidekiq/concurrency-and-scaling.md","x":960,"y":880,"width":400,"height":60,"color":"5"},
+		{"id":"sk-testing","type":"file","file":"rails/sidekiq/testing.md","x":960,"y":960,"width":400,"height":60,"color":"6"}
+	],
+	"edges":[
+		{"id":"e-rails-redis","fromNode":"rails-overview","toNode":"redis-in-rails","fromSide":"right","toSide":"left"},
+		{"id":"e-rails-sidekiq","fromNode":"rails-overview","toNode":"sk-overview","fromSide":"right","toSide":"left"},
+		{"id":"e-redis-overview-clients","fromNode":"redis-in-rails","toNode":"redis-clients","fromSide":"bottom","toSide":"top"},
+		{"id":"e-redis-clients-ds","fromNode":"redis-clients","toNode":"redis-ds-practice","fromSide":"bottom","toSide":"top"},
+		{"id":"e-redis-ds-blocking","fromNode":"redis-ds-practice","toNode":"redis-blocking","fromSide":"bottom","toSide":"top"},
+		{"id":"e-ds-pr-string-cache","fromNode":"redis-ds-practice","toNode":"pr-string-cache","fromSide":"right","toSide":"left"},
+		{"id":"e-pr-string-cache-lock","fromNode":"pr-string-cache","toNode":"pr-string-lock","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-string-lock-rate","fromNode":"pr-string-lock","toNode":"pr-string-rate","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-string-rate-hash","fromNode":"pr-string-rate","toNode":"pr-hash-cart","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-hash-list-queue","fromNode":"pr-hash-cart","toNode":"pr-list-queue","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-list-queue-activity","fromNode":"pr-list-queue","toNode":"pr-list-activity","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-activity-set","fromNode":"pr-list-activity","toNode":"pr-set-perms","fromSide":"right","toSide":"left"},
+		{"id":"e-pr-set-zset","fromNode":"pr-set-perms","toNode":"pr-zset-queue","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-zset-stream","fromNode":"pr-zset-queue","toNode":"pr-stream-audit","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-stream-bitmap","fromNode":"pr-stream-audit","toNode":"pr-bitmap-dau","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-bitmap-hll","fromNode":"pr-bitmap-dau","toNode":"pr-hll-visitors","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-hll-pubsub-ac","fromNode":"pr-hll-visitors","toNode":"pr-pubsub-actioncable","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-pubsub-ac-inv","fromNode":"pr-pubsub-actioncable","toNode":"pr-pubsub-cache-inv","fromSide":"bottom","toSide":"top"},
+		{"id":"e-pr-pubsub-inv-multi","fromNode":"pr-pubsub-cache-inv","toNode":"pr-multi-transfer","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-overview-arch","fromNode":"sk-overview","toNode":"sk-architecture","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-arch-life","fromNode":"sk-architecture","toNode":"sk-lifecycle","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-life-guarantees","fromNode":"sk-lifecycle","toNode":"sk-guarantees","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-guarantees-retry","fromNode":"sk-guarantees","toNode":"sk-retry","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-retry-signals","fromNode":"sk-retry","toNode":"sk-signals","fromSide":"right","toSide":"left"},
+		{"id":"e-sk-signals-design","fromNode":"sk-signals","toNode":"sk-job-design","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-design-concurrency","fromNode":"sk-job-design","toNode":"sk-concurrency","fromSide":"bottom","toSide":"top"},
+		{"id":"e-sk-concurrency-testing","fromNode":"sk-concurrency","toNode":"sk-testing","fromSide":"bottom","toSide":"top"}
+	]
 }
