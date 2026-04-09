@@ -1,13 +1,112 @@
 {
   "collapse-filter": true,
   "search": "",
-  "showTags": false,
+  "showTags": true,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": true,
-  "colorGroups": [],
-  "collapse-display": true,
+  "colorGroups": [
+    {
+      "query": "path:databases/redis",
+      "color": {
+        "a": 1,
+        "rgb": 16728124
+      }
+    },
+    {
+      "query": "path:rails",
+      "color": {
+        "a": 1,
+        "rgb": 16764958
+      }
+    },
+    {
+      "query": "path:system-design",
+      "color": {
+        "a": 1,
+        "rgb": 16107560
+      }
+    },
+    {
+      "query": "path:algorithms-and-data-structures",
+      "color": {
+        "a": 1,
+        "rgb": 11198760
+      }
+    },
+    {
+      "query": "path:linux",
+      "color": {
+        "a": 1,
+        "rgb": 3333190
+      }
+    },
+    {
+      "query": "path:messaging",
+      "color": {
+        "a": 1,
+        "rgb": 2017440
+      }
+    },
+    {
+      "query": "path:computer",
+      "color": {
+        "a": 1,
+        "rgb": 2675410
+      }
+    },
+    {
+      "query": "path:networking",
+      "color": {
+        "a": 1,
+        "rgb": 2665205
+      }
+    },
+    {
+      "query": "path:databases/sql",
+      "color": {
+        "a": 1,
+        "rgb": 3960565
+      }
+    },
+    {
+      "query": "path:databases/postgresql",
+      "color": {
+        "a": 1,
+        "rgb": 5915110
+      }
+    },
+    {
+      "query": "path:programming",
+      "color": {
+        "a": 1,
+        "rgb": 9517035
+      }
+    },
+    {
+      "query": "path:foundations",
+      "color": {
+        "a": 1,
+        "rgb": 12793820
+      }
+    },
+    {
+      "query": "path:ruby",
+      "color": {
+        "a": 1,
+        "rgb": 15413920
+      }
+    },
+    {
+      "query": "path:databases/migrations",
+      "color": {
+        "a": 1,
+        "rgb": 15418990
+      }
+    }
+  ],
+  "collapse-display": false,
   "showArrow": false,
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1,
@@ -17,6 +116,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.6191628788041527,
-  "close": true
+  "scale": 0.4114668681227201,
+  "close": false
 }

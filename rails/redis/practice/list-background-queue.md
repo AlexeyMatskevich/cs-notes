@@ -1,10 +1,21 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - type/pattern
+aliases:
+  - BRPOP
+  - background queue
+order: 3
+---
+
 # Очередь фоновых задач с блокирующим ожиданием
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [LIST](../../../databases/redis/data-structures/02-list.md).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [LIST](../../../databases/redis/data-structures/list.md).
 
 Сервис отправки email должен обрабатывать задачи по мере поступления. Несколько воркеров слушают одну очередь. Когда задач нет — воркер не должен тратить CPU на polling.
 
-На языке system design это [temporal decoupling](../../../system-design/09-message-queues.md#temporal-decoupling-развязка-во-времени): HTTP-запрос только ставит задачу, а выполнение происходит позже в отдельном воркере.
+На языке system design это [temporal decoupling](../../../system-design/message-queues.md#temporal-decoupling-развязка-во-времени): HTTP-запрос только ставит задачу, а выполнение происходит позже в отдельном воркере.
 
 SET не подходит: нет понятия «первый» или «последний» элемент, порядок не определён. STRING не подходит: это одно значение, не коллекция. ZSET здесь избыточен: score для простой FIFO-очереди не нужен. LIST с `LPUSH` + `BRPOP` решает задачу:
 
@@ -45,10 +56,10 @@ class EmailWorker
 end
 ```
 
-[`BRPOP`](../../../databases/redis/data-structures/02-list.md) — ключевая операция. Воркер отдаёт выделенное соединение Redis'у и засыпает. Redis будит его только при появлении элемента в списке. Без `BRPOP` пришлось бы делать `RPOP` в цикле с `sleep` — это polling, который тратит CPU и добавляет задержку до величины `sleep`.
+[`BRPOP`](../../../databases/redis/data-structures/list.md) — ключевая операция. Воркер отдаёт выделенное соединение Redis'у и засыпает. Redis будит его только при появлении элемента в списке. Без `BRPOP` пришлось бы делать `RPOP` в цикле с `sleep` — это polling, который тратит CPU и добавляет задержку до величины `sleep`.
 
-Это простая очередь с гарантией не выше [at-most-once](../../../system-design/08-delivery-guarantees.md#at-most-once-не-более-одного-раза): после `BRPOP` элемент исчезает из Redis. Если процесс упал после получения задачи, но до завершения обработки, задача потеряна. Для учебного примера этого достаточно; для подтверждений обработки и recovery нужны [Stream](stream-payment-audit.md) или готовый фреймворк вроде Sidekiq.
+Это простая очередь с гарантией не выше [at-most-once](../../../system-design/delivery-guarantees.md#at-most-once-не-более-одного-раза): после `BRPOP` элемент исчезает из Redis. Если процесс упал после получения задачи, но до завершения обработки, задача потеряна. Для учебного примера этого достаточно; для подтверждений обработки и recovery нужны [Stream](stream-payment-audit.md) или готовый фреймворк вроде Sidekiq.
 
-По модели доставки это [point-to-point](../../../system-design/09-message-queues.md#point-to-point-и-pubsub): каждую задачу должен получить один воркер, а не все подписчики сразу.
+По модели доставки это [point-to-point](../../../system-design/message-queues.md#point-to-point-и-pubsub): каждую задачу должен получить один воркер, а не все подписчики сразу.
 
 Если нужно ограничить длину списка (например, хранить только последние N записей), применяется паттерн `LPUSH` + `LTRIM` — см. [ограниченный лог активности](list-capped-activity-log.md).

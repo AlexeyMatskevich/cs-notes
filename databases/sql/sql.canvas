@@ -1,0 +1,90 @@
+{
+  "nodes": [
+    {"id": "node-overview", "type": "file", "file": "databases/sql/sql.md", "x": -200, "y": 250, "width": 400, "height": 60, "color": "1"},
+
+    {"id": "group-foundations", "type": "group", "label": "Foundations", "x": 350, "y": -20, "width": 450, "height": 560},
+    {"id": "node-relational-model", "type": "file", "file": "databases/sql/foundations/relational-model.md", "x": 370, "y": 20, "width": 400, "height": 60, "color": "1"},
+    {"id": "node-types-and-null", "type": "file", "file": "databases/sql/foundations/types-and-null.md", "x": 370, "y": 140, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-expressions", "type": "file", "file": "databases/sql/foundations/expressions.md", "x": 370, "y": 260, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-normalization", "type": "file", "file": "databases/sql/foundations/normalization.md", "x": 370, "y": 380, "width": 400, "height": 60, "color": "4"},
+
+    {"id": "group-querying", "type": "group", "label": "Querying", "x": 950, "y": -80, "width": 450, "height": 1060},
+    {"id": "node-select", "type": "file", "file": "databases/sql/querying/select-and-filtering.md", "x": 970, "y": -40, "width": 400, "height": 60, "color": "1"},
+    {"id": "node-sorting", "type": "file", "file": "databases/sql/querying/sorting-and-limiting.md", "x": 970, "y": 80, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-aggregation", "type": "file", "file": "databases/sql/querying/aggregation.md", "x": 970, "y": 200, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-joins", "type": "file", "file": "databases/sql/querying/joins.md", "x": 970, "y": 320, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-grouping-sets", "type": "file", "file": "databases/sql/querying/grouping-sets.md", "x": 970, "y": 440, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-subqueries", "type": "file", "file": "databases/sql/querying/subqueries-and-cte.md", "x": 970, "y": 560, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-set-operations", "type": "file", "file": "databases/sql/querying/set-operations.md", "x": 970, "y": 680, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-window-functions", "type": "file", "file": "databases/sql/querying/window-functions.md", "x": 970, "y": 800, "width": 400, "height": 60, "color": "5"},
+
+    {"id": "group-schema", "type": "group", "label": "Schema (DDL)", "x": 1550, "y": -20, "width": 450, "height": 680},
+    {"id": "node-tables", "type": "file", "file": "databases/sql/schema/tables-and-types.md", "x": 1570, "y": 20, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-constraints", "type": "file", "file": "databases/sql/schema/constraints.md", "x": 1570, "y": 140, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-partitioning", "type": "file", "file": "databases/sql/schema/partitioning.md", "x": 1570, "y": 260, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-views", "type": "file", "file": "databases/sql/schema/views.md", "x": 1570, "y": 380, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-indexes", "type": "file", "file": "databases/sql/schema/indexes.md", "x": 1570, "y": 500, "width": 400, "height": 60, "color": "4"},
+
+    {"id": "node-pagination", "type": "file", "file": "databases/sql/querying/pagination.md", "x": 1570, "y": 800, "width": 400, "height": 60, "color": "6"},
+
+    {"id": "group-modification", "type": "group", "label": "Modification (DML)", "x": 2150, "y": -20, "width": 450, "height": 440},
+    {"id": "node-dml", "type": "file", "file": "databases/sql/modification/dml.md", "x": 2170, "y": 20, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-transactions", "type": "file", "file": "databases/sql/modification/transactions.md", "x": 2170, "y": 140, "width": 400, "height": 60, "color": "4"},
+    {"id": "node-compound-dml", "type": "file", "file": "databases/sql/modification/compound-dml.md", "x": 2170, "y": 260, "width": 400, "height": 60, "color": "5"},
+
+    {"id": "group-pg-extensions", "type": "group", "label": "PostgreSQL Extensions", "x": 2150, "y": 540, "width": 960, "height": 800},
+    {"id": "node-pg-extensions", "type": "file", "file": "databases/sql/postgresql/pg-extensions.md", "x": 2170, "y": 580, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-jsonb", "type": "file", "file": "databases/sql/postgresql/jsonb.md", "x": 2170, "y": 700, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-arrays-ranges", "type": "file", "file": "databases/sql/postgresql/arrays-and-ranges.md", "x": 2170, "y": 820, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-fts", "type": "file", "file": "databases/sql/postgresql/full-text-search.md", "x": 2170, "y": 940, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-functions", "type": "file", "file": "databases/sql/postgresql/functions-and-procedures.md", "x": 2170, "y": 1060, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-triggers", "type": "file", "file": "databases/sql/postgresql/triggers.md", "x": 2170, "y": 1180, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-index-operations", "type": "file", "file": "databases/sql/postgresql/index-operations.md", "x": 2680, "y": 580, "width": 400, "height": 60, "color": "6"},
+    {"id": "node-exclusion", "type": "file", "file": "databases/sql/postgresql/exclusion-constraints.md", "x": 2680, "y": 700, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-pg-partitioning", "type": "file", "file": "databases/sql/postgresql/partitioning.md", "x": 2680, "y": 820, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-mat-views", "type": "file", "file": "databases/sql/postgresql/materialized-views.md", "x": 2680, "y": 940, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-pg-compound-dml", "type": "file", "file": "databases/sql/postgresql/compound-dml.md", "x": 2680, "y": 1060, "width": 400, "height": 60, "color": "5"},
+    {"id": "node-distinct-on", "type": "file", "file": "databases/sql/postgresql/distinct-on.md", "x": 2680, "y": 1180, "width": 400, "height": 60, "color": "5"}
+  ],
+  "edges": [
+    {"id": "edge-overview-relational", "fromNode": "node-overview", "toNode": "node-relational-model", "fromSide": "right", "toSide": "left"},
+
+    {"id": "edge-relational-types", "fromNode": "node-relational-model", "toNode": "node-types-and-null", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-types-expressions", "fromNode": "node-types-and-null", "toNode": "node-expressions", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-relational-normalization", "fromNode": "node-relational-model", "toNode": "node-normalization", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-expressions-select", "fromNode": "node-expressions", "toNode": "node-select", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-select-sorting", "fromNode": "node-select", "toNode": "node-sorting", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-sorting-aggregation", "fromNode": "node-sorting", "toNode": "node-aggregation", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-aggregation-joins", "fromNode": "node-aggregation", "toNode": "node-joins", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-aggregation-grouping", "fromNode": "node-aggregation", "toNode": "node-grouping-sets", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-joins-subqueries", "fromNode": "node-joins", "toNode": "node-subqueries", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-subqueries-set-ops", "fromNode": "node-subqueries", "toNode": "node-set-operations", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-set-ops-window", "fromNode": "node-set-operations", "toNode": "node-window-functions", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-window-tables", "fromNode": "node-window-functions", "toNode": "node-tables", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-tables-constraints", "fromNode": "node-tables", "toNode": "node-constraints", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-constraints-partitioning", "fromNode": "node-constraints", "toNode": "node-partitioning", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-constraints-views", "fromNode": "node-constraints", "toNode": "node-views", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-views-indexes", "fromNode": "node-views", "toNode": "node-indexes", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-indexes-pagination", "fromNode": "node-indexes", "toNode": "node-pagination", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-pagination-dml", "fromNode": "node-pagination", "toNode": "node-dml", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-dml-transactions", "fromNode": "node-dml", "toNode": "node-transactions", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-transactions-compound", "fromNode": "node-transactions", "toNode": "node-compound-dml", "fromSide": "bottom", "toSide": "top"},
+
+    {"id": "edge-compound-pg-ext", "fromNode": "node-compound-dml", "toNode": "node-pg-extensions", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-pg-ext-jsonb", "fromNode": "node-pg-extensions", "toNode": "node-jsonb", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-jsonb-arrays", "fromNode": "node-jsonb", "toNode": "node-arrays-ranges", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-arrays-fts", "fromNode": "node-arrays-ranges", "toNode": "node-fts", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-fts-functions", "fromNode": "node-fts", "toNode": "node-functions", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-functions-triggers", "fromNode": "node-functions", "toNode": "node-triggers", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-pg-ext-index-ops", "fromNode": "node-pg-extensions", "toNode": "node-index-operations", "fromSide": "right", "toSide": "left"},
+    {"id": "edge-index-ops-exclusion", "fromNode": "node-index-operations", "toNode": "node-exclusion", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-exclusion-pg-part", "fromNode": "node-exclusion", "toNode": "node-pg-partitioning", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-pg-part-mat-views", "fromNode": "node-pg-partitioning", "toNode": "node-mat-views", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-mat-views-pg-compound", "fromNode": "node-mat-views", "toNode": "node-pg-compound-dml", "fromSide": "bottom", "toSide": "top"},
+    {"id": "edge-pg-compound-distinct", "fromNode": "node-pg-compound-dml", "toNode": "node-distinct-on", "fromSide": "bottom", "toSide": "top"}
+  ]
+}

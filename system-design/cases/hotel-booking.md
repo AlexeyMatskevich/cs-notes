@@ -1,6 +1,19 @@
+---
+tags:
+  - domain/system-design
+  - theme/reliability
+  - theme/transactions
+  - type/case-study
+aliases:
+  - Hotel Booking System
+order: 16
+---
+
 # Система бронирования отелей
 
-**Предпосылки:** [HTTP](../../networking/application/01-http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/04-websockets.md)/polling, [паттерны надёжности](../06-reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([`FOR UPDATE`](../../databases/postgresql/concurrency/04-patterns.md#пессимистичный-подход-for-update)).
+**Предпосылки:** [HTTP](../../networking/application/http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/websockets.md)/polling, [паттерны надёжности](../reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([`FOR UPDATE`](../../databases/postgresql/concurrency/patterns.md#пессимистичный-подход-for-update)).
+
+<- [Event-driven Architecture](../event-driven-architecture.md)
 
 ## Сценарий
 
@@ -223,4 +236,8 @@ end
 | Idempotency | Stripe (payment + refund), Hotel Booking API |
 | State machine | Order со статусами для отслеживания прогресса и обработки частичных сбоев |
 
-Circuit breaker явно не применён в этом примере, но был бы уместен для Loyalty API (95% надёжность) — чтобы не замедлять обработку при массовых сбоях.
+[Circuit breaker](../reliability-patterns.md) явно не применён в этом примере, но был бы уместен для Loyalty API (95% надёжность) — чтобы не замедлять обработку при массовых сбоях.
+
+---
+
+<- [Event-driven Architecture](../event-driven-architecture.md)

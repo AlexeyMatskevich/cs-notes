@@ -1,0 +1,28 @@
+---
+tags:
+  - domain/rails
+  - theme/queues
+  - theme/caching
+  - type/overview
+aliases:
+  - Ruby on Rails
+order: 0
+---
+
+# Rails
+
+**Предпосылки:** Ruby, базовое понимание Rails (MVC, ActiveRecord, маршрутизация).
+
+Материалы об инструментах и паттернах, специфичных для Rails-экосистемы.
+
+## Содержание
+
+### Redis в Rails
+
+Как Rails-приложение использует Redis: подключения, практические сценарии, подводные камни.
+
+- [Redis в Rails-приложении](redis/redis-in-rails.md) — клиенты, соединения, структуры данных на практике
+
+### Фоновые задачи
+
+- [Sidekiq](sidekiq/sidekiq.md) — архитектура, жизненный цикл задачи, гарантии, retry, deploy, масштабирование, тестирование

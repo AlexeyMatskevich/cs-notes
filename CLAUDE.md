@@ -8,7 +8,7 @@ This is a personal technical knowledge repository containing deep technical note
 
 ## Repository Structure
 
-Each domain has an `index.md` with study order, cross-links, and trade-offs. Use `tree -L 2` or `ls` for the actual file list.
+Each domain has a domain-named overview file (e.g. `postgresql.md`, `linux.md`) with study order, cross-links, and trade-offs. Use `tree -L 2` or `ls` for the actual file list.
 
 | Directory | What's inside |
 |-----------|--------------|
@@ -69,7 +69,7 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 
 5. Never use a term before it is explained or declared in `Предпосылки`.
 
-6. For explanatory notes, use the full causal pedagogy from `styleguide.md`: motivation, point of entry, scenario, effect, gradual disclosure, and detail-on-demand. For `index.md`, overview, and reference-like files, not every explanatory default applies, but the invariants still do.
+6. For explanatory notes, use the full causal pedagogy from `styleguide.md`: motivation, point of entry, scenario, effect, gradual disclosure, and detail-on-demand. For overview and reference-like files, not every explanatory default applies, but the invariants still do.
 
 7. For fundamental or branch-opening notes, prefer role before name. For complex interdependent systems, start with a compact whole-system map before component details.
 
@@ -86,15 +86,15 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 **Read `structure-guide.md` for full structural patterns.** Key rules:
 
 - One topic per file, kebab-case naming (`postgresql.md`, `indexes.md`)
-- Files with numeric prefix (`00-acid.md`, `01-pages-and-tuples.md`): prefix = dependency order. File `02` may reference `00` and `01`, not the other way around.
+- Dependency order is encoded in the overview file's "Порядок изучения" section and in prev/next navigation, not in filenames
 - 3+ files on one theme → extract into a subdirectory
-- Each themed directory has an `index.md` (study order, cross-links, "Как всё связано" trade-offs section)
+- Each themed directory has a domain-named overview file (`postgresql.md`, `linux.md`, `sidekiq.md`) with study order, cross-links, and "Как всё связано" trade-offs section
 - Shared theory used by multiple technologies → extract to parent level (e.g. `system-design/replication.md`, `system-design/sharding.md`)
-- Cross-link related notes with relative links at the point of first mention
-- `structure-guide.md` owns navigation, `<details>`, tables, and other markup patterns
+- Cross-link related notes with relative links at every mention, not just the first
+- `structure-guide.md` owns navigation, callouts, tables, and other markup patterns
 - Large assets (PDFs, images) go in `assets/` directory
 - Single `#` title per note; `##` for major sections
-- When adding a new note, check for cascading changes: update `index.md`, cross-references in neighboring files, and the file map above
+- When adding a new note, check for cascading changes: update the domain overview file, cross-references in neighboring files, and the file map above
 
 ## Content Rules
 

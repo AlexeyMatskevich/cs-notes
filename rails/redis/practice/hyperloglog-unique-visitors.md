@@ -1,6 +1,18 @@
+---
+tags:
+  - domain/rails
+  - theme/performance
+  - type/pattern
+aliases:
+  - HyperLogLog
+  - PFCOUNT
+  - PFMERGE
+order: 3
+---
+
 # Подсчёт уникальных посетителей при 100 000 страниц
 
-**Предпосылки:** [Клиенты и соединения](../00-clients-and-connections.md), [HyperLogLog](../../../databases/redis/data-structures/06-hyperloglog.md).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [HyperLogLog](../../../databases/redis/data-structures/hyperloglog.md).
 
 Аналитическая система считает уникальных посетителей по каждой странице сайта за каждый день. Сайт имеет 100 000 страниц и миллионы пользователей. Нужны дневные, недельные и месячные агрегаты.
 
@@ -32,7 +44,7 @@ class UniqueVisitorTracker
 
   def site_wide_uniques(date)
     # Объединить HLL по всем страницам за день
-    # SCAN вместо KEYS — не блокирует event loop (см. [блокирующие команды](../02-blocking-pitfalls.md))
+    # SCAN вместо KEYS — не блокирует event loop (см. [блокирующие команды](../blocking-pitfalls.md))
     page_keys = @redis.with { |r| r.scan_each(match: "uv:*:#{date.iso8601}").to_a }
     return 0 if page_keys.empty?
 
@@ -41,4 +53,4 @@ class UniqueVisitorTracker
 end
 ```
 
-3 миллиона HLL-счётчиков × 12 КБ = 36 ГБ. Те же данные в SET — сотни ГБ. Стандартная ошибка [HyperLogLog](../../../databases/redis/data-structures/06-hyperloglog.md) — 0.81%. Для аналитических дашбордов, где «≈1 024 000» и «1 024 000» неразличимы, это приемлемо. Для точного ответа «был ли конкретный пользователь на странице?» HLL не подходит — для этого нужен SET или Bitmap.
+3 миллиона HLL-счётчиков × 12 КБ = 36 ГБ. Те же данные в SET — сотни ГБ. Стандартная ошибка [HyperLogLog](../../../databases/redis/data-structures/hyperloglog.md) — 0.81%. Для аналитических дашбордов, где «≈1 024 000» и «1 024 000» неразличимы, это приемлемо. Для точного ответа «был ли конкретный пользователь на странице?» HLL не подходит — для этого нужен SET или Bitmap.

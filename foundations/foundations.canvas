@@ -1,0 +1,19 @@
+{
+	"nodes":[
+		{"id":"node-foundations","type":"file","file":"foundations/foundations.md","x":0,"y":200,"width":400,"height":60,"color":"1"},
+		{"id":"node-binary-and-bytes","type":"file","file":"foundations/binary-and-bytes.md","x":600,"y":200,"width":400,"height":60,"color":"4"},
+		{"id":"node-integers","type":"file","file":"foundations/integers.md","x":1200,"y":100,"width":400,"height":60,"color":"4"},
+		{"id":"node-bitwise-operations","type":"file","file":"foundations/bitwise-operations.md","x":1800,"y":0,"width":400,"height":60,"color":"4"},
+		{"id":"node-floating-point","type":"file","file":"foundations/floating-point.md","x":1800,"y":150,"width":400,"height":60,"color":"4"},
+		{"id":"node-endianness","type":"file","file":"foundations/endianness.md","x":1800,"y":300,"width":400,"height":60,"color":"5"},
+		{"id":"node-text-encoding","type":"file","file":"foundations/text-encoding.md","x":1200,"y":400,"width":400,"height":60,"color":"4"}
+	],
+	"edges":[
+		{"id":"edge-foundations-to-binary","fromNode":"node-foundations","toNode":"node-binary-and-bytes","fromSide":"right","toSide":"left"},
+		{"id":"edge-binary-to-integers","fromNode":"node-binary-and-bytes","toNode":"node-integers","fromSide":"right","toSide":"left"},
+		{"id":"edge-integers-to-bitwise","fromNode":"node-integers","toNode":"node-bitwise-operations","fromSide":"right","toSide":"left"},
+		{"id":"edge-integers-to-floating","fromNode":"node-integers","toNode":"node-floating-point","fromSide":"right","toSide":"left"},
+		{"id":"edge-integers-to-endianness","fromNode":"node-integers","toNode":"node-endianness","fromSide":"right","toSide":"left"},
+		{"id":"edge-binary-to-text","fromNode":"node-binary-and-bytes","toNode":"node-text-encoding","fromSide":"bottom","toSide":"left"}
+	]
+}

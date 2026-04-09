@@ -1,0 +1,225 @@
+---
+tags:
+  - domain/algorithms
+  - theme/storage
+  - theme/performance
+  - type/concept
+aliases:
+  - Heap
+  - priority queue
+order: 4
+---
+
+# Куча (Heap)
+
+**Предпосылки:** оценка сложности в O(…), [бинарное дерево](binary-tree.md) (left/right, полнота), [массив](../linear/array.md) (индексация, формула адреса).
+
+Планировщик операционной системы управляет тысячей процессов, каждый с числовым приоритетом. Каждые несколько миллисекунд планировщик должен извлечь процесс с наивысшим приоритетом и отдать ему процессор, а новые процессы появляются непрерывно. Нужны две операции: добавить элемент с приоритетом и извлечь максимальный. [BST](binary-search-tree.md) поддерживает полный порядок между всеми элементами, но планировщику полный порядок не нужен — нужен только экстремум. К тому же [BST](binary-search-tree.md) может вырождаться до O(n). **[Куча](heap.md)** решает именно эту задачу, с гарантированным O(log n) и без риска вырождения.
+
+## Heap: память vs структура данных
+
+**Heap** в контексте памяти — область для динамически выделенных данных (противопоставляется стеку вызовов). **Heap** как структура данных — бинарное дерево с особым инвариантом. Между ними нет связи.
+
+## Определение
+
+[Куча](heap.md) — [бинарное дерево](binary-tree.md) с двумя свойствами:
+
+**Свойство кучи (heap property):** каждый родитель ≥ детей (max-heap) или ≤ детей (min-heap).
+
+**Свойство формы (shape property):** [дерево](tree.md) [завершённое (complete)](binary-tree.md) — все уровни заполнены, кроме последнего, который заполняется слева направо.
+
+Свойство формы гарантирует высоту ≈ log₂(n) и позволяет хранить [кучу](heap.md) в [массиве](../linear/array.md) без указателей:
+
+```text
+        90              Массив: [90, 60, 70, 30, 40, 50]
+       /  \             Индекс:   0   1   2   3   4   5
+      60   70
+     / \   /
+    30 40 50
+```
+
+Формулы навигации:
+
+```ruby
+left_child  = parent * 2 + 1
+right_child = parent * 2 + 2
+parent      = (child - 1) / 2
+```
+
+## Операции
+
+Обе ключевые операции — вставка и извлечение — используют формулы навигации, чтобы восстановить свойство кучи после изменения.
+
+**Вставка (sift up):** добавляем элемент в конец массива (сохраняя свойство формы), затем пока элемент больше родителя — меняем местами с родителем. Элемент "всплывает" вверх до своего места. Сложность: O(log n).
+
+```text
+Вставляем 95:
+[90, 60, 70, 30, 40, 50, 95]     95 > 70 (родитель) → swap
+[90, 60, 95, 30, 40, 50, 70]     95 > 90 (родитель) → swap
+[95, 60, 90, 30, 40, 50, 70]     95 — корень, стоп
+
+        95
+       /  \
+      60   90
+     / \   / \
+    30 40 50 70
+```
+
+**Извлечение максимума (sift down):** запоминаем корень (результат), перемещаем последний элемент на место корня (сохраняя свойство формы), затем пока элемент меньше большего ребёнка — меняем местами с большим ребёнком. Элемент "тонет" вниз до своего места. Сложность: O(log n).
+
+```text
+Извлекаем 95, ставим 70 на его место:
+[70, 60, 90, 30, 40, 50]         70 < 90 (больший ребёнок) → swap
+[90, 60, 70, 30, 40, 50]         70 > 50 → стоп
+
+        90
+       /  \
+      60   70
+     / \   /
+    30 40 50
+```
+
+**Просмотр максимума:** O(1) — просто возвращаем корень.
+
+## Сравнение с другими структурами
+
+Для планировщика с 1000 процессов вставка и извлечение за O(log n) ≈ 10 операций сравнения — насколько это хорошо по сравнению с альтернативами?
+
+| Структура | Добавить | Извлечь макс. |
+|-----------|----------|---------------|
+| Неотсорт. [массив](../linear/array.md) | O(1) | O(n) |
+| Отсорт. [массив](../linear/array.md) | O(n) | O(1) |
+| [BST](binary-search-tree.md) (средний) | O(log n) | O(log n) |
+| [BST](binary-search-tree.md) (худший) | O(n) | O(n) |
+| [Куча](heap.md) | O(log n) | O(log n) |
+
+[Куча](heap.md) даёт **гарантированный** O(log n) без риска вырождения.
+
+## Построение [кучи](heap.md) из [массива](../linear/array.md) (build heap)
+
+Вставка n элементов по одному стоит O(n log n). Но если все элементы уже есть, можно построить [кучу](heap.md) быстрее: применить sift down к каждому узлу снизу вверх, начиная с последнего внутреннего узла (индекс n/2 − 1). Листья (половина [массива](../linear/array.md)) уже удовлетворяют свойству [кучи](heap.md), поэтому обрабатывается только верхняя половина. Итоговая сложность — O(n), потому что большинство узлов находятся на нижних уровнях и "тонут" на 0–1 шаг, а лишь немногие верхние узлы тонут на log n шагов.
+
+## Heapsort
+
+[Куча](heap.md) естественно даёт алгоритм сортировки: построить max-heap из [массива](../linear/array.md) за O(n), затем n раз извлечь максимум за O(log n). Каждый извлечённый элемент — наибольший из оставшихся — ставится в конец [массива](../linear/array.md) (на место, освобождённое при извлечении). Итого O(n log n), сортировка in-place без дополнительной памяти.
+
+## Приоритетная очередь (Priority Queue)
+
+Heapsort использует [кучу](heap.md) для сортировки, но чаще [куча](heap.md) нужна как реализация приоритетной [очереди](../linear/stack-queue-deque.md) — абстрактного типа данных с операциями: добавить элемент с приоритетом, извлечь элемент с наивысшим приоритетом. **[Куча](heap.md) — эффективная реализация приоритетной [очереди](../linear/stack-queue-deque.md).** Max-heap для случая, когда больший приоритет = большее число. Min-heap — когда больший приоритет = меньшее число.
+
+Задача планировщика ОС, с которой начиналась заметка, — это именно приоритетная [очередь](../linear/stack-queue-deque.md): процессы поступают с разными приоритетами, планировщик извлекает наиболее приоритетный. Та же абстракция встречается в алгоритме Дейкстры (извлечение вершины с наименьшим расстоянием) и event loop (обработка ближайшего по времени таймера).
+
+## Sources
+
+- Cormen, Leiserson, Rivest, Stein. *Introduction to Algorithms* (CLRS), 4th ed. (binary heap, build-heap за O(n), heapsort, priority queue).
+
+## Реализация
+
+Реализация max-heap на Ruby использует массив и два приватных метода — sift_up для вставки и sift_down для извлечения:
+
+```ruby
+class Heap
+  def initialize
+    @values = []
+  end
+
+  def peek
+    @values[0]
+  end
+
+  def insert(value)
+    @values << value
+    sift_up
+  end
+
+  def extract_max
+    return nil if @values.empty?
+
+    maximum = @values[0]
+    last = @values.pop
+
+    unless @values.empty?
+      @values[0] = last
+      sift_down
+    end
+
+    maximum
+  end
+
+  private
+
+  def sift_up
+    value = @values.last
+    position = @values.size - 1
+    parent_position, parent_value = parent(position)
+
+    while parent_position >= 0 && parent_value < value
+      @values[parent_position] = value
+      @values[position] = parent_value
+      position = parent_position
+      parent_position, parent_value = parent(position)
+    end
+  end
+
+  def sift_down
+    value = @values.first
+    position = 0
+    child = biggest_child(position)
+
+    return unless child
+
+    while child && value < child[1]
+      @values[position] = child[1]
+      @values[child[0]] = value
+      position = child[0]
+      child = biggest_child(position)
+    end
+  end
+
+  def parent(position)
+    parent_pos = (position - 1) / 2
+    [parent_pos, @values[parent_pos]]
+  end
+
+  def biggest_child(position)
+    left = left_child(position)
+    right = right_child(position)
+
+    return if !left && !right
+    return right unless left
+    return left unless right
+
+    [left, right].max { |l, r| l[1] <=> r[1] }
+  end
+
+  def left_child(position)
+    l_position = position * 2 + 1
+    value = @values[l_position]
+    return unless value
+
+    [l_position, value]
+  end
+
+  def right_child(position)
+    r_position = position * 2 + 2
+    value = @values[r_position]
+    return unless value
+
+    [r_position, value]
+  end
+end
+```
+
+## Max-heap vs Min-heap
+
+Реализация выше — max-heap. Для превращения в min-heap достаточно поменять направление сравнений:
+- в `sift_up`: менять местами, пока родитель **больше** ребёнка
+- в `sift_down`: выбирать **меньшего** ребёнка и менять местами, пока родитель **больше** него
+
+## Дубликаты
+
+В отличие от BST (где правило для равных значений выбирается отдельно), куча допускает дубликаты естественно. Инвариант "родитель ≥ детей" выполняется при равенстве (50 ≥ 50). При извлечении обе копии выйдут по очереди.
+
+## Sources
+
+- Cormen, Leiserson, Rivest, Stein. *Introduction to Algorithms* (CLRS), 4th ed. (binary heap, build-heap за O(n), heapsort, priority queue).
