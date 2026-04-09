@@ -3,13 +3,13 @@ phase: design
 status: approved
 topic: Информатика — фундамент (биты, байты, представление данных)
 files:
-  - foundations/index.md
-  - foundations/00-binary-and-bytes.md
-  - foundations/01-integers.md
-  - foundations/02-bitwise-operations.md
-  - foundations/03-floating-point.md
-  - foundations/04-text-encoding.md
-  - foundations/05-endianness.md
+  - foundations/foundations.md
+  - foundations/binary-and-bytes.md
+  - foundations/integers.md
+  - foundations/bitwise-operations.md
+  - foundations/floating-point.md
+  - foundations/text-encoding.md
+  - foundations/endianness.md
 ---
 
 # Design: foundations/
@@ -123,13 +123,13 @@ files:
 
 ```
 foundations/
-├── index.md                      # порядок, связи
-├── 00-binary-and-bytes.md        # бит, байт, двоичная, hex
-├── 01-integers.md                # unsigned, signed, two's complement, overflow
-├── 02-bitwise-operations.md      # AND/OR/XOR/NOT/shift, маски
-├── 03-floating-point.md          # IEEE 754
-├── 04-text-encoding.md           # ASCII → Unicode → UTF-8
-└── 05-endianness.md              # порядок байтов
+├── foundations.md                # порядок, связи
+├── binary-and-bytes.md           # бит, байт, двоичная, hex
+├── integers.md                   # unsigned, signed, two's complement, overflow
+├── bitwise-operations.md         # AND/OR/XOR/NOT/shift, маски
+├── floating-point.md             # IEEE 754
+├── text-encoding.md              # ASCII → Unicode → UTF-8
+└── endianness.md                 # порядок байтов
 ```
 
 ### Граф зависимостей
@@ -146,7 +146,7 @@ foundations/
 
 ## Дизайн каждого файла
 
-### 00-binary-and-bytes.md
+### binary-and-bytes.md
 
 **Предпосылки:** нет
 **Мотивация:** недостающее звено — внутри компьютера два состояния, как из них всё?
@@ -177,9 +177,9 @@ foundations/
 
 ---
 
-### 01-integers.md
+### integers.md
 
-**Предпосылки:** [00-binary-and-bytes](00-binary-and-bytes.md) (бит, байт, двоичная система, hex)
+**Предпосылки:** [binary-and-bytes](../foundations/binary-and-bytes.md) (бит, байт, двоичная система, hex)
 **Мотивация:** ограничение — unsigned хватает для 0–255, но нет отрицательных
 **Тип сценария:** ограничение — где unsigned перестаёт работать
 **Вход:** «Восемь бит дают 256 вариантов (0–255). Для маленьких положительных — хватает. Но температура бывает ниже нуля, координата — левее начала, баланс — в минусе.»
@@ -209,9 +209,9 @@ foundations/
 
 ---
 
-### 02-bitwise-operations.md
+### bitwise-operations.md
 
-**Предпосылки:** [00-binary-and-bytes](00-binary-and-bytes.md), [01-integers](01-integers.md)
+**Предпосылки:** [binary-and-bytes](../foundations/binary-and-bytes.md), [integers](../foundations/integers.md)
 **Мотивация:** недостающее звено — нужны инструменты для работы с отдельными битами
 **Тип сценария:** роль — какую работу выполняют побитовые операции
 **Вход:** «До сих пор число — единое значение: складывали, сравнивали, записывали. Но бывает, что важен конкретный бит: включен ли флаг, есть ли разрешение, установлен ли признак.»
@@ -239,9 +239,9 @@ foundations/
 
 ---
 
-### 03-floating-point.md
+### floating-point.md
 
-**Предпосылки:** [00-binary-and-bytes](00-binary-and-bytes.md), [01-integers](01-integers.md)
+**Предпосылки:** [binary-and-bytes](../foundations/binary-and-bytes.md), [integers](../foundations/integers.md)
 **Мотивация:** ограничение — целые не могут представить дроби
 **Тип сценария:** ограничение — где integers перестают работать
 **Вход:** «36.6° температуры, 3.14 для площади круга — целых чисел недостаточно. Нужен способ записать дробную часть теми же битами.»
@@ -273,9 +273,9 @@ foundations/
 
 ---
 
-### 04-text-encoding.md
+### text-encoding.md
 
-**Предпосылки:** [00-binary-and-bytes](00-binary-and-bytes.md) (бит, байт, hex)
+**Предпосылки:** [binary-and-bytes](../foundations/binary-and-bytes.md) (бит, байт, hex)
 **Мотивация:** недостающее звено — биты кодируют числа, но экран показывает буквы
 **Тип сценария:** роль — кто превращает байты в символы
 **Вход:** «Экран отображает буквы, знаки пунктуации, иероглифы. Каждый символ занимает место в памяти — значит, записан теми же байтами. Какое число соответствует какой букве?»
@@ -310,9 +310,9 @@ foundations/
 
 ---
 
-### 05-endianness.md
+### endianness.md
 
-**Предпосылки:** [00-binary-and-bytes](00-binary-and-bytes.md), [01-integers](01-integers.md)
+**Предпосылки:** [binary-and-bytes](../foundations/binary-and-bytes.md), [integers](../foundations/integers.md)
 **Мотивация:** наблюдаемая странность — одно число, байты в разном порядке
 **Тип сценария:** ограничение — многобайтовое число требует соглашения о порядке
 **Вход:** «Число 0x00000001 занимает четыре байта. В памяти x86 оно хранится `01 00 00 00`, а в сетевом пакете — `00 00 00 01`. Те же байты, зеркальный порядок. Не ошибка — два разных соглашения.»
@@ -348,28 +348,28 @@ foundations/
 
 | Файл | Что добавить |
 |------|-------------|
-| `databases/redis/data-structures/07-bitmap-and-bitfield.md` | Заменить «побитовые операции» → ссылку `[побитовые операции](../../../foundations/02-bitwise-operations.md)` |
-| `databases/redis/memory/00-encodings.md` | Добавить `[бит, байт](../../../foundations/00-binary-and-bytes.md)` в Предпосылки |
-| `computer/data-path/02-ram.md` | Добавить `[бит, байт](../../foundations/00-binary-and-bytes.md)` в Предпосылки |
-| `computer/programmer-model/02-simd.md` | Добавить `[бит, байт](../../foundations/00-binary-and-bytes.md)` в Предпосылки |
-| `computer/programmer-model/01-abi-and-data-layout.md` | Убрать секцию endianness (строки ~188–213), заменить ссылкой на `foundations/05-endianness.md` |
-| `linux/infrastructure/00-elf-and-linking.md` | Добавить `[бит, байт, hex](../../foundations/00-binary-and-bytes.md)` в Предпосылки |
+| `databases/redis/data-structures/bitmap-and-bitfield.md` | Заменить «побитовые операции» → ссылку `[побитовые операции](../../../foundations/bitwise-operations.md)` |
+| `databases/redis/memory/encodings.md` | Добавить `[бит, байт](../../../foundations/binary-and-bytes.md)` в Предпосылки |
+| `computer/data-path/ram.md` | Добавить `[бит, байт](../../foundations/binary-and-bytes.md)` в Предпосылки |
+| `computer/programmer-model/simd.md` | Добавить `[бит, байт](../../foundations/binary-and-bytes.md)` в Предпосылки |
+| `computer/programmer-model/abi-and-data-layout.md` | Убрать секцию endianness (строки ~188–213), заменить ссылкой на `foundations/endianness.md` |
+| `linux/infrastructure/elf-and-linking.md` | Добавить `[бит, байт, hex](../../foundations/binary-and-bytes.md)` в Предпосылки |
 
 ### Мотивационные cross-links (programming/ — не Предпосылки)
 
 | Файл | Что добавить |
 |------|-------------|
-| `programming/01-assembler.md` | Cross-link в тексте: «почему 0–255 и почему адреса через +4 — [двоичная система и байты](../foundations/binary-and-bytes.md), [целые числа](../foundations/integers.md)» |
-| `programming/02-variables-and-types.md` | Cross-link: «что стоит за int и float — [целые](../foundations/integers.md), [дробные](../foundations/floating-point.md)» |
+| `programming/assembler.md` | Cross-link в тексте: «почему 0–255 и почему адреса через +4 — [двоичная система и байты](../foundations/binary-and-bytes.md), [целые числа](../foundations/integers.md)» |
+| `programming/variables-and-types.md` | Cross-link: «что стоит за int и float — [целые](../foundations/integers.md), [дробные](../foundations/floating-point.md)» |
 
 ### Инфраструктура
 
 | Файл | Что менять |
 |------|-----------|
 | `CLAUDE.md` | Добавить `foundations/` в file map |
-| `programming/index.md` | Мотивационная ссылка: «рекомендуем foundations/ для глубокого понимания» |
-| `computer/index.md` | Аналогично |
-| `networking/foundations/00-ethernet-and-switching.md` | Оставить мини-определение + ссылка «подробнее → foundations/00» |
+| `programming/programming.md` | Мотивационная ссылка: «рекомендуем foundations/ для глубокого понимания» |
+| `computer/computer.md` | Аналогично |
+| `networking/foundations/ethernet-and-switching.md` | Оставить мини-определение + ссылка «подробнее → foundations/binary-and-bytes.md» |
 
 ### Аудитировано, изменения не нужны
 
@@ -377,11 +377,11 @@ foundations/
 
 | Кластер | Обоснование |
 |---------|------------|
-| `linux/kernel/` (03-network-stack и др.) | Hex-данные используются как иллюстрация к сетевому стеку ядра. Контекст достаточен — читатель linux/kernel уже прошёл foundations-уровень через цепочку предпосылок домена. |
-| `linux/containers/` (01-containers и др.) | Битовые маски упоминаются при seccomp/capabilities. Объяснение inline достаточно для уровня заметки. |
-| `networking/foundations/04-ipv6.md` | Hex-нотация IPv6-адресов. Читатель прошёл 00-ethernet, где бит/байт уже определены. |
+| `linux/kernel/` (network-stack и др.) | Hex-данные используются как иллюстрация к сетевому стеку ядра. Контекст достаточен — читатель linux/kernel уже прошёл foundations-уровень через цепочку предпосылок домена. |
+| `linux/containers/` (containers и др.) | Битовые маски упоминаются при seccomp/capabilities. Объяснение inline достаточно для уровня заметки. |
+| `networking/foundations/ipv6.md` | Hex-нотация IPv6-адресов. Читатель прошёл ethernet-and-switching, где бит/байт уже определены. |
 | `algorithms-and-data-structures/` | Хеш-функции работают с битами, но это деталь реализации, не блокирующая понимание ADT. |
-| `ruby/internal/collections/02-string.md` | Encoding обсуждается на уровне Ruby-объектов, не на уровне бит. Мотивационная ссылка на foundations/04 уместна, но не жёсткая предпосылка. |
+| `ruby/internal/collections/string.md` | Encoding обсуждается на уровне Ruby-объектов, не на уровне бит. Мотивационная ссылка на foundations/text-encoding уместна, но не жёсткая предпосылка. |
 
 ## Общие соглашения для серии
 

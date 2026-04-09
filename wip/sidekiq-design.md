@@ -3,16 +3,16 @@ phase: design
 status: approved
 topic: Sidekiq — обучающая серия
 files:
-  - rails/sidekiq/index.md
-  - rails/sidekiq/00-architecture.md
-  - rails/sidekiq/01-job-lifecycle.md
-  - rails/sidekiq/02-guarantees.md
-  - rails/sidekiq/03-retry-and-errors.md
-  - rails/sidekiq/04-signals-and-deploy.md
-  - rails/sidekiq/05-job-design.md
-  - rails/sidekiq/06-concurrency-and-scaling.md
-  - rails/sidekiq/07-testing.md
-  - rails/index.md
+  - rails/sidekiq/sidekiq.md
+  - rails/sidekiq/architecture.md
+  - rails/sidekiq/job-lifecycle.md
+  - rails/sidekiq/guarantees.md
+  - rails/sidekiq/retry-and-errors.md
+  - rails/sidekiq/signals-and-deploy.md
+  - rails/sidekiq/job-design.md
+  - rails/sidekiq/concurrency-and-scaling.md
+  - rails/sidekiq/testing.md
+  - rails/rails.md
 ---
 
 # Design: Sidekiq
@@ -67,15 +67,15 @@ files:
 
 | Концепция | Источник |
 |-----------|---------|
-| Temporal decoupling, ACK, point-to-point, DLQ, backpressure | system-design/09-message-queues.md |
-| At-least-once, exactly-once = idempotency | system-design/08-delivery-guarantees.md |
-| Retry с backoff + jitter, circuit breaker, bulkhead, idempotency key | system-design/06-reliability-patterns.md |
-| Redis LIST, BRPOP, FIFO queue | databases/redis/data-structures/02-list.md |
-| Simple queue (BRPOP), reliable queue (LMOVE), delayed queue (ZSET) | databases/redis/patterns/03-queues.md |
-| SIGTERM, SIGTSTP, graceful shutdown, self-pipe trick | linux/programming/00-signals.md |
-| Потоки ОС, shared memory, mutex, race conditions | linux/foundations/03-threads.md |
+| Temporal decoupling, ACK, point-to-point, DLQ, backpressure | system-design/message-queues.md |
+| At-least-once, exactly-once = idempotency | system-design/delivery-guarantees.md |
+| Retry с backoff + jitter, circuit breaker, bulkhead, idempotency key | system-design/reliability-patterns.md |
+| Redis LIST, BRPOP, FIFO queue | databases/redis/data-structures/list.md |
+| Simple queue (BRPOP), reliable queue (LMOVE), delayed queue (ZSET) | databases/redis/patterns/queues.md |
+| SIGTERM, SIGTSTP, graceful shutdown, self-pipe trick | linux/programming/signals.md |
+| Потоки ОС, shared memory, mutex, race conditions | linux/foundations/threads.md |
 | GVL, I/O overlap, Puma architecture | ruby/ruby-concurrency.md |
-| connection_pool, Redis instances (Sidekiq = noeviction) | rails/redis/00-clients-and-connections.md |
+| connection_pool, Redis instances (Sidekiq = noeviction) | rails/redis/clients-and-connections.md |
 | Hand-built LPUSH+BRPOP queue | rails/redis/practice/list-background-queue.md |
 
 **Читатель НЕ знает:**
@@ -174,13 +174,13 @@ Jobs спроектированы → нагрузка растёт
 
 | Файл | Предпосылки |
 |------|-------------|
-| 00-architecture | [Redis Lists](../../databases/redis/data-structures/02-list.md), [Очереди в Redis](../../databases/redis/patterns/03-queues.md), [Message Queues](../../system-design/09-message-queues.md), [Background queue](../redis/practice/list-background-queue.md) |
+| 00-architecture | [Redis Lists](../databases/redis/data-structures/list.md), [Очереди в Redis](../databases/redis/patterns/queues.md), [Message Queues](../system-design/message-queues.md), [Background queue](../rails/redis/practice/list-background-queue.md) |
 | 01-job-lifecycle | Предыдущий файл серии |
-| 02-guarantees | [Гарантии доставки](../../system-design/08-delivery-guarantees.md), [Reliability patterns § idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) |
+| 02-guarantees | [Гарантии доставки](../system-design/delivery-guarantees.md), [Reliability patterns § idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) |
 | 03-retry-and-errors | Предыдущие файлы серии |
-| 04-signals-and-deploy | [Сигналы](../../linux/programming/00-signals.md) |
-| 05-job-design | [Reliability patterns § bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов), [Event-driven architecture](../../system-design/13-event-driven-architecture.md) |
-| 06-concurrency-and-scaling | [Ruby concurrency](../../ruby/ruby-concurrency.md), [Потоки](../../linux/foundations/03-threads.md) |
+| 04-signals-and-deploy | [Сигналы](../linux/programming/signals.md) |
+| 05-job-design | [Reliability patterns § bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов), [Event-driven architecture](../system-design/event-driven-architecture.md) |
+| 06-concurrency-and-scaling | [Ruby concurrency](../ruby/ruby-concurrency.md), [Потоки](../linux/foundations/threads.md) |
 | 07-testing | Предыдущие файлы серии |
 
 ### Интеграция с system-design (cross-links)
@@ -188,36 +188,36 @@ Jobs спроектированы → нагрузка растёт
 Ключевой принцип: Sidekiq — конкретная реализация абстрактных паттернов из system-design. Каждый cross-link подтверждает связь: «это тот самый паттерн, который ты знаешь, вот как он реализован здесь».
 
 **00-architecture.md:**
-- [Temporal decoupling](../../system-design/09-message-queues.md#temporal-decoupling-развязка-во-времени) — мотивация: зачем background processing
-- [Point-to-point](../../system-design/09-message-queues.md#point-to-point-и-pubsub) — модель Sidekiq: competing consumers
-- [Microservices § Sidekiq в монолите](../../system-design/12-microservices.md) — контекст: где живёт Sidekiq в архитектуре
+- [Temporal decoupling](../system-design/message-queues.md#temporal-decoupling-развязка-во-времени) — мотивация: зачем background processing
+- [Point-to-point](../system-design/message-queues.md#point-to-point-и-pubsub) — модель Sidekiq: competing consumers
+- [Microservices § Sidekiq в монолите](../system-design/microservices.md) — контекст: где живёт Sidekiq в архитектуре
 
 **01-job-lifecycle.md:**
-- [ACK](../../system-design/09-message-queues.md#acknowledgment) — Sidekiq не использует explicit ACK в OSS (BRPOP = implicit)
+- [ACK](../system-design/message-queues.md#acknowledgment) — Sidekiq не использует explicit ACK в OSS (BRPOP = implicit)
 
 **02-guarantees.md:**
-- [At-least-once](../../system-design/08-delivery-guarantees.md#at-least-once-не-менее-одного-раза) — контракт Sidekiq при SuperFetch
-- [Exactly-once = at-least-once + idempotency](../../system-design/08-delivery-guarantees.md#exactly-once--at-least-once--idempotency) — ключевая формула
-- [Idempotency key](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) — паттерн для Sidekiq jobs
+- [At-least-once](../system-design/delivery-guarantees.md#at-least-once-не-менее-одного-раза) — контракт Sidekiq при SuperFetch
+- [Exactly-once = at-least-once + idempotency](../system-design/delivery-guarantees.md#exactly-once--at-least-once--idempotency) — ключевая формула
+- [Idempotency key](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) — паттерн для Sidekiq jobs
 
 **03-retry-and-errors.md:**
-- [Retry с backoff](../../system-design/06-reliability-patterns.md#retry-with-backoff-повторная-попытка) — Sidekiq применяет тот же паттерн, но с power of 4
-- [DLQ](../../system-design/09-message-queues.md#dead-letter-queue) — dead set = DLQ
-- [Transient vs permanent failure](../../system-design/06-reliability-patterns.md#transient-vs-permanent-failure) — различение в контексте retry
+- [Retry с backoff](../system-design/reliability-patterns.md#retry-with-backoff-повторная-попытка) — Sidekiq применяет тот же паттерн, но с power of 4
+- [DLQ](../system-design/message-queues.md#dead-letter-queue) — dead set = DLQ
+- [Transient vs permanent failure](../system-design/reliability-patterns.md#transient-vs-permanent-failure) — различение в контексте retry
 
 **04-signals-and-deploy.md:**
-- [Graceful shutdown](../../linux/programming/00-signals.md#практические-паттерны) — Sidekiq реализует тот же паттерн
+- [Graceful shutdown](../linux/programming/signals.md#практические-паттерны) — Sidekiq реализует тот же паттерн
 
 **05-job-design.md:**
-- [Bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) — изоляция критичного от некритичного внутри jobs
-- [Bulkhead § Sidekiq queues](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) — reliability-patterns уже содержит пример с Sidekiq очередями
-- [Cascading failure](../../system-design/06-reliability-patterns.md#cascading-failure-механизм) — что происходит, когда один медленный job забивает все потоки
-- [Event-driven architecture § command vs event](../../system-design/13-event-driven-architecture.md) — perform_async = command, Kafka publish = event. Осознанный выбор.
-- [Idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) — retry-safe design requires idempotent jobs
+- [Bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — изоляция критичного от некритичного внутри jobs
+- [Bulkhead § Sidekiq queues](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — reliability-patterns уже содержит пример с Sidekiq очередями
+- [Cascading failure](../system-design/reliability-patterns.md#cascading-failure-механизм) — что происходит, когда один медленный job забивает все потоки
+- [Event-driven architecture § command vs event](../system-design/event-driven-architecture.md) — perform_async = command, Kafka publish = event. Осознанный выбор.
+- [Idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) — retry-safe design requires idempotent jobs
 
 **06-concurrency-and-scaling.md:**
-- [Bulkhead § отдельные очереди](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) — Capsules = bulkhead внутри процесса
-- [Backpressure](../../system-design/09-message-queues.md#backpressure) — что происходит, когда Redis забит (noeviction → ошибка записи)
+- [Bulkhead § отдельные очереди](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — Capsules = bulkhead внутри процесса
+- [Backpressure](../system-design/message-queues.md#backpressure) — что происходит, когда Redis забит (noeviction → ошибка записи)
 
 ## Валидация
 
@@ -234,17 +234,17 @@ PASS.
 
 ```
 rails/sidekiq/
-├── index.md                          # карта серии + trade-offs
-├── 00-architecture.md                # зачем + три роли + Redis data model
-├── 01-job-lifecycle.md               # perform_async → completion, middleware
-├── 02-guarantees.md                  # BasicFetch vs SuperFetch, idempotency
-├── 03-retry-and-errors.md            # формула retry, sorted sets, DLQ
-├── 04-signals-and-deploy.md          # TSTP/TERM, deploy sequence, IterableJob
-├── 05-job-design.md                  # атомарность, fan-out, batches, композиция
-├── 06-concurrency-and-scaling.md     # threads, processes, priorities, capsules
-└── 07-testing.md                     # fake/inline, ActiveJob, argument validation
+├── sidekiq.md                        # карта серии + trade-offs
+├── architecture.md                   # зачем + три роли + Redis data model
+├── job-lifecycle.md                  # perform_async → completion, middleware
+├── guarantees.md                     # BasicFetch vs SuperFetch, idempotency
+├── retry-and-errors.md               # формула retry, sorted sets, DLQ
+├── signals-and-deploy.md             # TSTP/TERM, deploy sequence, IterableJob
+├── job-design.md                     # атомарность, fan-out, batches, композиция
+├── concurrency-and-scaling.md        # threads, processes, priorities, capsules
+└── testing.md                        # fake/inline, ActiveJob, argument validation
 
-rails/index.md                        # НОВЫЙ: карта Rails-материалов
+rails/rails.md                        # карта Rails-материалов
 ```
 
 ## Дизайн файлов
@@ -257,7 +257,7 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 
 ### 00-architecture.md (~130-150 строк)
 
-**Предпосылки:** [Redis Lists](../../databases/redis/data-structures/02-list.md), [Очереди в Redis](../../databases/redis/patterns/03-queues.md), [Message Queues](../../system-design/09-message-queues.md), [Background queue](redis/practice/list-background-queue.md).
+**Предпосылки:** [Redis Lists](../databases/redis/data-structures/list.md), [Очереди в Redis](../databases/redis/patterns/queues.md), [Message Queues](../system-design/message-queues.md), [Background queue](../rails/redis/practice/list-background-queue.md).
 
 **Мотивация:** Простая очередь руками работает для одного типа задачи. В реальном приложении десятки типов, каждый со своими требованиями.
 
@@ -271,8 +271,8 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 5. perform_async / perform_in / perform_at — три способа поставить задачу
 
 **system-design cross-links:**
-- [Temporal decoupling](../../system-design/09-message-queues.md#temporal-decoupling-развязка-во-времени) при мотивации
-- [Point-to-point](../../system-design/09-message-queues.md#point-to-point-и-pubsub) при описании модели competing consumers
+- [Temporal decoupling](../system-design/message-queues.md#temporal-decoupling-развязка-во-времени) при мотивации
+- [Point-to-point](../system-design/message-queues.md#point-to-point-и-pubsub) при описании модели competing consumers
 
 **Завершение → 01:** «Архитектура — карта. Теперь проследим путь одной задачи через неё.»
 
@@ -295,7 +295,7 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 
 ### 02-guarantees.md (~110-130 строк)
 
-**Предпосылки:** [Гарантии доставки](../../system-design/08-delivery-guarantees.md), [Reliability patterns § idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов).
+**Предпосылки:** [Гарантии доставки](../system-design/delivery-guarantees.md), [Reliability patterns § idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов).
 
 **Мотивация:** Процесс убит OOM mid-job. Что случилось с задачей?
 
@@ -306,14 +306,14 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 2. **Fetch** — самая наглядная. BasicFetch (default): BRPOP = простая очередь из redis/patterns. Job удалён из Redis до начала выполнения. Crash/OOM/SIGKILL = потеря. SuperFetch (Pro, opt-in через `config.super_fetch!`, `<details>`): LMOVE в приватную очередь процесса = reliable queue из redis/patterns. Job в Redis до acknowledge. Orphan recovery при crash.
 3. **Push** — client отправляет LPUSH, но Redis может быть недоступен. Reliable push (Pro, opt-in через `Sidekiq::Client.reliable_push!`, `<details>`): при сбое Redis сохраняет job локально и повторяет. Default push: job потерян при сбое сети.
 4. **Scheduling** — Poller переносит jobs из sorted sets в queue. Default scheduler: ZRANGEBYSCORE + LPUSH не атомарны, crash между ними = потеря или дублирование. Reliable scheduler (Pro, opt-in через `config.reliable_scheduler!`, `<details>`): атомарное продвижение.
-5. Контракт: default OSS = at-most-once при crash на каждой из трёх точек. Pro mechanisms значительно сужают окна потерь, но не закрывают полностью — у каждого есть оставшиеся loss windows (`reliable_push!` = in-memory buffer, теряется при рестарте клиентского процесса, не совместим с Batches; `reliable_scheduler!` unsafe на Redis Cluster). Называть это «hard at-least-once» — преувеличение; корректнее: best-effort [at-least-once](../../system-design/08-delivery-guarantees.md#at-least-once-не-менее-одного-раза) с конкретными оговорками в `<details>`. Важно: покупка Pro без включения — не меняет гарантий.
-6. At-least-once → возможны дубликаты → [idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов). Конкретные паттерны: unique constraint, idempotency key, status check.
+5. Контракт: default OSS = at-most-once при crash на каждой из трёх точек. Pro mechanisms значительно сужают окна потерь, но не закрывают полностью — у каждого есть оставшиеся loss windows (`reliable_push!` = in-memory buffer, теряется при рестарте клиентского процесса, не совместим с Batches; `reliable_scheduler!` unsafe на Redis Cluster). Называть это «hard at-least-once» — преувеличение; корректнее: best-effort [at-least-once](../system-design/delivery-guarantees.md#at-least-once-не-менее-одного-раза) с конкретными оговорками в `<details>`. Важно: покупка Pro без включения — не меняет гарантий.
+6. At-least-once → возможны дубликаты → [idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов). Конкретные паттерны: unique constraint, idempotency key, status check.
 7. Ловушка: perform_async внутри ActiveRecord-транзакции. Job попадает в Redis до commit. Rollback → job обрабатывает несуществующие данные. Решение: Transactional Push (7.2+).
 
 **system-design cross-links:**
-- [At-least-once](../../system-design/08-delivery-guarantees.md#at-least-once-не-менее-одного-раза) — контракт
-- [Exactly-once = at-least-once + idempotency](../../system-design/08-delivery-guarantees.md#exactly-once--at-least-once--idempotency) — формула
-- [Idempotency key](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) — конкретный механизм
+- [At-least-once](../system-design/delivery-guarantees.md#at-least-once-не-менее-одного-раза) — контракт
+- [Exactly-once = at-least-once + idempotency](../system-design/delivery-guarantees.md#exactly-once--at-least-once--idempotency) — формула
+- [Idempotency key](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) — конкретный механизм
 
 **Завершение → 03:** «Знаем о потерях и дубликатах. Но что если job просто упал с ошибкой — email-сервис вернул 500?»
 
@@ -327,29 +327,29 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 
 **Под-дуга:**
 1. Processor wraps server middleware chain с `JobRetry`. Exception из perform или middleware поднимается до `JobRetry#process_retry` → ZADD в retry sorted set (score = время следующей попытки). Важно: retry — это уровень Processor, не middleware. Server middleware (логирование, метрики) работает внутри retry boundary.
-2. Формула delay: `(count ** 4) + 15 + (rand(10) * (count + 1))`. Сравнение с [exponential backoff](../../system-design/06-reliability-patterns.md#retry-with-backoff-повторная-попытка) из system-design: степень 4 (не 2) — агрессивный backoff, чтобы дать время на deploy фикса. Jitter — предотвращение thundering herd.
-3. retry sorted set = delayed queue pattern из [redis/patterns](../../databases/redis/patterns/03-queues.md#отложенные-задачи-delayed-queue). Poller переносит jobs из retry/schedule sorted sets в очередь. Default: ZRANGEBYSCORE + LPUSH (не атомарно, crash между ними = дубликат или потеря). Reliable scheduler (Pro): атомарное продвижение через Lua. Интервал Poller масштабируется с числом процессов.
-4. 25 retry ≈ 21 день. После — ZADD в dead sorted set (max 10000, TTL 6 мес). Dead set = [DLQ](../../system-design/09-message-queues.md#dead-letter-queue).
+2. Формула delay: `(count ** 4) + 15 + (rand(10) * (count + 1))`. Сравнение с [exponential backoff](../system-design/reliability-patterns.md#retry-with-backoff-повторная-попытка) из system-design: степень 4 (не 2) — агрессивный backoff, чтобы дать время на deploy фикса. Jitter — предотвращение thundering herd.
+3. retry sorted set = delayed queue pattern из [redis/patterns](../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue). Poller переносит jobs из retry/schedule sorted sets в очередь. Default: ZRANGEBYSCORE + LPUSH (не атомарно, crash между ними = дубликат или потеря). Reliable scheduler (Pro): атомарное продвижение через Lua. Интервал Poller масштабируется с числом процессов.
+4. 25 retry ≈ 21 день. После — ZADD в dead sorted set (max 10000, TTL 6 мес). Dead set = [DLQ](../system-design/message-queues.md#dead-letter-queue).
 5. Death handlers: `config.death_handlers << ->(job, ex) { ... }`. Custom retry per job: `sidekiq_options retry: 5`.
-6. [Transient vs permanent failure](../../system-design/06-reliability-patterns.md#transient-vs-permanent-failure): retry спасает от transient (API down на час). Permanent (невалидный email) — бессмысленно, нужен dead set.
+6. [Transient vs permanent failure](../system-design/reliability-patterns.md#transient-vs-permanent-failure): retry спасает от transient (API down на час). Permanent (невалидный email) — бессмысленно, нужен dead set.
 
 **system-design cross-links:**
-- [Retry с backoff](../../system-design/06-reliability-patterns.md#retry-with-backoff-повторная-попытка) — сравнение формул
-- [DLQ](../../system-design/09-message-queues.md#dead-letter-queue) — dead set это DLQ
-- [Transient vs permanent](../../system-design/06-reliability-patterns.md#transient-vs-permanent-failure) — контекст для retry
+- [Retry с backoff](../system-design/reliability-patterns.md#retry-with-backoff-повторная-попытка) — сравнение формул
+- [DLQ](../system-design/message-queues.md#dead-letter-queue) — dead set это DLQ
+- [Transient vs permanent](../system-design/reliability-patterns.md#transient-vs-permanent-failure) — контекст для retry
 
 **Завершение → 04:** «Retry обрабатывает ошибки кода. Но что если причина — инфраструктурная: deploy нового кода, перезапуск сервера?»
 
 ### 04-signals-and-deploy.md (~90-120 строк)
 
-**Предпосылки:** [Сигналы](../../linux/programming/00-signals.md).
+**Предпосылки:** [Сигналы](../linux/programming/signals.md).
 
 **Мотивация:** Deploy нового кода → старый процесс должен остановиться без потери in-flight jobs.
 
 **Вход:** `cap production deploy` — 10 jobs выполняются. Что происходит?
 
 **Под-дуга:**
-1. TSTP = quiet: процесс перестаёт забирать новые jobs, дорабатывает текущие. Аналогия: [graceful shutdown](../../linux/programming/00-signals.md#практические-паттерны) — stop accepting, finish current.
+1. TSTP = quiet: процесс перестаёт забирать новые jobs, дорабатывает текущие. Аналогия: [graceful shutdown](../linux/programming/signals.md#практические-паттерны) — stop accepting, finish current.
 2. TERM/INT = shutdown: timeout (default 25 sec), затем принудительное завершение. Текущие jobs прерываются, незавершённые requeue.
 3. Deploy sequence: TSTP → deploy new code → TERM old process. Зачем два шага: TSTP даёт время дорабатывать, пока новый код ещё не готов.
 4. TTIN = backtrace всех потоков (debug).
@@ -361,48 +361,48 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 
 ### 05-job-design.md (~110-140 строк)
 
-**Предпосылки:** [Reliability patterns § bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов), [Event-driven architecture](../../system-design/13-event-driven-architecture.md).
+**Предпосылки:** [Reliability patterns § bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов), [Event-driven architecture](../system-design/event-driven-architecture.md).
 
 **Мотивация:** Обработка заказа — цепочка операций. Один большой job делает всё: reserve → charge → email → analytics. Одна ошибка в analytics роняет весь job → retry перезапускает charge → двойное списание.
 
 **Вход:** OrderProcessingJob.perform: payment + email + analytics в одном perform. Analytics упал → retry → charge повторно.
 
 **Под-дуга:**
-1. Один большой job = одна ошибка роняет всё. Retry = повторение всех шагов. Наглядный пример из [reliability-patterns](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов): некритичное не должно ронять критичное.
-2. Принцип: один job = одна атомарная операция. Job должен быть идемпотентным (cross-link: [idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов)).
+1. Один большой job = одна ошибка роняет всё. Retry = повторение всех шагов. Наглядный пример из [reliability-patterns](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов): некритичное не должно ронять критичное.
+2. Принцип: один job = одна атомарная операция. Job должен быть идемпотентным (cross-link: [idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов)).
 3. Fan-out: один job порождает N sub-jobs. ChargePaymentJob → SendEmailJob.perform_async + TrackAnalyticsJob.perform_async. Каждый job со своим retry-циклом.
-4. [Bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) внутри job: begin/rescue для некритичного vs отдельные jobs (лучше). reliability-patterns.md уже содержит пример с Sidekiq очередями — cross-link.
+4. [Bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) внутри job: begin/rescue для некритичного vs отдельные jobs (лучше). reliability-patterns.md уже содержит пример с Sidekiq очередями — cross-link.
 5. Координация: когда все sub-jobs завершены? Batches (Pro: callbacks on_success, on_complete; `<details>`). OSS альтернативы: sidekiq-batch, sidekiq-grouping (`<details>`).
-6. perform_async = [команда](../../system-design/13-event-driven-architecture.md) (знаю получателя, жду действие). Kafka publish = событие (не знаю, кто обработает). Осознанный выбор модели. Когда Sidekiq-команды перерастают в event-driven — ссылка на EDA.
+6. perform_async = [команда](../system-design/event-driven-architecture.md) (знаю получателя, жду действие). Kafka publish = событие (не знаю, кто обработает). Осознанный выбор модели. Когда Sidekiq-команды перерастают в event-driven — ссылка на EDA.
 
 **system-design cross-links:**
-- [Bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) — изоляция внутри jobs + очереди
-- [Cascading failure](../../system-design/06-reliability-patterns.md#cascading-failure-механизм) — один медленный job забивает все потоки
-- [Command vs event](../../system-design/13-event-driven-architecture.md) — модель интеграции
-- [Idempotency](../../system-design/06-reliability-patterns.md#idempotency-безопасность-повторных-запросов) — retry-safe design
+- [Bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — изоляция внутри jobs + очереди
+- [Cascading failure](../system-design/reliability-patterns.md#cascading-failure-механизм) — один медленный job забивает все потоки
+- [Command vs event](../system-design/event-driven-architecture.md) — модель интеграции
+- [Idempotency](../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) — retry-safe design
 
 **Завершение → 06:** «Jobs спроектированы: маленькие, атомарные, идемпотентные. Их стало 10 000 в час. Как обработать?»
 
 ### 06-concurrency-and-scaling.md (~110-140 строк)
 
-**Предпосылки:** [Ruby concurrency](../../ruby/ruby-concurrency.md), [Потоки](../../linux/foundations/03-threads.md).
+**Предпосылки:** [Ruby concurrency](../ruby/ruby-concurrency.md), [Потоки](../linux/foundations/threads.md).
 
 **Мотивация:** 10 потоков, все I/O-bound. 10 000 jobs/час. Не справляемся.
 
 **Вход:** 1000 emails/минуту, Sidekiq обрабатывает 60. Пользователи ждут 15 минут.
 
 **Под-дуга:**
-1. Thread pool + [GVL](../../ruby/ruby-concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код): потоки полезны для I/O-bound (email, HTTP, DB). CPU-bound jobs не ускоряются потоками.
+1. Thread pool + [GVL](../ruby/ruby-concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код): потоки полезны для I/O-bound (email, HTTP, DB). CPU-bound jobs не ускоряются потоками.
 2. concurrency setting: больше потоков → больше I/O overlap, но больше memory + connection pool. Правило: concurrency ≤ DB pool size.
 3. Несколько процессов: каждый со своим GVL. CPU parallelism. systemd / Procfile / docker-compose.
 4. Queue priorities: weighted (`critical,3 default,2 low,1` → вероятностная) vs strict (`critical default low` → critical обрабатывается первым). Weighted = fair scheduling. Strict = starvation risk для low.
-5. [Bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) через очереди: отдельные процессы для critical и low. Один забит тяжёлыми jobs — второй работает.
+5. [Bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) через очереди: отдельные процессы для critical и low. Один забит тяжёлыми jobs — второй работает.
 6. Capsules (7.0+, `<details>`): изолированная группа настроек внутри одного процесса. Свой concurrency, свои очереди. In-process bulkhead без отдельного процесса.
-7. [Backpressure](../../system-design/09-message-queues.md#backpressure): Redis с noeviction → при исчерпании памяти LPUSH возвращает ошибку → producer получает exception. Мониторинг queue depth.
+7. [Backpressure](../system-design/message-queues.md#backpressure): Redis с noeviction → при исчерпании памяти LPUSH возвращает ошибку → producer получает exception. Мониторинг queue depth.
 
 **system-design cross-links:**
-- [Bulkhead](../../system-design/06-reliability-patterns.md#bulkhead-изоляция-ресурсов) — очереди и процессы как bulkhead
-- [Backpressure](../../system-design/09-message-queues.md#backpressure) — Redis memory limits
+- [Bulkhead](../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — очереди и процессы как bulkhead
+- [Backpressure](../system-design/message-queues.md#backpressure) — Redis memory limits
 
 **Завершение → 07:** «Система масштабирована. Как тестировать? И какой API выбрать?»
 
@@ -430,29 +430,29 @@ rails/index.md                        # НОВЫЙ: карта Rails-матер�
 
 | Файл | Что менять |
 |------|-----------|
-| `rails/redis/index.md` | Обновить ссылку `sidekiq.md` → `sidekiq/index.md` |
+| `rails/redis/redis-in-rails.md` | Обновить ссылку `sidekiq.md` → `sidekiq/sidekiq.md` |
 | `rails/redis/practice/list-background-queue.md` | Обновить ссылку на Sidekiq если есть |
-| `databases/redis/patterns/03-queues.md` | «См. также» → `../../rails/sidekiq/index.md` вместо `sidekiq.md`. Добавить cross-link на 02-guarantees.md (BasicFetch/SuperFetch как конкретная инстанциация) |
-| `system-design/09-message-queues.md` | «См. также» → `../rails/sidekiq/index.md`. Уточнить inline cross-links (point-to-point → 00-architecture, retry → 03-retry, DLQ → 03-retry) |
-| `system-design/06-reliability-patterns.md` | Bulkhead section: обновить ссылки на sidekiq.yml пример → `../rails/sidekiq/06-concurrency-and-scaling.md`. Idempotency section: добавить cross-link на 02-guarantees.md |
-| `system-design/12-microservices.md` | Обновить все ссылки `sidekiq.md` → `sidekiq/index.md` |
-| `system-design/13-event-driven-architecture.md` | Обновить ссылки, добавить cross-link на 05-job-design.md (command vs event) |
+| `databases/redis/patterns/queues.md` | «См. также» → `../../rails/sidekiq/sidekiq.md` вместо `sidekiq.md`. Добавить cross-link на guarantees.md (BasicFetch/SuperFetch как конкретная инстанциация) |
+| `system-design/message-queues.md` | «См. также» → `../rails/sidekiq/sidekiq.md`. Уточнить inline cross-links (point-to-point → architecture, retry → retry-and-errors, DLQ → retry-and-errors) |
+| `system-design/reliability-patterns.md` | Bulkhead section: обновить ссылки на sidekiq.yml пример → `../rails/sidekiq/concurrency-and-scaling.md`. Idempotency section: добавить cross-link на guarantees.md |
+| `system-design/microservices.md` | Обновить все ссылки `sidekiq.md` → `sidekiq/sidekiq.md` |
+| `system-design/event-driven-architecture.md` | Обновить ссылки, добавить cross-link на job-design.md (command vs event) |
 | `CLAUDE.md` | Обновить file map: `rails/` описание |
 
 ### Создание новых файлов
 
 | Файл | Описание |
 |------|----------|
-| `rails/index.md` | Карта Rails-материалов: Redis серия + Sidekiq серия. Предпосылки: Ruby, Rails. |
-| `rails/sidekiq/index.md` | Карта серии Sidekiq |
-| `rails/sidekiq/00-architecture.md` | Зачем + три роли + Redis data model |
-| `rails/sidekiq/01-job-lifecycle.md` | perform_async → completion |
-| `rails/sidekiq/02-guarantees.md` | BasicFetch vs SuperFetch, idempotency |
-| `rails/sidekiq/03-retry-and-errors.md` | Retry formula, sorted sets, DLQ |
-| `rails/sidekiq/04-signals-and-deploy.md` | TSTP/TERM, deploy, IterableJob |
-| `rails/sidekiq/05-job-design.md` | Атомарность, fan-out, batches |
-| `rails/sidekiq/06-concurrency-and-scaling.md` | Threads, processes, priorities, capsules |
-| `rails/sidekiq/07-testing.md` | Testing modes, ActiveJob, practices |
+| `rails/rails.md` | Карта Rails-материалов: Redis серия + Sidekiq серия. Предпосылки: Ruby, Rails. |
+| `rails/sidekiq/sidekiq.md` | Карта серии Sidekiq |
+| `rails/sidekiq/architecture.md` | Зачем + три роли + Redis data model |
+| `rails/sidekiq/job-lifecycle.md` | perform_async → completion |
+| `rails/sidekiq/guarantees.md` | BasicFetch vs SuperFetch, idempotency |
+| `rails/sidekiq/retry-and-errors.md` | Retry formula, sorted sets, DLQ |
+| `rails/sidekiq/signals-and-deploy.md` | TSTP/TERM, deploy, IterableJob |
+| `rails/sidekiq/job-design.md` | Атомарность, fan-out, batches |
+| `rails/sidekiq/concurrency-and-scaling.md` | Threads, processes, priorities, capsules |
+| `rails/sidekiq/testing.md` | Testing modes, ActiveJob, practices |
 
 ### Удаление
 

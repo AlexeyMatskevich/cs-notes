@@ -9,7 +9,6 @@ aliases:
   - Exactly-Once Semantics
 order: 4
 ---
-
 # Kafka Transactions: exactly-once для consume-transform-produce
 
 **Предпосылки:** [Consumer internals](consumer-internals.md) (poll loop, offset commit, at-least-once), [Producer reliability](producer-reliability.md) (idempotent producer, PID, sequence number, границы), [Гарантии доставки](../../../system-design/delivery-guarantees.md) (exactly-once = at-least-once + idempotency), [Reliability patterns](../../../system-design/reliability-patterns.md) (idempotency).
@@ -257,7 +256,7 @@ Enrichment-сервис — consumer в группе `enrichment-group`. Есл�
 
 Kafka Transactions гарантируют exactly-once для операций **внутри Kafka**: прочитать из topic'а, записать в topic, закоммитить offset — атомарно и ровно один раз. Enrichment-сервис (Kafka → Kafka) — идеальный кандидат.
 
-Как только обработка выходит за пределы Kafka, транзакции не контролируют side effect. Billing прочитал обогащённое событие из `enriched_orders` (с `read_committed` — без дубликатов от enrichment'а) и вызвал платёжный API: «начисли 15$ продавцу #7». API ответил «ok». Billing упал до commit'а offset'а. При рестарте — повтор вызова. Exactly-once гарантия Kafka не защитила billing от дубликата во внешней системе.
+Как только обработка выходит за пределы Kafka, транзакции не контролируют side effect. Billing прочитал обогащённое событие из `enriched_orders` (с `read_committed` — без дубликатов от enrichment'а) и вызвал платёжный API: «начисли 15$ продавцу \#7». API ответил «ok». Billing упал до commit'а offset'а. При рестарте — повтор вызова. Exactly-once гарантия Kafka не защитила billing от дубликата во внешней системе.
 
 Для таких случаев остаётся at-least-once + [идемпотентность](../../../system-design/reliability-patterns.md) на стороне приложения: unique constraint в БД, idempotency key во внешнем API, upsert вместо insert. `seller_read_db` с идемпотентным `UPDATE` — пример, где транзакции Kafka не нужны: одна операция «прочитал → обработал → закоммитил offset», без записи в другой topic, и [at-least-once + идемпотентный обработчик](../../../system-design/delivery-guarantees.md) достаточен.
 

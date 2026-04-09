@@ -192,7 +192,7 @@ CQRS не требует distributed log, Kafka или отдельных баз
 
 В текущей CQRS-архитектуре write-модель — обычная PostgreSQL с мутабельным состоянием. `UPDATE orders SET status = 'shipped' WHERE id = 42` перезаписывает старое значение. Событие `order.shipped` публикуется и уходит в проекции, но write-база хранит только текущий снимок.
 
-Менеджер спрашивает: «Заказ #42 — когда он перешёл из `paid` в `shipped`?» Ответить нельзя — в базе только `status = 'shipped'` и `updated_at`. Прагматичное решение: добавить `paid_at`, `shipped_at`, `delivered_at` — отдельный timestamp на каждый переход. Или JSONB-поле `status_history`:
+Менеджер спрашивает: «Заказ \#42 — когда он перешёл из `paid` в `shipped`?» Ответить нельзя — в базе только `status = 'shipped'` и `updated_at`. Прагматичное решение: добавить `paid_at`, `shipped_at`, `delivered_at` — отдельный timestamp на каждый переход. Или JSONB-поле `status_history`:
 
 ```json
 [
@@ -218,7 +218,7 @@ Audit log решает часть этой проблемы. Logidze (расши
 
 Вместо хранения текущего состояния и дописывания истории — хранить только историю, а текущее состояние вычислять из неё.
 
-Последовательность событий заказа #42:
+Последовательность событий заказа \#42:
 
 ```
 Event 1: OrderCreated     {user: 7, items: [{sku: "A", price: 7000, qty: 1}]}
@@ -321,7 +321,7 @@ CREATE TABLE events (
 );
 ```
 
-Constraint `UNIQUE (stream_id, version)` — ключевая гарантия. Это optimistic concurrency: два процесса одновременно читают заказ #42 на version 5, оба пытаются записать version 6. Один получает unique violation — и должен перечитать состояние и повторить. Защита от race condition без блокировок — тот же принцип, что optimistic locking в ActiveRecord (`lock_version`), но на уровне event stream.
+Constraint `UNIQUE (stream_id, version)` — ключевая гарантия. Это optimistic concurrency: два процесса одновременно читают заказ \#42 на version 5, оба пытаются записать version 6. Один получает unique violation — и должен перечитать состояние и повторить. Защита от race condition без блокировок — тот же принцип, что optimistic locking в ActiveRecord (`lock_version`), но на уровне event stream.
 
 Запись — `INSERT`. Чтение состояния — `SELECT * FROM events WHERE stream_id = ? AND version > ? ORDER BY version`. Snapshot — отдельная таблица.
 

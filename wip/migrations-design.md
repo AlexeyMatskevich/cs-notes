@@ -4,8 +4,8 @@ status: approved
 topic: Database Migrations
 files:
   - databases/migrations/index.md
-  - databases/migrations/00-safe-schema-changes.md
-  - databases/migrations/01-schema-evolution.md
+  - databases/migrations/safe-schema-changes.md
+  - databases/migrations/schema-evolution.md
 ---
 
 # Design: Database Migrations
@@ -150,7 +150,7 @@ files:
    1. **Expand schema** — добавить новую структуру (ADD COLUMN, etc.)
    2. **Deploy dual-write** — rolling deploy кода, который пишет в оба столбца. **Gate: ВСЕ instances обновлены** (ни один writer не пишет только в старый столбец)
    3. **Backfill** — заполнить старые строки. **Gate: начинать только после п.2** + post-rollout tail-sweep для late-commit строк
-   4. **Switch reads** — переключить чтение на новый столбец. **Три gate-а:** (A) transaction drain — все pre-rollout транзакции завершены (application barrier или scoped `pg_stat_activity.xact_start`); (B) convergence verified stable — проверяется дважды, критерий по типу миграции; (C, advanced) replica catch-up — если читают с replicas (требует знание [репликации](../postgresql/distribution/00-replication.md)): capture `pg_current_wal_lsn()` непосредственно перед switch reads, ждать все serving replicas >= этот LSN. Primary-only reads — gate не нужен
+   4. **Switch reads** — переключить чтение на новый столбец. **Три gate-а:** (A) transaction drain — все pre-rollout транзакции завершены (application barrier или scoped `pg_stat_activity.xact_start`); (B) convergence verified stable — проверяется дважды, критерий по типу миграции; (C, advanced) replica catch-up — если читают с replicas (требует знание [репликации](../databases/postgresql/distribution/replication.md)): capture `pg_current_wal_lsn()` непосредственно перед switch reads, ждать все serving replicas >= этот LSN. Primary-only reads — gate не нужен
    5. **Contract** — удалить старую структуру. **Gate: все readers и writers на новом столбце**
 
    Ключевое: без строгих gates между шагами — stale reads, потеря записей, failed validation. Примеры: переименование столбца, смена типа, разделение таблицы. Универсальный паттерн.
@@ -224,8 +224,8 @@ files:
 ```
 databases/migrations/
 ├── index.md                      рамка, study order, scope
-├── 00-safe-schema-changes.md     одиночные операции: cost profile, safe patterns, timeouts
-└── 01-schema-evolution.md        multi-step: separation, backfill, compatibility, expand-contract
+├── safe-schema-changes.md     одиночные операции: cost profile, safe patterns, timeouts
+└── schema-evolution.md        multi-step: separation, backfill, compatibility, expand-contract
 ```
 
 ## Дизайн файлов
@@ -241,7 +241,7 @@ databases/migrations/
 - **Study order:** 00 → 01.
 - **Как всё связано:** trade-off безопасность/скорость, trade-off простота/координация.
 
-### 00-safe-schema-changes.md
+### safe-schema-changes.md
 
 **Предпосылки:** все предпосылки серии (через ссылки).
 **Мотивация:** ALTER TABLE на пустой таблице vs 50M строк — тот же SQL, разный результат.
@@ -261,9 +261,9 @@ databases/migrations/
 - Операционный checklist (минимальная диагностика: pg_locks для блокирующих транзакций, pg_index.indisvalid для INVALID-индексов, pg_stat_replication для replication lag при backfill, pg_stat_activity для idle-in-transaction)
 - Практические правила (summary)
 
-### 01-schema-evolution.md
+### schema-evolution.md
 
-**Предпосылки:** `00-safe-schema-changes.md`.
+**Предпосылки:** `safe-schema-changes.md`.
 **Мотивация:** одну операцию выполнишь безопасно — но миграция это 3 шага, и между ними работает старый код.
 **Точка входа:** сценарий с добавлением region + backfill + NOT NULL.
 **Под-дуга:** schema vs data → code compatibility → expand-contract → backfilling (внутри expand) → reversibility.
@@ -281,14 +281,14 @@ databases/migrations/
 
 | Файл | Что менять |
 |------|-----------|
-| `databases/sql/index.md` | Добавить `databases/migrations/` в study order после schema/ И после postgresql/ (серия требует `04-index-operations.md` и `03-locks.md` как prerequisites — навигация должна направлять читателя через PG-файлы до миграций) |
-| `databases/sql/schema/00-tables-and-types.md` | Cross-link в секции ALTER TABLE на миграции. ALTER TYPE exceptions — PG-specific, идут в sql/postgresql/. |
-| `databases/sql/schema/01-constraints.md` | Cross-link на миграции: «добавление constraints на существующие таблицы». Без нового контента — NOT VALID и VALIDATE живут в PG-слое. |
-| `databases/sql/postgresql/04-index-operations.md` (расширение) | **Добавить:** USING INDEX для constraints (привязка constraint к существующему индексу). Логически связано с existing CONCURRENTLY content. |
-| `databases/sql/postgresql/index.md` | Обновить описание `04-index-operations.md` если контент расширен. Если вместо расширения добавляется новый файл — добавить его в study order. |
-| `databases/sql/schema/04-indexes.md` | Cross-link: «создание индексов на production → [миграции](../../migrations/00-safe-schema-changes.md)» (дополнение к существующей ссылке на index-operations) |
-| `databases/sql/postgresql/04-index-operations.md` | **Fix:** заменить `DROP INDEX idx_name` на `DROP INDEX CONCURRENTLY idx_name` в секции INVALID-index recovery (plain DROP = ACCESS EXCLUSIVE, blocking на live table). Cross-link: CONCURRENTLY в контексте миграционного workflow → `../../migrations/01-schema-evolution.md` |
-| `databases/postgresql/concurrency/03-locks.md` | Cross-link в секции table-level locks: «DDL-блокировки на практике → [миграции](../../migrations/00-safe-schema-changes.md)» |
+| `databases/sql/sql.md` | Добавить `databases/migrations/` в study order после schema/ И после postgresql/ (серия требует `index-operations.md` и `locks.md` как prerequisites — навигация должна направлять читателя через PG-файлы до миграций) |
+| `databases/sql/schema/tables-and-types.md` | Cross-link в секции ALTER TABLE на миграции. ALTER TYPE exceptions — PG-specific, идут в sql/postgresql/. |
+| `databases/sql/schema/constraints.md` | Cross-link на миграции: «добавление constraints на существующие таблицы». Без нового контента — NOT VALID и VALIDATE живут в PG-слое. |
+| `databases/sql/postgresql/index-operations.md` (расширение) | **Добавить:** USING INDEX для constraints (привязка constraint к существующему индексу). Логически связано с existing CONCURRENTLY content. |
+| `databases/sql/postgresql/pg-extensions.md` | Обновить описание `index-operations.md` если контент расширен. Если вместо расширения добавляется новый файл — добавить его в study order. |
+| `databases/sql/schema/indexes.md` | Cross-link: «создание индексов на production → [миграции](../../migrations/safe-schema-changes.md)» (дополнение к существующей ссылке на index-operations) |
+| `databases/sql/postgresql/index-operations.md` | **Fix:** заменить `DROP INDEX idx_name` на `DROP INDEX CONCURRENTLY idx_name` в секции INVALID-index recovery (plain DROP = ACCESS EXCLUSIVE, blocking на live table). Cross-link: CONCURRENTLY в контексте миграционного workflow → `../../migrations/schema-evolution.md` |
+| `databases/postgresql/concurrency/locks.md` | Cross-link в секции table-level locks: «DDL-блокировки на практике → [миграции](../../migrations/safe-schema-changes.md)» |
 | `CLAUDE.md` | Обновить file map: добавить `databases/migrations/` |
 
 **Принцип распределения:**

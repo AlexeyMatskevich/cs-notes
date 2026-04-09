@@ -44,7 +44,7 @@ class UniqueVisitorTracker
 
   def site_wide_uniques(date)
     # Объединить HLL по всем страницам за день
-    # SCAN вместо KEYS — не блокирует event loop (см. [блокирующие команды](../02-blocking-pitfalls.md))
+    # SCAN вместо KEYS — не блокирует event loop (см. [блокирующие команды](../blocking-pitfalls.md))
     page_keys = @redis.with { |r| r.scan_each(match: "uv:*:#{date.iso8601}").to_a }
     return 0 if page_keys.empty?
 

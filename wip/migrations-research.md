@@ -129,7 +129,7 @@ files: []
    ```
    Ждать пока count = 0. Без scope по datname/application_name на shared cluster любая unrelated транзакция блокирует cutover. Edge case: `pg_stat_activity` не показывает prepared transactions (2PC) — если используется distributed transactions, проверять также `pg_prepared_xacts`. Не полагаться на `idle_in_transaction_session_timeout` — он часто 0 (отключён) по умолчанию.
 
-   **Replica catch-up gate (advanced — требует знание [репликации](../../postgresql/distribution/00-replication.md)):** если приложение читает с replicas — LSN barrier capture непосредственно перед Switch reads (ПОСЛЕ drain + convergence, не после backfill — между backfill и switch reads проходят drain/convergence, за это время трафик продолжается):
+   **Replica catch-up gate (advanced — требует знание [репликации](../databases/postgresql/distribution/replication.md)):** если приложение читает с replicas — LSN barrier capture непосредственно перед Switch reads (ПОСЛЕ drain + convergence, не после backfill — между backfill и switch reads проходят drain/convergence, за это время трафик продолжается):
    ```sql
    -- На primary: capture barrier НЕПОСРЕДСТВЕННО перед switch reads
    SELECT pg_current_wal_lsn();  -- $cutover_lsn
