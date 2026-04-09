@@ -13,6 +13,8 @@ order: 16
 
 **Предпосылки:** [HTTP](../../networking/application/http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/websockets.md)/polling, [паттерны надёжности](../reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([`FOR UPDATE`](../../databases/postgresql/concurrency/patterns.md#пессимистичный-подход-for-update)).
 
+<- [Event-driven Architecture](../event-driven-architecture.md)
+
 ## Сценарий
 
 Пользователь выбрал номер в отеле и нажал «Забронировать». Система должна:
@@ -235,3 +237,7 @@ end
 | State machine | Order со статусами для отслеживания прогресса и обработки частичных сбоев |
 
 Circuit breaker явно не применён в этом примере, но был бы уместен для Loyalty API (95% надёжность) — чтобы не замедлять обработку при массовых сбоях.
+
+---
+
+<- [Event-driven Architecture](../event-driven-architecture.md)

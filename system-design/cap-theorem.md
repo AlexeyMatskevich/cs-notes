@@ -13,6 +13,8 @@ order: 2
 
 **Предпосылки:** базовое понимание [репликации](replication.md) (leader/follower, синхронная и асинхронная), понятие network partition, [ACID](../databases/acid.md) (достаточно знать, что Consistency в ACID — это про constraints).
 
+<- [Шардинг](sharding.md) | [Модели консистентности](consistency-models.md) ->
+
 Пока база данных живёт на одной машине, всё просто: записал — прочитал — увидел то же значение. Проблемы начинаются, когда данные распределяются по нескольким узлам, связанным сетью.
 
 Два узла: San Francisco и New York. Оба хранят `balance = 100`. Клиент в San Francisco делает `UPDATE balance = 50`. В этот момент связь между городами рвётся.
@@ -147,3 +149,7 @@ AP-системы сохраняют доступность ценой расх�
 - Gilbert, Lynch, 2002, *Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services*: формальное доказательство CAP-теоремы
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 9: Consistency and Consensus
 - Brewer, 2012, *CAP Twelve Years Later: How the "Rules" Have Changed*: уточнение от автора теоремы — CAP как спектр, а не бинарный выбор
+
+---
+
+<- [Шардинг](sharding.md) | [Модели консистентности](consistency-models.md) ->

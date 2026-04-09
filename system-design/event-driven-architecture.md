@@ -16,6 +16,8 @@ order: 15
 
 **Предпосылки:** [Профили нагрузки](read-write-profiles.md) (индексы замедляют запись, read-heavy vs write-heavy), [Модели консистентности](consistency-models.md) (eventual consistency, read-your-writes), [Паттерны надёжности](reliability-patterns.md) (idempotency), [Message Queues](message-queues.md) (temporal decoupling, pub/sub, log-based vs queue-based брокер), [Микросервисы](microservices.md) (текущая архитектура магазина: Orders, события, подписчики).
 
+<- [Микросервисы](microservices.md) | [Система бронирования отелей](cases/hotel-booking.md) ->
+
 Архитектура из предыдущей заметки работает: Orders пишет в PostgreSQL, checkout координируется через saga, событие `order.completed` уходит в очередь, Notification, Loyalty и Analytics подписываются самостоятельно. Но Orders-сервис обслуживает не только checkout. Бизнес хочет панель продавца: список заказов с фильтрацией по статусу, дате, городу, полнотекстовый поиск по товарам, выручка за период, топ продаж. Все эти данные лежат в той же PostgreSQL, куда пишутся заказы. Одна модель данных — два конфликтующих паттерна доступа.
 
 ## Конфликт паттернов доступа
@@ -422,3 +424,7 @@ Replay               невозможен         невозможен         �
 - Fowler, 2011, *Event Sourcing* — описание паттерна и trade-offs
 - Richardson, 2018, *Microservices Patterns* — CQRS и event sourcing в контексте микросервисов
 - Meyer, 1988, *Object-Oriented Software Construction* — CQS (Command Query Separation)
+
+---
+
+<- [Микросервисы](microservices.md) | [Система бронирования отелей](cases/hotel-booking.md) ->

@@ -14,6 +14,8 @@ order: 7
 
 **Предпосылки:** клиент-серверная архитектура, DNS (домен → IP), [TCP](../networking/transport/tcp.md)/[HTTP](../networking/application/http.md), горизонтальное масштабирование (несколько одинаковых серверов), понятие отказа узла.
 
+<- [Профили нагрузки: read-heavy и write-heavy](read-write-profiles.md) | [Паттерны надёжности](reliability-patterns.md) ->
+
 Горизонтальное масштабирование решает проблему пропускной способности: один сервер обрабатывает 100 RPS, три сервера — 300. Но появляется новый вопрос: как клиент узнает, на какой из трёх серверов отправить запрос? При одном сервере DNS возвращает один IP, и клиент идёт туда. При десяти серверах — десять IP. Если клиент выбирает случайно, он продолжит слать запросы на мёртвый сервер и получать таймауты. Load balancer — компонент, который принимает все входящие запросы и распределяет их между живыми серверами.
 
 ```
@@ -187,3 +189,7 @@ sequenceDiagram
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 1 — scalability, load parameters
 - Nginx Documentation: HTTP Load Balancing. <https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/>
 - AWS: What is Elastic Load Balancing. <https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html>
+
+---
+
+<- [Профили нагрузки: read-heavy и write-heavy](read-write-profiles.md) | [Паттерны надёжности](reliability-patterns.md) ->

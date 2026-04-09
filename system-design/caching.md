@@ -15,6 +15,8 @@ order: 9
 
 **Предпосылки:** [модели консистентности](consistency-models.md) (read-your-writes), базовое понимание PostgreSQL (shared buffers, соединения), Redis (GET/SET/DEL), pub/sub для инвалидации, [CDN](../networking/infrastructure/cdn.md) (RTT, origin/edge).
 
+<- [Паттерны надёжности](reliability-patterns.md) | [Гарантии доставки в распределённых системах](delivery-guarantees.md) ->
+
 В [read-heavy системах](read-write-profiles.md) кэширование — основной способ масштабирования чтения.
 
 ## Зачем кэш: иерархия задержек
@@ -548,4 +550,8 @@ Redis Cluster использует похожий принцип: 16384 слот
 - Carlson, 2013, *Redis in Action*, Chapter 2 — cache-aside pattern, stampede solutions
 - Karger et al., 1997, *Consistent Hashing and Random Trees* — оригинальная статья о consistent hashing
 - DeCandia et al., 2007, *Dynamo: Amazon's Highly Available Key-value Store* — virtual nodes в production
+
+---
+
+<- [Паттерны надёжности](reliability-patterns.md) | [Гарантии доставки в распределённых системах](delivery-guarantees.md) ->
 

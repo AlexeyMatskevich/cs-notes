@@ -14,6 +14,8 @@ order: 3
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (strong consistency vs eventual consistency, linearizability, partition tolerance), [репликация](replication.md) (leader/follower, sync/async, кворум).
 
+<- [CAP-теорема](cap-theorem.md) | [Разрешение конфликтов](conflict-resolution.md) ->
+
 CAP-теорема ставит выбор при network partition: консистентность (linearizability) или доступность. AP-системы выбирают доступность и получают eventual consistency — гарантию «данные когда-нибудь синхронизируются». На практике двух крайностей недостаточно: каталогу онлайн-магазина хватит eventual consistency, но для списания с баланса нужна linearizability. Между этими полюсами лежит спектр промежуточных моделей, каждая из которых даёт конкретную гарантию за конкретную цену.
 
 ```
@@ -136,3 +138,7 @@ Linearizability — самая строгая модель. Система ве�
 - Vogels, 2008, *Eventually Consistent* — классическая статья об eventual consistency и её вариациях
 - Herlihy, Wing, 1990, *Linearizability: A Correctness Condition for Concurrent Objects* — формальное определение linearizability
 - Lamport, 1979, *How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs* — определение sequential consistency
+
+---
+
+<- [CAP-теорема](cap-theorem.md) | [Разрешение конфликтов](conflict-resolution.md) ->

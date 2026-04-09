@@ -15,6 +15,8 @@ order: 11
 
 **Предпосылки:** [гарантии доставки](delivery-guarantees.md) (at-most-once, at-least-once, exactly-once = idempotency), [паттерны надёжности](reliability-patterns.md) (retry, cascading failure).
 
+<- [Гарантии доставки в распределённых системах](delivery-guarantees.md) | [Выбор хранилища под паттерн доступа](storage-selection.md) ->
+
 [Кэширование](caching.md) решает проблему повторных чтений — горячие данные обслуживаются из Redis, не нагружая PostgreSQL. Но оформление заказа — не чтение данных. Это цепочка действий: зарезервировать товар на складе, списать деньги, отправить подтверждение, записать аналитику. Каждое действие — вызов внешнего сервиса. Кэш здесь не поможет: нужно выполнить работу, а не вернуть сохранённый результат.
 
 ## Цена синхронной цепочки
@@ -258,3 +260,7 @@ Queue depth, consumer lag, error rate — каждая метрика требу
 - Kreps, 2013, *The Log: What every software engineer should know about real-time data's unifying abstraction* — лог как основа messaging
 - Narkhede, Shapira, Palino, 2017, *Kafka: The Definitive Guide* — Kafka architecture, partitions, consumer groups
 - Hohpe, Woolf, 2003, *Enterprise Integration Patterns* — messaging patterns, temporal decoupling, channel types
+
+---
+
+<- [Гарантии доставки в распределённых системах](delivery-guarantees.md) | [Выбор хранилища под паттерн доступа](storage-selection.md) ->

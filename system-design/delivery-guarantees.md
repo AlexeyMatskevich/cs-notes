@@ -16,6 +16,8 @@ order: 10
 
 **Предпосылки:** [Паттерны надёжности](reliability-patterns.md) (retry, idempotency), [HTTP](../networking/application/http.md).
 
+<- [Кэширование](caching.md) | [Message Queues: асинхронная коммуникация между сервисами](message-queues.md) ->
+
 [Retry](reliability-patterns.md#retry-с-backoff-повтор-с-нарастающей-задержкой) решает проблему transient failures: запрос не дошёл — отправь ещё раз. Но retry отвечает на вопрос «дойдёт ли вызов до получателя?», а не на вопрос «сколько раз получатель его обработает?». Разница критична.
 
 Интернет-магазин: обработчик заказа вызывает платёжный сервис. Запрос ушёл, платёжный сервис списал деньги — и упал до того, как отправил ответ. Обработчик получил timeout. С точки зрения обработчика запрос мог не дойти вообще. Retry? Деньги спишутся второй раз. Не retry? Возможно, первый запрос действительно потерялся в сети, и покупатель получит товар бесплатно.
@@ -93,3 +95,7 @@ Kafka маркетирует «exactly-once semantics», но внутри эт�
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 11 — stream processing, message brokers, exactly-once semantics
 - Helland, 2012, *Idempotence Is Not a Medical Condition* — exactly-once as application-level concern
 - Gray, 1978, *Notes on Data Base Operating Systems* — two generals problem and impossibility of distributed agreement
+
+---
+
+<- [Кэширование](caching.md) | [Message Queues: асинхронная коммуникация между сервисами](message-queues.md) ->

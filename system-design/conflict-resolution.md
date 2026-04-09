@@ -15,6 +15,8 @@ order: 4
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (AP-системы, eventual consistency, network partition), [модели консистентности](consistency-models.md).
 
+<- [Модели консистентности](consistency-models.md) | [Распределённый консенсус](consensus.md) ->
+
 AP-система принимает записи на любом доступном узле, даже если сеть разделена. Когда partition заканчивается и узлы снова видят друг друга, обнаруживается, что разные узлы приняли разные записи для одних и тех же данных. Нужен механизм, который приведёт данные к единому состоянию.
 
 ## Last-Write-Wins (LWW)
@@ -152,3 +154,7 @@ Redis Enterprise использует CRDT для geo-distributed кластер
 - DeCandia et al., 2007, *Dynamo: Amazon's Highly Available Key-value Store* — vector clocks в production
 - Shapiro et al., 2011, *Conflict-free Replicated Data Types* — формальное определение CRDT
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 5: Replication — LWW, vector clocks, разрешение конфликтов
+
+---
+
+<- [Модели консистентности](consistency-models.md) | [Распределённый консенсус](consensus.md) ->

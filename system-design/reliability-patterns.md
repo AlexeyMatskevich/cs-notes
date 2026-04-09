@@ -15,6 +15,8 @@ order: 8
 
 **Предпосылки:** [HTTP](../networking/application/http.md) (запрос/ответ, статус-коды), [TCP](../networking/transport/tcp.md) (соединение, таймаут), клиент-серверная архитектура, понятие потока/треда и пула соединений.
 
+<- [Load Balancing](load-balancing.md) | [Кэширование](caching.md) ->
+
 Распределённая система состоит из компонентов, которые общаются по сети. Сеть ненадёжна: запросы теряются, задерживаются, сервисы падают и перегружаются. Паттерны надёжности — набор приёмов, которые не предотвращают сбои (это невозможно), а ограничивают их последствия: один упавший компонент не должен ронять всю систему.
 
 ## Transient vs permanent failure
@@ -497,3 +499,7 @@ Job упал
 - Nygard, 2018, *Release It! Design and Deploy Production-Ready Software*, 2nd ed. — circuit breaker, bulkhead, timeouts
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 8: The Trouble with Distributed Systems — failure modes
 - AWS Architecture Blog: Exponential Backoff And Jitter. <https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/>
+
+---
+
+<- [Load Balancing](load-balancing.md) | [Кэширование](caching.md) ->

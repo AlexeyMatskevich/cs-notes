@@ -14,6 +14,8 @@ order: 14
 
 **Предпосылки:** [Паттерны надёжности](reliability-patterns.md) (idempotency, circuit breaker, bulkhead), [Message Queues](message-queues.md) (temporal decoupling, pub/sub, consumer groups), [API Design](api-design.md) (REST, gRPC, контракты), базовое понимание SQL-транзакций (ACID, COMMIT/ROLLBACK).
 
+<- [API Design: проектирование границы между системами](api-design.md) | [Event-driven Architecture](event-driven-architecture.md) ->
+
 В предыдущей заметке мы определили, как проектировать API — REST для внешних клиентов, gRPC для межсервисного взаимодействия, очереди для асинхронных задач. Но в нашем интернет-магазине всё это пока живёт в одном процессе: `PaymentService.charge(order)` — вызов метода, а не сетевой запрос. Вопрос, который мы ещё не разбирали: когда и зачем этот вызов метода превращается в вызов через сеть к отдельному сервису? И какую цену мы за это платим?
 
 ## Монолит, который работает
@@ -344,3 +346,7 @@ Chatty interface. Если два модуля связаны синхронны
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 9 — распределённые транзакции, two-phase commit, ограничения
 - Fowler, 2015, *MonolithFirst* — рекомендация начинать с монолита
 - Shopify Engineering, *Deconstructing the Monolith* — packwerk и модульный монолит в масштабе
+
+---
+
+<- [API Design: проектирование границы между системами](api-design.md) | [Event-driven Architecture](event-driven-architecture.md) ->

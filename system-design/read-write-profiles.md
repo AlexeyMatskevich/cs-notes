@@ -14,6 +14,8 @@ order: 6
 
 **Предпосылки:** [CAP-теорема](cap-theorem.md) (CP/AP, partition tolerance), [модели консистентности](consistency-models.md) (eventual, read-your-writes), [разрешение конфликтов](conflict-resolution.md) (CRDT), [репликация](replication.md) (leader-based, replication lag), [шардинг](sharding.md) (shard key, resharding), базовое понимание [B-tree индексов](../databases/postgresql/indexes/) (ускоряют чтение, замедляют запись).
 
+<- [Распределённый консенсус](consensus.md) | [Load Balancing](load-balancing.md) ->
+
 Два сервиса интернет-магазина обрабатывают по 50 000 операций в секунду. Каталог товаров отвечает на поисковые запросы покупателей, сервис аналитики записывает каждый клик, просмотр и скролл. Оба упираются в потолок производительности одного сервера — но решения, которые спасают каталог, бесполезны для аналитики и наоборот. Разница не в масштабе, а в характере нагрузки: соотношении операций чтения к операциям записи.
 
 ## Два полюса нагрузки
@@ -154,3 +156,7 @@ Write-heavy (аналитика, 1000 записей/сек):
 - Kleppmann, 2017, *Designing Data-Intensive Applications*, Chapter 3: Storage and Retrieval — B-tree vs LSM-tree, write amplification
 - O'Neil et al., 1996, *The Log-Structured Merge-Tree (LSM-Tree)* — оригинальная статья LSM-tree
 - Fitzpatrick, 2004, *Distributed Caching with Memcached* — паттерны кэширования для read-heavy нагрузок
+
+---
+
+<- [Распределённый консенсус](consensus.md) | [Load Balancing](load-balancing.md) ->
