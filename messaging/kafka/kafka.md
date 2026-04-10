@@ -24,11 +24,11 @@ Kafka — распределённая платформа потоковой о�
 
 Как устроен кластер Kafka: из каких сущностей состоит, как данные распределяются и реплицируются.
 
-- [Broker, topic, partition, offset](architecture/what-is-kafka.md) — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, несколько producer'ов в одну партицию, consumer groups с независимыми offset'ами
-- [Репликация](architecture/replication.md) — per-partition leader/follower, ISR, high watermark, acks, min.insync.replicas, controller и partition leader election, KRaft
-- [Producer reliability](architecture/producer-reliability.md) — retries, ordering, idempotent producer: PID, sequence number, exactly-once per partition
-- [Consumer internals](architecture/consumer-internals.md) — poll loop, offset commit, heartbeat, rebalancing: eager vs cooperative protocol, assignment strategies
-- [Transactions](architecture/transactions.md) — transactional producer, exactly-once для consume-transform-produce, LSO, read_committed isolation
+- [[messaging/kafka/architecture/what-is-kafka|Broker, topic, partition, offset]] — фундаментальная модель: почему Redis Streams не справляется при росте, как Kafka распределяет лог по серверам, тройная роль партиции, несколько producer'ов в одну партицию, consumer groups с независимыми offset'ами
+- [[messaging/kafka/architecture/replication|Репликация]] — per-partition leader/follower, ISR, high watermark, acks, min.insync.replicas, controller и partition leader election, KRaft
+- [[messaging/kafka/architecture/producer-reliability|Producer reliability]] — retries, ordering, idempotent producer: PID, sequence number, exactly-once per partition
+- [[messaging/kafka/architecture/consumer-internals|Consumer internals]] — poll loop, offset commit, heartbeat, rebalancing: eager vs cooperative protocol, assignment strategies
+- [[messaging/kafka/architecture/transactions|Transactions]] — transactional producer, exactly-once для consume-transform-produce, LSO, read_committed isolation
 
 ## Как всё связано
 

@@ -20,42 +20,42 @@ aliases:
 
 Фундамент: как данные лежат на диске.
 
-- [ACID в PostgreSQL](storage/acid.md) — реализация [ACID](../acid.md) через [MVCC](concurrency/mvcc.md), [WAL](durability/wal.md), constraints
-- [Страницы и кортежи](storage/pages-and-tuples.md) — физическая единица хранения и формат строки
-- [TOAST](storage/toast.md) — вынос больших значений за пределы страницы
-- [Физическая структура хранения](storage/physical-layout.md) — файлы, форки, сегменты на диске и связь с [WAL](durability/wal.md)
+- [[databases/postgresql/storage/acid|ACID в PostgreSQL]] — реализация [ACID](../acid.md) через [[databases/postgresql/concurrency/mvcc|MVCC]], [[databases/postgresql/durability/wal|WAL]], constraints
+- [[databases/postgresql/storage/pages-and-tuples|Страницы и кортежи]] — физическая единица хранения и формат строки
+- [[databases/postgresql/storage/toast|TOAST]] — вынос больших значений за пределы страницы
+- [[databases/postgresql/storage/physical-layout|Физическая структура хранения]] — файлы, форки, сегменты на диске и связь с [[databases/postgresql/durability/wal|WAL]]
 
 ### Устойчивость к сбоям и кеширование
 
 Как PostgreSQL переживает сбои и почему дисковый I/O не убивает latency.
 
-- [WAL](durability/wal.md) — журнал предзаписи для восстановления после сбоя
-- [Буферный кеш](durability/buffer-cache.md) — shared buffers, dirty pages, [LRU](../../algorithms-and-data-structures/linear/lru-cache.md) vs [clock-sweep](../../algorithms-and-data-structures/linear/clock-sweep.md), [WAL](durability/wal.md) before data
+- [[databases/postgresql/durability/wal|WAL]] — журнал предзаписи для восстановления после сбоя
+- [[databases/postgresql/durability/buffer-cache|Буферный кеш]] — shared buffers, dirty pages, [LRU](../../algorithms-and-data-structures/linear/lru-cache.md) vs [clock-sweep](../../algorithms-and-data-structures/linear/clock-sweep.md), [[databases/postgresql/durability/wal|WAL]] before data
 
 ### Параллельный доступ
 
 Как транзакции читают и пишут параллельно, не ломая данные.
 
-- [MVCC](concurrency/mvcc.md) — версионирование строк вместо блокировок чтения
-- [Аномалии транзакций](concurrency/anomalies.md) — что может пойти не так при параллельном доступе
-- [Уровни изоляции](concurrency/isolation-levels.md) — как PostgreSQL реализует READ COMMITTED, REPEATABLE READ, SERIALIZABLE
-- [Блокировки](concurrency/locks.md) — координация записи, table-level и row-level locks
-- [Практические паттерны](concurrency/patterns.md) — выбор между оптимистичным и пессимистичным подходом
-- [Распространённые ошибки](concurrency/common-mistakes.md) — типичные заблуждения о транзакциях и блокировках
-- [Очереди задач](concurrency/queues-and-skip-locked.md) — `FOR UPDATE SKIP LOCKED`, индекс под очередь, идемпотентность
+- [[databases/postgresql/concurrency/mvcc|MVCC]] — версионирование строк вместо блокировок чтения
+- [[databases/postgresql/concurrency/anomalies|Аномалии транзакций]] — что может пойти не так при параллельном доступе
+- [[databases/postgresql/concurrency/isolation-levels|Уровни изоляции]] — как PostgreSQL реализует READ COMMITTED, REPEATABLE READ, SERIALIZABLE
+- [[databases/postgresql/concurrency/locks|Блокировки]] — координация записи, table-level и row-level locks
+- [[databases/postgresql/concurrency/patterns|Практические паттерны]] — выбор между оптимистичным и пессимистичным подходом
+- [[databases/postgresql/concurrency/common-mistakes|Распространённые ошибки]] — типичные заблуждения о транзакциях и блокировках
+- [[databases/postgresql/concurrency/queues-and-skip-locked|Очереди задач]] — `FOR UPDATE SKIP LOCKED`, индекс под очередь, идемпотентность
 
 ### Обслуживание
 
-- [VACUUM](maintenance/vacuum.md) — очистка dead tuples, предотвращение bloat
+- [[databases/postgresql/maintenance/vacuum|VACUUM]] — очистка dead tuples, предотвращение bloat
 
 ### Индексы
 
-- [B-tree](indexes/btree.md) — индекс по умолчанию, точные совпадения и диапазоны
-- [GIN](indexes/gin.md) — инвертированный индекс для массивов, JSONB, полнотекста
-- [GiST](indexes/gist.md) — дерево для геометрии, диапазонов, пространственных запросов
-- [Hash](indexes/hash.md) — хеш-индекс для точечных запросов по равенству
-- [BRIN](indexes/brin.md) — компактный индекс для огромных таблиц с корреляцией
-- [SP-GiST](indexes/spgist.md) — space-partitioned индекс (trie/quad-tree) для некоторых типов и запросов
+- [[databases/postgresql/indexes/btree|B-tree]] — индекс по умолчанию, точные совпадения и диапазоны
+- [[databases/postgresql/indexes/gin|GIN]] — инвертированный индекс для массивов, JSONB, полнотекста
+- [[databases/postgresql/indexes/gist|GiST]] — дерево для геометрии, диапазонов, пространственных запросов
+- [[databases/postgresql/indexes/hash|Hash]] — хеш-индекс для точечных запросов по равенству
+- [[databases/postgresql/indexes/brin|BRIN]] — компактный индекс для огромных таблиц с корреляцией
+- [[databases/postgresql/indexes/spgist|SP-GiST]] — space-partitioned индекс (trie/quad-tree) для некоторых типов и запросов
 
 ### Проектирование схемы
 
@@ -63,19 +63,19 @@ aliases:
 
 ### Планировщик запросов
 
-- [Планировщик запросов](query-processing/planner.md) — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
-- [Порядок соединения](query-processing/join-order.md) — [динамическое программирование](../../algorithms-and-data-structures/techniques/dynamic-programming.md), interesting orders, GEQO
-- [Подзапросы и CTE](query-processing/subqueries-and-cte.md) — flattening, semi-join, материализация CTE
-- [EXPLAIN](query-processing/explain.md) — как читать план: оценки vs факты, BUFFERS, где «болит» запрос
-- [Память и spill](query-processing/memory-and-spill.md) — `work_mem`, сортировки и хеши, temp I/O
-- [Prepared statements](query-processing/prepared-statements.md) — generic plan vs custom plan, parameter sensitivity
-- [Диагностика медленных запросов](query-processing/diagnosing-slow-queries.md) — как быстро локализовать причину: оценки, I/O, spill, параметры
+- [[databases/postgresql/query-processing/planner|Планировщик запросов]] — статистика, selectivity, cost model, методы доступа и алгоритмы соединения
+- [[databases/postgresql/query-processing/join-order|Порядок соединения]] — [динамическое программирование](../../algorithms-and-data-structures/techniques/dynamic-programming.md), interesting orders, GEQO
+- [[databases/postgresql/query-processing/subqueries-and-cte|Подзапросы и CTE]] — flattening, semi-join, материализация CTE
+- [[databases/postgresql/query-processing/explain|EXPLAIN]] — как читать план: оценки vs факты, BUFFERS, где «болит» запрос
+- [[databases/postgresql/query-processing/memory-and-spill|Память и spill]] — `work_mem`, сортировки и хеши, temp I/O
+- [[databases/postgresql/query-processing/prepared-statements|Prepared statements]] — generic plan vs custom plan, parameter sensitivity
+- [[databases/postgresql/query-processing/diagnosing-slow-queries|Диагностика медленных запросов]] — как быстро локализовать причину: оценки, I/O, spill, параметры
 
 ### Распределение и масштабирование
 
 - [Репликация](../../system-design/replication.md) и [шардинг](../../system-design/sharding.md) — общие понятия (failover, кворум, shard key)
 - [Репликация](./distribution/replication.md) — physical vs logical, lag, failover
-- [Шардирование](distribution/sharding.md) — отличие от партиционирования, shard key, цена распределения
+- [[databases/postgresql/distribution/sharding|Шардирование]] — отличие от партиционирования, shard key, цена распределения
 
 ## Выбор индекса
 
@@ -105,19 +105,19 @@ aliases:
 
 PostgreSQL — система компромиссов. Каждая гарантия имеет цену:
 
-**Durability vs Performance:** Писать на диск при каждом COMMIT дорого (random I/O). Решение — [WAL](durability/wal.md) (sequential I/O). Цена — сложность recovery и необходимость checkpoint'ов.
+**Durability vs Performance:** Писать на диск при каждом COMMIT дорого (random I/O). Решение — [[databases/postgresql/durability/wal|WAL]] (sequential I/O). Цена — сложность recovery и необходимость checkpoint'ов.
 
-**Isolation vs Performance:** Блокировки при чтении убивают параллелизм. Решение — [MVCC](concurrency/mvcc.md) (версионирование). Цена — dead tuples и необходимость [VACUUM](maintenance/vacuum.md).
+**Isolation vs Performance:** Блокировки при чтении убивают параллелизм. Решение — [[databases/postgresql/concurrency/mvcc|MVCC]] (версионирование). Цена — dead tuples и необходимость [[databases/postgresql/maintenance/vacuum|VACUUM]].
 
-**Memory vs I/O:** Диск медленный. Решение — [буферный кеш](durability/buffer-cache.md) (shared buffers). Цена — память ограничена, нужен алгоритм вытеснения, dirty pages требуют координации с [WAL](durability/wal.md).
+**Memory vs I/O:** Диск медленный. Решение — [[databases/postgresql/durability/buffer-cache|буферный кеш]] (shared buffers). Цена — память ограничена, нужен алгоритм вытеснения, dirty pages требуют координации с [[databases/postgresql/durability/wal|WAL]].
 
-**Space vs Flexibility:** Tuple должен помещаться в страницу. Решение — [TOAST](storage/toast.md) (вынос больших значений). Цена — дополнительный I/O при чтении больших колонок.
+**Space vs Flexibility:** Tuple должен помещаться в страницу. Решение — [[databases/postgresql/storage/toast|TOAST]] (вынос больших значений). Цена — дополнительный I/O при чтении больших колонок.
 
-**Correctness vs Performance:** Полная сериализуемость требует блокировок или откатов. Решение — [уровни изоляции](concurrency/isolation-levels.md) как компромисс. Цена — программист должен понимать, какие [аномалии](concurrency/anomalies.md) возможны.
+**Correctness vs Performance:** Полная сериализуемость требует блокировок или откатов. Решение — [[databases/postgresql/concurrency/isolation-levels|уровни изоляции]] как компромисс. Цена — программист должен понимать, какие [[databases/postgresql/concurrency/anomalies|аномалии]] возможны.
 
 **Simplicity vs Flexibility:** Один механизм защиты не подходит всем. Решение — два подхода (оптимистичный/пессимистичный) + атомарные операции SQL. Цена — программист должен выбирать.
 
-**XID Space vs Complexity:** 32-битный XID ограничен, оборачивается. Решение — freezing старых tuples. Цена — [VACUUM](maintenance/vacuum.md) должен успевать замораживать, долгие транзакции опасны.
+**XID Space vs Complexity:** 32-битный XID ограничен, оборачивается. Решение — freezing старых tuples. Цена — [[databases/postgresql/maintenance/vacuum|VACUUM]] должен успевать замораживать, долгие транзакции опасны.
 
 ## Sources
 

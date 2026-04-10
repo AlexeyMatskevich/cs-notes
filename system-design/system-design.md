@@ -47,7 +47,7 @@ order: 0
 
 ### Case Studies
 
-- [Система бронирования отелей](cases/hotel-booking.md) — async-обработка, state machine заказа, refund flow, типичные ошибки с транзакциями
+- [[system-design/cases/hotel-booking|Система бронирования отелей]] — async-обработка, state machine заказа, refund flow, типичные ошибки с транзакциями
 
 ## Как всё связано
 

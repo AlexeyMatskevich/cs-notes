@@ -20,52 +20,52 @@ order: 0
 
 ## Техники
 
-0. [Динамическое программирование (DP)](techniques/dynamic-programming.md)
+0. [[algorithms-and-data-structures/techniques/dynamic-programming|Динамическое программирование (DP)]]
 
 ## Линейные структуры
 
-Типичный путь выбора: [массив](linear/array.md) → [динамический массив](linear/dynamic-array.md) → [связный список](linear/linked-list.md) → ограниченные интерфейсы ([стек/очередь/дек](linear/stack-queue-deque.md)) → [хеш‑таблица](linear/hash-table.md) → кэши с вытеснением ([LRU](linear/lru-cache.md)/LFU/[clock‑sweep](linear/clock-sweep.md)).
+Типичный путь выбора: [[algorithms-and-data-structures/linear/array|массив]] → [[algorithms-and-data-structures/linear/dynamic-array|динамический массив]] → [[algorithms-and-data-structures/linear/linked-list|связный список]] → ограниченные интерфейсы ([[algorithms-and-data-structures/linear/stack-queue-deque|стек/очередь/дек]]) → [[algorithms-and-data-structures/linear/hash-table|хеш‑таблица]] → кэши с вытеснением ([[algorithms-and-data-structures/linear/lru-cache|LRU]]/LFU/[[algorithms-and-data-structures/linear/clock-sweep|clock‑sweep]]).
 
-0. [Абстрактный тип данных (ADT)](linear/adt.md)
-1. [Массив](linear/array.md)
-2. [Динамический массив](linear/dynamic-array.md)
-3. [Связный список](linear/linked-list.md)
-4. [Стек, очередь, дек](linear/stack-queue-deque.md)
-5. [Хеш-таблица](linear/hash-table.md)
-6. [LRU-кэш](linear/lru-cache.md)
-7. [Clock-Sweep](linear/clock-sweep.md)
+0. [[algorithms-and-data-structures/linear/adt|Абстрактный тип данных (ADT)]]
+1. [[algorithms-and-data-structures/linear/array|Массив]]
+2. [[algorithms-and-data-structures/linear/dynamic-array|Динамический массив]]
+3. [[algorithms-and-data-structures/linear/linked-list|Связный список]]
+4. [[algorithms-and-data-structures/linear/stack-queue-deque|Стек, очередь, дек]]
+5. [[algorithms-and-data-structures/linear/hash-table|Хеш-таблица]]
+6. [[algorithms-and-data-structures/linear/lru-cache|LRU-кэш]]
+7. [[algorithms-and-data-structures/linear/clock-sweep|Clock-Sweep]]
 
 ## Нелинейные структуры
 
-Все линейные структуры хранят элементы в последовательности — по позиции или по ключу. Но когда в данных есть иерархии, сети или маршруты, нужны связи "многие ко многим" или "один ко многим". [Граф](non-linear/graph.md) — обобщение, [дерево](non-linear/tree.md) и [куча](non-linear/heap.md) — его частные случаи с более сильными гарантиями.
+Все линейные структуры хранят элементы в последовательности — по позиции или по ключу. Но когда в данных есть иерархии, сети или маршруты, нужны связи "многие ко многим" или "один ко многим". [[algorithms-and-data-structures/non-linear/graph|Граф]] — обобщение, [[algorithms-and-data-structures/non-linear/tree|дерево]] и [[algorithms-and-data-structures/non-linear/heap|куча]] — его частные случаи с более сильными гарантиями.
 
-0. [Граф](non-linear/graph.md)
-1. [Дерево](non-linear/tree.md)
-2. [Бинарное дерево](non-linear/binary-tree.md)
-3. [Двоичное дерево поиска (BST)](non-linear/binary-search-tree.md)
-4. [Куча (Heap)](non-linear/heap.md)
-5. [B-дерево (B-tree)](non-linear/b-tree.md)
-6. [B+ дерево (B+ tree)](non-linear/b-plus-tree.md)
-7. [B* дерево (B* tree)](non-linear/b-star-tree.md)
-8. [Инвертированный индекс (Inverted Index)](non-linear/inverted-index.md)
-9. [Skip List](non-linear/skip-list.md)
+0. [[algorithms-and-data-structures/non-linear/graph|Граф]]
+1. [[algorithms-and-data-structures/non-linear/tree|Дерево]]
+2. [[algorithms-and-data-structures/non-linear/binary-tree|Бинарное дерево]]
+3. [[algorithms-and-data-structures/non-linear/binary-search-tree|Двоичное дерево поиска (BST)]]
+4. [[algorithms-and-data-structures/non-linear/heap|Куча (Heap)]]
+5. [[algorithms-and-data-structures/non-linear/b-tree|B-дерево (B-tree)]]
+6. [[algorithms-and-data-structures/non-linear/b-plus-tree|B+ дерево (B+ tree)]]
+7. [[algorithms-and-data-structures/non-linear/b-star-tree|B* дерево (B* tree)]]
+8. [[algorithms-and-data-structures/non-linear/inverted-index|Инвертированный индекс (Inverted Index)]]
+9. [[algorithms-and-data-structures/non-linear/skip-list|Skip List]]
 
 ## Выбор структуры
 
 - Нужно часто проверять "есть ли ребро между i и j" → матрица смежности.
-- [Граф](non-linear/graph.md) разреженный и важны обходы соседей → списки смежности.
-- Нужна иерархия без циклов → [дерево](non-linear/tree.md).
-- Нужны быстрые `search/insert/delete` по упорядоченному ключу → [BST](non-linear/binary-search-tree.md) (если важны гарантии, лучше самобалансирующееся).
-- Нужна приоритетная очередь (добавить элемент и извлечь min/max) → [куча](non-linear/heap.md).
-- Поиск по ключу на диске → [B-дерево](non-linear/b-tree.md) / [B+ дерево](non-linear/b-plus-tree.md).
-- Поиск внутри составных значений (массивы, тексты) → [инвертированный индекс](non-linear/inverted-index.md).
-- Упорядоченное множество с O(log n) без балансировки → [skip list](non-linear/skip-list.md).
+- [[algorithms-and-data-structures/non-linear/graph|Граф]] разреженный и важны обходы соседей → списки смежности.
+- Нужна иерархия без циклов → [[algorithms-and-data-structures/non-linear/tree|дерево]].
+- Нужны быстрые `search/insert/delete` по упорядоченному ключу → [[algorithms-and-data-structures/non-linear/binary-search-tree|BST]] (если важны гарантии, лучше самобалансирующееся).
+- Нужна приоритетная очередь (добавить элемент и извлечь min/max) → [[algorithms-and-data-structures/non-linear/heap|куча]].
+- Поиск по ключу на диске → [[algorithms-and-data-structures/non-linear/b-tree|B-дерево]] / [[algorithms-and-data-structures/non-linear/b-plus-tree|B+ дерево]].
+- Поиск внутри составных значений (массивы, тексты) → [[algorithms-and-data-structures/non-linear/inverted-index|инвертированный индекс]].
+- Упорядоченное множество с O(log n) без балансировки → [[algorithms-and-data-structures/non-linear/skip-list|skip list]].
 
 ## Сводные таблицы
 
-### [Массив](linear/array.md) vs [Связный список](linear/linked-list.md)
+### [[algorithms-and-data-structures/linear/array|Массив]] vs [[algorithms-and-data-structures/linear/linked-list|Связный список]]
 
-| Операция | [Массив](linear/array.md) | Односвязный [список](linear/linked-list.md) | Двусвязный [список](linear/linked-list.md) |
+| Операция | [[algorithms-and-data-structures/linear/array\|Массив]] | Односвязный [[algorithms-and-data-structures/linear/linked-list\|список]] | Двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
 |----------|--------|-------------------|-------------------|
 | Доступ по индексу | O(1) | O(n) | O(n) |
 | Поиск по значению | O(n) | O(n) | O(n) |
@@ -80,15 +80,15 @@ order: 0
 `**` — при наличии tail указателя
 `***` — если уже есть указатель на место; иначе +O(n) на поиск
 
-### ADT: [Стек, Очередь, Дек](linear/stack-queue-deque.md)
+### ADT: [[algorithms-and-data-structures/linear/stack-queue-deque|Стек, Очередь, Дек]]
 
 | ADT | Порядок | Операции | Лучшая реализация |
 |-----|---------|----------|-------------------|
-| [Стек](linear/stack-queue-deque.md) | LIFO | push/pop с одного конца | [Динамический массив](linear/dynamic-array.md) |
-| [Очередь](linear/stack-queue-deque.md) | FIFO | enqueue в конец, dequeue из начала | Ring buffer |
-| [Дек](linear/stack-queue-deque.md) | Оба | Все операции с обоих концов | Ring buffer или двусвязный [список](linear/linked-list.md) |
+| [[algorithms-and-data-structures/linear/stack-queue-deque\|Стек]] | LIFO | push/pop с одного конца | [[algorithms-and-data-structures/linear/dynamic-array\|Динамический массив]] |
+| [[algorithms-and-data-structures/linear/stack-queue-deque\|Очередь]] | FIFO | enqueue в конец, dequeue из начала | Ring buffer |
+| [[algorithms-and-data-structures/linear/stack-queue-deque\|Дек]] | Оба | Все операции с обоих концов | Ring buffer или двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
 
-### [Хеш-таблица](linear/hash-table.md)
+### [[algorithms-and-data-structures/linear/hash-table|Хеш-таблица]]
 
 | Операция | В среднем | В худшем |
 |----------|-----------|----------|
@@ -98,25 +98,25 @@ order: 0
 
 `*` — амортизировано
 
-### [LRU-кэш](linear/lru-cache.md)
+### [[algorithms-and-data-structures/linear/lru-cache|LRU-кэш]]
 
 | Операция | Время | Структуры |
 |----------|-------|-----------|
-| get | O(1) | [Хеш-таблица](linear/hash-table.md) + двусвязный [список](linear/linked-list.md) |
-| put | O(1) | [Хеш-таблица](linear/hash-table.md) + двусвязный [список](linear/linked-list.md) |
+| get | O(1) | [[algorithms-and-data-structures/linear/hash-table\|Хеш-таблица]] + двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
+| put | O(1) | [[algorithms-and-data-structures/linear/hash-table\|Хеш-таблица]] + двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
 
-### LFU vs [LRU](linear/lru-cache.md)
+### LFU vs [[algorithms-and-data-structures/linear/lru-cache|LRU]]
 
-| Аспект | [LRU](linear/lru-cache.md) | LFU |
+| Аспект | [[algorithms-and-data-structures/linear/lru-cache\|LRU]] | LFU |
 |--------|-----|-----|
 | Критерий вытеснения | Время последнего обращения | Количество обращений |
 | Cache pollution | Нет | Да (старые популярные элементы застревают) |
 | Адаптация к изменениям | Быстрая | Медленная |
 | Лучше для | Меняющиеся паттерны доступа | Стабильные паттерны доступа |
 
-### [Clock-Sweep](linear/clock-sweep.md) vs [LRU](linear/lru-cache.md) vs LFU
+### [[algorithms-and-data-structures/linear/clock-sweep|Clock-Sweep]] vs [[algorithms-and-data-structures/linear/lru-cache|LRU]] vs LFU
 
-| Аспект | [LRU](linear/lru-cache.md) | LFU | [Clock-Sweep](linear/clock-sweep.md) |
+| Аспект | [[algorithms-and-data-structures/linear/lru-cache\|LRU]] | LFU | [[algorithms-and-data-structures/linear/clock-sweep\|Clock-Sweep]] |
 |--------|-----|-----|-------------|
 | Критерий | Время | Частота | Частота + затухание |
 | Точность | Точный порядок | Точный счётчик | Приблизительный |

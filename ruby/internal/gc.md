@@ -13,9 +13,9 @@ order: 7
 # Управление памятью в Ruby
 
 > [!info]- Предпосылки
-> [Исполнение](vm/execution.md) — VALUE, VM-стек, фреймы. [Объекты и классы](object-model/objects-and-classes.md) — RBasic, RObject, flags. [Виртуальная память](../../linux/foundations/virtual-memory.md) — страницы, TLB, CoW после `fork()`. [Управление памятью ОС](../../linux/programming/memory-management.md) — `malloc`/`free` как базовая модель ручного управления. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/graph.md) (для графа объектов).
+> [[ruby/internal/vm/execution|Исполнение]] — VALUE, VM-стек, фреймы. [[ruby/internal/object-model/objects-and-classes|Объекты и классы]] — RBasic, RObject, flags. [Виртуальная память](../../linux/foundations/virtual-memory.md) — страницы, TLB, CoW после `fork()`. [Управление памятью ОС](../../linux/programming/memory-management.md) — `malloc`/`free` как базовая модель ручного управления. Базовые структуры данных: [связный список](../../algorithms-and-data-structures/linear/linked-list.md) (для free list), [граф](../../algorithms-and-data-structures/non-linear/graph.md) (для графа объектов).
 
-← [Формы объектов](object-model/shapes.md) | [Array](collections/array.md) →
+← [[ruby/internal/object-model/shapes|Формы объектов]] | [[ruby/internal/collections/array|Array]] →
 
 Сначала разберём базовые подходы к управлению памятью, затем — как это устроено в MRI/[CRuby](../../ruby.md).
 
@@ -288,11 +288,11 @@ Ruby GC — генерационный инкрементальный mark-sweep
 arr = []
 ```
 
-В MRI переменная `arr` живёт в VM‑стеке (в локальных переменных [фрейма](vm/execution.md)), а сам объект массива живёт в куче.
+В MRI переменная `arr` живёт в VM‑стеке (в локальных переменных [[ruby/internal/vm/execution|фрейма]]), а сам объект массива живёт в куче.
 
 ### VALUE и pointer tagging
 
-В CRuby все ссылки на объекты представлены типом **VALUE** (подробнее — в [заметке об исполнении](vm/execution.md)) — это `uintptr_t`, целое число размером с указатель (8 байт на 64-bit системах).
+В CRuby все ссылки на объекты представлены типом **VALUE** (подробнее — в [[ruby/internal/vm/execution|заметке об исполнении]]) — это `uintptr_t`, целое число размером с указатель (8 байт на 64-bit системах).
 
 Ruby использует **выравнивание**: объекты в куче выровнены по границе 8 байт, поэтому младшие 3 бита адреса всегда нули. Этот факт используется для **pointer tagging**: примитивные объекты (маленькие числа, символы, nil, true, false) хранятся прямо в VALUE, а младшие биты кодируют тип. Так Ruby отличает примитивы от указателей на объекты в куче.
 
@@ -300,7 +300,7 @@ Ruby использует **выравнивание**: объекты в куч
 
 ### RVALUE и RBasic
 
-На уровне GC каждый объект в куче занимает **слот** (часто его называют **RVALUE**). В начале слота лежит заголовок `struct RBasic` (flags + klass — см. [Объекты и классы](object-model/objects-and-classes.md)). После заголовка идут данные, специфичные для типа (`struct RArray`, `struct RString`, `struct RObject` и др.). Для массива это поля `struct RArray` (например, длина и место, где лежат элементы).
+На уровне GC каждый объект в куче занимает **слот** (часто его называют **RVALUE**). В начале слота лежит заголовок `struct RBasic` (flags + klass — см. [[ruby/internal/object-model/objects-and-classes|Объекты и классы]]). После заголовка идут данные, специфичные для типа (`struct RArray`, `struct RString`, `struct RObject` и др.). Для массива это поля `struct RArray` (например, длина и место, где лежат элементы).
 
 Итого на этом шаге:
 - VM-стек → локальная переменная `arr` (`VALUE`)
@@ -830,4 +830,4 @@ RUBY_GC_LIBRARY=mmtk ruby script.rb
 
 ---
 
-← [Формы объектов](object-model/shapes.md) | [Array](collections/array.md) →
+← [[ruby/internal/object-model/shapes|Формы объектов]] | [[ruby/internal/collections/array|Array]] →

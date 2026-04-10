@@ -252,7 +252,7 @@ Queue depth, consumer lag, error rate — каждая метрика требу
 - [Redis Streams](../databases/redis/data-structures/stream.md) — log-based структура с consumer groups
 - [Очереди в PostgreSQL](../databases/postgresql/concurrency/queues-and-skip-locked.md) — `FOR UPDATE SKIP LOCKED` как альтернатива внешнему брокеру
 - [Kafka: consumer internals](../messaging/kafka/architecture/consumer-internals.md) — poll loop, offset commit, rebalancing
-- [Бронирование отелей](cases/hotel-booking.md) — async-обработка и state machine заказа
+- [[system-design/cases/hotel-booking|Бронирование отелей]] — async-обработка и state machine заказа
 
 ## Sources
 
