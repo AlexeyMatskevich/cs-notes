@@ -17,6 +17,7 @@
 
 ## Computer Systems / OS
 
+- [ ] Что на самом деле значит «данные записаны»: цепочка `store buffer -> L1/L2/L3 -> когерентная видимость другим ядрам -> DRAM -> page cache/ядро -> SSD/HDD` и какие гарантии появляются на каждом шаге. Контекст вопроса: после разбора `store buffer` в `computer/cpu.md` и `computer/data-path/memory-hierarchy.md` возникла путаница между тремя разными смыслами «записано» — значение уже видно текущему потоку, его уже могут увидеть другие ядра, и оно уже durable для `COMMIT` в БД.
 - [x] Файловые дескрипторы → [linux/foundations/04-file-descriptors.md](../linux/foundations/file-descriptors.md)
 - [x] Мультиплексирование ввода-вывода → [linux/programming/04-io-multiplexing.md](../linux/programming/io-multiplexing.md)
 - [x] `write()` vs `fsync()` → [linux/foundations/06-filesystems.md](../linux/foundations/filesystems.md) (page cache, fsync) + [linux/programming/02-file-io.md](../linux/programming/file-io.md) (O_SYNC, O_DSYNC)
