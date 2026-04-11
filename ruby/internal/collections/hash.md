@@ -13,7 +13,7 @@ order: 10
 # Hash
 
 > [!info]- Предпосылки
-> [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [иерархия памяти](../../../computer/data-path/memory-hierarchy.md) (cache lines, стоимость cache miss).
+> [хеш-таблица](../../../algorithms-and-data-structures/linear/hash-table.md) (хеш-функция, коллизии, open addressing, load factor, рехеширование), [Array](array.md) (embedded/heap-паттерн), [объекты и классы](../object-model/objects-and-classes.md) (VALUE, RBasic), [GC](../gc.md) (VWA, слоты), [иерархия памяти](../../../computer/data-path/memory-hierarchy.md#локальность-данных-почему-кеш-вообще-помогает) (cache lines, стоимость cache miss).
 
 ← [Array](array.md) | [String](string.md) →
 
@@ -39,7 +39,7 @@ AR table (≤8 элементов):
 └────────────────────┴──────────────────────────────────────────┘
 ```
 
-AR table размещается прямо в слоте объекта `RHash`, сразу после заголовка — без отдельной аллокации. Вся структура (~136 байт) помещается в два cache lines процессора (по 64 байта). Последовательный обход 8 hints выигрывает за счёт [пространственной локальности кеша](../../../computer/data-path/memory-hierarchy.md) — все 8 байт hints лежат рядом в памяти.
+AR table размещается прямо в слоте объекта `RHash`, сразу после заголовка — без отдельной аллокации. Вся структура (~136 байт) помещается в два cache lines процессора (по 64 байта). Последовательный обход 8 hints выигрывает за счёт [пространственной локальности кеша](../../../computer/data-path/memory-hierarchy.md#локальность-данных-почему-кеш-вообще-помогает) — все 8 байт hints лежат рядом в памяти.
 
 ### Поиск: hints вместо полного хеширования
 
