@@ -205,17 +205,9 @@ Docker по умолчанию применяет seccomp-профиль, бло
 
 ## Capabilities: дробление root-привилегий
 
-Традиционная модель привилегий в Unix бинарна: процесс либо root (UID --- User ID --- 0, может всё), либо обычный пользователь (ограничен). [Capabilities](../foundations/permissions-and-capabilities.md) дробят всемогущество root на ~40 независимых флагов. Каждый флаг разрешает конкретное действие. Ядро хранит capabilities в трёх множествах для каждого потока: effective (текущие активные привилегии --- именно их ядро проверяет при системных вызовах), permitted (максимум, который поток может перенести в effective) и inheritable (что передаётся потомкам через `exec()`). Процесс может понизить свои привилегии --- убрать capability из effective --- но не может добавить ту, которой нет в permitted.
+[Capabilities](../foundations/permissions-and-capabilities.md) дробят привилегии root на ~40 независимых флагов -- механизм детально разобран в заметке о [правах доступа](../foundations/permissions-and-capabilities.md). Здесь важно, как Docker использует их в контейнерном контексте.
 
-`CAP_NET_BIND_SERVICE` --- привязка к портам ниже 1024. Веб-серверу нужен порт 80, но не нужен доступ к чужим процессам. Без capabilities пришлось бы запускать его от root, давая полный контроль над системой ради одного порта.
-
-`CAP_SYS_PTRACE` --- вызов `ptrace()` для отладки других процессов. Нужен отладчикам (gdb, strace), но в обычном контейнере опасен: позволяет читать память соседних процессов в том же PID namespace.
-
-`CAP_NET_RAW` --- создание raw-сокетов. Нужен для `ping` (ICMP --- Internet Control Message Protocol) и сетевой диагностики, но позволяет генерировать произвольные пакеты --- потенциальный инструмент для ARP (Address Resolution Protocol)-спуфинга.
-
-`CAP_SYS_ADMIN` --- самая широкая capability, которую иногда называют "новый root". Разрешает монтирование файловых систем, настройку namespaces, управление cgroups и десятки других операций. Любой контейнер с `CAP_SYS_ADMIN` почти эквивалентен привилегированному.
-
-Docker по умолчанию запускает контейнер с 14 из ~40 capabilities (включая `CAP_NET_RAW` для `ping` и `CAP_NET_BIND_SERVICE` для порта 80). Отброшенные включают `CAP_SYS_ADMIN`, `CAP_SYS_PTRACE`, `CAP_SYS_MODULE` (загрузка модулей ядра), `CAP_SYS_BOOT` (перезагрузка), `CAP_SYS_TIME` (изменение часов). Добавить capability: `docker run --cap-add SYS_PTRACE ...` для контейнера с отладчиком. Убрать из набора по умолчанию: `docker run --cap-drop NET_RAW ...` если `ping` не нужен и хочется уменьшить поверхность атаки.
+Docker по умолчанию запускает контейнер лишь с частью из ~40 capabilities -- включая `CAP_NET_RAW` для `ping` и `CAP_NET_BIND_SERVICE` для порта 80. Отброшенные включают `CAP_SYS_ADMIN`, `CAP_SYS_PTRACE`, `CAP_SYS_MODULE` (загрузка модулей ядра), `CAP_SYS_BOOT` (перезагрузка), `CAP_SYS_TIME` (изменение часов). Добавить capability: `docker run --cap-add SYS_PTRACE ...` для контейнера с отладчиком. Убрать из набора по умолчанию: `docker run --cap-drop NET_RAW ...` если `ping` не нужен и хочется уменьшить поверхность атаки.
 
 Посмотреть текущие capabilities контейнера можно через `docker exec <container> cat /proc/1/status | grep Cap`. Поля `CapPrm` (permitted), `CapEff` (effective) и `CapInh` (inheritable) содержат битовые маски. Утилита `capsh --decode=<hex>` расшифровывает маску в человекочитаемые имена.
 
