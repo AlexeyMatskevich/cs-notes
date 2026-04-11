@@ -13,7 +13,7 @@ order: 5
 
 # Дизайн задач
 
-**Предпосылки:** [Sidekiq: сигналы и deploy](signals-and-deploy.md), [reliability patterns § bulkhead](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов), [event-driven architecture](../../system-design/event-driven-architecture.md), [message queues](../../system-design/message-queues.md).
+**Предпосылки:** [Sidekiq: сигналы и deploy](signals-and-deploy.md), [[system-design/reliability-patterns#bulkhead-изоляция-ресурсов|reliability patterns § bulkhead]], [event-driven architecture](../../system-design/event-driven-architecture.md), [message queues](../../system-design/message-queues.md).
 
 <- [Сигналы и deploy](signals-and-deploy.md) | [Concurrency и масштабирование](concurrency-and-scaling.md) ->
 
@@ -39,11 +39,11 @@ end
 
 Аналитика упала — exception поднимается до `JobRetry`, задача уходит в retry. При повторной попытке выполнятся все четыре шага заново — включая `charge`, который уже списал деньги. Двойное списание.
 
-Проблема глубже, чем повторное списание. Некритичное действие (аналитика) роняет критичное (оплату). Это частный случай [cascading failure](../../system-design/reliability-patterns.md#cascading-failure-механизм): сбой в одном компоненте бьёт по всему потоку. В [reliability patterns](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) решение — [bulkhead](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов): изолировать критичное от некритичного, чтобы сбой одного не затрагивал другое.
+Проблема глубже, чем повторное списание. Некритичное действие (аналитика) роняет критичное (оплату). Это частный случай [[system-design/reliability-patterns#cascading-failure-механизм|cascading failure]]: сбой в одном компоненте бьёт по всему потоку. В [[system-design/reliability-patterns#bulkhead-изоляция-ресурсов|reliability patterns]] решение — [[system-design/reliability-patterns#bulkhead-изоляция-ресурсов|bulkhead]]: изолировать критичное от некритичного, чтобы сбой одного не затрагивал другое.
 
 ## Один job = одна атомарная операция
 
-Принцип: каждый job делает одну операцию, которая либо полностью выполняется, либо нет. [Job](architecture.md) должен быть [идемпотентным](../../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) — безопасным для повторного выполнения.
+Принцип: каждый job делает одну операцию, которая либо полностью выполняется, либо нет. [Job](architecture.md) должен быть [[system-design/reliability-patterns#idempotency-безопасность-повторных-запросов|идемпотентным]] — безопасным для повторного выполнения.
 
 ```ruby
 class ChargePaymentJob
@@ -196,7 +196,7 @@ Fan-out хорошо изолирует независимые ветви. Но 
 
 `perform_async` — это команда в терминах [event-driven architecture](../../system-design/event-driven-architecture.md): вызывающий код знает конкретного получателя и ожидает конкретное действие. `ChargePaymentJob.perform_async(order_id)` — «ты, ChargePaymentJob, обработай этот заказ».
 
-Альтернативная модель — событие: «заказ создан, кому интересно — обрабатывайте». Вызывающий код не знает получателей. Это территория [pub/sub](../../system-design/message-queues.md#point-to-point-и-pubsub) и специализированных брокеров сообщений. Sidekiq работает в модели команд — point-to-point с конкурирующими consumers.
+Альтернативная модель — событие: «заказ создан, кому интересно — обрабатывайте». Вызывающий код не знает получателей. Это территория [[system-design/message-queues#point-to-point-и-pubsub|pub/sub]] и специализированных брокеров сообщений. Sidekiq работает в модели команд — point-to-point с конкурирующими consumers.
 
 Когда Sidekiq-команды начинают обрастать сложной маршрутизацией (один job ставит 15 sub-jobs, и каждый из них — ещё несколько), это сигнал, что система может выиграть от перехода к событийной модели. Но для большинства Rails-приложений прямые команды проще и достаточны.
 

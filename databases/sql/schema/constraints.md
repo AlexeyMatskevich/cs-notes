@@ -62,7 +62,7 @@ UNIQUE запрещает дубликаты в столбце (или комб�
 
 ### UNIQUE и NULL
 
-`UNIQUE` не запрещает несколько NULL — потому что [NULL](../foundations/types-and-null.md) = NULL в SQL возвращает NULL, не TRUE ([трёхзначная логика](../foundations/types-and-null.md#трёхзначная-логика)), и два NULL не считаются дубликатами:
+`UNIQUE` не запрещает несколько NULL — потому что [NULL](../foundations/types-and-null.md) = NULL в SQL возвращает NULL, не TRUE ([[databases/sql/foundations/types-and-null#трёхзначная-логика|трёхзначная логика]]), и два NULL не считаются дубликатами:
 
 ```sql
 CREATE TABLE emails (email TEXT UNIQUE);

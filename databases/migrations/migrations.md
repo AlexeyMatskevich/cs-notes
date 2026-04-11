@@ -31,7 +31,7 @@ aliases:
 Большинство рецептов ниже предполагают обычную рабочую среду PostgreSQL, а не произвольный migration runner.
 
 - **Сессия живёт достаточно долго, чтобы её настройки сохранялись.** В transaction mode у PgBouncer session-level `SET` и advisory locks не переживают переназначение серверного соединения между транзакциями.
-- **Операции, которым нужен отдельный запуск вне BEGIN/COMMIT, действительно идут без внешней транзакции.** Это обязательно для [CREATE INDEX CONCURRENTLY](../sql/postgresql/index-operations.md#create-index-concurrently) и REINDEX CONCURRENTLY.
+- **Операции, которым нужен отдельный запуск вне BEGIN/COMMIT, действительно идут без внешней транзакции.** Это обязательно для [[databases/sql/postgresql/index-operations#create-index-concurrently|CREATE INDEX CONCURRENTLY]] и REINDEX CONCURRENTLY.
 - **Долгие шаги сами убирают за собой session state.** Если поднять `statement_timeout` для долгой операции и не вернуть обратно, следующие шаги [миграции](migrations.md) останутся без обычной защиты.
 - **Backfill идёт серией коротких транзакций.** Один батч = одна транзакция с explicit COMMIT; не одна большая транзакция, которая держит блокировки и мешает [VACUUM](../postgresql/maintenance/vacuum.md).
 

@@ -65,7 +65,7 @@ WHERE rn = 1;
 | ROW_NUMBER + CTE | да | да | да | нумерует все строки |
 | DISTINCT ON | да | нет | нет (PG) | Sort + Unique или Index Scan |
 
-DISTINCT ON — PostgreSQL-shortcut для частного случая top-1. Для top-N или портативного SQL — ROW_NUMBER + CTE. Для top-N с использованием индекса — [LATERAL](../querying/subqueries-and-cte.md#lateral--подзапрос-с-доступом-к-внешним-строкам).
+DISTINCT ON — PostgreSQL-shortcut для частного случая top-1. Для top-N или портативного SQL — ROW_NUMBER + CTE. Для top-N с использованием индекса — [[databases/sql/querying/subqueries-and-cte#lateral--подзапрос-с-доступом-к-внешним-строкам|LATERAL]].
 
 ## Sources
 

@@ -27,7 +27,7 @@ order: 6
 :concurrency: 5
 ```
 
-Ruby-потоки работают под [GVL](../../ruby/internal/concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код), но для I/O-bound задач это не проблема: GVL освобождается при блокирующем I/O, и потоки эффективно чередуют CPU и [I/O overlap](../../ruby/internal/concurrency.md#io-overlap-потоки-полезны-даже-с-gvl). Для CPU-bound задач потоки не дают ускорения — здесь помогут дополнительные процессы.
+Ruby-потоки работают под [[ruby/internal/concurrency#gvl-почему-потоки-не-ускоряют-cpu-код|GVL]], но для I/O-bound задач это не проблема: GVL освобождается при блокирующем I/O, и потоки эффективно чередуют CPU и [[ruby/internal/concurrency#io-overlap-потоки-полезны-даже-с-gvl|I/O overlap]]. Для CPU-bound задач потоки не дают ускорения — здесь помогут дополнительные процессы.
 
 ## Concurrency: сколько потоков?
 
@@ -89,9 +89,9 @@ Sidekiq забирает задачи из `critical`, пока она не оп
 
 ## Bulkhead: изоляция через процессы и очереди
 
-Один медленный job-класс, который делает HTTP-запросы к медленному API, может занять все потоки. Пока все потоки ждут ответа от API, задачи из других очередей стоят — это [cascading failure](../../system-design/reliability-patterns.md#cascading-failure-механизм) внутри одного процесса.
+Один медленный job-класс, который делает HTTP-запросы к медленному API, может занять все потоки. Пока все потоки ждут ответа от API, задачи из других очередей стоят — это [[system-design/reliability-patterns#cascading-failure-механизм|cascading failure]] внутри одного процесса.
 
-Решение из [reliability patterns](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов) — [bulkhead](../../system-design/reliability-patterns.md#bulkhead-изоляция-ресурсов): выделить отдельный процесс для медленных задач:
+Решение из [[system-design/reliability-patterns#bulkhead-изоляция-ресурсов|reliability patterns]] — [[system-design/reliability-patterns#bulkhead-изоляция-ресурсов|bulkhead]]: выделить отдельный процесс для медленных задач:
 
 ```bash
 bundle exec sidekiq -q critical -q default  # процесс 1: быстрые задачи
@@ -121,7 +121,7 @@ bundle exec sidekiq -q external_api         # процесс 2: медленны
 
 ## Backpressure: когда Redis переполнен
 
-Redis настроен с политикой [`noeviction`](architecture.md#данные-в-redis): при исчерпании памяти вызов `perform_async` получит exception — это [backpressure](../../system-design/message-queues.md#backpressure): система сигнализирует, что не справляется.
+Redis настроен с политикой [[rails/sidekiq/architecture#данные-в-redis|`noeviction`]]: при исчерпании памяти вызов `perform_async` получит exception — это [[system-design/message-queues#backpressure|backpressure]]: система сигнализирует, что не справляется.
 
 Мониторинг глубины очереди (`Sidekiq::Queue.new("default").latency`) помогает заметить накопление до того, как Redis переполнится. Если latency растёт — задачи добавляются быстрее, чем обрабатываются. Решения: увеличить concurrency, добавить процессы, оптимизировать задачи, или перенести некритичные задачи на off-peak часы.
 

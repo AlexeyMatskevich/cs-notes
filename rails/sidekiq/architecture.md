@@ -39,15 +39,15 @@ end
 
 ## Три роли
 
-Sidekiq реализует [point-to-point](../../system-design/message-queues.md#point-to-point-и-pubsub) модель: несколько consumers конкурируют за задачи из общей очереди. Система состоит из трёх ролей:
+Sidekiq реализует [[system-design/message-queues#point-to-point-и-pubsub|point-to-point]] модель: несколько consumers конкурируют за задачи из общей очереди. Система состоит из трёх ролей:
 
 **Client** — Rails-приложение, которое ставит задачи. Вызов `SendEmailJob.perform_async(user_id)` сериализует аргументы в JSON, прогоняет через client middleware (цепочку обработчиков, которые могут дополнить или отклонить задачу перед отправкой) и выполняет `LPUSH` в Redis.
 
 **Broker** — Redis. Хранит очереди, расписание, retry, метаданные процессов. Redis выбран потому, что Sidekiq использует знакомые структуры: LIST для очередей, Sorted Set для отложенных задач и retry, Set и Hash для метаданных. Это те же паттерны из [очередей в Redis](../../databases/redis/patterns/queues.md), собранные вместе.
 
-**Server** — процесс Sidekiq, который забирает задачи из Redis и выполняет их в потоках. Один сервер обрабатывает задачи параллельно: пока один поток ждёт ответа от SMTP-сервера, другой обрабатывает картинку. Это возможно благодаря тому, что потоки Ruby освобождают GVL при блокирующем I/O ([подробнее — Ruby concurrency](../../ruby/internal/concurrency.md#gvl-почему-потоки-не-ускоряют-cpu-код)).
+**Server** — процесс Sidekiq, который забирает задачи из Redis и выполняет их в потоках. Один сервер обрабатывает задачи параллельно: пока один поток ждёт ответа от SMTP-сервера, другой обрабатывает картинку. Это возможно благодаря тому, что потоки Ruby освобождают GVL при блокирующем I/O ([[ruby/internal/concurrency#gvl-почему-потоки-не-ускоряют-cpu-код|подробнее — Ruby concurrency]]).
 
-В терминах [temporal decoupling](../../system-design/message-queues.md#temporal-decoupling-развязка-во-времени): client и server работают независимо. Rails-приложение кладёт задачу и продолжает обслуживать HTTP-запрос. Sidekiq-процесс обрабатывает задачу, когда готов — через миллисекунды, минуты или часы.
+В терминах [[system-design/message-queues#temporal-decoupling-развязка-во-времени|temporal decoupling]]: client и server работают независимо. Rails-приложение кладёт задачу и продолжает обслуживать HTTP-запрос. Sidekiq-процесс обрабатывает задачу, когда готов — через миллисекунды, минуты или часы.
 
 ## Данные в Redis
 
@@ -63,7 +63,7 @@ Sidekiq реализует [point-to-point](../../system-design/message-queues.m
 | Set | `processes` | ID активных Sidekiq-процессов |
 | Hash | `<identity>` | Метаданные процесса: hostname, pid, concurrency, busy, beat |
 
-`schedule` и `retry` — это [delayed queue на Sorted Set](../../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue): score задаёт момент, когда задача должна переместиться в рабочую очередь. `dead` — это [Dead Letter Queue](../../system-design/message-queues.md#dead-letter-queue): задачи, которые не удалось обработать после всех попыток.
+`schedule` и `retry` — это [[databases/redis/patterns/queues#отложенные-задачи-delayed-queue|delayed queue на Sorted Set]]: score задаёт момент, когда задача должна переместиться в рабочую очередь. `dead` — это [[system-design/message-queues#dead-letter-queue|Dead Letter Queue]]: задачи, которые не удалось обработать после всех попыток.
 
 Redis для Sidekiq настраивается с политикой `noeviction` (при исчерпании памяти Redis возвращает ошибку на запись вместо удаления ключей). Если бы политика была `allkeys-lru` (удаление наименее используемых ключей для освобождения памяти), Redis мог бы удалить ключ очереди с тысячами задач, чтобы освободить место для нового.
 
@@ -87,7 +87,7 @@ flowchart TB
 
 **Processor** — рабочий поток. Выполняет цикл: забрать [задачу](job-lifecycle.md) из Redis (`BRPOP`), десериализовать JSON, выполнить `perform`. Количество Processor-ов определяется настройкой `concurrency` (по умолчанию 5 начиная с Sidekiq 7).
 
-**Poller** — фоновый поток, который периодически проверяет sorted sets `schedule` и `retry`. Если score задачи ≤ текущему времени, [Poller](job-lifecycle.md) перемещает её в рабочую очередь (`LPUSH`). Это тот же паттерн [отложенной очереди](../../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue), но реализованный как отдельный поток внутри процесса.
+**Poller** — фоновый поток, который периодически проверяет sorted sets `schedule` и `retry`. Если score задачи ≤ текущему времени, [Poller](job-lifecycle.md) перемещает её в рабочую очередь (`LPUSH`). Это тот же паттерн [[databases/redis/patterns/queues#отложенные-задачи-delayed-queue|отложенной очереди]], но реализованный как отдельный поток внутри процесса.
 
 **Heartbeat** — поток, который каждые ~10 секунд обновляет метаданные процесса в Redis (hostname, pid, количество занятых потоков). По этим данным Web UI показывает состояние системы, а Pro-версия определяет мёртвые процессы для восстановления задач.
 

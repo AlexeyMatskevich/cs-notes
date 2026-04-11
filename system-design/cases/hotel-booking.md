@@ -11,7 +11,7 @@ order: 16
 
 # Система бронирования отелей
 
-**Предпосылки:** [HTTP](../../networking/application/http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/websockets.md)/polling, [паттерны надёжности](../reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([`FOR UPDATE`](../../databases/postgresql/concurrency/patterns.md#пессимистичный-подход-for-update)).
+**Предпосылки:** [HTTP](../../networking/application/http.md), background jobs (Sidekiq), [WebSocket](../../networking/application/websockets.md)/polling, [паттерны надёжности](../reliability-patterns.md) (timeout, retry, circuit breaker, idempotency), базовое понимание транзакций PostgreSQL ([[databases/postgresql/concurrency/patterns#пессимистичный-подход-for-update|`FOR UPDATE`]]).
 
 <- [Event-driven Architecture](../event-driven-architecture.md)
 

@@ -12,7 +12,7 @@ order: 2
 
 # Гарантии доставки и идемпотентность
 
-**Предпосылки:** [архитектура Sidekiq](architecture.md), [жизненный цикл задачи](job-lifecycle.md), [гарантии доставки](../../system-design/delivery-guarantees.md), [reliability patterns § idempotency](../../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов).
+**Предпосылки:** [архитектура Sidekiq](architecture.md), [жизненный цикл задачи](job-lifecycle.md), [гарантии доставки](../../system-design/delivery-guarantees.md), [[system-design/reliability-patterns#idempotency-безопасность-повторных-запросов|reliability patterns § idempotency]].
 
 <- [Жизненный цикл задачи](job-lifecycle.md) | [Retry и обработка ошибок](retry-and-errors.md) ->
 
@@ -48,7 +48,7 @@ Client выполняет `LPUSH` для отправки задачи в Redis.
 
 ### Scheduling: sorted set → queue
 
-[Poller](architecture.md#устройство-серверного-процесса) перемещает «созревшие» [задачи](job-lifecycle.md) из sorted sets (`schedule`, `retry`) в рабочие очереди. Для этого нужны три шага: прочитать задачу (`ZRANGEBYSCORE`), удалить из sorted set (`ZREM`), добавить в рабочую очередь (`LPUSH`). По умолчанию эти шаги не атомарны. Crash между `ZREM` и `LPUSH` — задача удалена из sorted set, но не попала в очередь — потеря. Crash между `LPUSH` и `ZREM` — задача в очереди, но не удалена из sorted set — дубликат при следующей проверке.
+[[rails/sidekiq/architecture#устройство-серверного-процесса|Poller]] перемещает «созревшие» [задачи](job-lifecycle.md) из sorted sets (`schedule`, `retry`) в рабочие очереди. Для этого нужны три шага: прочитать задачу (`ZRANGEBYSCORE`), удалить из sorted set (`ZREM`), добавить в рабочую очередь (`LPUSH`). По умолчанию эти шаги не атомарны. Crash между `ZREM` и `LPUSH` — задача удалена из sorted set, но не попала в очередь — потеря. Crash между `LPUSH` и `ZREM` — задача в очереди, но не удалена из sorted set — дубликат при следующей проверке.
 
 > [!info]- Pro: reliable scheduler
 > `config.reliable_scheduler!` — атомарное продвижение через Lua-скрипт. Одна неделимая операция: выбрать задачу из sorted set, удалить её оттуда, добавить в рабочую очередь.
@@ -57,9 +57,9 @@ Client выполняет `LPUSH` для отправки задачи в Redis.
 
 ## Контракт: какая гарантия?
 
-По умолчанию (OSS Sidekiq) каждая из трёх точек может потерять задачу — это [at-most-once](../../system-design/delivery-guarantees.md#at-most-once-не-более-одного-раза): задача выполнится не более одного раза (возможно, ноль).
+По умолчанию (OSS Sidekiq) каждая из трёх точек может потерять задачу — это [[system-design/delivery-guarantees#at-most-once-не-более-одного-раза|at-most-once]]: задача выполнится не более одного раза (возможно, ноль).
 
-Pro-механизмы (`super_fetch!`, `reliable_push!`, `reliable_scheduler!`) значительно сужают окна потерь, приближая систему к [at-least-once](../../system-design/delivery-guarantees.md#at-least-once-не-менее-одного-раза). Но у каждого механизма остаются оговорки (in-memory буфер теряется при рестарте, reliable scheduler несовместим с Redis Cluster). Более точная формулировка: best-effort at-least-once — система делает всё возможное, чтобы задача была выполнена хотя бы раз, но не гарантирует это при любых сбоях.
+Pro-механизмы (`super_fetch!`, `reliable_push!`, `reliable_scheduler!`) значительно сужают окна потерь, приближая систему к [[system-design/delivery-guarantees#at-least-once-не-менее-одного-раза|at-least-once]]. Но у каждого механизма остаются оговорки (in-memory буфер теряется при рестарте, reliable scheduler несовместим с Redis Cluster). Более точная формулировка: best-effort at-least-once — система делает всё возможное, чтобы задача была выполнена хотя бы раз, но не гарантирует это при любых сбоях.
 
 Важно: покупка Pro без явного включения механизмов (`config.super_fetch!` и т.д.) не меняет гарантий. Каждый механизм требует opt-in.
 
@@ -67,7 +67,7 @@ Pro-механизмы (`super_fetch!`, `reliable_push!`, `reliable_scheduler!`)
 
 At-least-once означает: задача может выполниться повторно. Retry после ошибки, orphan recovery после crash, дубликат из-за scheduling — всё это приводит к повторному выполнению. Если задача делает `balance += 100`, повторное выполнение удвоит сумму.
 
-[Exactly-once на транспортном уровне невозможна](../../system-design/delivery-guarantees.md#exactly-once--at-least-once--idempotency). Решение: at-least-once + [идемпотентность](../../system-design/reliability-patterns.md#idempotency-безопасность-повторных-запросов) = exactly-once по результату.
+[[system-design/delivery-guarantees#exactly-once--at-least-once--idempotency|Exactly-once на транспортном уровне невозможна]]. Решение: at-least-once + [[system-design/reliability-patterns#idempotency-безопасность-повторных-запросов|идемпотентность]] = exactly-once по результату.
 
 Три паттерна для идемпотентных задач:
 

@@ -172,7 +172,7 @@ END;
 $$;
 ```
 
-Каждый блок EXCEPTION создаёт **implicit subtransaction** — аналог [SAVEPOINT](../modification/transactions.md#savepoint--частичный-откат). Если ошибка не возникает, subtransaction фиксируется прозрачно. Если возникает — откатывается только блок, а не вся транзакция.
+Каждый блок EXCEPTION создаёт **implicit subtransaction** — аналог [[databases/sql/modification/transactions#savepoint--частичный-откат|SAVEPOINT]]. Если ошибка не возникает, subtransaction фиксируется прозрачно. Если возникает — откатывается только блок, а не вся транзакция.
 
 В цикле это означает subtransaction на **каждую итерацию**. Тысяча итераций с EXCEPTION — тысяча subtransactions, каждая с overhead на создание и фиксацию. Для bulk upsert `INSERT ... ON CONFLICT` (без subtransactions) значительно эффективнее:
 

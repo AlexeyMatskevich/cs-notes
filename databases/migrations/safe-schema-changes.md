@@ -59,7 +59,7 @@ order: 0
 | CREATE INDEX | SHARE | build | пропорционально размеру; блокирует writes, reads продолжают работать |
 | CREATE INDEX CONCURRENTLY | SHARE UPDATE EXCLUSIVE | two-phase build | дольше; не блокирует DML |
 
-Даже мгновенный ACCESS EXCLUSIVE попадает в [очередь блокировок](../postgresql/concurrency/locks.md#table-level-locks--защита-структуры-таблицы): если долгий SELECT держит ACCESS SHARE, ALTER TABLE ждёт — а все последующие запросы выстраиваются за ним. Ожидание в секунды терпимо. В минуты — весь трафик к таблице встаёт.
+Даже мгновенный ACCESS EXCLUSIVE попадает в [[databases/postgresql/concurrency/locks#table-level-locks--защита-структуры-таблицы|очередь блокировок]]: если долгий SELECT держит ACCESS SHARE, ALTER TABLE ждёт — а все последующие запросы выстраиваются за ним. Ожидание в секунды терпимо. В минуты — весь трафик к таблице встаёт.
 
 В таблицах выше предполагается одна подкоманда на один `ALTER TABLE`. При объединении нескольких действий (`ALTER TABLE t ADD COLUMN ..., ALTER COLUMN ...`) PostgreSQL берёт самую строгую блокировку и удерживает до конца — быстрое изменение описания схемы в паре с rewrite получает блокировку на всё время rewrite.
 
@@ -119,7 +119,7 @@ CHECK, FK и NOT NULL можно добавить в два шага. Уника
 
 `ADD UNIQUE(col)` и `ADD PRIMARY KEY(col)` берут ACCESS EXCLUSIVE и строят уникальный индекс — блокировка на всё время построения. На 50M строк — минуты.
 
-Безопасный путь: создать уникальный индекс [неблокирующим способом](../sql/postgresql/index-operations.md#create-index-concurrently), затем привязать constraint к уже готовому unique index через [USING INDEX](../sql/postgresql/index-operations.md#using-index--привязка-индекса-к-constraint):
+Безопасный путь: создать уникальный индекс [[databases/sql/postgresql/index-operations#create-index-concurrently|неблокирующим способом]], затем привязать constraint к уже готовому unique index через [[databases/sql/postgresql/index-operations#using-index--привязка-индекса-к-constraint|USING INDEX]]:
 
 ```sql
 -- 1. SHARE UPDATE EXCLUSIVE — не блокирует DML
@@ -131,7 +131,7 @@ ALTER TABLE orders ADD CONSTRAINT orders_external_id_uq
   UNIQUE USING INDEX idx_orders_external_id;
 ```
 
-USING INDEX привязывает существующий unique index к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [частичные](../sql/schema/indexes.md#частичный-индекс) и [expression-индексы](../sql/schema/indexes.md#expression-индекс) привязать нельзя. Не поддерживается для партиционированных таблиц (таблиц, разбитых на части по ключу партиционирования).
+USING INDEX привязывает существующий unique index к constraint без повторного построения. Работает только с plain B-tree индексами с default ordering — [[databases/sql/schema/indexes#частичный-индекс|частичные]] и [[databases/sql/schema/indexes#expression-индекс|expression-индексы]] привязать нельзя. Не поддерживается для партиционированных таблиц (таблиц, разбитых на части по ключу партиционирования).
 
 Для PRIMARY KEY — тот же рецепт, но столбец должен быть NOT NULL **до** USING INDEX. Если столбец nullable, PostgreSQL выполняет неявный SET NOT NULL с полным сканированием под ACCESS EXCLUSIVE — блокирующая операция. Безопасная последовательность: сначала safe NOT NULL через CHECK-паттерн (см. выше), затем USING INDEX.
 
@@ -149,13 +149,13 @@ GROUP BY external_id
 HAVING COUNT(*) > 1;
 ```
 
-[CONCURRENTLY build](../sql/postgresql/index-operations.md#create-index-concurrently) проходит в два прохода по таблице. До начала второго прохода конкурентные writes ещё могут создать дубликат. Во втором проходе PostgreSQL уже может начать отклонять новые конфликты, хотя команда ещё не завершилась. Если build потом всё равно падает, после него может остаться [INVALID-индекс](../sql/postgresql/index-operations.md#сбой-при-concurrently--invalid-индекс), который продолжит ломать запись дубликатов, пока его не удалить. Поэтому failure path здесь важен не меньше happy path. Порядок:
+[[databases/sql/postgresql/index-operations#create-index-concurrently|CONCURRENTLY build]] проходит в два прохода по таблице. До начала второго прохода конкурентные writes ещё могут создать дубликат. Во втором проходе PostgreSQL уже может начать отклонять новые конфликты, хотя команда ещё не завершилась. Если build потом всё равно падает, после него может остаться [[databases/sql/postgresql/index-operations#сбой-при-concurrently--invalid-индекс|INVALID-индекс]], который продолжит ломать запись дубликатов, пока его не удалить. Поэтому failure path здесь важен не меньше happy path. Порядок:
 
 1. Проверить дубликаты (SQL выше), вычистить если есть
 2. Приостановить writes в столбец (переключатель в коде приложения), дождаться завершения незавершённых транзакций, которые ещё могут писать `external_id`
 3. Запустить build
 4. Если успех — возобновить writes
-5. Если сбой — не снимать write-freeze: сначала удалить [INVALID-индекс](../sql/postgresql/index-operations.md#сбой-при-concurrently--invalid-индекс) (`DROP INDEX CONCURRENTLY`), только потом разбираться с причиной и повторять build
+5. Если сбой — не снимать write-freeze: сначала удалить [[databases/sql/postgresql/index-operations#сбой-при-concurrently--invalid-индекс|INVALID-индекс]] (`DROP INDEX CONCURRENTLY`), только потом разбираться с причиной и повторять build
 
 Writes приостановлены на время build и обязательного cleanup после сбоя. DROP просто убирает сломанный индекс; безопасно открывать запись снова только после успешного build или после явного решения отказаться от этой миграции.
 
@@ -173,7 +173,7 @@ PostgreSQL 11+ сохраняет default в системном каталоге
 
 Fast default с `CURRENT_TIMESTAMP` мгновенный по блокировкам, но все существующие строки получают **один** timestamp — время начала транзакции, в которой выполняется ALTER TABLE (потому что `CURRENT_TIMESTAMP` = `now()` = время начала транзакции). Для audit-столбцов (`created_at`, `updated_at`) это тихое искажение: миллионы строк с одинаковым временем, не соответствующим реальности.
 
-Если существующие строки должны получить реальные значения — столбец добавляется nullable без DEFAULT, данные заполняются отдельно ([backfill](schema-evolution.md#backfilling)), default ставится для будущих записей:
+Если существующие строки должны получить реальные значения — столбец добавляется nullable без DEFAULT, данные заполняются отдельно ([[databases/migrations/schema-evolution#backfilling|backfill]]), default ставится для будущих записей:
 
 ```sql
 -- 1. Nullable, без DEFAULT (мгновенно)
@@ -193,7 +193,7 @@ ALTER TABLE orders ALTER COLUMN region SET DEFAULT 'unknown';
 
 ### lock_timeout — защита от очереди
 
-[lock_timeout](../postgresql/concurrency/locks.md#table-level-locks--защита-структуры-таблицы) ограничивает время ожидания блокировки. Если ALTER TABLE не получил блокировку за заданное время — операция отменяется, очередь не растёт:
+[[databases/postgresql/concurrency/locks#table-level-locks--защита-структуры-таблицы|lock_timeout]] ограничивает время ожидания блокировки. Если ALTER TABLE не получил блокировку за заданное время — операция отменяется, очередь не растёт:
 
 ```sql
 SET lock_timeout = '5s';
@@ -262,7 +262,7 @@ WHERE state = 'idle in transaction'
   AND datname = current_database();
 ```
 
-Если приложение использует [реплики](../postgresql/distribution/replication.md) — при длительных backfill-операциях следить за replication lag: массовые UPDATE генерируют [WAL](../postgresql/durability/wal.md#решение-write-ahead-log-wal) (Write-Ahead Log — журнал, в который PostgreSQL записывает изменения до их применения к данным), replica может отставать.
+Если приложение использует [реплики](../postgresql/distribution/replication.md) — при длительных backfill-операциях следить за replication lag: массовые UPDATE генерируют [[databases/postgresql/durability/wal#решение-write-ahead-log-wal|WAL]] (Write-Ahead Log — журнал, в который PostgreSQL записывает изменения до их применения к данным), replica может отставать.
 
 ## Практические правила
 
@@ -281,7 +281,7 @@ WHERE state = 'idle in transaction'
 - ADD FK NOT VALID (обе таблицы)
 
 **App-unsafe** — DDL мгновенный, код ломается при rolling deploy:
-- DROP COLUMN, RENAME COLUMN → [expand-contract](schema-evolution.md#expand-contract)
+- DROP COLUMN, RENAME COLUMN → [[databases/migrations/schema-evolution#expand-contract|expand-contract]]
 
 **Downtime / expand-contract:**
 - ALTER COLUMN TYPE с перезаписью

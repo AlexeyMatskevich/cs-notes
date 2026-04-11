@@ -128,7 +128,7 @@ let value = DATA.load(Relaxed);
 >
 > Но базовый принцип совпадает: store→load reordering разрешён, остальные комбинации (load→load, store→store, load→store) запрещены. В некоторых деталях x86 даже сильнее чистой TSO — например, гарантии вокруг [locked instructions](../../computer/atomic-instructions.md) (`lock cmpxchg`, `xchg`) строже.
 >
-> Нюанс store forwarding: поток может видеть свою собственную запись до её глобальной видимости (через [store buffer](../../computer/data-path/cache-coherency.md#store-buffer-запись-без-ожидания)). Это не нарушает TSO-гарантии для межпоточного взаимодействия, но формально отличает x86 от «идеальной» TSO. Формализация этих тонкостей — статья «x86-TSO: A Rigorous and Usable Programmer's Model for x86 Multiprocessors» (CACM 2010).
+> Нюанс store forwarding: поток может видеть свою собственную запись до её глобальной видимости (через [[computer/data-path/cache-coherency#store-buffer-запись-без-ожидания|store buffer]]). Это не нарушает TSO-гарантии для межпоточного взаимодействия, но формально отличает x86 от «идеальной» TSO. Формализация этих тонкостей — статья «x86-TSO: A Rigorous and Usable Programmer's Model for x86 Multiprocessors» (CACM 2010).
 >
 > На практике: говорить «x86 реализует TSO» — допустимое упрощение. Точнее: «модель x86 очень близка к TSO и как минимум такая же сильная».
 

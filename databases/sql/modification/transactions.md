@@ -96,7 +96,7 @@ Savepoint'ы не бесплатны: СУБД отслеживает состо
 
 Та же проблема возникает в приложении: HTTP-запрос открывает транзакцию, делает внешний API-вызов (2 секунды timeout), потом продолжает работу с базой. Всё время ожидания API транзакция удерживает ресурсы.
 
-В PostgreSQL конкретный механизм — [MVCC](../../postgresql/concurrency/mvcc.md#цена-mvcc-dead-tuples): открытая транзакция не позволяет СУБД освободить старые версии строк, и таблица может вырасти на гигабайты. Защита — `idle_in_transaction_session_timeout`.
+В PostgreSQL конкретный механизм — [[databases/postgresql/concurrency/mvcc#цена-mvcc-dead-tuples|MVCC]]: открытая транзакция не позволяет СУБД освободить старые версии строк, и таблица может вырасти на гигабайты. Защита — `idle_in_transaction_session_timeout`.
 
 ## ACID
 
@@ -148,7 +148,7 @@ COMMIT;
 
 SERIALIZABLE — самый строгий уровень: СУБД гарантирует, что результат параллельного выполнения эквивалентен какому-то последовательному порядку. Цена: транзакция может получить ошибку сериализации и должна быть перезапущена.
 
-Как PostgreSQL реализует эти уровни через версионирование строк — в [уровнях изоляции PostgreSQL](../../postgresql/concurrency/isolation-levels.md). Типовые паттерны работы с конкурентным доступом (SELECT FOR UPDATE, advisory locks, retry loops) — в [паттернах параллельного доступа](../../postgresql/concurrency/patterns.md#пессимистичный-подход-for-update).
+Как PostgreSQL реализует эти уровни через версионирование строк — в [уровнях изоляции PostgreSQL](../../postgresql/concurrency/isolation-levels.md). Типовые паттерны работы с конкурентным доступом (SELECT FOR UPDATE, advisory locks, retry loops) — в [[databases/postgresql/concurrency/patterns#пессимистичный-подход-for-update|паттернах параллельного доступа]].
 
 ## Sources
 

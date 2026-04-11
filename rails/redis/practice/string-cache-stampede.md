@@ -12,11 +12,11 @@ order: 3
 
 # Защита от cache stampede
 
-**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING](../../../databases/redis/data-structures/string.md), [Lua-скрипты](../../../databases/redis/atomicity/lua-scripting.md), [теория cache stampede](../../../system-design/caching.md#cache-stampede).
+**Предпосылки:** [Клиенты и соединения](../clients-and-connections.md), [STRING](../../../databases/redis/data-structures/string.md), [Lua-скрипты](../../../databases/redis/atomicity/lua-scripting.md), [[system-design/caching#cache-stampede|теория cache stampede]].
 
 Популярный кеш с TTL 5 минут хранит результат тяжёлого SQL-запроса. В момент, когда TTL истекает, 1000 параллельных запросов обнаруживают пустой кеш и одновременно отправляют один и тот же запрос в PostgreSQL. База получает лавину одинаковых тяжёлых запросов и деградирует — p99 latency (время, в которое укладываются 99% запросов) подскакивает, вплоть до таймаутов у пользователей.
 
-Это cache stampede (thundering herd). Два подхода к защите: блокировка на перестроение и упреждающее обновление. Подробнее о теории: [кеширование в Redis](../../../databases/redis/patterns/caching.md) и [общая заметка о caching](../../../system-design/caching.md#cache-stampede).
+Это cache stampede (thundering herd). Два подхода к защите: блокировка на перестроение и упреждающее обновление. Подробнее о теории: [кеширование в Redis](../../../databases/redis/patterns/caching.md) и [[system-design/caching#cache-stampede|общая заметка о caching]].
 
 ## Блокировка на перестроение
 

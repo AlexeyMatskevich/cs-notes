@@ -43,7 +43,7 @@ order: 1
 | DROP COLUMN | Старый код читает удалённый столбец → SELECT fails |
 | RENAME COLUMN | Старый код использует старое имя → ошибка |
 
-DROP COLUMN и RENAME COLUMN — мгновенный DDL, но ломают работающий код. Из [классификации](safe-schema-changes.md#практические-правила): «DDL-fast, app-unsafe». Для таких операций нужен expand-contract.
+DROP COLUMN и RENAME COLUMN — мгновенный DDL, но ломают работающий код. Из [[databases/migrations/safe-schema-changes#практические-правила|классификации]]: «DDL-fast, app-unsafe». Для таких операций нужен expand-contract.
 
 Один из базовых приёмов сохранить совместимость — не смешивать изменение схемы и массовую переработку данных в одну длинную транзакцию.
 
@@ -74,7 +74,7 @@ ALTER TABLE orders ADD COLUMN region TEXT;
 UPDATE orders SET region = 'unknown' WHERE region IS NULL;
 ```
 
-Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт [ROW EXCLUSIVE](../postgresql/concurrency/locks.md#автоматические-блокировки-при-записи) — уровень блокировки, который PostgreSQL автоматически берёт при UPDATE. ROW EXCLUSIVE совместим с ACCESS SHARE (SELECT), поэтому чтение продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
+Schema change берёт ACCESS EXCLUSIVE на микросекунды. Data change берёт [[databases/postgresql/concurrency/locks#автоматические-блокировки-при-записи|ROW EXCLUSIVE]] — уровень блокировки, который PostgreSQL автоматически берёт при UPDATE. ROW EXCLUSIVE совместим с ACCESS SHARE (SELECT), поэтому чтение продолжает работать. Даже UPDATE на 50M строк лучше разбить на батчи (см. Backfilling ниже), но принцип ясен: **одна миграция — один тип изменения**.
 
 ## Expand-contract
 
@@ -141,12 +141,12 @@ SELECT pg_current_wal_lsn();  -- $cutover_lsn
 SELECT pg_last_wal_replay_lsn() >= $cutover_lsn;  -- true = caught up
 ```
 
-Ждать пока все serving replicas replay >= `$cutover_lsn`. Транзакции с [REPEATABLE READ](../sql/modification/transactions.md#уровни-изоляции) на replica сохраняют старый snapshot даже после catch-up (snapshot фиксируется на BEGIN). Для коротких web-запросов в READ COMMITTED это не проблема — каждый новый statement берёт свежий snapshot. Для long-lived analytics-транзакций (REPEATABLE READ) — завершить их на replica перед cutover или перенаправить analytics-запросы на primary. Если приложение читает только с primary — gate не нужен.
+Ждать пока все serving replicas replay >= `$cutover_lsn`. Транзакции с [[databases/sql/modification/transactions#уровни-изоляции|REPEATABLE READ]] на replica сохраняют старый snapshot даже после catch-up (snapshot фиксируется на BEGIN). Для коротких web-запросов в READ COMMITTED это не проблема — каждый новый statement берёт свежий snapshot. Для long-lived analytics-транзакций (REPEATABLE READ) — завершить их на replica перед cutover или перенаправить analytics-запросы на primary. Если приложение читает только с primary — gate не нужен.
 
 **5. Contract** — убрать старую структуру:
 
 ```sql
--- Через safe CHECK-паттерн (см. [NOT NULL](00-safe-schema-changes.md#not-null))
+-- Через safe CHECK-паттерн (см. [[databases/migrations/safe-schema-changes#not-null|NOT NULL]])
 ALTER TABLE orders ADD CONSTRAINT orders_region_nn CHECK (region IS NOT NULL) NOT VALID;
 ALTER TABLE orders VALIDATE CONSTRAINT orders_region_nn;
 ALTER TABLE orders ALTER COLUMN region SET NOT NULL;
@@ -185,7 +185,7 @@ Backfill выполняется внутри expand-фазы, после deploy 
 
 ### Batch по диапазонам
 
-Для таблиц с числовым PK ([BIGSERIAL, IDENTITY](../sql/schema/tables-and-types.md#конкурентная-вставка--serial-и-identity)) — разбить на range windows:
+Для таблиц с числовым PK ([[databases/sql/schema/tables-and-types#конкурентная-вставка--serial-и-identity|BIGSERIAL, IDENTITY]]) — разбить на range windows:
 
 ```sql
 UPDATE orders SET region = compute_region(shipping_address)

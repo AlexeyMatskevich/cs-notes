@@ -285,7 +285,7 @@ Write-behind подходит для данных, где потеря небо�
 
 ## Cache stampede
 
-Cache stampede — пример [cascading failure](reliability-patterns.md#cascading-failure-механизм): внезапная нагрузка на origin может перегрузить всю систему.
+Cache stampede — пример [[system-design/reliability-patterns#cascading-failure-механизм|cascading failure]]: внезапная нагрузка на origin может перегрузить всю систему.
 
 Популярный профиль с TTL 5 минут. В момент истечения TTL к этому профилю приходит 1000 одновременных запросов. Все получают cache miss, все идут в PostgreSQL.
 

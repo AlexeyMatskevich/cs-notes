@@ -44,7 +44,7 @@ order: 4
 | Посмотреть первый | `front() → x` | O(1) |
 | Проверить пустоту | `empty?() → bool` | O(1) |
 
-На [односвязном списке](../linear/linked-list.md) с tail [очередь](stack-queue-deque.md) реализуется просто: enqueue через tail, dequeue через head — обе операции O(1). Но узлы [списка](../linear/linked-list.md) разбросаны по куче, и при интенсивной работе [cache misses](../../computer/data-path/memory-hierarchy.md#три-типа-промахов) начинают доминировать. Ring buffer решает это, сохраняя данные в непрерывном [массиве](array.md).
+На [односвязном списке](../linear/linked-list.md) с tail [очередь](stack-queue-deque.md) реализуется просто: enqueue через tail, dequeue через head — обе операции O(1). Но узлы [списка](../linear/linked-list.md) разбросаны по куче, и при интенсивной работе [[computer/data-path/memory-hierarchy#три-типа-промахов|cache misses]] начинают доминировать. Ring buffer решает это, сохраняя данные в непрерывном [массиве](array.md).
 
 ### Ring Buffer: от «мёртвой зоны» к кольцу
 

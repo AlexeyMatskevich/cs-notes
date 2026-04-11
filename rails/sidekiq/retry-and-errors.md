@@ -20,7 +20,7 @@ order: 3
 
 ## Как Sidekiq перехватывает ошибку
 
-Исключение из `perform` не уходит в никуда. [Processor](architecture.md#устройство-серверного-процесса) оборачивает server middleware chain в `JobRetry` — это не middleware, а обёртка уровнем выше. Если `perform` (или любой server middleware) выбросит исключение, оно поднимается до `JobRetry#process_retry`:
+Исключение из `perform` не уходит в никуда. [[rails/sidekiq/architecture#устройство-серверного-процесса|Processor]] оборачивает server middleware chain в `JobRetry` — это не middleware, а обёртка уровнем выше. Если `perform` (или любой server middleware) выбросит исключение, оно поднимается до `JobRetry#process_retry`:
 
 ```
 Processor
@@ -35,7 +35,7 @@ Processor
 ZADD retry <время_следующей_попытки> '<обновлённый_json>'
 ```
 
-Score — Unix timestamp следующей попытки. Задача лежит в `retry`, пока [Poller](architecture.md#устройство-серверного-процесса) не обнаружит, что её время наступило, и не переместит в рабочую очередь.
+Score — Unix timestamp следующей попытки. Задача лежит в `retry`, пока [[rails/sidekiq/architecture#устройство-серверного-процесса|Poller]] не обнаружит, что её время наступило, и не переместит в рабочую очередь.
 
 ## Формула задержки
 
@@ -47,9 +47,9 @@ delay = (count ** 4) + 15 + (rand(10) * (count + 1))
 
 Три компоненты:
 
-**count⁴** — экспоненциальный backoff. В [reliability patterns](../../system-design/reliability-patterns.md#retry-with-backoff-повторная-попытка) типичный backoff использует степень 2 (удвоение). Sidekiq использует степень 4 — гораздо более агрессивный рост. Первые попытки идут быстро (секунды), последние — через дни. Логика: если ошибка не прошла за первые пять попыток, скорее всего нужен deploy фикса, а не ещё одна попытка через минуту.
+**count⁴** — экспоненциальный backoff. В [[system-design/reliability-patterns#retry-with-backoff-повторная-попытка|reliability patterns]] типичный backoff использует степень 2 (удвоение). Sidekiq использует степень 4 — гораздо более агрессивный рост. Первые попытки идут быстро (секунды), последние — через дни. Логика: если ошибка не прошла за первые пять попыток, скорее всего нужен deploy фикса, а не ещё одна попытка через минуту.
 
-**+15** — минимальная задержка 15 секунд даже при count=0. Моментальный retry редко полезен — [transient failure](../../system-design/reliability-patterns.md#transient-vs-permanent-failure) обычно длится хотя бы несколько секунд.
+**+15** — минимальная задержка 15 секунд даже при count=0. Моментальный retry редко полезен — [[system-design/reliability-patterns#transient-vs-permanent-failure|transient failure]] обычно длится хотя бы несколько секунд.
 
 **rand(10) × (count + 1)** — jitter (случайное смещение). Если 1000 задач упали одновременно (сервис лёг), без jitter все 1000 попытаются retry в одну секунду, создавая thundering herd — лавину одновременных запросов, которая перегружает восстанавливающийся сервис. Случайное смещение распределяет нагрузку.
 
@@ -67,17 +67,17 @@ delay = (count ** 4) + 15 + (rand(10) * (count + 1))
 
 ## Retry sorted set и Poller
 
-Sorted set `retry` работает как [delayed queue](../../databases/redis/patterns/queues.md#отложенные-задачи-delayed-queue): score = timestamp следующей попытки. [Poller](architecture.md#устройство-серверного-процесса) периодически выполняет `ZRANGEBYSCORE retry -inf <now>` и перемещает «созревшие» задачи в рабочие очереди.
+Sorted set `retry` работает как [[databases/redis/patterns/queues#отложенные-задачи-delayed-queue|delayed queue]]: score = timestamp следующей попытки. [[rails/sidekiq/architecture#устройство-серверного-процесса|Poller]] периодически выполняет `ZRANGEBYSCORE retry -inf <now>` и перемещает «созревшие» задачи в рабочие очереди.
 
 По умолчанию `ZRANGEBYSCORE` + `LPUSH` — не атомарная операция. Crash между ними может привести к дубликату или потере. Reliable scheduler (Pro) решает это через Lua-скрипт.
 
-Интервал проверки [Poller](architecture.md#устройство-серверного-процесса) адаптируется: чем больше [Sidekiq](sidekiq.md)-процессов в кластере, тем реже каждый процесс проверяет sorted sets. Это предотвращает thundering herd на уровне инфраструктуры — по той же логике, что jitter в формуле retry предотвращает его на уровне задач.
+Интервал проверки [[rails/sidekiq/architecture#устройство-серверного-процесса|Poller]] адаптируется: чем больше [Sidekiq](sidekiq.md)-процессов в кластере, тем реже каждый процесс проверяет sorted sets. Это предотвращает thundering herd на уровне инфраструктуры — по той же логике, что jitter в формуле retry предотвращает его на уровне задач.
 
 ## Dead set: когда retry бессмысленен
 
-После 25 попыток (по умолчанию) задача переносится в sorted set `dead` — это [Dead Letter Queue](../../system-design/message-queues.md#dead-letter-queue). Dead set ограничен: максимум 10 000 задач, хранение 6 месяцев. Задачи из dead set можно вручную запустить заново через Web UI Sidekiq.
+После 25 попыток (по умолчанию) задача переносится в sorted set `dead` — это [[system-design/message-queues#dead-letter-queue|Dead Letter Queue]]. Dead set ограничен: максимум 10 000 задач, хранение 6 месяцев. Задачи из dead set можно вручную запустить заново через Web UI Sidekiq.
 
-Не каждая ошибка заслуживает 25 попыток. [Transient failure](../../system-design/reliability-patterns.md#transient-vs-permanent-failure) (API down на час) — retry поможет. Permanent failure (невалидный email, несуществующий order_id) — 25 попыток бессмысленны, задача займёт место в retry set, потратит ресурсы и всё равно окажется в dead.
+Не каждая ошибка заслуживает 25 попыток. [[system-design/reliability-patterns#transient-vs-permanent-failure|Transient failure]] (API down на час) — retry поможет. Permanent failure (невалидный email, несуществующий order_id) — 25 попыток бессмысленны, задача займёт место в retry set, потратит ресурсы и всё равно окажется в dead.
 
 ## Настройка retry-поведения
 

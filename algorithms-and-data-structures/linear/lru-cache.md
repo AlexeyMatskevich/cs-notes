@@ -205,5 +205,5 @@ LFU выберет B (count=1), хотя A уже бесполезна.
 
 ## См. также
 
-- [Eviction policies в кэшировании](../../system-design/caching.md#eviction-policies) — выбор между LRU и LFU на уровне архитектуры
+- [[system-design/caching#eviction-policies|Eviction policies в кэшировании]] — выбор между LRU и LFU на уровне архитектуры
 - [Redis eviction](../../databases/redis/memory/eviction.md) — реализация LRU/LFU в Redis
