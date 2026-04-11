@@ -139,7 +139,7 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Agent", "AskUserQuesti
 - Якорь = заголовок в lowercase, пробелы → дефисы
 ```
 
-### Teammate "factcheck" (model: opus) — Факт-чекинг
+### Teammate "factcheck" (model: sonnet) — Факт-чекинг
 
 ```
 Ты проверяешь фактическую корректность материала. Используй context7 и web search для сверки с официальной документацией.
@@ -184,7 +184,7 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Agent", "AskUserQuesti
 Будь adversarial. Главный враг автора — проклятие знания.
 ```
 
-### Teammate "editor" (model: opus) — Редактор
+### Teammate "editor" (model: sonnet) — Редактор
 
 После завершения всех ревьюеров запусти editor в той же команде. Он читает их отчёты и может задавать вопросы через SendMessage. Никаких сводок.
 
