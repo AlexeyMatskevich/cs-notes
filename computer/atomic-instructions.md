@@ -17,6 +17,8 @@ order: 10
 
 **Предпосылки:** [[computer/programmer-model/isa|ISA]] (инструкции, x86 vs ARM), [[computer/data-path/cache-coherency|когерентность кешей]] (MESI, Modified, кеш-линия).
 
+← [[computer/programmer-model/simd|SIMD и векторные расширения]]
+
 [[computer/data-path/cache-coherency|Когерентность]] гарантирует, что запись одного ядра станет видна другим. Но операция `counter++` — это три шага: load, add, store. Между load и store другое ядро может выполнить свой load, и один инкремент потеряется. Когерентность работает корректно — каждый отдельный store виден. Проблема в том, что последовательность из трёх шагов не неделима.
 
 Процессор решает эту задачу специальными инструкциями, которые выполняют read-modify-write как единое целое. Для любого наблюдателя (другого ядра) операция либо ещё не произошла, либо уже завершена целиком — промежуточного состояния не видно. Такие инструкции называются атомарными (atomic, от греч. ἄτομος — неделимый). Разные архитектуры реализуют эту гарантию по-разному.
@@ -89,3 +91,7 @@ CAS гарантирует неделимость операции над одн
 - John L. Hennessy, David A. Patterson, 2017, *Computer Architecture: A Quantitative Approach* — Chapter 5: Thread-Level Parallelism, Section 5.5
 - Intel, 2024, *Intel 64 and IA-32 Architectures Software Developer's Manual* — Volume 2, LOCK prefix; Volume 3, Chapter 8 (Multiple-Processor Management)
 - ARM, 2023, *ARM Architecture Reference Manual* — Section B2.9: Exclusive access instructions (LDXR/STXR)
+
+---
+
+← [[computer/programmer-model/simd|SIMD и векторные расширения]]
