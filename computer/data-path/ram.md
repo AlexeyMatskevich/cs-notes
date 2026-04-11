@@ -14,7 +14,7 @@ order: 4
 
 # Оперативная память
 
-**Предпосылки:** [бит, байт](../../foundations/binary-and-bytes.md), [когерентность кешей](cache-coherency.md) (cache line, MESI, false sharing), [иерархия памяти](memory-hierarchy.md) (L1/L2/L3 кеши, [[computer/data-path/memory-hierarchy#кеш-линия-минимальная-единица-обмена|cache line]], кеш-промахи).
+**Предпосылки:** [бит, байт](../../foundations/binary-and-bytes.md), [когерентность кешей](cache-coherency.md) (cache line, MESI, [[computer/data-path/cache-coherency#Устранение false sharing: выравнивание по кеш-линии|false sharing]]), [иерархия памяти](memory-hierarchy.md) (L1/L2/L3 кеши, [[computer/data-path/memory-hierarchy#кеш-линия-минимальная-единица-обмена|cache line]], кеш-промахи).
 
 ← [Когерентность кешей](cache-coherency.md) | [Хранилище](storage.md) →
 
