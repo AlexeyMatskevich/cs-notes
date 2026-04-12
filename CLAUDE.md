@@ -119,6 +119,8 @@ Common agent mistakes when writing notes (hookify rules catch some mechanically,
 
 - **Теория GC в `ruby/internal/gc.md` Часть I (строки 22–275):** mark-sweep, трассировка, generational, write barrier сейчас объясняются на уровне Ruby-мотивации — это временно, пока Ruby единственный потребитель VM-GC в репо. §9 structure-guide (общие теоретические файлы) запускается, когда концепция используется несколькими технологиями. Когда появится вторая заметка про VM-GC (JVM, Go, Python, V8), извлечь Часть I в `algorithms-and-data-structures/techniques/garbage-collection.md` (или новый shared-файл) и обновить `ruby/internal/gc.md` до опоры на извлечённую теорию.
 
+- **Механика seccomp-BPF в `linux/containers/containers.md` (раздел «Seccomp-BPF»):** prctl/seccomp syscall и SECCOMP_RET_* объясняются как общий механизм ядра, а не только контейнерное применение — это временно, пока containers.md единственный потребитель seccomp в репо. Когда появится отдельная заметка `linux/kernel/seccomp.md`, перенести механику туда и оставить в containers.md только контейнерный контекст.
+
 ## Commits
 
 Conventional commits when needed: `docs(postgresql): explain MVCC snapshots`
