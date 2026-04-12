@@ -21,6 +21,7 @@
 
 ## Shared Theory / Standards
 
+- [ ] I/O (Input/Output, ввод-вывод) — термин используется повсюду (`what-is-os.md`, `threads.md`, `file-io.md`, `syscall-internals.md` и др.), но нигде не вводится как определение. Нужна каноническая точка с расшифровкой (скорее всего `linux/foundations/what-is-os.md` — там I/O появляется впервые), на которую ссылаются остальные.
 - [ ] POSIX (Portable Operating System Interface) — единое определение стандарта для всего репо. Сейчас расшифровка дублируется в 5 файлах (`ipc.md`, `signals.md`, `memory-mapping.md`, `file-io.md`, `threads.md`). Нужна одна каноническая точка (скорее всего `linux/foundations/what-is-os.md`, раздел рядом с `## Ядро`) с якорем, на который ссылаются все остальные. После создания: убрать дублирующие расшифровки, оставить `[[...#posix|POSIX]]` ссылки.
 
 ## Computer Systems / OS
