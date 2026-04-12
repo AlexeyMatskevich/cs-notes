@@ -271,7 +271,7 @@ bpftrace -e 'tracepoint:block:block_rq_issue { @start[args->dev, args->sector] =
 
 ### Механизм точек останова
 
-GDB использует тот же `ptrace()`, что и strace, но с другими командами. Для установки breakpoint GDB выполняет `ptrace(PTRACE_PEEKDATA, ...)`, чтобы прочитать оригинальный байт по целевому адресу, сохраняет его, и записывает на это место `0xCC` — инструкцию `int3`. Когда процессор доходит до этого адреса, `int3` генерирует исключение #BP (Breakpoint), ядро доставляет [[linux/programming/signals|SIGTRAP]] [[linux/foundations/processes|процессу]], ptrace перехватывает его и будит GDB. GDB читает регистры (`PTRACE_GETREGS`), память (`PTRACE_PEEKDATA`) и показывает текущую позицию в коде.
+GDB использует тот же `ptrace()`, что и strace, но с другими командами. Для установки breakpoint GDB выполняет `ptrace(PTRACE_PEEKDATA, ...)`, чтобы прочитать оригинальный байт по целевому адресу, сохраняет его, и записывает на это место `0xCC` — инструкцию `int3`. Когда процессор доходит до этого адреса, `int3` генерирует исключение BP (Breakpoint), ядро доставляет [[linux/programming/signals|SIGTRAP]] [[linux/foundations/processes|процессу]], ptrace перехватывает его и будит GDB. GDB читает регистры (`PTRACE_GETREGS`), память (`PTRACE_PEEKDATA`) и показывает текущую позицию в коде.
 
 ```
 GDB                          ядро                    процесс
