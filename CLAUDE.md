@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a personal technical knowledge repository containing deep technical notes in Russian. Notes optimize for understanding and retention through linked facts, explicit dependencies, and causal explanation; index and overview files may be more map-like.
 
+The repo doubles as an **Obsidian vault** (`.obsidian/` is checked in, `.canvas` files are used for dependency maps). Cross-note links with heading anchors must use Obsidian wikilink syntax (`[[path#Heading|text]]`), not Markdown links — see auto-memory `feedback_obsidian_anchors`.
+
 ## Repository Structure
 
 Each domain has a domain-named overview file (e.g. `postgresql.md`, `linux.md`) with study order, cross-links, and trade-offs. Use `tree -L 2` or `ls` for the actual file list.
@@ -14,6 +16,10 @@ Each domain has a domain-named overview file (e.g. `postgresql.md`, `linux.md`) 
 |-----------|--------------|
 | `styleguide.md` | Writing guide: pedagogy of understanding, design before writing, self-check |
 | `structure-guide.md` | File structure: naming, navigation, markup patterns, cascade rules |
+| `index.md` | Top-level entry point with mermaid dependency graph across all domains |
+| `knowledge-map.canvas` | Obsidian canvas visualizing domain dependencies (same content as `index.md` graph) |
+| `AGENTS.md` | Short guide for non-Claude agents (e.g. Codex); delegates structure/style to `CLAUDE.md` + `styleguide.md` |
+| `scripts/` | Helper scripts: `dev-setup.sh`, `convert-to-obsidian.py`, `rename-obsidian.py` |
 | `foundations/` | Bits, bytes, binary, integers, bitwise ops, IEEE 754, text encoding, endianness (6 notes) |
 | `programming/` | From "what is a program" through variables, loops, functions, collections, OOP, FP, errors, compilation (13 notes + examples/) |
 | `networking/` | Ethernet → IP → TCP → DNS/HTTP/TLS → infrastructure (18 notes in 4 subdirs) |
@@ -28,7 +34,7 @@ Each domain has a domain-named overview file (e.g. `postgresql.md`, `linux.md`) 
 | `computer/` | CPU pipeline, memory hierarchy, cache coherency, RAM, storage, buses, ISA, ABI, SIMD (12 notes in 2 axes) |
 | `linux/` | Processes, threads, VM, FS, concurrency, syscalls, drivers, ELF, containers (30 notes in 6 subdirs) |
 | `ruby/` | Ruby-язык (WIP): системного описания языка пока нет. Внутри `ruby/internal/` — внутреннее устройство CRuby (парсер, YARV, объектная модель, GC, JIT) + конкурентность (GVL, Fiber, Ractor); строится на `computer/` (иерархия памяти, ABI, атомарные инструкции) и `linux/` (потоки, виртуальная память, системные вызовы) |
-| `wip/` | Unfinished drafts and note-flow process artifacts (*-research/design/review.md) |
+| `wip/` | Unfinished topic drafts. Note-flow process artifacts (`<slug>-{research,design,review}.md`) also land here during `/note-*` commands but may not be present outside an active flow |
 
 ## Commands
 
