@@ -85,7 +85,7 @@ Hookify rules (`.claude/hookify.*.local.md`) enforce mechanical checks in real-t
 
 10. Keep concepts on their abstraction layer. Shared theory belongs above technology-specific implementation details, and adding new notes may require cascading updates to neighboring materials.
 
-11. When rules conflict, follow the priority hierarchy from `styleguide.md` §0.3: invariants (prerequisites contract, no metalanguage) > narrative (scenario before mechanics, bridges) > completeness (lifecycle, effects, etymology) > style (prose vs lists, code anchors).
+11. When rules conflict, follow the priority hierarchy from `styleguide.md` §0.1: invariants (prerequisites contract, no metalanguage) > narrative (scenario before mechanics, bridges) > completeness (lifecycle, effects, etymology) > style (prose vs lists, code anchors).
 
 ## File Organization
 
