@@ -6,7 +6,7 @@ action: block
 conditions:
   - field: file_path
     operator: regex_match
-    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design|foundations|wip)/.*\.md$
+    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design|foundations)/.*\.md$
   - field: new_text
     operator: regex_match
     pattern: \[[^\]]+\]\([^)]*\.md#[^)]+\)
