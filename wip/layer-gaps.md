@@ -54,3 +54,12 @@
 - **Ожидаемый слой:** `algorithms-and-data-structures/techniques/persistent-data-structures.md`.
 - **Приоритет:** низкий — один потребитель.
 - **Обнаружено:** 2026-04-17 /deep-rework programming
+
+## finite-state-machine (algorithms-and-data-structures/techniques)
+
+- **Нужна для:** `computer/data-path/cache-coherency.md` — MESI вводится и диаграммируется как state machine, но сама рамка FSM не объяснена; `computer/atomic-instructions.md` — состояния кеш-линии при CAS и LL/SC; потенциально — будущие TCP state machine (networking), состояния транзакции/блокировки (databases), `system-design/cases/hotel-booking.md` (state machine заказа), `system-design/microservices.md` (оркестратор как FSM).
+- **Что это:** методическая рамка описания системы через конечное множество состояний и переходов по событиям. Формально — тройка (Q, Σ, δ) или пятёрка с начальным и финальными состояниями. Прикладная форма — диаграмма состояний и таблица переходов.
+- **Зачем в репо:** FSM уже используется в cache-coherency как модель, появляется как упоминание в system-design — пора вынести общую теорию наверх, чтобы технологические заметки опирались на одну базу, а не переизобретали рамку.
+- **Ожидаемый слой:** `algorithms-and-data-structures/techniques/finite-state-machine.md`.
+- **Приоритет:** средний — четыре потребителя в разных доменах, §9 structure-guide срабатывает.
+- **Обнаружено:** 2026-04-17 /deep-rework computer

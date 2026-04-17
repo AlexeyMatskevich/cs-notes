@@ -21,6 +21,7 @@ order: 0
 ## Техники
 
 0. [[algorithms-and-data-structures/techniques/dynamic-programming|Динамическое программирование (DP)]]
+1. [[algorithms-and-data-structures/techniques/cache-aware-algorithms|Cache-aware алгоритмы]] — tiling, AoS vs SoA, B-tree как cache-aware структура
 
 ## Линейные структуры
 
