@@ -1,0 +1,29 @@
+# Layer gaps
+
+Концепции, которые всплывают в заметках как мотивация или worked example, но не имеют собственной заметки в репо. Добавляются сюда по мере обнаружения в `/deep-rework` и аналогичных проходах.
+
+## decimal-and-money (databases/sql или foundations)
+
+- **Нужна для:** `foundations/floating-point.md` и `foundations/floating-point-edge-cases.md` — обе заметки прямо зовут «специализированные десятичные типы (DECIMAL/NUMERIC)» как решение для денежных расчётов, но перенаправить читателя некуда.
+- **Что это:** формат фиксированной точки (DECIMAL/NUMERIC в SQL, BigDecimal в Java/Ruby) — альтернатива IEEE 754 там, где точное представление десятичных дробей обязательно.
+- **Зачем в репо:** завершает дугу «float не подходит для денег», переводит читателя с «не используйте float» на «используйте вот это».
+- **Ожидаемый слой:** `databases/sql/schema/decimal-and-money.md` либо `foundations/fixed-point-decimal.md`.
+- **Обнаружено:** 2026-04-17 /deep-rework foundations
+
+## integer-overflow-in-practice (отдельный аггрегат или cross-link'и)
+
+- **Нужна для:** `foundations/integers.md` — прикладные проявления знакового переполнения (TCP seq wraparound, Y2038, SQL `INT` overflow, счётчики в Prometheus) сейчас упоминаются только через Ariane-5.
+- **Что это:** каталог реальных инцидентов и шаблонов защиты (безопасное приведение типов, checked arithmetic в Rust, проверка границ до операции).
+- **Зачем в репо:** показывает, что переполнение — не теоретическое свойство `INT`, а регулярный источник багов в production.
+- **Ожидаемый слой:** либо `foundations/integer-overflow-in-practice.md`, либо достаточно cross-link'ов из integers.md в существующие заметки сети/БД, когда те появятся.
+- **Приоритет:** низкий — при наличии заметок-потребителей задача решается линками.
+- **Обнаружено:** 2026-04-17 /deep-rework foundations
+
+## kahan-summation (algorithms-and-data-structures/techniques)
+
+- **Нужна для:** `foundations/floating-point-edge-cases.md` даёт Kahan summation в одном примере, но объяснение уровня «зачем нужна компенсация ошибки» короткое.
+- **Что это:** алгоритм Кахана для суммирования массивов с плавающей точкой без накопления ошибки округления; родственные — Neumaier, Shewchuk, pairwise summation.
+- **Зачем в репо:** численные методы и обработка больших массивов — частый случай, где наивное сложение даёт заметную ошибку.
+- **Ожидаемый слой:** `algorithms-and-data-structures/techniques/compensated-summation.md` или расширение edge-cases.md до двух-трёх алгоритмов.
+- **Приоритет:** низкий.
+- **Обнаружено:** 2026-04-17 /deep-rework foundations
