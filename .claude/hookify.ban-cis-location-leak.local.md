@@ -6,7 +6,7 @@ action: block
 conditions:
   - field: file_path
     operator: regex_match
-    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design)/.*\.md$
+    pattern: (algorithms|computer|databases|linux|messaging|networking|programming|rails|ruby|system-design|foundations|wip)/.*\.md$
   - field: new_text
     operator: regex_match
     pattern: (?i)Алмат[ыа]|Казахстан|Росси[ияю]|Москв[аыу]|Минск|Киев[ау]?|Ташкент|Бишкек|Астан[ау]|СНГ|UTC\+[56]|GMT\+[56]
