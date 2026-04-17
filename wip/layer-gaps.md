@@ -27,3 +27,30 @@
 - **Ожидаемый слой:** `algorithms-and-data-structures/techniques/compensated-summation.md` или расширение edge-cases.md до двух-трёх алгоритмов.
 - **Приоритет:** низкий.
 - **Обнаружено:** 2026-04-17 /deep-rework foundations
+
+## virtual-memory / адресное пространство процесса (linux/memory)
+
+- **Нужна для:** `programming/memory.md` описывает стек и кучу как две области памяти процесса, но само понятие «адресное пространство процесса» не введено. Естественный сосед — будущий `linux/memory/virtual-memory.md`.
+- **Что это:** виртуальная память, mapping страниц, разделение ядра и пользователя, роль MMU и TLB.
+- **Зачем в репо:** `programming/memory.md` + любые заметки про контейнеры/ОС опираются на модель «у процесса свой диапазон адресов», которая сейчас нигде не объяснена целиком.
+- **Ожидаемый слой:** `linux/memory/virtual-memory.md`.
+- **Приоритет:** средний — `memory.md` обходится без ссылки, но как только появятся темы из ОС, потребуется опора.
+- **Обнаружено:** 2026-04-17 /deep-rework programming
+
+## closure как общая концепция (programming или algorithms-and-data-structures/techniques)
+
+- **Нужна для:** `programming/fp.md` вводит блок, захватывающий `tax_rate` из окружения, и один раз называет это closure + cross-link `ruby/internal/blocks.md`. Общего описания концепции в репо нет.
+- **Что это:** функция вместе с захваченным окружением лексических переменных; формальное определение, отличие от простой передачи параметров.
+- **Зачем в репо:** closure появится в многих языках, в callback-стилях, в обработке событий и в коде сборщиков. Пока работает inline-gloss в одной заметке, но при росте потребителей понадобится shared-объяснение.
+- **Ожидаемый слой:** либо отдельная заметка в `programming/` (если тема соберёт материал), либо `algorithms-and-data-structures/techniques/closure.md`.
+- **Приоритет:** низкий — один потребитель.
+- **Обнаружено:** 2026-04-17 /deep-rework programming
+
+## persistent-data-structures / structural sharing (algorithms-and-data-structures/techniques)
+
+- **Нужна для:** `programming/fp.md` показывает `.merge` как «новый хеш», не объясняя, почему это дёшево. Аналогично для immutable lists в ФП-языках.
+- **Что это:** persistent-структуры с structural sharing: основная часть данных переиспользуется между версиями, копируется только путь к изменению. Treap, HAMT, finger tree.
+- **Зачем в репо:** закрывает дугу «неизменяемость = не обязательно дорого».
+- **Ожидаемый слой:** `algorithms-and-data-structures/techniques/persistent-data-structures.md`.
+- **Приоритет:** низкий — один потребитель.
+- **Обнаружено:** 2026-04-17 /deep-rework programming

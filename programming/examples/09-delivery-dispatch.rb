@@ -8,12 +8,14 @@ def delivery_label(method)
   end
 end
 
+# order_total.rb — поле переименовали в прошлом квартале,
+# старые функции ещё читают через "kind", новые — через "type"
 def delivery_price(method, order_total)
-  if method["kind"] == "pickup"
+  if method["type"] == "pickup"
     0
-  elsif method["kind"] == "courier"
+  elsif method["type"] == "courier"
     300
-  elsif method["kind"] == "express"
+  elsif method["type"] == "express"
     700
   end
 end
@@ -28,10 +30,11 @@ def delivery_eta(method)
   end
 end
 
+# рабочие записи несут оба ключа — миграция не завершена
 methods = [
-  { "kind" => "pickup" },
-  { "kind" => "courier" },
-  { "kind" => "express" }
+  { "kind" => "pickup",  "type" => "pickup" },
+  { "kind" => "courier", "type" => "courier" },
+  { "kind" => "express", "type" => "express" }
 ]
 
 order_total = 2400

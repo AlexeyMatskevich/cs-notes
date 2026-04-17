@@ -1,6 +1,8 @@
 profile_verified = true
 bank_account_connected = true
+bank_linked = bank_account_connected         # синоним, живёт на дашборде
 review_state = "hold"
+review_status = review_state                 # другой код использует другое имя
 requested_amount = 120
 available_balance = 300
 
@@ -38,15 +40,15 @@ puts reason_text
 puts ""
 
 puts "=== Seller dashboard banner ==="
-identity_ready = profile_verified
-payout_target_ready = bank_account_connected
-amount_ok_for_banner = requested_amount >= 50
-balance_ok_for_banner = available_balance >= requested_amount
+identity_ok = profile_verified
+payout_target_ready = bank_linked
+min_passed = requested_amount >= 50
+balance_ok = available_balance >= requested_amount
 banner_visible =
-  identity_ready &&
+  identity_ok &&
   payout_target_ready &&
-  amount_ok_for_banner &&
-  balance_ok_for_banner
+  min_passed &&
+  balance_ok
 if banner_visible
   puts "You can withdraw funds today"
 else
@@ -76,7 +78,7 @@ end
 puts ""
 
 puts "=== Finance sidebar ==="
-hold_cleared = review_state != "hold"
+hold_cleared = review_status != "hold"
 minimum_amount_passed = requested_amount > 50
 available_now = available_balance >= requested_amount
 sidebar_can_highlight =

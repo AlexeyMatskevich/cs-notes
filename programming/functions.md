@@ -16,31 +16,58 @@ order: 5
 
 <- [Циклы](loops.md) | [Коллекции](collections.md) ->
 
-В приложении маркетплейса правило выплаты продавцу считают в нескольких частях программы: в кнопке вывода денег, в баннере и в ночной проверке. Правило изменилось: ручная блокировка теперь тоже должна останавливать выплату. Компьютер выполнит любую проверку, которую ему дадут. Трудность в другом: одна и та же логика быстро расползается по файлу под разными локальными именами и в разном порядке условий.
+В маркетплейсе одно правило — «можно ли продавцу запросить выплату» — проверяется во многих местах интерфейса: кнопка вывода денег, баннер на панели продавца, сайдбар у финансового менеджера, ночная очередь, отчёт. Правила таких проверок приходят от бизнеса и время от времени меняются: сегодня добавили условие «ручная блокировка тоже останавливает выплату», завтра поднимут минимальную сумму.
 
-Проблема здесь уже не в длине кода как таковой. Проблема в том, что человек больше не может надёжно удерживать в голове все копии правила и замечать, где они начали расходиться.
-
-Правильная логика в чистом виде выглядит так:
+Ниже — три фрагмента из одного файла, которые живут в разных углах программы. Каждый решает одну и ту же задачу.
 
 ```ruby
-can_request_payout =
+# --- Withdraw page button ---
+blocked_by_review = review_state == "hold"
+enough_money_for_request = available_balance >= requested_amount
+button_enabled =
   profile_verified &&
   bank_account_connected &&
-  review_state != "hold" &&
+  !blocked_by_review &&
   requested_amount >= 50 &&
-  available_balance >= requested_amount
+  enough_money_for_request
 ```
 
-Вот [пример](examples/05-payout-eligibility-drift.rb). Его не нужно разбирать как упражнение на внимательность — достаточно посмотреть, как быстро одно короткое правило превращается в тяжёлый для чтения файл, где одинаковая проверка уже живёт в UI, тексте ошибок, API и ночной обработке.
+```ruby
+# --- Seller dashboard banner (seller_dashboard.rb) ---
+identity_ok = profile_verified
+payout_target_ready = bank_linked
+min_passed = requested_amount >= 50
+balance_ok = available_balance >= requested_amount
+banner_visible =
+  identity_ok &&
+  payout_target_ready &&
+  min_passed &&
+  balance_ok
+```
 
-> [!info]- Где правило уже разъехалось
-> Разбирать такой файл построчно ради победы не нужно. Важно увидеть сам тип боли: даже в этом сокращённом фрагменте правило уже живёт в нескольких формах, и они начинают расходиться.
+```ruby
+# --- Finance sidebar (finance_controller.rb) ---
+hold_cleared = review_status != "hold"
+minimum_amount_passed = requested_amount > 50
+available_now = available_balance >= requested_amount
+sidebar_can_highlight =
+  profile_verified &&
+  bank_account_connected &&
+  hold_cleared &&
+  minimum_amount_passed &&
+  available_now
+```
+
+В этих трёх фрагментах — одно и то же правило выплаты. Записано оно по-разному: разные локальные имена, разный порядок условий, а в двух местах правило уже расходится с оригиналом.
+
+Сейчас блоки лежат рядом, с подсветкой — расхождение ловится за минуту, если заранее знаешь, что оно есть. В реальном коде всё иначе. Фрагменты живут в `seller_dashboard.rb`, `finance_controller.rb`, `withdraw_page.rb` и ещё четырёх файлах, никто не открывает их одновременно. Новое требование от бизнеса приходит как одна строка в тикете: «ручная блокировка теперь останавливает выплату». Обычный первый шаг разработчика — `grep review_state` по репозиторию. Он находит кнопку, но не находит сайдбар: там то же самое поле называется `review_status`. Банковская проверка записана в баннере как `bank_linked`, поиск по `bank_account_connected` туда не приходит. Правишь те места, что нашёл grep, diff выглядит чисто, ревьюер одобряет. Несоответствие всплывёт через квартал — на жалобе клиента или на финансовой сверке. К этому моменту ты уже не помнишь, что трогал эту логику, и будешь искать баг в других местах.
+
+> [!info]- Где именно разошлось
+> В `seller dashboard banner` нет проверки ручной блокировки вообще: ни `review_state`, ни `review_status` там не встречаются. Банковская проверка записана как `bank_linked`, а не `bank_account_connected` — поиск по главному имени сюда не попадает.
 >
-> - В `seller dashboard banner` полностью потерялась ручная блокировка: там есть профиль, банк, минимальная сумма и баланс, но нет `review_state != "hold"`.
-> - В `create payout API` та же проблема, только в другой форме: условие разбито на несколько `if`, и новая часть правила туда просто не дошла.
-> - В `finance sidebar` правило уже дрейфует ещё сильнее: там проверка на минимальную сумму стала `requested_amount > 50`, хотя в исходном правиле было `>= 50`.
-> - В `finance CSV export` ручная блокировка есть, но потерялась проверка на минимальную сумму.
-> - При этом `withdraw page button`, `withdraw page reason text`, `night payout queue` и `support tool` всё ещё держат полную версию правила. Именно поэтому такой файл неприятен: тут нет одной поломки, тут уже несколько почти одинаковых кусков, которые разъезжаются каждый по-своему.
+> В `finance sidebar` блокировка проверяется, но поле названо `review_status`, а не `review_state`: синонимы, разные по символам. Плюс минимальная сумма записана как `requested_amount > 50`, а в кнопке — `requested_amount >= 50`. Для суммы ровно 50 кнопка разрешит выплату, а сайдбар её скроет.
+
+Полная версия с семью местами дрейфа — в [examples/05-payout-eligibility-drift.rb](examples/05-payout-eligibility-drift.rb). Файл рабочий, но настоящая боль не в длине: каждая копия правила жила своей жизнью, их писали разные люди в разное время, в разных файлах и с разной локальной лексикой. Поиск по коду рассчитывает, что одна концепция названа одним словом — а здесь не названа.
 
 ## Функция: один кусок логики с именем
 
@@ -58,17 +85,19 @@ end
 
 `def` (define — «определить») начинает определение функции. `can_request_payout` — имя функции. `profile_verified`, `bank_account_connected`, `review_state`, `requested_amount`, `available_balance` — параметры: входные данные, с которыми она работает.
 
-Теперь вместо трёх копий формулы остаются три вызова:
+Теперь вместо трёх копий формулы в разных углах программы остаются три вызова:
 
 ```ruby
-button_enabled = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
-banner_visible = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
-should_queue_payout = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
+button_enabled      = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
+banner_visible      = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
+sidebar_can_highlight = can_request_payout(profile_verified, bank_account_connected, review_state, requested_amount, available_balance)
 ```
 
-Если правило снова изменится, править нужно одну функцию, а не каждую копию отдельно.
+Если правило изменится — «ручная блокировка теперь тоже останавливает выплату» — править нужно одну функцию. Теперь `grep can_request_payout` находит одно определение и все вызовы. Ревьюер смотрит не на семь открытых файлов для сверки, а на один diff. Новый разработчик через год увидит одну `can_request_payout` и не узнает, что раньше правило расползалось по семи местам под разными именами — расползаться больше нечему, искать больше не нужно.
 
-Это не специальный приём Ruby. Та же идея есть в разных языках: дать куску логики имя, передать входные данные и получить результат обратно.
+Пять параметров в заголовке подряд — уже ощутимо, и с каждым новым условием правила станет хуже. Когда параметров становится много, их собирают в один объект с именованными полями; это разбирается в [коллекциях](collections.md).
+
+Функция — не специальный приём Ruby. Та же идея есть в разных языках: дать куску логики имя, передать входные данные и получить результат обратно.
 
 ```text
 Ruby:       def greeting(name) ... end
@@ -91,13 +120,14 @@ def can_request_payout(profile_verified, bank_account_connected, review_state, r
     available_balance >= requested_amount
 end
 
-result = can_request_payout(true, true, "clear", 120, 300)
+seller_review_state = "clear"
+result = can_request_payout(true, true, seller_review_state, 120, 300)
 puts result    # true
 ```
 
 При вызове `can_request_payout(true, true, "clear", 120, 300)` первое `true` попадает в `profile_verified`, второе `true` — в `bank_account_connected`, строка `"clear"` — в `review_state`, `120` — в `requested_amount`, `300` — в `available_balance`. Последнее вычисленное выражение становится результатом функции.
 
-Функция может возвращать и не число, а, например, строку:
+Функция может возвращать и не логическое значение, а, например, строку:
 
 ```ruby
 def greeting(name)
@@ -109,7 +139,7 @@ end
 
 ## Вызовы и стек
 
-[Стек](memory.md) (stack — «стопка»: последний положенный элемент снимается первым) подробно устроен в [заметке о памяти](memory.md), но главная идея нужна уже сейчас.
+[Стек](memory.md) (stack — «стопка»: последний положенный элемент снимается первым) подробно устроен в заметке о памяти, но главная идея нужна уже сейчас.
 
 Функции могут вызывать другие функции:
 
