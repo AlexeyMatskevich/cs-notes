@@ -14,11 +14,11 @@ order: 9
 # Блоки, Proc и Lambda
 
 > [!info]- Предпосылки
-> [[ruby/internal/vm/compilation|Компиляция]] — каждый scope (метод, блок) = отдельный ISeq. [[ruby/internal/vm/execution|Исполнение]] — фреймы, EP, динамический доступ через `getlocal idx, level`. [[ruby/internal/vm/control-flow|Управление потоком]] — `throw` + catch tables для break/return. [Управление памятью ОС](../../linux/programming/memory-management.md) — стек vs куча, стоимость `malloc` при stack-to-heap promotion.
+> [Замыкания](../../programming/closures.md) — что такое функция с захваченным окружением, зачем она возникает и почему узкий контракт вроде `select` нельзя насытить без этого механизма. [[ruby/internal/vm/compilation|Компиляция]] — каждый scope (метод, блок) = отдельный ISeq. [[ruby/internal/vm/execution|Исполнение]] — фреймы, EP, динамический доступ через `getlocal idx, level`. [[ruby/internal/vm/control-flow|Управление потоком]] — `throw` + catch tables для break/return. [Управление памятью ОС](../../linux/programming/memory-management.md) — стек vs куча, стоимость `malloc` при stack-to-heap promotion.
 
 ← [[ruby/internal/methods/method-definition|Определение методов]] | [Метапрограммирование](metaprogramming.md) →
 
-В [[ruby/internal/vm/execution|заметке об исполнении]] мы видели, что блок `{ puts name }` обращается к переменной `name` из окружающего метода через цепочку [[ruby/internal/vm/execution|EP]]. Но мы рассматривали это как техническую деталь — «блок видит переменные метода». На самом деле за этим стоит фундаментальная идея, которая объединяет блоки, `Proc` и `lambda` в одну концепцию.
+В [[ruby/internal/vm/execution|заметке об исполнении]] мы видели, что блок `{ puts name }` обращается к переменной `name` из окружающего метода через цепочку [[ruby/internal/vm/execution|EP]]. Но мы рассматривали это как техническую деталь — «блок видит переменные метода». На самом деле за этим стоит фундаментальная идея — [замыкание](../../programming/closures.md), функция вместе с захваченным окружением, — которая объединяет блоки, `Proc` и `lambda` в одну концепцию.
 
 ## Блок — это замыкание
 
