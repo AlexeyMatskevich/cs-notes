@@ -131,7 +131,7 @@ Clock-sweep не различает элементы с одинаковым с�
 
 ### Где используется
 
-PostgreSQL использует [clock-sweep](clock-sweep.md) для [[databases/postgresql/durability/buffer-cache#алгоритм-вытеснения|shared buffers]] — кэша страниц диска в разделяемой памяти, где тысячи backend-процессов конкурируют за доступ. Операционные системы применяют аналогичный алгоритм (CLOCK) для [page replacement](../../linux/foundations/virtual-memory.md) — вытеснения страниц виртуальной памяти на диск.
+PostgreSQL использует [clock-sweep](clock-sweep.md) для [[databases/postgresql/durability/buffer-cache#алгоритм-вытеснения|shared buffers]] — кэша страниц диска в разделяемой памяти, где тысячи backend-процессов конкурируют за доступ. Операционные системы применяют аналогичный алгоритм (CLOCK) для [page replacement](../../linux/foundations/virtual-memory/virtual-memory.md) — вытеснения страниц виртуальной памяти на диск.
 
 ### Классификация алгоритмов вытеснения
 

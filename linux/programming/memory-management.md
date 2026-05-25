@@ -11,7 +11,7 @@ order: 18
 # Управление памятью
 
 > [!info]- Предпосылки
-> [виртуальная память](../foundations/virtual-memory.md) (страницы, TLB, page fault, demand paging, overcommit, OOM killer), [отображение памяти](memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/data-path/ram.md) (NUMA), [cgroups](../containers/namespaces-and-cgroups.md) (memory.max, изоляция OOM внутри группы).
+> [виртуальная память](../foundations/virtual-memory/virtual-memory.md) (страницы, TLB, page fault, demand paging, overcommit, OOM killer), [отображение памяти](memory-mapping.md) (mmap, MAP_ANONYMOUS, madvise), [оперативная память](../../computer/data-path/ram.md) (NUMA), [cgroups](../containers/namespaces-and-cgroups.md) (memory.max, изоляция OOM внутри группы).
 
 ← [Мультиплексирование ввода-вывода](io-multiplexing.md) | [Межпроцессное взаимодействие](ipc.md) →
 
@@ -25,7 +25,7 @@ epoll и io_uring позволяют одному потоку обслужив�
 
 PostgreSQL при запуске выделяет shared_buffers — область разделяемой памяти для кеширования страниц данных. Допустим, shared_buffers = 128 ГБ на сервере с 256 ГБ RAM. При стандартных 4 КБ страницах это 128 ГБ / 4 КБ = 33 554 432 страницы — 32 миллиона записей в page table.
 
-[[linux/foundations/virtual-memory#tlb-кеш-трансляций|TLB]] типичного серверного процессора (Intel Xeon, AMD EPYC) хранит около 1600 записей для 4 КБ страниц (64 в L1 DTLB (Data TLB) + 1536 в L2 TLB). Каждая запись покрывает 4 КБ — суммарное покрытие TLB составляет ~6 МБ. Из 128 ГБ буферного пула TLB одновременно покрывает 6 МБ / 128 ГБ = 0.000046, то есть 0.0046%. Оставшиеся 99.995% обращений к буферному пулу приводят к TLB miss.
+[[linux/foundations/virtual-memory/tlb#TLB: кеш трансляций|TLB]] типичного серверного процессора (Intel Xeon, AMD EPYC) хранит около 1600 записей для 4 КБ страниц (64 в L1 DTLB (Data TLB) + 1536 в L2 TLB). Каждая запись покрывает 4 КБ — суммарное покрытие TLB составляет ~6 МБ. Из 128 ГБ буферного пула TLB одновременно покрывает 6 МБ / 128 ГБ = 0.000046, то есть 0.0046%. Оставшиеся 99.995% обращений к буферному пулу приводят к TLB miss.
 
 Каждый TLB miss запускает page walk — обход четырёх уровней page table (PGD (Page Global Directory) -> PUD (Page Upper Directory) -> PMD (Page Middle Directory) -> PTE). В лучшем случае промежуточные таблицы лежат в L2 кеше, и page walk обходится в 10–20 нс. В худшем — таблицы вытеснены из кеша, и каждый уровень требует обращения к RAM: 4 x 60–100 нс = 240–400 нс. Для базы данных с рандомным паттерном доступа (индексный поиск, hash join) промежуточные таблицы редко попадают в кеш — типичный page walk стоит 30–50 нс.
 
@@ -126,7 +126,7 @@ PostgreSQL держит shared_buffers в huge pages, но `malloc` в heap ид
 
 ## Overcommit: виртуальная память без физической
 
-[[linux/foundations/virtual-memory#overcommit-виртуальная-память-без-физической|Overcommit]] — ядро разрешает виртуальных отображений больше, чем есть физической RAM.
+[[linux/foundations/virtual-memory/page-faults#Overcommit: виртуальная память без физической|Overcommit]] — ядро разрешает виртуальных отображений больше, чем есть физической RAM.
 
 Пять процессов на сервере с 16 ГБ RAM вызывают `malloc(4 ГБ)` каждый — суммарный запрос 20 ГБ. При overcommit_memory=0 (эвристический режим по умолчанию) ядро разрешает все пять запросов: каждый malloc создаёт VMA без выделения фреймов, RSS (Resident Set Size — размер резидентной памяти) каждого процесса — около нуля. Demand paging выделяет фреймы по мере записи.
 

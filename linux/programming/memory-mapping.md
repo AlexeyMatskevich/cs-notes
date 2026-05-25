@@ -12,7 +12,7 @@ order: 14
 # Отображение памяти
 
 > [!info]- Предпосылки
-> [виртуальная память](../foundations/virtual-memory.md) (страницы, page table, page fault, demand paging), [файловые системы](../foundations/filesystems.md) (page cache, inode).
+> [виртуальная память](../foundations/virtual-memory/virtual-memory.md) (страницы, page table, page fault, demand paging), [файловые системы](../foundations/filesystems.md) (page cache, inode).
 
 ← [Сигналы](signals.md) | [Файловый ввод-вывод](file-io.md) →
 
@@ -72,7 +72,7 @@ process virtual memory           process virtual memory
 
 Именно так работает загрузка исполняемых файлов. Когда ядро запускает программу через `execve()` (системный вызов замены образа процесса), сегмент `.text` (машинный код) отображается как `MAP_PRIVATE | PROT_READ | PROT_EXEC`. Десять процессов, запустивших один и тот же бинарник, разделяют одни и те же физические страницы с кодом.
 
-Запись в `MAP_PRIVATE`-отображение не затрагивает файл. Ядро применяет [[linux/foundations/virtual-memory#Copy-on-write: fork() без копирования|copy-on-write]] (CoW, копирование при записи): при первой попытке записи создаётся приватная копия страницы, принадлежащая только этому процессу. Оригинал в page cache остаётся неизменным.
+Запись в `MAP_PRIVATE`-отображение не затрагивает файл. Ядро применяет [[linux/foundations/virtual-memory/page-faults#Copy-on-write: fork() без копирования|copy-on-write]] (CoW, копирование при записи): при первой попытке записи создаётся приватная копия страницы, принадлежащая только этому процессу. Оригинал в page cache остаётся неизменным.
 
 ```c
 // Чтение конфигурационного файла с возможностью локальных модификаций
