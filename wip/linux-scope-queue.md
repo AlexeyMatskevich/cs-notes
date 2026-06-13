@@ -1,0 +1,43 @@
+# Очередь: вне-курсовые концепции курса linux
+
+Сюда попадают понятия, которые курс `linux/` **упоминает по необходимости, но не должен раскрывать в своих рамках** — они принадлежат другим доменам/курсам (часто ещё ненаписанным) или отдельным будущим заметкам. Это очередь на будущую обработку, а не дефекты текущего курса: styleguide §2 разрешает объявлять предпосылкой тему, заметки для которой ещё нет, и давать побочным упоминаниям inline-gloss + ссылку. Цель файла — чтобы такие «отложенные» концепции не вынуждали объяснение внутрь linux-курса и не оставались молчаливой дырой.
+
+Формат строки: **концепция** — где упоминается → почему вне scope → предлагаемый дом.
+
+## A. Кандидаты в будущие заметки (названы и отложены внутри курса, своей заметки нет)
+
+- **Mandatory Access Control (SELinux, AppArmor)** — `foundations/permissions-and-capabilities.md` (названы, inline-gloss, явно отложены в «отдельные заметки»). Курс раскрывает DAC (rwx, UID/GID, capabilities); MAC — отдельный слой контроля доступа. → будущая заметка `linux/security/` (MAC) или раздел в новом security-домене.
+- **PAM (Pluggable Authentication Modules)** — `permissions-and-capabilities.md`, отложено. Это аутентификация («кто ты»), а курс про авторизацию («что тебе можно»). → будущая заметка про аутентификацию.
+- **POSIX ACL (`setfacl`/`getfacl`)** — `permissions-and-capabilities.md`, отложено. Расширение rwx-модели на списки. → раздел/заметка в security.
+- **Timers / timekeeping (hrtimer, tick, clocksource, внутренности `clock_gettime`)** — фрагментарно в `cpu-modes-and-syscalls.md`, `syscall-internals.md`, `scheduler.md` (тики таймера планировщика); единой заметки нет. Пограничный пробел для курса внутренностей ядра. → кандидат `linux/kernel/timers.md`.
+
+## B. Отложенные выносы слоёв (общая теория, ждёт второго потребителя)
+
+Тот же паттерн, что deferred-refactor GC-теории в `CLAUDE.md`: пока теория используется единственной технологией, она живёт в её заметке; при появлении второго потребителя — вынос вверх по слою.
+
+- **Теория memory-ordering / lock-free** (happens-before, модели памяти, ABA, hazard pointers, epoch-based reclamation) — сейчас преподаётся inline в `linux/concurrency/`, прочно привязана к Linux/hardware (futex, RCU, `computer/cache-coherency`). Когда появится второй потребитель (модель памяти другого языка/рантайма), извлечь общую CS-теорию в `algorithms-and-data-structures/techniques/` или `system-design/`, оставив в linux реализационные детали.
+
+## C. Уже зафиксировано в CLAUDE.md «Deferred refactors» (не дублировать, держать в виду)
+
+- **Теория GC** в `ruby/internal/gc.md` Часть I → извлечь в `algorithms-and-data-structures/techniques/garbage-collection.md` при втором потребителе VM-GC. (не linux, но смежно по слою)
+- **Механика seccomp-BPF** в `linux/containers/containers.md` → перенести в `linux/kernel/seccomp.md`, когда та появится; в containers оставить только контейнерный контекст.
+
+## D. Кросс-доменные зависимости (объявленные предпосылки, не дыры — внимание при merge)
+
+- `kernel/network-stack.md` → `networking/` (Ethernet/IP/TCP) — объявленная предпосылка, домен существует.
+- многие → `computer/` (cache-coherency, buses-and-dma, cpu, memory-hierarchy, atomic-instructions) — объявленные предпосылки, существуют. Все 20 якорей из linux в computer/ резолвятся на main (проверено: 0 broken). Если будущий рерворк `computer/` переименует заголовки — перепроверить эти inbound-якоря (это единственная кросс-доменная зависимость linux наружу).
+
+## E. Кандидаты-расширения (упомянуты как продвинутые, не раскрыты — вне scope foundations-курса)
+
+- **Kernel-bypass / high-performance networking (XDP, DPDK)** — упомянуты в `kernel/network-stack.md` как высокопроизводительные альтернативы обычному пути пакета. Продвинутая тема, законно вне scope базового курса. → кандидат отдельной заметки в networking-advanced при необходимости.
+
+## Результаты scope-gap скана (финальная codex-верификация, 30/30)
+
+Скан подтвердил уже зафиксированные категории, НОВЫХ неуправляемых дыр не выявил:
+- Основная масса [ВНЕ-SCOPE]-пометок указывает на **существующие домены-предпосылки**: `networking/` (VLAN, ICMP/traceroute, IP fragmentation, FTP, NIC queues — особенно плотно в `network-stack` и `interrupts`), `computer/` (Meltdown/микроархитектура, TSC), `algorithms/` (деревья), `filesystems` (page cache). Это законные объявленные предпосылки (категория D), не дыры.
+- **Продукты-иллюстрации** (PostgreSQL, Redis, Ruby runtime в «См. также») — допустимые классические примеры, не подлежат раскрытию в курсе.
+- Подтверждена фрагментарность **таймеров/TSC** (см. A4) и кросс-доменная нагрузка `network-stack`/`interrupts` на `networking/` (см. D) — стоит отразить в обзоре (уже добавлено: пометка про networking в `linux.md`).
+
+---
+
+_Пополняется по ходу переработки: из отчётов fix-агентов (deliberatelySkipped с причиной «вне scope») и из финальной верификации (линза scope-gap)._
