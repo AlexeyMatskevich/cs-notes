@@ -14,47 +14,51 @@ order: 0
 
 **Предпосылки:** [базовое программирование](../programming/programming.md) (переменные, типы, условия, циклы, функции, [указатели/ссылки](../programming/memory.md)) и оценка сложности в O(…).
 
-В этих структурах почти всё сводится к двум вопросам:
-1. По чему ищем элемент: по позиции (индекс) или по ключу?
-2. Чем платим за скорость: сдвигами и копированием, лишними указателями, промахами кэша CPU, блокировками?
+Выбор структуры данных почти всегда сводится к двум вопросам:
+1. Как находим элемент — по позиции (индекс), по ключу или по связям с другими элементами?
+2. Чем платим за скорость — сдвигами и копированием при вставке, лишней памятью под ссылки, тем, как данные ложатся в кеш процессора (быстрая память рядом с ядром), а в многопоточном коде — ожиданием на блокировках (когда потоки конкурируют за общий ресурс)?
 
-## Техники
-
-0. [[algorithms-and-data-structures/techniques/dynamic-programming|Динамическое программирование (DP)]]
-1. [[algorithms-and-data-structures/techniques/cache-aware-algorithms|Cache-aware алгоритмы]] — tiling, AoS vs SoA, B-tree как cache-aware структура
+Линейные структуры отвечают на первый вопрос через позицию или ключ. Нелинейные добавляют третий способ — поиск по связям между элементами, когда в данных есть иерархии, сети или маршруты. Техники в конце — это уже не контейнеры, а приёмы, которые используют и те, и другие.
 
 ## Линейные структуры
 
 Типичный путь выбора: [[algorithms-and-data-structures/linear/array|массив]] → [[algorithms-and-data-structures/linear/dynamic-array|динамический массив]] → [[algorithms-and-data-structures/linear/linked-list|связный список]] → ограниченные интерфейсы ([[algorithms-and-data-structures/linear/stack-queue-deque|стек/очередь/дек]]) → [[algorithms-and-data-structures/linear/hash-table|хеш‑таблица]] → кэши с вытеснением ([[algorithms-and-data-structures/linear/lru-cache|LRU]]/LFU/[[algorithms-and-data-structures/linear/clock-sweep|clock‑sweep]]).
 
-0. [[algorithms-and-data-structures/linear/adt|Абстрактный тип данных (ADT)]]
-1. [[algorithms-and-data-structures/linear/array|Массив]]
-2. [[algorithms-and-data-structures/linear/dynamic-array|Динамический массив]]
-3. [[algorithms-and-data-structures/linear/linked-list|Связный список]]
-4. [[algorithms-and-data-structures/linear/stack-queue-deque|Стек, очередь, дек]]
-5. [[algorithms-and-data-structures/linear/hash-table|Хеш-таблица]]
-6. [[algorithms-and-data-structures/linear/lru-cache|LRU-кэш]]
-7. [[algorithms-and-data-structures/linear/clock-sweep|Clock-Sweep]]
+0. [[algorithms-and-data-structures/linear/adt|Абстрактный тип данных (ADT)]] — тип как контракт операций, отделённый от реализации
+1. [[algorithms-and-data-structures/linear/array|Массив]] — непрерывный блок памяти: доступ по индексу за O(1), цена — фиксированный размер
+2. [[algorithms-and-data-structures/linear/dynamic-array|Динамический массив]] — рост через удвоение ёмкости, амортизированный O(1) на добавление в конец
+3. [[algorithms-and-data-structures/linear/linked-list|Связный список]] — узлы со ссылками: вставка/удаление за O(1), цена — нет доступа по индексу
+4. [[algorithms-and-data-structures/linear/stack-queue-deque|Стек, очередь, дек]] — ограниченные интерфейсы доступа: LIFO, FIFO, оба конца
+5. [[algorithms-and-data-structures/linear/hash-table|Хеш-таблица]] — поиск по ключу за O(1) в среднем через хеш-функцию; цена — коллизии и деградация
+6. [[algorithms-and-data-structures/linear/lru-cache|LRU-кэш]] — вытеснение давно неиспользованного за O(1) на хеш-таблице и двусвязном списке
+7. [[algorithms-and-data-structures/linear/clock-sweep|Clock-Sweep]] — приближение LRU без конкуренции потоков при каждом обращении
 
 ## Нелинейные структуры
 
-Все линейные структуры хранят элементы в последовательности — по позиции или по ключу. Но когда в данных есть иерархии, сети или маршруты, нужны связи "многие ко многим" или "один ко многим". [[algorithms-and-data-structures/non-linear/graph|Граф]] — обобщение, [[algorithms-and-data-structures/non-linear/tree|дерево]] и [[algorithms-and-data-structures/non-linear/heap|куча]] — его частные случаи с более сильными гарантиями.
+Все линейные структуры хранят элементы в последовательности — по позиции или по ключу. Но когда в данных есть иерархии, сети или маршруты, нужны связи «многие ко многим» или «один ко многим». [[algorithms-and-data-structures/non-linear/graph|Граф]] — самый общий случай; [[algorithms-and-data-structures/non-linear/tree|дерево]] — его частный случай (связный, без циклов), а [[algorithms-and-data-structures/non-linear/heap|куча]] — уже частный случай дерева (плюс свойство кучи: родитель не больше или не меньше детей).
 
-0. [[algorithms-and-data-structures/non-linear/graph|Граф]]
-1. [[algorithms-and-data-structures/non-linear/tree|Дерево]]
-2. [[algorithms-and-data-structures/non-linear/binary-tree|Бинарное дерево]]
-3. [[algorithms-and-data-structures/non-linear/binary-search-tree|Двоичное дерево поиска (BST)]]
-4. [[algorithms-and-data-structures/non-linear/heap|Куча (Heap)]]
-5. [[algorithms-and-data-structures/non-linear/b-tree|B-дерево (B-tree)]]
-6. [[algorithms-and-data-structures/non-linear/b-plus-tree|B+ дерево (B+ tree)]]
-7. [[algorithms-and-data-structures/non-linear/b-star-tree|B* дерево (B* tree)]]
-8. [[algorithms-and-data-structures/non-linear/inverted-index|Инвертированный индекс (Inverted Index)]]
-9. [[algorithms-and-data-structures/non-linear/skip-list|Skip List]]
+0. [[algorithms-and-data-structures/non-linear/graph|Граф]] — связи «многие ко многим»: матрица против списков смежности и цена памяти
+1. [[algorithms-and-data-structures/non-linear/tree|Дерево]] — иерархия без циклов: корень, узлы, листья
+2. [[algorithms-and-data-structures/non-linear/binary-tree|Бинарное дерево]] — не больше двух детей; обходы (in/pre/post-order, по уровням)
+3. [[algorithms-and-data-structures/non-linear/binary-search-tree|Двоичное дерево поиска (BST)]] — упорядоченный поиск/вставка/удаление за O(h); цена — вырождение
+4. [[algorithms-and-data-structures/non-linear/heap|Куча (Heap)]] — приоритетная очередь: извлечение min/max за O(log n) на массиве
+5. [[algorithms-and-data-structures/non-linear/b-tree|B-дерево (B-tree)]] — много ключей в узле под размер страницы диска: меньше чтений с диска
+6. [[algorithms-and-data-structures/non-linear/b-plus-tree|B+ дерево (B+ tree)]] — все данные в листьях, листья связаны: быстрый диапазонный скан
+7. [[algorithms-and-data-structures/non-linear/b-star-tree|B* дерево (B* tree)]] — плотнее заполненные узлы за счёт перераспределения перед разбиением
+8. [[algorithms-and-data-structures/non-linear/inverted-index|Инвертированный индекс (Inverted Index)]] — поиск внутри составных значений: термин → список документов
+9. [[algorithms-and-data-structures/non-linear/skip-list|Skip List]] — упорядоченное множество за O(log n) на вероятностных уровнях, без балансировки
+
+## Техники
+
+Эти две заметки — не контейнеры, а приёмы поверх уже изученных структур, поэтому читаются последними: динамическое программирование опирается на [[algorithms-and-data-structures/linear/array|массив]] и [[algorithms-and-data-structures/linear/hash-table|хеш-таблицу]], а cache-aware алгоритмы — на [[algorithms-and-data-structures/non-linear/b-tree|B-дерево]] и иерархию памяти.
+
+0. [[algorithms-and-data-structures/techniques/dynamic-programming|Динамическое программирование (DP)]] — таблица ответов на перекрывающиеся подзадачи вместо повторного пересчёта
+1. [[algorithms-and-data-structures/techniques/cache-aware-algorithms|Cache-aware алгоритмы]] — учёт кеш-линий и локальности: tiling, AoS vs SoA, B-tree как cache-aware структура
 
 ## Выбор структуры
 
-- Нужно часто проверять "есть ли ребро между i и j" → матрица смежности.
-- [[algorithms-and-data-structures/non-linear/graph|Граф]] разреженный и важны обходы соседей → списки смежности.
+- Нужно часто проверять «есть ли ребро между i и j» → матрица смежности (таблица V×V, в ячейке — есть ли ребро).
+- [[algorithms-and-data-structures/non-linear/graph|Граф]] разреженный и важны обходы соседей → списки смежности (у каждой вершины — список её соседей).
 - Нужна иерархия без циклов → [[algorithms-and-data-structures/non-linear/tree|дерево]].
 - Нужны быстрые `search/insert/delete` по упорядоченному ключу → [[algorithms-and-data-structures/non-linear/binary-search-tree|BST]] (если важны гарантии, лучше самобалансирующееся).
 - Нужна приоритетная очередь (добавить элемент и извлечь min/max) → [[algorithms-and-data-structures/non-linear/heap|куча]].
@@ -86,8 +90,8 @@ order: 0
 | ADT | Порядок | Операции | Лучшая реализация |
 |-----|---------|----------|-------------------|
 | [[algorithms-and-data-structures/linear/stack-queue-deque\|Стек]] | LIFO | push/pop с одного конца | [[algorithms-and-data-structures/linear/dynamic-array\|Динамический массив]] |
-| [[algorithms-and-data-structures/linear/stack-queue-deque\|Очередь]] | FIFO | enqueue в конец, dequeue из начала | Ring buffer |
-| [[algorithms-and-data-structures/linear/stack-queue-deque\|Дек]] | Оба | Все операции с обоих концов | Ring buffer или двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
+| [[algorithms-and-data-structures/linear/stack-queue-deque\|Очередь]] | FIFO | enqueue в конец, dequeue из начала | Кольцевой буфер (ring buffer) |
+| [[algorithms-and-data-structures/linear/stack-queue-deque\|Дек]] | Оба | Все операции с обоих концов | Кольцевой буфер или двусвязный [[algorithms-and-data-structures/linear/linked-list\|список]] |
 
 ### [[algorithms-and-data-structures/linear/hash-table|Хеш-таблица]]
 
@@ -111,7 +115,7 @@ order: 0
 | Аспект | [[algorithms-and-data-structures/linear/lru-cache\|LRU]] | LFU |
 |--------|-----|-----|
 | Критерий вытеснения | Время последнего обращения | Количество обращений |
-| Cache pollution | Нет | Да (старые популярные элементы застревают) |
+| Засорение кеша (cache pollution) | Нет | Да (старые популярные элементы застревают) |
 | Адаптация к изменениям | Быстрая | Медленная |
 | Лучше для | Меняющиеся паттерны доступа | Стабильные паттерны доступа |
 
@@ -121,8 +125,8 @@ order: 0
 |--------|-----|-----|-------------|
 | Критерий | Время | Частота | Частота + затухание |
 | Точность | Точный порядок | Точный счётчик | Приблизительный |
-| Cache pollution | Нет | Да | Нет (затухание) |
-| Contention | При каждом обращении | При каждом обращении | Только при вытеснении |
+| Засорение кеша | Нет | Да | Нет (затухание) |
+| Конкуренция потоков (contention) | При каждом обращении | При каждом обращении | Только при вытеснении |
 | Масштабируемость | Хуже | Хуже | Лучше |
 
 ## Sources

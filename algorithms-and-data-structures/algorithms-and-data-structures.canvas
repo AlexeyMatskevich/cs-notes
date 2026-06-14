@@ -16,7 +16,7 @@
       "label": "Техники",
       "x": 560,
       "y": -20,
-      "width": 440,
+      "width": 940,
       "height": 160
     },
     {
@@ -24,6 +24,16 @@
       "type": "file",
       "file": "algorithms-and-data-structures/techniques/dynamic-programming.md",
       "x": 580,
+      "y": 0,
+      "width": 400,
+      "height": 60,
+      "color": "6"
+    },
+    {
+      "id": "node-cache-aware-algorithms",
+      "type": "file",
+      "file": "algorithms-and-data-structures/techniques/cache-aware-algorithms.md",
+      "x": 1080,
       "y": 0,
       "width": 400,
       "height": 60,
@@ -233,6 +243,13 @@
       "id": "edge-overview-to-dp",
       "fromNode": "node-overview",
       "toNode": "node-dynamic-programming",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "edge-overview-to-cache-aware",
+      "fromNode": "node-overview",
+      "toNode": "node-cache-aware-algorithms",
       "fromSide": "right",
       "toSide": "left"
     },
