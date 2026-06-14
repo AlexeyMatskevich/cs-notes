@@ -41,7 +41,7 @@ graph LR
 
 ### Объектная модель
 
-Как Ruby представляет объекты, классы и модули в памяти. Зависит от VM ([[ruby/internal/vm/execution|VALUE]], фреймы).
+Как Ruby представляет объекты, классы и модули в памяти. Зависит от VM ([[ruby/internal/object-model/objects-and-classes|VALUE]], фреймы).
 
 - [[ruby/internal/object-model/objects-and-classes|Объекты и классы]] — RObject, RClass, метакласс, m_tbl
 - [[ruby/internal/object-model/modules|Модули]] — include/prepend, iclass, цепочка super, поиск констант через [[ruby/internal/object-model/modules|CREF]]
@@ -70,14 +70,14 @@ graph LR
 
 ### Ветка B: Память и коллекции
 
-**Сборка мусора.** Управление памятью: аллокация, mark-sweep, генерации, компактификация. Зависит от VM ([[ruby/internal/vm/execution|VALUE]], стек) и объектной модели (RBasic, flags).
+**Сборка мусора.** Управление памятью: аллокация, mark-sweep, генерации, компактификация. Зависит от VM ([[ruby/internal/object-model/objects-and-classes|VALUE]], стек) и объектной модели (RBasic, flags).
 
 - [GC](gc.md) — mark-sweep, generational, incremental, compaction, VWA
 
-**Коллекции.** Внутреннее устройство встроенных типов Array, Hash, String. Зависит от объектной модели ([[ruby/internal/vm/execution|VALUE]], RBasic), GC (VWA, слоты, write barrier) и [структур данных](../../algorithms-and-data-structures/linear/).
+**Коллекции.** Внутреннее устройство встроенных типов Array, Hash, String. Зависит от объектной модели ([[ruby/internal/object-model/objects-and-classes|VALUE]], RBasic), GC (VWA, слоты, write barrier) и [структур данных](../../algorithms-and-data-structures/algorithms-and-data-structures.md).
 
 - [[ruby/internal/collections/array|Array]] — RArray: embedded/heap-хранение, стратегия роста (×1.5), shared-массивы (CoW)
-- [Hash](./collections/hash.md) — RHash: AR table (≤8 элементов), ST table (open addressing), переход между ними
+- [[ruby/internal/collections/hash|Hash]] — RHash: AR table (≤8 элементов), ST table (open addressing), переход между ними
 - [[ruby/internal/collections/string|String]] — RString: embedded/heap, кодировки, CoW, frozen strings, интернирование (fstring)
 
 ---
@@ -98,9 +98,7 @@ JIT — компиляция горячего байткода в машинны
 
 ## Как всё связано
 
-*Этот раздел — итоговая карта для тех, кто прочитал заметки выше. Термины здесь не объясняются — они определены в соответствующих файлах.*
-
-**VM vs Объектная модель:** VM оперирует значениями типа [[ruby/internal/vm/execution|VALUE]] на стеке. Объектная модель определяет, что стоит за каждым VALUE — RObject с массивом ivar и указателем klass. VM использует klass для диспетчеризации методов, shapes — для доступа к переменным.
+**VM vs Объектная модель:** VM оперирует значениями типа [[ruby/internal/object-model/objects-and-classes|VALUE]] на стеке. Объектная модель определяет, что стоит за каждым VALUE — RObject с массивом ivar и указателем klass. VM использует klass для диспетчеризации методов, shapes — для доступа к переменным.
 
 **Статическая структура vs Динамическое поведение:** Объектная модель (классы, модули, shapes) задаёт структуру — где лежат методы и переменные. Методы и блоки определяют поведение — как код находится и исполняется. Метапрограммирование размывает эту границу: `define_method` создаёт метод из замыкания, `instance_eval` меняет `self` и лексическую область.
 

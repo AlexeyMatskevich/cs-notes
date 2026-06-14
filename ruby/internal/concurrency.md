@@ -7,13 +7,13 @@ aliases:
   - GVL
   - Fiber
   - Ractor
-order: 1
+order: 13
 ---
 
 # Конкурентность и параллелизм в Ruby
 
 > [!info]- Предпосылки
-> Базовое знание Ruby (потоки, блоки); [потоки ОС](../../linux/foundations/threads.md) — создание, контекстные переключения, pthread; [синхронизация](../../linux/concurrency/synchronization.md) — mutex, condition variable, futex; [модель памяти](../../linux/concurrency/memory-ordering.md) — барьеры, видимость, happens-before.
+> Базовое знание Ruby (потоки, блоки); [[ruby/internal/vm/execution|исполнение VM]] — байткод-инструкции, ISeq, переключение между инструкциями; [[ruby/internal/object-model/objects-and-classes|объектная модель]] — VALUE, объект как `klass` + ivar (для shareable/Ractor); [потоки ОС](../../linux/foundations/threads.md) — создание, контекстные переключения, pthread; [синхронизация](../../linux/concurrency/synchronization.md) — mutex, condition variable, futex; [модель памяти](../../linux/concurrency/memory-ordering.md) — барьеры, видимость, happens-before.
 
 ## Один поток — сто запросов
 
@@ -46,7 +46,7 @@ Ruby использует оба подхода: Thread — вытесняемы
 
 ## Thread: нативные потоки Ruby
 
-Ruby Thread — это pthread ([подробнее о потоках ОС](../../linux/foundations/threads.md)). При создании четырёх Thread MRI вызывает `pthread_create` четыре раза, плюс один внутренний timer thread:
+Ruby Thread — это pthread ([подробнее о потоках ОС](../../linux/foundations/threads.md)). При создании четырёх Thread MRI (Matz's Ruby Interpreter — эталонная реализация Ruby на C, она же CRuby) вызывает `pthread_create` четыре раза, плюс один внутренний timer thread:
 
 ```text
 Ruby процесс
@@ -225,10 +225,10 @@ GVL ограничивает CPU-параллелизм. Потоки полез
 
 Каждый pthread резервирует под стек заметный объём [виртуальной памяти](../../linux/foundations/virtual-memory/virtual-memory.md) (на Linux это часто мегабайты на поток). Для 10 000 одновременных соединений — 10 000 потоков — это десятки гигабайт виртуального адресного пространства и заметная нагрузка на [планировщик](../../linux/foundations/scheduler.md): переключение контекста стоит микросекунды, а при большом числе потоков ядро тратит CPU на выбор следующего кандидата.
 
-Fiber — корутина с собственным стеком, но значительно дешевле потока. В 64-bit CRuby дефолтные stack budgets для `Thread` составляют 256 KiB VM stack и 1024 KiB machine stack, а для `Fiber` — 128 KiB и 512 KiB. Переключение между fiber происходит внутри runtime в [пользовательском режиме](../../linux/foundations/cpu-modes-and-syscalls.md), без отдельного системного вызова на сам факт переключения.
+Fiber — корутина: подпрограмма, которая умеет приостановиться и позже возобновиться с того же места, сохранив свой стек (та самая кооперативная отдача управления в точках yield, что мы видели выше). У неё есть собственный стек, но она значительно дешевле потока: стек fiber по умолчанию примерно вдвое меньше, чем стек потока. Переключение между fiber происходит внутри runtime в [пользовательском режиме](../../linux/foundations/cpu-modes-and-syscalls.md), без отдельного системного вызова на сам факт переключения.
 
 > [!info]- Подробности: настройка размеров стека
-> Размеры thread/fiber stack в CRuby можно менять через переменные окружения `RUBY_THREAD_VM_STACK_SIZE`, `RUBY_THREAD_MACHINE_STACK_SIZE`, `RUBY_FIBER_VM_STACK_SIZE` и `RUBY_FIBER_MACHINE_STACK_SIZE`.
+> В 64-bit CRuby дефолтные размеры стека для `Thread` — 256 KiB VM stack и 1024 KiB machine stack, а для `Fiber` — 128 KiB и 512 KiB. Все четыре значения меняются через переменные окружения `RUBY_THREAD_VM_STACK_SIZE`, `RUBY_THREAD_MACHINE_STACK_SIZE`, `RUBY_FIBER_VM_STACK_SIZE` и `RUBY_FIBER_MACHINE_STACK_SIZE`.
 
 ### Fiber: resume, yield, обмен значениями
 
@@ -280,7 +280,7 @@ Fiber даёт дешёвую конкурентность для I/O, но не
 
 MRI исторически строился вокруг GVL: внутри одного VM-контекста Ruby-код выполняется последовательно, и многим C-расширениям не нужна тонкая блокировка. Четыре CPU-bound потока на четырёх ядрах не дают ускорения — GVL пропускает по одному.
 
-Ractor (Ruby 3.0+, экспериментальный) меняет точку компромисса: вместо того чтобы делать весь мир thread-safe, Ruby вводит изоляцию. Каждый Ractor — независимая единица исполнения со своим GVL. Потоки из разных Ractor выполняются параллельно — это даёт CPU-параллелизм.
+Ractor (Ruby 3.0+, экспериментальный) меняет точку компромисса: вместо того чтобы делать весь мир thread-safe, Ruby вводит изоляцию. Ractor (Ruby + Actor) — изолированный актор: общается только сообщениями, без общей мутируемой памяти. Каждый Ractor — независимая единица исполнения со своим GVL. Потоки из разных Ractor выполняются параллельно — это даёт CPU-параллелизм.
 
 Потоки внутри одного Ractor делят ractor-wide GVL и не могут исполнять Ruby-код параллельно друг с другом. CPU-bound Ruby-код распараллеливается через Ractor или Process, не через Thread внутри одного Ractor.
 
@@ -411,7 +411,7 @@ Ractor даёт CPU-параллелизм, но API экспериментал�
 
 ### Puma: reactor + thread pool
 
-Puma использует гибридную архитектуру в clustered mode — три уровня конкурентности:
+Puma использует гибридную архитектуру в clustered mode — три уровня конкурентности. Один из них, reactor, — это поток, который мультиплексирует I/O многих соединений в одном epoll-цикле ([мультиплексирование I/O](../../linux/programming/io-multiplexing.md)), чтобы медленный клиент не занимал поток приложения; «reactor» здесь — имя паттерна «реагировать на готовые события», то же I/O-мультиплексирование, что у `Fiber::Scheduler`, но поверх пула потоков. Три уровня на схеме:
 
 ```text
                     +------------------------------------------+
