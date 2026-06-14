@@ -93,7 +93,7 @@ $ ldd hello
     /lib64/ld-linux-x86-64.so.2 (0x00007f8a1c5f0000)
 ```
 
-16 КБ вместо 880 КБ. `ldd` показывает три зависимости: `linux-vdso.so.1` ([[linux/foundations/cpu-modes-and-syscalls#vdso-системный-вызов-без-системного-вызова|vDSO]] — виртуальная библиотека [[linux/foundations/what-is-os#Ядро: привилегированная часть ОС|ядра]] для быстрых [[linux/foundations/cpu-modes-and-syscalls#Механизм системного вызова|syscall]]), `libc.so.6` (стандартная библиотека C) и `/lib64/ld-linux-x86-64.so.2` — динамический линкер.
+16 КБ вместо 880 КБ. `ldd` показывает три зависимости: `linux-vdso.so.1` ([[linux/foundations/cpu-modes-and-syscalls#vDSO: системный вызов без системного вызова|vDSO]] — виртуальная библиотека [[linux/foundations/what-is-os#Ядро: привилегированная часть ОС|ядра]] для быстрых [[linux/foundations/cpu-modes-and-syscalls#Механизм системного вызова|syscall]]), `libc.so.6` (стандартная библиотека C) и `/lib64/ld-linux-x86-64.so.2` — динамический линкер.
 
 Код `.so` отображается через `mmap()` с флагами `MAP_PRIVATE` и `PROT_READ|PROT_EXEC` — механизм тот же, что уже описан в [[linux/foundations/virtual-memory/page-faults#Demand paging: ленивая загрузка|виртуальной памяти]]. Все [[linux/foundations/processes#Из чего состоит процесс|процессы]], отобразившие один и тот же файл libc.so, читают его через одни и те же физические фреймы кода: 400 процессов с `printf` — одна копия libc в RAM (~2 МБ), а не 400 копий (800 МБ).
 
@@ -265,7 +265,7 @@ $ cat /proc/self/maps | grep libc.so
 
 Базовый адрес libc сдвинулся на ~20 ТБ между двумя запусками. Атакующий не знает, где в памяти находится `system()`, и return-to-libc перестаёт работать — прыжок по угаданному адресу попадёт в невалидную память ([[linux/programming/signals|SIGSEGV]]).
 
-Значение `randomize_va_space` определяет степень рандомизации: `0` — отключено (полезно для отладки: `setarch x86_64 -R ./hello` запустит [[linux/foundations/processes#Из чего состоит процесс|процесс]] без ASLR), `1` — рандомизируются [[computer/programmer-model/abi-and-data-layout#Стековый кадр и вызов функции|стек]], mmap, [[linux/foundations/cpu-modes-and-syscalls#vdso-системный-вызов-без-системного-вызова|VDSO]], `2` — добавляется рандомизация brk ([[linux/foundations/virtual-memory/translation#Адресное пространство процесса|кучи]]). Энтропия рандомизации на x86-64 — 28 бит для mmap-области и 22 бита для стека, что даёт порядка 256 миллионов возможных базовых адресов для библиотеки.
+Значение `randomize_va_space` определяет степень рандомизации: `0` — отключено (полезно для отладки: `setarch x86_64 -R ./hello` запустит [[linux/foundations/processes#Из чего состоит процесс|процесс]] без ASLR), `1` — рандомизируются [[computer/programmer-model/abi-and-data-layout#Стековый кадр и вызов функции|стек]], mmap, [[linux/foundations/cpu-modes-and-syscalls#vDSO: системный вызов без системного вызова|VDSO]], `2` — добавляется рандомизация brk ([[linux/foundations/virtual-memory/translation#Адресное пространство процесса|кучи]]). Энтропия рандомизации на x86-64 — 28 бит для mmap-области и 22 бита для стека, что даёт порядка 256 миллионов возможных базовых адресов для библиотеки.
 
 Именно ASLR — причина, по которой PLT и GOT необходимы: компилятор не может вшить прямой адрес в машинный код, и косвенный прыжок через таблицу — единственный способ вызвать функцию, чей адрес определяется в runtime.
 

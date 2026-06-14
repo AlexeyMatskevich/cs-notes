@@ -175,7 +175,7 @@ Linux capabilities (процессные capabilities появились в яд
 
 ### Наборы capabilities
 
-Одного набора capabilities недостаточно: процесс может иметь разрешённые capabilities, но не активировать их все сразу — это снижает поверхность атаки. Ядро хранит capabilities не прямо в полях `task_struct`, а в credentials-структуре `struct cred` (доступ к ней — через указатель `task_struct->cred`; она refcounted, и при `fork()` cred разделяется, пока `execve()` или `setuid()` не создаст новую). В cred — пять наборов, три из них в первом приближении:
+Одного набора capabilities недостаточно: процесс может иметь разрешённые capabilities, но не активировать их все сразу — это снижает поверхность атаки. Ядро хранит capabilities не прямо в полях `task_struct`, а в credentials-структуре `struct cred` (доступ к ней — через указатель `task_struct->cred`). В cred — пять наборов, три из них в первом приближении:
 
 **Permitted** (разрешённые) — максимальный набор capabilities, которые поток может активировать. Верхняя граница: поток не может получить capability, которой нет в permitted.
 
@@ -189,7 +189,7 @@ Linux capabilities (процессные capabilities появились в яд
 
 **Ambient** (окружающие, Linux 4.3, 2015) — capabilities, которые попадают в permitted и effective нового процесса после `execve()` **без** необходимости файловых capabilities. Важная оговорка: ambient сохраняется только при запуске «обычного» файла. Если execve запускает privileged-файл — setuid, setgid или с назначенными file capabilities — ambient сбрасывается в ноль. Это защита: setuid-binary не должен унаследовать посторонние capabilities из окружения. Применяется для wrapper'ов без setcap, которым нужно пробросить capability — `systemd-run --user --property=AmbientCapabilities=...` использует именно этот набор.
 
-Модель передачи capabilities через execve (по `man 7 capabilities`):
+Модель передачи capabilities через execve (по `man 7 capabilities`). В формулах `P` — наборы текущего процесса, `F` — capability-атрибуты исполняемого файла, `P'` — наборы процесса после `execve()`; `&` — пересечение, `|` — объединение битовых масок:
 
 ```
 P'(ambient)     = privileged-файл ? 0 : P(ambient)
