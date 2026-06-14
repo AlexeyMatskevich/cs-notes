@@ -5,8 +5,6 @@ tags:
   - type/concept
 aliases:
   - collections
-  - array
-  - hash
 order: 6
 ---
 
